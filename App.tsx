@@ -7,112 +7,104 @@
  *
  * @format
  */
+import React, { useState, useEffect } from 'react';
+import { View, StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import auth from '@react-native-firebase/auth';
+import Search from './Search';
+import Details from './Details';
+import Login from './authentication/Login';
+import Welcome from './authentication/Welcome';
+import CreateAccount from './authentication/CreateAccount';
 
-import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
+const HomeStack = createStackNavigator();
 
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+function HomeStackScreen() {
+  return <HomeStack.Navigator>
+    <HomeStack.Screen name="Find" component={Search} />
+    <HomeStack.Screen name="Details" component={Details} />
+  </HomeStack.Navigator>
+}
 
-declare const global: {HermesInternal: null | {}};
+const AuthStack = createStackNavigator();
 
-const App = () => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <ScrollView
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
-          <Header />
-          {global.HermesInternal == null ? null : (
-            <View style={styles.engine}>
-              <Text style={styles.footer}>Engine: Hermes</Text>
-            </View>
-          )}
-          <View style={styles.body}>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Step One</Text>
-              <Text style={styles.sectionDescription}>
-                Edit <Text style={styles.highlight}>App.tsx</Text> to change
-                this screen and then come back to see your edits.
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>See Your Changes</Text>
-              <Text style={styles.sectionDescription}>
-                <ReloadInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Debug</Text>
-              <Text style={styles.sectionDescription}>
-                <DebugInstructions />
-              </Text>
-            </View>
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Learn More</Text>
-              <Text style={styles.sectionDescription}>
-                Read the docs to discover what to do next:
-              </Text>
-            </View>
-            <LearnMoreLinks />
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </>
-  );
-};
+function AuthStackScreen() {
+  return <AuthStack.Navigator>
+    <AuthStack.Screen name="Welcome" component={Welcome} />
+    <AuthStack.Screen name="Create Account" component={CreateAccount} />
+    <AuthStack.Screen name="Sign In" component={Login} />
+  </AuthStack.Navigator>
+}
 
-const styles = StyleSheet.create({
-  scrollView: {
-    backgroundColor: Colors.lighter,
-  },
-  engine: {
-    position: 'absolute',
-    right: 0,
-  },
-  body: {
-    backgroundColor: Colors.white,
-  },
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-    color: Colors.black,
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-    color: Colors.dark,
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  footer: {
-    color: Colors.dark,
-    fontSize: 12,
-    fontWeight: '600',
-    padding: 4,
-    paddingRight: 12,
-    textAlign: 'right',
-  },
-});
+const Tab = createBottomTabNavigator();
 
-export default App;
+export default function App() {
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  function onAuthStateChanged(user: any) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    // auth()
+    //   .signOut()
+    //   .then(() => console.log('User signed out!'));
+
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
+  function TabNavigation() {
+    return <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName = "";
+          if (route.name === 'Find') {
+            // iconName = focused
+            //   ? 'ios-information-circle'
+            //   : 'ios-information-circle-outline';
+            iconName = "search"
+            // } else if (route.name === 'Settings') {
+            //   iconName = focused ? 'ios-list-box' : 'ios-list';
+            // }
+          } else if (route.name === "Countdown") {
+            iconName = "timer-outline"
+          }
+          else if (route.name === "Profile") {
+            iconName = "person-circle-outline"
+          }
+          // You can return any component that you like here!
+          return <Ionicons name={iconName} size={size} color={color} />;
+        }
+      })}
+      tabBarOptions={{
+        activeTintColor: 'blue',
+        inactiveTintColor: 'gray',
+      }}
+    >
+      <Tab.Screen name="Find" component={HomeStackScreen} />
+      <Tab.Screen name="Countdown" component={HomeStackScreen} />
+      <Tab.Screen name="Profile" component={HomeStackScreen} />
+    </Tab.Navigator>
+  }
+
+  const Stack = createStackNavigator();
+
+  if (initializing) {
+    return <View />
+  }
+
+  return <NavigationContainer>
+    {/* <StatusBar barStyle="dark-content" /> */}
+    <Stack.Navigator>
+      {/* options config - https://reactnavigation.org/docs/nesting-navigators/#nesting-multiple-stack-navigators */}
+      {user ? <Stack.Screen name="Home" component={TabNavigation} options={{ headerShown: false }} /> : <Stack.Screen name="Welcome" component={AuthStackScreen} options={{ headerShown: false }} />}
+    </Stack.Navigator>
+  </NavigationContainer>
+}

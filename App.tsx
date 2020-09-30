@@ -8,8 +8,8 @@
  * @format
  */
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { View, StatusBar, Image, SafeAreaView, Appearance, useColorScheme } from 'react-native';
+import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,17 +19,42 @@ import Details from './Details';
 import Login from './authentication/Login';
 import Welcome from './authentication/Welcome';
 import CreateAccount from './authentication/CreateAccount';
+import { Navigation } from './types';
+import Actor from './Actor';
+import SegmentedControl from '@react-native-community/segmented-control';
 
-const HomeStack = createStackNavigator();
+const HomeStack = createStackNavigator<Navigation.HomeStackParamList>();
+
+const buttons = ['Movies', 'Games']
+const colorScheme = Appearance.getColorScheme();
+
+class LogoTitle extends React.Component {
+  render() {
+    return (
+      <SafeAreaView style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
+        <SegmentedControl
+          style={{ marginLeft: 16, marginRight: 16 }}
+          values={buttons}
+          selectedIndex={0}
+          onChange={(event) => {
+          }}
+        />
+      </SafeAreaView>
+    );
+  }
+}
 
 function HomeStackScreen() {
   return <HomeStack.Navigator>
     <HomeStack.Screen name="Find" component={Search} />
+    {/* <HomeStack.Screen name="Find" component={Search} options={{ header: () => <LogoTitle /> }} /> */}
     <HomeStack.Screen name="Details" component={Details} />
+    {/* <HomeStack.Screen name="Details" component={Details} options={{headerShown: false}} /> */}
+    <HomeStack.Screen name="Actor" component={Actor} />
   </HomeStack.Navigator>
 }
 
-const AuthStack = createStackNavigator();
+const AuthStack = createStackNavigator<Navigation.AuthStackParamList>();
 
 function AuthStackScreen() {
   return <AuthStack.Navigator>
@@ -84,7 +109,7 @@ export default function App() {
         }
       })}
       tabBarOptions={{
-        activeTintColor: 'blue',
+        activeTintColor: '#3880ff',
         inactiveTintColor: 'gray',
       }}
     >
@@ -94,14 +119,17 @@ export default function App() {
     </Tab.Navigator>
   }
 
-  const Stack = createStackNavigator();
+  const Stack = createStackNavigator<Navigation.StackParamList>();
 
   if (initializing) {
     return <View />
   }
 
-  return <NavigationContainer>
-    {/* <StatusBar barStyle="dark-content" /> */}
+  const colorScheme = Appearance.getColorScheme();
+  // const colorScheme = useColorScheme();
+
+  return <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <StatusBar barStyle="dark-content" />
     <Stack.Navigator>
       {/* options config - https://reactnavigation.org/docs/nesting-navigators/#nesting-multiple-stack-navigators */}
       {user ? <Stack.Screen name="Home" component={TabNavigation} options={{ headerShown: false }} /> : <Stack.Screen name="Welcome" component={AuthStackScreen} options={{ headerShown: false }} />}

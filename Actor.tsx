@@ -1,21 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
   ScrollView,
   View,
-  StatusBar,
-  NativeSyntheticEvent,
-  TextInputSubmitEditingEventData,
-  Platform,
-  ActivityIndicator,
-  Button,
-  Dimensions,
-  Pressable, Appearance
+  Pressable,
+  Appearance,
+  Text
 } from 'react-native';
 
-import moment from 'moment';
-import { Image, Text } from 'react-native-elements';
+import { Image } from 'react-native-elements';
 import { Navigation, TMDB } from './types';
 import { getMovieCredits } from './helpers/requests';
 import { reusableStyles } from './styles';

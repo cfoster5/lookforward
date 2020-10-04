@@ -33,12 +33,13 @@ export async function getGamesSearch(searchVal: string): Promise<game[]> {
   return response.json();
 }
 
-export async function getUpcomingMovies() {
+export async function getUpcomingMovies(): Promise<TMDB.Movie.Movie[]> {
   const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=1`);
   const json: TMDB.Movie.Response = await response.json();
-  return json.results.sort((a, b) => {
-    return b.popularity - a.popularity;
-  });
+  // return json.results.sort((a, b) => {
+  //   return b.popularity - a.popularity;
+  // });
+  return json.results
 }
 
 // export async function searchMovies(searchVal: string) {

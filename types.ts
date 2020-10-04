@@ -281,7 +281,7 @@ export namespace Navigation {
   export type HomeStackParamList = {
     Find: undefined,
     Details: { type: "game" | "movie", data: release | TMDB.Movie.Movie },
-    Actor: TMDB.Movie.Cast
+    Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }
 
   type FindScreenRouteProp = RouteProp<HomeStackParamList, 'Find'>;

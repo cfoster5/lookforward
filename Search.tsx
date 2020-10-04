@@ -1,44 +1,27 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
   ScrollView,
   View,
-  Text,
-  StatusBar,
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
   Platform,
-  ActivityIndicator,
-  Dimensions,
   Pressable,
   Appearance
 } from 'react-native';
 
-import { SearchBar, ListItem, Avatar, Image, ButtonGroup } from 'react-native-elements';
+import { SearchBar, Image } from 'react-native-elements';
 import { getGamesSearch, getGames, getGameReleases, getUpcomingMovies, searchMovies } from './helpers/requests';
 import { game, Navigation, release, TMDB } from './types';
-import moment from 'moment';
 import { reusableStyles } from './styles';
 import SegmentedControl from '@react-native-community/segmented-control';
-
+import MediaItem from './components/MediaItem';
 
 function Search({ route, navigation }: Navigation.FindScreenProps) {
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
   const [games, setGames] = useState<release[]>([])
-  // const navigation = useNavigation();
   const [categoryIndex, setCategoryIndex] = useState(0)
+  const scrollRef = useRef<ScrollView>(null);
 
   // function removeOldReleases(games: game[]) {
   //   let tempGames: game[] = [];
@@ -70,6 +53,10 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
       tempMovies = [...tempMovies, ...searchData]
       // Updating state for each year, need to only update once 
       setMovies(tempMovies)
+      scrollRef?.current?.scrollTo({
+        y: 0,
+        animated: false
+      })
     });
   }
 
@@ -78,11 +65,10 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
   const colorScheme = Appearance.getColorScheme();
 
   return (
-    <React.Fragment>
+    <>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
         <SegmentedControl
-          style={{ marginLeft: 16, marginRight: 16, marginTop: 8 }}
-          // fontStyle={{ fontSize: 13 }}
+          style={{ marginHorizontal: 16, marginTop: 8, paddingVertical: 16 }}
           values={buttons}
           selectedIndex={categoryIndex}
           onChange={(event) => {
@@ -110,59 +96,17 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
           // setResults(removeOldReleases(await getGamesSearch(searchValue)))
         }}
       />
-      {/* <ScrollView>
-        {
-          results.map((result: game, i) => (
-            <ListItem key={i} bottomDivider
-              onPress={() => {
-                navigation.navigate('Details', result);
-              }}>
-              <ListItem.Content>
-                <ListItem.Title>{result.name}</ListItem.Title>
-              </ListItem.Content>
-            </ListItem>
-          ))
-        }
-      </ScrollView> */}
-      <ScrollView contentContainerStyle={{ flexGrow: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
-        {/* {
-          results.map((result: game, i) => (
-            // <Text key={i}>{result.cover.url}</Text>
-            <Image
-              key={i}
-              style={(i % 2) ? styles.itemRight : styles.itemLeft}
-              source={{ uri: `https:${result.cover.url.replace("thumb", "cover_big_2x")}` }}
-              onPress={() => {
-                navigation.navigate('Details', result);
-              }}
-            />
-          ))
-        } */}
+      <ScrollView contentContainerStyle={{ flexGrow: 1, flexDirection: 'row', flexWrap: 'wrap', marginBottom: 16 }} ref={scrollRef}>
         {categoryIndex === 0 &&
           movies.map((movieRelease, i) => (
-            // <Text key={i}>{result.cover.url}</Text>
-            <Pressable key={i} onPress={() => navigation.navigate('Details', { type: "movie", data: movieRelease })}>
-              <Image
-                // key={i}
-                style={(i % 2) ? reusableStyles.itemRight : reusableStyles.itemLeft}
-                // source={{ uri: movieRelease.poster_path ? `https://image.tmdb.org/t/p/w500${movieRelease.poster_path}` : `https://via.placeholder.com/500x750?text=${movieRelease.title}` }}
-                source={{ uri: movieRelease.poster_path ? `https://image.tmdb.org/t/p/w300${movieRelease.poster_path}` : `https://via.placeholder.com/500x750?text=${movieRelease.title}` }}
-              // onPress={() => navigation.navigate('Details', movieRelease)}
-              />
-            </Pressable>
+            <MediaItem key={i} navigation={navigation} mediaType="movie" index={i} data={movieRelease} />
           ))}
         {categoryIndex === 1 &&
           games.map((gameRelease: release, i) => (
-            // <Text key={i}>{gameRelease.cover.url}</Text>
-            <Image
-              key={i}
-              style={(i % 2) ? reusableStyles.itemRight : reusableStyles.itemLeft}
-              source={{ uri: `https:${gameRelease?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}
-              onPress={() => navigation.navigate('Details', { type: "game", data: gameRelease })}
-            />
+            <MediaItem key={i} navigation={navigation} mediaType="game" index={i} data={gameRelease} />
           ))}
       </ScrollView>
-    </React.Fragment>
+    </>
   );
 };
 

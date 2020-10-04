@@ -33,7 +33,7 @@ class LogoTitle extends React.Component {
     return (
       <SafeAreaView style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
         <SegmentedControl
-          style={{ marginLeft: 16, marginRight: 16 }}
+          style={{ marginHorizontal: 16 }}
           values={buttons}
           selectedIndex={0}
           onChange={(event) => {
@@ -129,7 +129,7 @@ export default function App() {
   // const colorScheme = useColorScheme();
 
   return <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-    <StatusBar barStyle="dark-content" />
+    <StatusBar barStyle={colorScheme === 'dark' ? "default" : "dark-content"} />
     <Stack.Navigator>
       {/* options config - https://reactnavigation.org/docs/nesting-navigators/#nesting-multiple-stack-navigators */}
       {user ? <Stack.Screen name="Home" component={TabNavigation} options={{ headerShown: false }} /> : <Stack.Screen name="Welcome" component={AuthStackScreen} options={{ headerShown: false }} />}

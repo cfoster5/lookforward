@@ -1,34 +1,72 @@
-import { game, release, TMDB } from '../types';
+import { IGDB, TMDB } from '../types';
 
-export async function getGames(): Promise<game[]> {
-  const response = await fetch("https://37y5ky2qx5.execute-api.us-east-1.amazonaws.com/games", {
+// export async function getGames(): Promise<IGDB.Game[]> {
+//   const response = await fetch("https://37y5ky2qx5.execute-api.us-east-1.amazonaws.com/games", {
+//     method: 'POST',
+//     headers: {
+//       'user-key': "8ee8062725cb2dc2a465c8b304954582"
+//     },
+//     body: `fields name, summary, cover.*, release_dates.*, release_dates.platform.*, genres.name; where release_dates.date > ${Math.floor(Date.now() / 1000)}; limit 50;`
+//   });
+//   return response.json();
+// }
+
+// export async function getGameReleases(): Promise<IGDB.ReleaseDate[]> {
+//   const response = await fetch("https://37y5ky2qx5.execute-api.us-east-1.amazonaws.com/release_dates", {
+//     method: 'POST',
+//     headers: {
+//       'user-key': "8ee8062725cb2dc2a465c8b304954582"
+//     },
+//     body: `fields *, game.name, game.summary, game.cover.*, game.genres.name, platform.abbreviation, platform.name; where date > ${Math.floor(Date.now() / 1000)}; limit 50; sort date;`
+//   });
+//   return response.json();
+// }
+
+export async function getUpcomingGameReleases(): Promise<IGDB.ReleaseDate.ReleaseDate[]> {
+  const response = await fetch("https://api.igdb.com/v4/release_dates", {
     method: 'POST',
     headers: {
-      'user-key': "8ee8062725cb2dc2a465c8b304954582"
+      "Client-ID": "lj3tlp1tz4vmha6gousdpge7x12s5m",
+      Authorization: "Bearer jkq3s91dk0l5w1tb43vo7d2kdxe79x"
     },
-    body: `fields name, summary, cover.*, release_dates.*, release_dates.platform.*, genres.name; where release_dates.date > ${Math.floor(Date.now() / 1000)}; limit 50;`
+    body: `fields *, game.name, game.summary, game.cover.*, game.genres.name, game.videos.name, game.videos.video_id, platform.abbreviation, platform.name; where date > ${Math.floor(Date.now() / 1000)} & region = (2,8); limit 100; sort date;`
   });
   return response.json();
 }
 
-export async function getGameReleases(): Promise<release[]> {
-  const response = await fetch("https://37y5ky2qx5.execute-api.us-east-1.amazonaws.com/release_dates", {
-    method: 'POST',
-    headers: {
-      'user-key': "8ee8062725cb2dc2a465c8b304954582"
-    },
-    body: `fields *, game.name, game.summary, game.cover.*, game.genres.name, platform.abbreviation, platform.name; where date > ${Math.floor(Date.now() / 1000)}; limit 50; sort date;`
-  });
-  return response.json();
-}
+// export async function getGameDetails(gameId: number): Promise<IGDB.Game.Game> {
+//   const response = await fetch("https://api.igdb.com/v4/games", {
+//     method: 'POST',
+//     headers: {
+//       "Client-ID": "lj3tlp1tz4vmha6gousdpge7x12s5m",
+//       Authorization: "Bearer jkq3s91dk0l5w1tb43vo7d2kdxe79x"
+//     },
+//     body: `fields videos.name, videos.video_id, similar_games.*; where id = ${gameId};`
+//   });
+//   const games: IGDB.Game.Game[] = await response.json();
+//   return games[0];
+// }
 
-export async function getGamesSearch(searchVal: string): Promise<game[]> {
-  const response = await fetch("https://37y5ky2qx5.execute-api.us-east-1.amazonaws.com/games", {
+// export async function getUpcomingGames(): Promise<IGDB.Game.Game[]> {
+//   const response = await fetch("https://api.igdb.com/v4/games", {
+//     method: 'POST',
+//     headers: {
+//       "Client-ID": "lj3tlp1tz4vmha6gousdpge7x12s5m",
+//       Authorization: "Bearer jkq3s91dk0l5w1tb43vo7d2kdxe79x"
+//     },
+//     body: `fields name, summary, cover.*, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name, genres.name; where release_dates.date > ${Math.floor(Date.now() / 1000)}; limit 50; sort date;`
+//   });
+//   return response.json();
+// }
+
+export async function searchGames(searchVal: string): Promise<IGDB.Game.Game[]> {
+  const response = await fetch("https://api.igdb.com/v4/games", {
     method: 'POST',
     headers: {
-      'user-key': "8ee8062725cb2dc2a465c8b304954582"
+      "Client-ID": "lj3tlp1tz4vmha6gousdpge7x12s5m",
+      Authorization: "Bearer jkq3s91dk0l5w1tb43vo7d2kdxe79x"
     },
-    body: `fields name, summary, cover.*, release_dates.*, release_dates.platform.*, genres.name; where release_dates.date > ${Math.floor(Date.now() / 1000)}; search "${searchVal}"; limit 50;`
+    body: `fields name, summary, cover.*, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name, genres.name, videos.name, videos.video_id; where release_dates.date > ${Math.floor(Date.now() / 1000)} & release_dates.region = (2,8); search "${searchVal}"; limit 50;`
   });
   return response.json();
 }

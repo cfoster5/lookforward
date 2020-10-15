@@ -6,22 +6,27 @@ import {
   TextInputSubmitEditingEventData,
   Platform,
   Pressable,
-  Appearance
+  Appearance,
+  FlatList
 } from 'react-native';
 
 import { SearchBar, Image } from 'react-native-elements';
-import { getGamesSearch, getGames, getGameReleases, getUpcomingMovies, searchMovies } from './helpers/requests';
-import { game, Navigation, release, TMDB } from './types';
+import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from './helpers/requests';
+import { IGDB, Navigation, TMDB } from './types';
 import { reusableStyles } from './styles';
 import SegmentedControl from '@react-native-community/segmented-control';
 import MediaItem from './components/MediaItem';
+import { convertReleasesToGames } from './helpers/helpers';
 
 function Search({ route, navigation }: Navigation.FindScreenProps) {
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
-  const [games, setGames] = useState<release[]>([])
+  const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([])
+  // const [games, setGames] = useState<IGDB.ReleaseDate.ReleaseDate[]>([])
+  const [games, setGames] = useState<IGDB.Game.Game[]>([])
+  const [initGames, setInitGames] = useState<IGDB.Game.Game[]>([])
   const [categoryIndex, setCategoryIndex] = useState(0)
-  const scrollRef = useRef<ScrollView>(null);
+  const scrollRef = useRef<FlatList>(null);
 
   // function removeOldReleases(games: game[]) {
   //   let tempGames: game[] = [];
@@ -35,11 +40,28 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
   useEffect(() => {
     let isMounted = true;
     getUpcomingMovies().then(movies => {
-      if (isMounted) setMovies(movies);
+      if (isMounted) {
+        setInitMovies(movies);
+        setMovies(movies);
+      };
     })
-    getGameReleases().then(games => {
-      if (isMounted) setGames(games);
+    // getGameReleases().then(games => {
+    getUpcomingGameReleases().then(async releaseDates => {
+      await convertReleasesToGames(releaseDates).then(games => {
+        // console.log(games)
+        if (isMounted) {
+          setInitGames(games);
+          setGames(games);
+        }
+      })
+        .catch(error => {
+          console.log("error 1", error)
+        })
+      // if (isMounted) setGames(releaseDates);
     })
+      .catch(error => {
+        console.log("error 2", error)
+      })
     return () => { isMounted = false };
   }, [])
 
@@ -49,63 +71,100 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
     let tempMovies: TMDB.Movie.Movie[] = [];
     years.forEach(async year => {
       const searchData = await searchMovies(searchValue, year)
-      console.log(...searchData)
+      // console.log(...searchData)
       tempMovies = [...tempMovies, ...searchData]
       // Updating state for each year, need to only update once 
       setMovies(tempMovies)
-      scrollRef?.current?.scrollTo({
-        y: 0,
+      scrollRef?.current?.scrollToIndex({
+        index: 0,
         animated: false
       })
     });
   }
 
-  const buttons = ['Movies', 'Games']
-
   const colorScheme = Appearance.getColorScheme();
+
+  const renderItem = ({ item }: { item: TMDB.Movie.Movie | IGDB.Game.Game }) => (
+    <MediaItem navigation={navigation} mediaType={categoryIndex === 0 ? "movie" : "game"} data={item} />
+  );
 
   return (
     <>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
         <SegmentedControl
           style={{ marginHorizontal: 16, marginTop: 8, paddingVertical: 16 }}
-          values={buttons}
+          values={['Movies', 'Games']}
           selectedIndex={categoryIndex}
           onChange={(event) => {
-            setCategoryIndex(event.nativeEvent.selectedSegmentIndex)
+            if (event.nativeEvent.selectedSegmentIndex === 0) {
+              setGames(initGames);
+            }
+            if (event.nativeEvent.selectedSegmentIndex === 1) {
+              setMovies(initMovies);
+            }
+            setSearchValue("");
+            setCategoryIndex(event.nativeEvent.selectedSegmentIndex);
+            scrollRef?.current?.scrollToIndex({
+              index: 0,
+              animated: false
+            })
           }}
         />
       </View>
-      <SearchBar
-        containerStyle={colorScheme === "dark" ? { backgroundColor: "black" } : {}}
-        inputContainerStyle={colorScheme === "dark" ? { backgroundColor: "#1f1f1f" } : {}}
-        placeholderTextColor={colorScheme === "dark" ? "#999999" : undefined}
-        searchIcon={colorScheme === "dark" ? { color: "#999999" } : {}}
-        inputStyle={colorScheme === "dark" ? { color: "white" } : {}}
-        cancelButtonProps={colorScheme === "dark" ? { buttonTextStyle: { color: "#428cff" } } : {}}
-        placeholder="Search"
-        onChangeText={(value: string) => setSearchValue(value)}
-        value={searchValue}
-        platform={Platform.OS === "ios" ? "ios" : "android"}
-        onSubmitEditing={async (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
-          if (categoryIndex === 0) {
-            setMovies([]);
-            // setMovies(await searchMovies(searchValue))
-            getMovies()
-          }
-          // setResults(removeOldReleases(await getGamesSearch(searchValue)))
-        }}
+      <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
+        <SearchBar
+          containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: 8 } : { marginHorizontal: 8 }}
+          inputContainerStyle={colorScheme === "dark" ? { backgroundColor: "#1f1f1f" } : {}}
+          placeholderTextColor={colorScheme === "dark" ? "#999999" : undefined}
+          searchIcon={colorScheme === "dark" ? { color: "#999999" } : {}}
+          inputStyle={colorScheme === "dark" ? { color: "white" } : {}}
+          cancelButtonProps={colorScheme === "dark" ? { buttonTextStyle: { color: "#428cff" } } : {}}
+          placeholder="Search"
+          onChangeText={(value: string) => setSearchValue(value)}
+          value={searchValue}
+          platform={Platform.OS === "ios" ? "ios" : "android"}
+          onSubmitEditing={async (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
+            scrollRef?.current?.scrollToIndex({
+              index: 0,
+              animated: false
+            })
+            if (categoryIndex === 0) {
+              setMovies([]);
+              // setMovies(await searchMovies(searchValue))
+              getMovies()
+            }
+            if (categoryIndex === 1) {
+              setGames([]);
+              setGames(await searchGames(searchValue));
+            }
+            // setResults(removeOldReleases(await getGamesSearch(searchValue)))
+          }}
+          onClear={() => {
+            if (categoryIndex === 0) {
+              setMovies(initMovies);
+            }
+            if (categoryIndex === 1) {
+              setGames(initGames);
+            }
+          }}
+          onCancel={() => {
+            if (categoryIndex === 0) {
+              setMovies(initMovies);
+            }
+            if (categoryIndex === 1) {
+              setGames(initGames);
+            }
+          }}
+        />
+      </View>
+      <FlatList
+        data={categoryIndex === 0 ? movies : games}
+        renderItem={renderItem}
+        numColumns={2}
+        contentContainerStyle={{ marginHorizontal: 16 }}
+        columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
+        ref={scrollRef}
       />
-      <ScrollView contentContainerStyle={{ flexGrow: 1, flexDirection: 'row', flexWrap: 'wrap', marginBottom: 16 }} ref={scrollRef}>
-        {categoryIndex === 0 &&
-          movies.map((movieRelease, i) => (
-            <MediaItem key={i} navigation={navigation} mediaType="movie" index={i} data={movieRelease} />
-          ))}
-        {categoryIndex === 1 &&
-          games.map((gameRelease: release, i) => (
-            <MediaItem key={i} navigation={navigation} mediaType="game" index={i} data={gameRelease} />
-          ))}
-      </ScrollView>
     </>
   );
 };

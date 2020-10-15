@@ -1,5 +1,7 @@
-import { Dimensions, StyleSheet } from "react-native";
+import { Appearance, Dimensions, StyleSheet } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
+
+const colorScheme = Appearance.getColorScheme();
 
 export const reusableStyles = StyleSheet.create({
   itemLeft: {
@@ -14,21 +16,20 @@ export const reusableStyles = StyleSheet.create({
     // marginLeft: 24,
     // marginRight: 8
     marginLeft: 16,
-    marginRight: 8
+    marginRight: 8,
+    borderWidth: 1,
+    borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0"
   },
   itemRight: {
-    // width: (Dimensions.get("window").width / 2) - 32, // is 50% of container width
-    // height: (4 / 3) * ((Dimensions.get("window").width / 2) - 32),
     width: (Dimensions.get("window").width / 2) - 24, // is 50% of container width
     height: (713 / 500) * ((Dimensions.get("window").width / 2) - 24),
     borderRadius: 8,
     resizeMode: "stretch",
-    // marginTop: 16,
-    marginBottom: 16,
+    // marginBottom: 16,
     // marginLeft: 8,
-    // marginRight: 24
-    marginLeft: 8,
-    marginRight: 16
+    // marginRight: 16,
+    borderWidth: 1,
+    borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0"
   },
   horizontalItem: {
     width: (Dimensions.get("window").width / 2) - 32, // is 50% of container width

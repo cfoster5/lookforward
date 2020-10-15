@@ -8,7 +8,7 @@
  * @format
  */
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar, Image, SafeAreaView, Appearance, useColorScheme } from 'react-native';
+import { View, StatusBar, Image, SafeAreaView, Appearance, useColorScheme, Button, Pressable } from 'react-native';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -22,27 +22,16 @@ import CreateAccount from './authentication/CreateAccount';
 import { Navigation } from './types';
 import Actor from './Actor';
 import SegmentedControl from '@react-native-community/segmented-control';
+import { iOSColors, iOSUIKit } from 'react-native-typography';
+import { OverflowMenuProvider } from 'react-navigation-header-buttons';
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import Countdown from './Countdown';
+import Profile from './Profile';
 
 const HomeStack = createStackNavigator<Navigation.HomeStackParamList>();
 
 const buttons = ['Movies', 'Games']
 const colorScheme = Appearance.getColorScheme();
-
-class LogoTitle extends React.Component {
-  render() {
-    return (
-      <SafeAreaView style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
-        <SegmentedControl
-          style={{ marginHorizontal: 16 }}
-          values={buttons}
-          selectedIndex={0}
-          onChange={(event) => {
-          }}
-        />
-      </SafeAreaView>
-    );
-  }
-}
 
 function HomeStackScreen() {
   return <HomeStack.Navigator>
@@ -70,9 +59,56 @@ export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
+  const [countdownMovies, setCountdownMovies] = useState([])
+  const [countdownGames, setCountdownGames] = useState([])
+
+  function onResult(querySnapshot: FirebaseFirestoreTypes.QuerySnapshot) {
+    // console.log(querySnapshot.docs);
+    let tempMovies: any = []
+    querySnapshot.docs.forEach(doc => {
+      // console.log(doc.data())
+      let data = doc.data();
+      data.documentID = doc.id;
+      tempMovies.push(data);
+    });
+    setCountdownMovies(tempMovies)
+  }
+
+  function onError(error: any) {
+    console.error(error);
+  }
 
   function onAuthStateChanged(user: any) {
     setUser(user);
+    // console.log(user);
+
+    // firestore().collection("users").doc(user.uid).collection('items').orderBy("release_date").where("mediaType", "==", "movie").onSnapshot(querySnapshot => {
+    //   console.log(querySnapshot.docs)
+    //   // setCountdownMovies(() => addTempItems(querySnapshot))
+    //   // console.log("home movies", countdownMovies)
+    // }, error => {
+    //   console.log("Error getting document:", error);
+    // });
+
+    firestore()
+      .collection('users').doc(user.uid).collection('items').orderBy("release_date").where("mediaType", "==", "movie")
+      .onSnapshot(onResult, onError);
+
+    firestore().collection("users").doc(user.uid).collection('items').orderBy("date").where("mediaType", "==", "game")
+    // firestore().collection("games").orderBy("date").where("owner", "==", user.uid)
+      .onSnapshot(querySnapshot => {
+        let tempGames: any = []
+        querySnapshot.docs.forEach(doc => {
+          // console.log(doc.data())
+          let data = doc.data();
+          data.documentID = doc.id;
+          tempGames.push(data);
+        });
+        setCountdownGames(tempGames)
+      }, error => {
+        console.log("Error getting document:", error);
+      });
+
     if (initializing) setInitializing(false);
   }
 
@@ -84,6 +120,22 @@ export default function App() {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
   }, []);
+
+  const CountdownStack = createStackNavigator<any>();
+
+  function CountdownStackScreen() {
+    return <CountdownStack.Navigator>
+      <CountdownStack.Screen name="Countdown" component={Countdown} initialParams={{ movies: countdownMovies, games: countdownGames }} />
+    </CountdownStack.Navigator>
+  }
+
+  const ProfileStack = createStackNavigator<any>();
+
+  function ProfileStackScreen() {
+    return <ProfileStack.Navigator>
+      <ProfileStack.Screen name="Profile" component={Profile} initialParams={{ movies: countdownMovies }} />
+    </ProfileStack.Navigator>
+  }
 
   function TabNavigation() {
     return <Tab.Navigator
@@ -114,8 +166,8 @@ export default function App() {
       }}
     >
       <Tab.Screen name="Find" component={HomeStackScreen} />
-      <Tab.Screen name="Countdown" component={HomeStackScreen} />
-      <Tab.Screen name="Profile" component={HomeStackScreen} />
+      <Tab.Screen name="Countdown" component={CountdownStackScreen} />
+      <Tab.Screen name="Profile" component={ProfileStackScreen} />
     </Tab.Navigator>
   }
 
@@ -129,10 +181,14 @@ export default function App() {
   // const colorScheme = useColorScheme();
 
   return <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-    <StatusBar barStyle={colorScheme === 'dark' ? "default" : "dark-content"} />
-    <Stack.Navigator>
-      {/* options config - https://reactnavigation.org/docs/nesting-navigators/#nesting-multiple-stack-navigators */}
-      {user ? <Stack.Screen name="Home" component={TabNavigation} options={{ headerShown: false }} /> : <Stack.Screen name="Welcome" component={AuthStackScreen} options={{ headerShown: false }} />}
-    </Stack.Navigator>
+    <OverflowMenuProvider>
+      <>
+        <StatusBar barStyle={colorScheme === 'dark' ? "default" : "dark-content"} />
+        <Stack.Navigator>
+          {/* options config - https://reactnavigation.org/docs/nesting-navigators/#nesting-multiple-stack-navigators */}
+          {user ? <Stack.Screen name="Home" component={TabNavigation} options={{ headerShown: false }} /> : <Stack.Screen name="Welcome" component={AuthStackScreen} options={{ headerShown: false }} />}
+        </Stack.Navigator>
+      </>
+    </OverflowMenuProvider>
   </NavigationContainer>
 }

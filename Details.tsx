@@ -26,6 +26,7 @@ import { Modalize } from 'react-native-modalize';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { HeaderButton, HeaderButtonProps, HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { months } from './helpers/helpers';
+import firestore from '@react-native-firebase/firestore';
 
 function Details({ route, navigation }: Navigation.DetailsScreenProps) {
   const media = route.params;
@@ -56,7 +57,7 @@ function Details({ route, navigation }: Navigation.DetailsScreenProps) {
         //   <Ionicons name="add" color={iOSColors.blue} size={30} />
         // </Pressable>
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-          <Item title="search" iconName="add" onPress={() => modalizeRef.current?.open()} />
+          <Item title="search" iconName="add" onPress={() => media.type === "movie" ? addToList() : modalizeRef.current?.open()} />
         </HeaderButtons>
       )
     });
@@ -89,6 +90,17 @@ function Details({ route, navigation }: Navigation.DetailsScreenProps) {
     }
   }
 
+  async function addToList() {
+    let data = media.data;
+    data.mediaType = media.type
+    try {
+      await firestore().collection("users").doc(route.params.uid).collection('items').add(data);
+      console.log("Document successfully written!");
+    } catch (error) {
+      console.error("Error writing document: ", error);
+    }
+  }
+
   return (
     <>
       {media.type === "game" &&
@@ -103,8 +115,8 @@ function Details({ route, navigation }: Navigation.DetailsScreenProps) {
                 marginLeft: 16,
                 marginTop: 16,
                 paddingBottom: i < (media.data as IGDB.Game.Game).release_dates.filter(releaseDate => releaseDate.region === 2 || releaseDate.region === 8).length - 1 ? 16 : 0,
-                borderBottomWidth: i < (media.data as IGDB.Game.Game).release_dates.filter(releaseDate => releaseDate.region === 2 || releaseDate.region === 8).length - 1 ? 1 : 0,
-                borderColor: i < (media.data as IGDB.Game.Game).release_dates.filter(releaseDate => releaseDate.region === 2 || releaseDate.region === 8).length - 1 ? "#808080" : undefined
+                borderBottomWidth: i < (media.data as IGDB.Game.Game).release_dates.filter(releaseDate => releaseDate.region === 2 || releaseDate.region === 8).length - 1 ? StyleSheet.hairlineWidth : 0,
+                borderColor: i < (media.data as IGDB.Game.Game).release_dates.filter(releaseDate => releaseDate.region === 2 || releaseDate.region === 8).length - 1 ? "#3c3d41" : undefined
               }}
             >
               <Text style={colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>{releaseDate.platform.name}</Text>

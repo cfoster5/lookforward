@@ -1,56 +1,70 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React, { useState } from 'react';
 import {
-  SafeAreaView,
-  Button,
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  Pressable,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import { Input } from 'react-native-elements';
 import auth from '@react-native-firebase/auth';
+import { iOSUIKit, iOSColors } from 'react-native-typography';
 
 function CreateAccount() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function createAccount() {
     try {
-      await auth().createUserWithEmailAndPassword(username, password);
+      await auth().createUserWithEmailAndPassword(email, password);
       console.log('User account created & signed in!');
     }
     catch (error) {
       if (error.code === 'auth/email-already-in-use') {
-        console.log('That email address is already in use!');
+        Alert.alert("Email Already in Use", 'That email address is already in use!');
       }
       if (error.code === 'auth/invalid-email') {
-        console.log('That email address is invalid!');
+        Alert.alert("Invalid Email", 'That email address is invalid!');
       }
-      console.error(error);
+      if (error.code === 'auth/weak-password') {
+        Alert.alert("Weak Password", 'That password is invalid!');
+      }
+      // console.error(error);
     }
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Input
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <Input
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Create Account" onPress={() => createAccount()} />
-    </SafeAreaView>
+    <Pressable onPress={() => Keyboard.dismiss()} style={{flex: 1}}>
+      <KeyboardAvoidingView
+        style={{ flex: 1, justifyContent: 'center', marginHorizontal: 16 }}
+        behavior="padding"
+      >
+        <View>
+          <Text style={{ ...iOSUIKit.largeTitleEmphasizedWhiteObject }}>Hello!</Text>
+          <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.gray, marginBottom: 8 }}>Create an account</Text>
+          <TextInput
+            style={{ ...iOSUIKit.bodyObject, backgroundColor: "#3a3a3c", color: "white", padding: 16, borderRadius: 8, marginVertical: 8 }}
+            placeholder="Email"
+            autoCapitalize="none"
+            keyboardType={"email-address"}
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
+          <TextInput
+            style={{ ...iOSUIKit.bodyObject, backgroundColor: "#3a3a3c", color: "white", padding: 16, borderRadius: 8, marginVertical: 8 }}
+            placeholder="Password"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={text => setPassword(text)}
+          />
+          <Pressable style={{ backgroundColor: iOSColors.blue, width: "100%", marginTop: 16, paddingVertical: 16, borderRadius: 8, opacity: email && password ? 1 : .5 }} onPress={() => email && password ? createAccount() : null}>
+            <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, textAlign: "center" }}>Continue</Text>
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
+    </Pressable>
   );
 };
 

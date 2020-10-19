@@ -1,66 +1,74 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  StatusBar,
-  NativeSyntheticEvent,
-  TextInputSubmitEditingEventData,
-  Platform,
-  ActivityIndicator,
-  Button,
-  Dimensions,
+  Text,
   TextInput,
+  Pressable,
+  Alert,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  View,
 } from 'react-native';
-import { Input } from 'react-native-elements';
 import auth from '@react-native-firebase/auth';
+import { iOSColors, iOSUIKit } from 'react-native-typography';
+import { useNavigation } from '@react-navigation/native';
 
-function Login() {
-  const [username, setUsername] = useState("");
+function Login({ route }: any) {
+  const navigation = useNavigation();
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   async function signIn() {
     try {
-      await auth().signInWithEmailAndPassword(username, password);
-      console.log('User account created & signed in!');
+      await auth().signInWithEmailAndPassword(email, password);
+      // console.log('User account created & signed in!');
     }
     catch (error) {
-      if (error.code === 'auth/email-already-in-use') {
-        console.log('That email address is already in use!');
-      }
       if (error.code === 'auth/invalid-email') {
-        console.log('That email address is invalid!');
+        Alert.alert("Invalid Email", 'That email address is invalid!');
       }
-      console.error(error);
+      if (error.code === 'auth/wrong-password') {
+        Alert.alert("Wrong Password", "That password is invalid or the user does not have a password!")
+      }
     }
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Input
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <Input
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Sign in" onPress={() => signIn()} />
-    </SafeAreaView>
+    <Pressable onPress={() => Keyboard.dismiss()} style={{flex: 1}}>
+      <KeyboardAvoidingView
+        style={{ flex: 1, justifyContent: 'center', marginHorizontal: 16 }}
+        behavior="padding"
+      >
+        {/* Wrapping with View fixes jump that Text elements experienced when keyboard is opening/dismissing */}
+        <View>
+          <Text style={{ ...iOSUIKit.largeTitleEmphasizedWhiteObject }}>{route.params.emailSent ? "Check your email inbox" : "Welcome back!"}</Text>
+          <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.gray, marginBottom: 8 }}>{route.params.emailSent ? "Sign in after resetting your password" : "Sign in to your account"}</Text>
+          <TextInput
+            style={{ ...iOSUIKit.bodyObject, backgroundColor: "#3a3a3c", color: "white", padding: 16, borderRadius: 8, marginVertical: 8 }}
+            placeholder="Email"
+            autoCapitalize="none"
+            keyboardType={"email-address"}
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
+          <TextInput
+            style={{ ...iOSUIKit.bodyObject, backgroundColor: "#3a3a3c", color: "white", padding: 16, borderRadius: 8, marginVertical: 8 }}
+            placeholder="Password"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={text => setPassword(text)}
+          />
+          {!route.params.emailSent &&
+            <Pressable style={{ alignItems: "flex-end" }} onPress={() => navigation.navigate("Password Reset")}>
+              <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.gray, marginVertical: 8 }}>Forgot password?</Text>
+            </Pressable>
+          }
+          <Pressable style={{ backgroundColor: iOSColors.blue, width: "100%", marginTop: route.params.emailSent ? 16 : 8, paddingVertical: 16, borderRadius: 8, opacity: email && password ? 1 : .5 }} onPress={() => email && password ? signIn() : null}>
+            <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, textAlign: "center" }}>Continue</Text>
+          </Pressable>
+        </View>
+      </KeyboardAvoidingView>
+    </Pressable>
   );
 };
 

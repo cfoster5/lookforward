@@ -1,35 +1,23 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
 import React from 'react';
-import { SafeAreaView, View, Dimensions } from 'react-native';
-import { Text, Button } from 'react-native-elements';
+import { View, Text, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { iOSColors, iOSUIKit } from 'react-native-typography';
 
 function Welcome() {
   const navigation = useNavigation();
   return (
-    <SafeAreaView style={{ flex: 1, alignItems: 'center', justifyContent: 'center', marginLeft: 15, marginRight: 15 }}>
-      <Text h4>Create an account to add items to your countdown list.</Text>
-      <Button title="Create Account" onPress={() => navigation.navigate('Create Account')} style={{ width: Dimensions.get("window").width - 50 }} />
-
+    <View style={{ flex: 1, justifyContent: "center", marginHorizontal: 16 }}>
+      <Text style={iOSUIKit.title3EmphasizedWhite}>Create an account to add items to your countdown list.</Text>
+      <Pressable style={{ backgroundColor: iOSColors.blue, width: "100%", marginVertical: 16, paddingVertical: 16, borderRadius: 8 }} onPress={() => navigation.navigate("Create Account")}>
+        <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, textAlign: "center" }}>Create Account</Text>
+      </Pressable>
       <View style={{ flexDirection: "row" }}>
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text>Already have an account?</Text>
-        </View>
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Button buttonStyle={{ justifyContent: 'flex-start' }} title="Sign In" type="clear" onPress={() => navigation.navigate('Sign In')} />
-        </View>
+        <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.gray, alignSelf: "center" }}>Already have an account?</Text>
+        <Pressable style={{ marginHorizontal: 8 }} onPress={() => navigation.navigate("Sign In", { emailSent: false })}>
+          <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.blue }}>Sign In</Text>
+        </Pressable>
       </View>
-
-    </SafeAreaView>
+    </View>
   );
 };
 

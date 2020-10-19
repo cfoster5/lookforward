@@ -1,11 +1,11 @@
-import React, { useRef, useState } from "react";
-import { Animated, Appearance, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { Appearance, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { months } from "../helpers/helpers";
 import { reusableStyles } from "../styles";
 import { IGDB, TMDB } from "../types";
 
-function CountdownItem({ item, showButtons, selected, updateSelections, SlideView, FadeView }: any) {
+function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, SlideView, FadeView }: any) {
   const colorScheme = Appearance.getColorScheme();
 
   function getReleaseDate(item): string {
@@ -71,66 +71,71 @@ function CountdownItem({ item, showButtons, selected, updateSelections, SlideVie
     );
   }
 
+  const styles = StyleSheet.create({
+    rowFront: {
+      overflow: "hidden",
+      // backgroundColor: "#1f1f1f",
+      backgroundColor: selected ? "#3a3a3c" : "#1f1f1f",
+    },
+    slide: {
+      flex: 1,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    image: {
+      width: 92 / 1.75,
+      height: 132 / 1.75,
+      borderRadius: 8,
+      resizeMode: "stretch",
+      marginLeft: 16,
+      marginTop: 8,
+      marginBottom: 8,
+    },
+    middle: {
+      borderColor: "#3c3d41",
+      borderBottomWidth: sectionName === "Games" && isLastInSection ? 0 : StyleSheet.hairlineWidth,
+      flex: 1,
+      justifyContent: "center",
+      marginLeft: 16,
+      paddingTop: 8,
+      paddingBottom: 8
+    },
+    countdown: {
+      borderColor: "#3c3d41",
+      borderBottomWidth: sectionName === "Games" && isLastInSection ? 0 : StyleSheet.hairlineWidth,
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      paddingTop: 8,
+      paddingBottom: 8
+    }
+  });
+
   return (
-    <Pressable onPress={() => updateSelections(item.documentID)}>
-      <View style={{ ...styles.rowFront, overflow: "hidden" }}>
-        {/* <View style={{ ...styles.rowFront, transform: [{ translateX: showButtons ? 16 : -16 }] }}> */}
-        <SlideView style={styles.rowFront}>
-          {/* {showButtons && */}
-          {/* <View style={{ justifyContent: "center", opacity: showButtons ? 1 : 0 }}> */}
+    <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : null}>
+      <View style={styles.rowFront}>
+        <SlideView style={styles.slide}>
           <FadeView style={{ justifyContent: "center" }}>
             <RadioButton selected={selected} />
           </FadeView>
-          {/* </View> */}
-          {/* } */}
-          {/* APPLY PADDING/MARGIN VERTICAL IF ITEM IS NOT FIRST OR LAST; FIRST ITEM SHOULD ONLY HAVE BOTTOM PADDING/MARGIN; LAST ITEM SHOULD ONLY HAVE TOP PADDING/MARGIN */}
-          <Image
-            style={styles.image}
-            source={{ uri: item.mediaType === "movie" ? `https://image.tmdb.org/t/p/w92${item.poster_path}` : `https:${item.game.cover.url.replace("thumb", "cover_big_2x")}` }}
-          />
-          <View style={{ borderColor: iOSColors.gray, borderBottomWidth: StyleSheet.hairlineWidth, flex: 1, justifyContent: "center", marginLeft: 16, paddingVertical: 16 }}>
+          <View style={{ justifyContent: "center" }}>
+            <Image
+              style={styles.image}
+              source={{ uri: item.mediaType === "movie" ? `https://image.tmdb.org/t/p/w92${item.poster_path}` : `https:${item.game.cover.url.replace("thumb", "cover_big_2x")}` }}
+            />
+          </View>
+          <View style={styles.middle}>
             <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{item.mediaType === "movie" ? item.title : item.game.name}</Text>
             <Text style={{ ...reusableStyles.date }}>{getReleaseDate(item)}</Text>
           </View>
-          <View style={{ borderColor: iOSColors.gray, borderBottomWidth: StyleSheet.hairlineWidth, flex: 1, alignItems: "center", justifyContent: "center", paddingVertical: 16 }}>
+          <View style={styles.countdown}>
             <Text style={{ ...iOSUIKit.title3EmphasizedWhiteObject, color: iOSColors.blue }}>{getCountdownDays(item)}</Text>
             <Text style={{ ...iOSUIKit.bodyWhiteObject, color: iOSColors.blue }}>days</Text>
           </View>
-          {/* </View> */}
         </SlideView>
       </View>
     </Pressable>
   )
 }
-
-const styles = StyleSheet.create({
-  rowFront: {
-    flexGrow: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    // padding: 16,
-    // alignItems: 'center',
-    backgroundColor: "#1f1f1f",
-    // borderBottomColor: 'black',
-    // borderBottomWidth: 1,
-    // justifyContent: 'center',
-    // height: 50,
-    width: '100%'
-  },
-  image: {
-    width: 92 / 1.75,
-    height: 132 / 1.75,
-    borderRadius: 8,
-    resizeMode: "stretch",
-    marginLeft: 16,
-    // marginVertical: 8
-    marginVertical: 16
-    // marginBottom: 16,
-    // marginLeft: 16,
-    // marginRight: 8,
-    // borderWidth: 1,
-    // borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0"
-  },
-});
 
 export default CountdownItem;

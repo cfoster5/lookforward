@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import {
   Appearance,
   Text,
@@ -11,11 +11,56 @@ import { iOSColors, iOSUIKit } from 'react-native-typography';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CountdownItem from './components/CountdownItem';
 import { HeaderButton, HeaderButtons, Item } from 'react-navigation-header-buttons';
+import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 
 function Countdown({ route, navigation }: any) {
   const colorScheme = Appearance.getColorScheme();
   const [showButtons, setShowButtons] = useState(false);
   const [selections, setSelections] = useState<string[]>([]);
+  const [countdownMovies, setCountdownMovies] = useState([]);
+  const [countdownGames, setCountdownGames] = useState([]);
+
+  useEffect(() => {
+    if (route.params.uid) {
+      const movieSubscription = firestore().collection('users').doc(route.params.uid).collection('items').orderBy("release_date").where("mediaType", "==", "movie")
+        .onSnapshot(querySnapshot => { onResult(querySnapshot, "movies") }, onError);
+
+      const gameSubscription = firestore().collection("users").doc(route.params.uid).collection('items').orderBy("date").where("mediaType", "==", "game")
+        // firestore().collection("games").orderBy("date").where("owner", "==", user.uid)
+        .onSnapshot(querySnapshot => { onResult(querySnapshot, "games") }, onError);
+
+      // Stop listening for updates when no longer required
+      return () => {
+        // Unmounting
+        movieSubscription();
+        gameSubscription();
+      };
+    }
+  }, [route.params.uid]);
+
+  useEffect(() => {
+    setListData([
+      { data: countdownMovies, title: "Movies" },
+      { data: countdownGames, title: "Games" }
+    ])
+  }, [countdownGames, countdownMovies])
+
+  function onResult(querySnapshot: FirebaseFirestoreTypes.QuerySnapshot, mediaType: "movies" | "games") {
+    // console.log(querySnapshot.docs);
+    let tempMedia: any = []
+    querySnapshot.docs.forEach(doc => {
+      // console.log(doc.data())
+      let data = doc.data();
+      data.documentID = doc.id;
+      tempMedia.push(data);
+    });
+    // State change here is forcing user back to home page on addToList();
+    mediaType === "movies" ? setCountdownMovies(tempMedia) : setCountdownGames(tempMedia);
+  }
+
+  function onError(error: any) {
+    console.error("error", error);
+  }
 
   const IoniconsHeaderButton = (props) => (
     // the `props` here come from <Item ... />
@@ -25,16 +70,31 @@ function Countdown({ route, navigation }: any) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton} left>
+          {showButtons &&
+            <Item title="Delete" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: selections.length === 0 ? "#48494a" : iOSColors.red }} onPress={() => {
+              if (selections.length > 0) {
+                setShowButtons(false);
+                deleteItems();
+                setSelections([]);
+                startAnimation();
+              }
+            }} />
+          }
+        </HeaderButtons>
+      ),
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           {!showButtons &&
             <Item title="Edit" onPress={() => { setShowButtons(true); startAnimation() }} />
           }
-          {showButtons && selections.length === 0 &&
-            <Item title="Done" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: iOSColors.blue }} onPress={() => { setShowButtons(false); startAnimation() }} />
-          }
-          {showButtons && selections.length !== 0 &&
-            <Item title="Delete" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: iOSColors.red }} onPress={() => { setShowButtons(false); startAnimation() }} />
+          {showButtons &&
+            <Item title="Done" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: iOSColors.blue }} onPress={() => {
+              setShowButtons(false);
+              setSelections([]);
+              startAnimation()
+            }} />
           }
         </HeaderButtons>
       )
@@ -43,7 +103,6 @@ function Countdown({ route, navigation }: any) {
 
   const transformAnim = useRef(new Animated.Value(!showButtons ? -16 : 16)).current;
   const opacityAnim = useRef(new Animated.Value(!showButtons ? 0 : 1)).current;
-
 
   function startAnimation() {
     Animated.timing(
@@ -93,14 +152,16 @@ function Countdown({ route, navigation }: any) {
   }
 
   const [listData, setListData] = useState([
-    { data: route.params.movies, title: "Movies" },
-    { data: route.params.games, title: "Games" }
+    // { data: route.params.movies, title: "Movies" },
+    // { data: route.params.games, title: "Games" }
+    { data: countdownMovies, title: "Movies" },
+    { data: countdownGames, title: "Games" }
   ])
 
   const renderSectionHeader = ({ section }) => <View style={{ backgroundColor: "#1f1f1f" }}><Text style={{
     ...iOSUIKit.title3EmphasizedWhiteObject,
     marginLeft: 16,
-    marginVertical: 16,
+    marginVertical: 8,
   }}
   >
     {section.title}
@@ -119,29 +180,42 @@ function Countdown({ route, navigation }: any) {
     setSelections(tempSelections);
   }
 
+  function deleteItems() {
+    selections.forEach(documentID => {
+      // Animate as if deleting and then delete
+      // Animate height to 0
+      firestore().collection('users').doc(route.params.uid).collection("items").doc(documentID).delete().then(() => {
+        console.log('Document deleted!');
+      });
+      setSelections([]);
+    });
+  }
+
   return (
     <SectionList
       contentContainerStyle={{ paddingVertical: 16, marginHorizontal: 16 }}
       sections={listData}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}
-      renderItem={({ item }) => <CountdownItem item={item} showButtons={showButtons} selected={selections.indexOf(item.documentID) > -1} updateSelections={updateSelections} SlideView={SlideView} FadeView={FadeView} />}
+      renderItem={data =>
+        <CountdownItem
+          item={data.item}
+          sectionName={data.section.title}
+          isFirstInSection={data.index === 0}
+          // isLastInSection={data.section.title === "Movies" ? data.index + 1 === route.params.movies.length : data.index + 1 === route.params.games.length}
+          isLastInSection={data.section.title === "Movies" ? data.index + 1 === countdownMovies.length : data.index + 1 === countdownGames.length}
+          showButtons={showButtons}
+          selected={selections.indexOf(data.item.documentID) > -1}
+          updateSelections={updateSelections}
+          SlideView={SlideView}
+          FadeView={FadeView}
+        />
+      }
       renderSectionHeader={renderSectionHeader}
       ListHeaderComponent={<View style={{ height: 16, backgroundColor: "#1f1f1f", borderTopLeftRadius: 8, borderTopRightRadius: 8 }}></View>}
       ListFooterComponent={<View style={{ height: 16, backgroundColor: "#1f1f1f", borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}></View>}
     />
   );
 };
-
-const styles = StyleSheet.create({
-  rowBack: {
-    alignItems: 'center',
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingLeft: 16,
-    paddingRight: 16,
-  }
-});
 
 export default Countdown;

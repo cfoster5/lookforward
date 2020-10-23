@@ -1,7 +1,8 @@
 import { Appearance, Dimensions, StyleSheet } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
-const colorScheme = Appearance.getColorScheme();
+// const colorScheme = Appearance.getColorScheme();
+const colorScheme = "dark"
 
 export const reusableStyles = StyleSheet.create({
   itemLeft: {

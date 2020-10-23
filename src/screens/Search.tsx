@@ -9,16 +9,16 @@ import {
   Appearance,
   FlatList
 } from 'react-native';
-
 import { SearchBar, Image } from 'react-native-elements';
-import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from './helpers/requests';
-import { IGDB, Navigation, TMDB } from './types';
-import { reusableStyles } from './styles';
+import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from '../../helpers/requests';
+import { IGDB, Navigation, TMDB } from '../../types';
+import { reusableStyles } from '../../styles';
 import SegmentedControl from '@react-native-community/segmented-control';
-import MediaItem from './components/MediaItem';
-import { convertReleasesToGames } from './helpers/helpers';
+import MediaItem from '../components/MediaItem';
+import usePrevious, { convertReleasesToGames, onResult } from '../../helpers/helpers';
+import { useScrollToTop } from '@react-navigation/native';
 
-function Search({ route, navigation }: Navigation.FindScreenProps) {
+function Search({ route, navigation, countdownMovies, countdownGames }: Navigation.FindScreenProps) {
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
   const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([])
@@ -27,6 +27,9 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
   const [initGames, setInitGames] = useState<IGDB.Game.Game[]>([])
   const [categoryIndex, setCategoryIndex] = useState(0)
   const scrollRef = useRef<FlatList>(null);
+  useScrollToTop(scrollRef);
+  const searchRef = useRef<SearchBar>(null);
+  const prevCategoryIndex = usePrevious(categoryIndex);
 
   // function removeOldReleases(games: game[]) {
   //   let tempGames: game[] = [];
@@ -65,6 +68,20 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
     return () => { isMounted = false };
   }, [])
 
+  useEffect(() => {
+    // Scroll to top on category change; Only after setting initial value
+    if (prevCategoryIndex) {
+      scrollRef?.current?.scrollToIndex({
+        index: 0,
+        animated: false
+      })
+    }
+  }, [categoryIndex])
+
+  // useEffect(() => {
+  //   console.log("Search Changes", countdownMovies, countdownGames)
+  // }, [countdownMovies, countdownGames])
+
   function getMovies() {
     const date = new Date();
     const years = [date.getFullYear(), date.getFullYear() + 1, date.getFullYear() + 2, date.getFullYear() + 3];
@@ -75,17 +92,17 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
       tempMovies = [...tempMovies, ...searchData]
       // Updating state for each year, need to only update once 
       setMovies(tempMovies)
-      scrollRef?.current?.scrollToIndex({
-        index: 0,
-        animated: false
-      })
     });
   }
 
-  const colorScheme = Appearance.getColorScheme();
+  // const colorScheme = Appearance.getColorScheme();
+  const colorScheme = "dark"
 
   const renderItem = ({ item }: { item: TMDB.Movie.Movie | IGDB.Game.Game }) => (
-    <MediaItem navigation={navigation} mediaType={categoryIndex === 0 ? "movie" : "game"} data={item} />
+    <MediaItem navigation={navigation} mediaType={categoryIndex === 0 ? "movie" : "game"} data={item}
+      inCountdown={categoryIndex === 0 ?
+        countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === item.id) : false}
+    />
   );
 
   return (
@@ -102,17 +119,20 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
             if (event.nativeEvent.selectedSegmentIndex === 1) {
               setMovies(initMovies);
             }
-            setSearchValue("");
+            // setSearchValue("");
+            searchRef.current?.clear();
             setCategoryIndex(event.nativeEvent.selectedSegmentIndex);
-            scrollRef?.current?.scrollToIndex({
-              index: 0,
-              animated: false
-            })
+            // scrollRef?.current?.scrollToIndex({
+            //   index: 0,
+            //   animated: false
+            // })
           }}
+          appearance="dark"
         />
       </View>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
         <SearchBar
+          ref={searchRef}
           containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: 8 } : { marginHorizontal: 8 }}
           inputContainerStyle={colorScheme === "dark" ? { backgroundColor: "#1f1f1f" } : {}}
           placeholderTextColor={colorScheme === "dark" ? "#999999" : undefined}
@@ -123,11 +143,7 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
           onChangeText={(value: string) => setSearchValue(value)}
           value={searchValue}
           platform={Platform.OS === "ios" ? "ios" : "android"}
-          onSubmitEditing={async (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
-            scrollRef?.current?.scrollToIndex({
-              index: 0,
-              animated: false
-            })
+          onSubmitEditing={searchValue ? async (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
             if (categoryIndex === 0) {
               setMovies([]);
               // setMovies(await searchMovies(searchValue))
@@ -138,7 +154,7 @@ function Search({ route, navigation }: Navigation.FindScreenProps) {
               setGames(await searchGames(searchValue));
             }
             // setResults(removeOldReleases(await getGamesSearch(searchValue)))
-          }}
+          } : undefined}
           onClear={() => {
             if (categoryIndex === 0) {
               setMovies(initMovies);

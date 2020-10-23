@@ -1,5 +1,5 @@
 export namespace IGDB {
-  
+
   export namespace Game {
     export interface Cover {
       id: number;
@@ -45,6 +45,20 @@ export namespace IGDB {
       video_id: string;
     }
 
+    export interface Company {
+      id: number,
+      name: string
+    }
+
+    export interface InvolvedCompany {
+      id: number,
+      company: Company,
+      developer: true,
+      porting: false,
+      publisher: false,
+      supporting: false
+    }
+
     export interface Game {
       id: number;
       cover: Cover;
@@ -53,6 +67,7 @@ export namespace IGDB {
       release_dates: ReleaseDate[];
       summary: string;
       videos: Video[];
+      involved_companies: InvolvedCompany[];
     }
   }
 
@@ -64,6 +79,7 @@ export namespace IGDB {
       name: string;
       summary: string;
       videos: IGDB.Game.Video[];
+      involved_companies: IGDB.Game.InvolvedCompany[];
     }
 
     export interface ReleaseDate {
@@ -257,8 +273,8 @@ import { StackNavigationProp } from "@react-navigation/stack"
 // export declare module Navigation {
 export namespace Navigation {
   export type HomeStackParamList = {
-    Find: undefined,
-    Details: { type: "game" | "movie", data: IGDB.Game.Game | TMDB.Movie.Movie },
+    Find: { uid: string | undefined },
+    Details: { type: "game" | "movie", data: IGDB.Game.Game | TMDB.Movie.Movie, uid: string | undefined },
     Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }
 
@@ -267,6 +283,8 @@ export namespace Navigation {
   export type FindScreenProps = {
     route: FindScreenRouteProp;
     navigation: FindScreenNavigationProp;
+    countdownMovies: any;
+    countdownGames: any;
   }
 
   type DetailsScreenRouteProp = RouteProp<HomeStackParamList, 'Details'>;
@@ -274,6 +292,8 @@ export namespace Navigation {
   export type DetailsScreenProps = {
     route: DetailsScreenRouteProp;
     navigation: DetailsScreenNavigationProp;
+    countdownMovies: any;
+    countdownGames: any;
   }
 
   type ActorScreenRouteProp = RouteProp<HomeStackParamList, 'Actor'>;
@@ -287,10 +307,24 @@ export namespace Navigation {
     Welcome: undefined,
     "Create Account": undefined
     "Sign In": undefined
+    "Password Reset": undefined
   }
   export type StackParamList = {
-    Home: undefined,
+    Home: { uid: string | undefined },
     Welcome: undefined
+  }
+
+  export type ProfileStackParamList = {
+    Profile: { uid: string | undefined },
+  }
+
+  type ProfileScreenRouteProp = RouteProp<ProfileStackParamList, 'Profile'>;
+  type ProfileScreenNavigationProp = StackNavigationProp<ProfileStackParamList, 'Profile'>;
+  export type ProfileScreenProps = {
+    route: ProfileScreenRouteProp;
+    navigation: ProfileScreenNavigationProp;
+    dayNotifications: boolean;
+    weekNotifications: boolean;
   }
 
 }

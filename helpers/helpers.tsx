@@ -1,3 +1,5 @@
+import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+import { useEffect, useRef } from "react";
 import { IGDB, TMDB } from "../types";
 
 export const months = [
@@ -44,9 +46,38 @@ export async function convertReleasesToGames(releaseDates: IGDB.ReleaseDate.Rele
         release_dates: [tempReleaseDate],
         summary: releaseDate.game.summary,
         videos: releaseDate.game.videos,
+        involved_companies: releaseDate.game.involved_companies
       };
       foundGame ? foundGame.release_dates.push(tempReleaseDate) : games.push(game);
     }
   });
   return games;
+}
+
+export function onResult(querySnapshot: FirebaseFirestoreTypes.QuerySnapshot, mediaType: "movies" | "games") {
+  // console.log(querySnapshot.docs);
+  let tempMedia: any = []
+  querySnapshot.docs.forEach(doc => {
+    // console.log(doc.data())
+    let data = doc.data();
+    data.documentID = doc.id;
+    tempMedia.push(data);
+  });
+  // State change here is forcing user back to home page on addToList();
+  return tempMedia;
+}
+
+// Hook
+export default function usePrevious(value: any) {
+  // The ref object is a generic container whose current property is mutable ...
+  // ... and can hold any value, similar to an instance property on a class
+  const ref = useRef();
+
+  // Store current value in ref
+  useEffect(() => {
+    ref.current = value;
+  }, [value]); // Only re-run if value changes
+
+  // Return previous value (happens before update in useEffect above)
+  return ref.current;
 }

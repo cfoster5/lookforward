@@ -9,16 +9,19 @@ import {
 } from 'react-native';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import CountdownItem from './components/CountdownItem';
+import CountdownItem from '../components/CountdownItem';
 import { HeaderButton, HeaderButtons, Item } from 'react-navigation-header-buttons';
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { useScrollToTop } from '@react-navigation/native';
 
 function Countdown({ route, navigation }: any) {
-  const colorScheme = Appearance.getColorScheme();
+  // const colorScheme = Appearance.getColorScheme();
   const [showButtons, setShowButtons] = useState(false);
   const [selections, setSelections] = useState<string[]>([]);
   const [countdownMovies, setCountdownMovies] = useState([]);
   const [countdownGames, setCountdownGames] = useState([]);
+  const scrollRef = useRef<SectionList>(null);
+  useScrollToTop(scrollRef);
 
   useEffect(() => {
     if (route.params.uid) {
@@ -214,6 +217,7 @@ function Countdown({ route, navigation }: any) {
       renderSectionHeader={renderSectionHeader}
       ListHeaderComponent={<View style={{ height: 16, backgroundColor: "#1f1f1f", borderTopLeftRadius: 8, borderTopRightRadius: 8 }}></View>}
       ListFooterComponent={<View style={{ height: 16, backgroundColor: "#1f1f1f", borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}></View>}
+      ref={scrollRef}
     />
   );
 };

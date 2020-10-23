@@ -2,8 +2,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { Appearance, Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { reusableStyles } from "../styles";
-import { Navigation, TMDB } from "../types";
+import { reusableStyles } from "../../styles";
+import { Navigation, TMDB } from "../../types";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.HomeStackParamList, "Details">,
@@ -12,9 +12,10 @@ interface Props {
 }
 
 function Person({ navigation, type, person }: Props) {
-  const colorScheme = Appearance.getColorScheme();
+  // const colorScheme = Appearance.getColorScheme();
+  const colorScheme = "dark"
   return (
-    <Pressable onPress={() => navigation.push('Actor', person)} style={{ flex: 1, flexDirection: 'row', alignItems: "center" }}>
+    <Pressable style={{ flex: 1, flexDirection: 'row', alignItems: "center" }}>
       {person.profile_path &&
         <Image
           style={reusableStyles.credit}

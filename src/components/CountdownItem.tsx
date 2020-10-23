@@ -1,24 +1,24 @@
 import React from "react";
 import { Appearance, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { months } from "../helpers/helpers";
-import { reusableStyles } from "../styles";
-import { IGDB, TMDB } from "../types";
+import { months } from "../../helpers/helpers";
+import { reusableStyles } from "../../styles";
+import { IGDB, TMDB } from "../../types";
 
 function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, SlideView, FadeView }: any) {
-  const colorScheme = Appearance.getColorScheme();
+  // const colorScheme = Appearance.getColorScheme();
 
   function getReleaseDate(item): string {
     if (item.mediaType === "movie") {
       let monthIndex = new Date((item as TMDB.Movie.Movie).release_date).getUTCMonth();
       // return `${months[monthIndex].toUpperCase()} ${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}, ${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
-      return `${monthIndex.toString().length < 2 ? "0" : ""}${monthIndex + 1}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate().toString().length < 2 ? "0" : ""}${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
+      return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate().toString().length < 2 ? "0" : ""}${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
     }
     else {
       let date = new Date((item as IGDB.ReleaseDate.ReleaseDate).date * 1000);
       let monthIndex = new Date(date).getUTCMonth();
       // return `${months[monthIndex].toUpperCase()} ${date.getUTCDate()}, ${new Date(date).getUTCFullYear()}`
-      return `${monthIndex.toString().length < 2 ? "0" : ""}${monthIndex + 1}/${date.getUTCDate().toString().length < 2 ? "0" : ""}${date.getUTCDate()}/${new Date(date).getUTCFullYear()}`;
+      return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${date.getUTCDate().toString().length < 2 ? "0" : ""}${date.getUTCDate()}/${new Date(date).getUTCFullYear()}`;
     }
   }
 

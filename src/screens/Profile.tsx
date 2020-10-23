@@ -10,14 +10,18 @@ import {
 import auth from '@react-native-firebase/auth';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { Navigation } from '../../types';
+import usePrevious from '../../helpers/helpers';
+import { reusableStyles } from '../../styles';
 
-function Profile({ route, navigation }: any) {
+function Profile({ route, navigation }: Navigation.ProfileScreenProps) {
   const uid = route.params.uid;
   const [dayNotifications, setDayNotifications] = useState(false);
   const [weekNotifications, setWeekNotifications] = useState(false);
   const toggleDaySwitch = () => setDayNotifications(previousState => !previousState);
   const toggleWeekSwitch = () => setWeekNotifications(previousState => !previousState);
-  const colorScheme = Appearance.getColorScheme();
+  const prevDayNotifications = usePrevious(dayNotifications);
+  const prevWeekNotifications = usePrevious(weekNotifications);
 
   useEffect(() => {
     if (uid) {
@@ -41,29 +45,47 @@ function Profile({ route, navigation }: any) {
   }, [uid])
 
   useEffect(() => {
-    firestore().collection("users").doc(uid).collection('contentPreferences').doc("preferences").update({
-      dayNotifications: dayNotifications,
-      weekNotifications: weekNotifications
-    })
-      .then(() => {
-        console.log("Document successfully written!");
+    if (prevDayNotifications !== undefined && prevDayNotifications !== dayNotifications) {
+      firestore().collection("users").doc(uid).collection('contentPreferences').doc("preferences").update({
+        dayNotifications: dayNotifications
       })
-      .catch(error => {
-        console.error("Error writing document: ", error);
-      });
-  }, [dayNotifications, weekNotifications])
+        .then(() => {
+          // console.log("Document successfully written!");
+        })
+        .catch(error => {
+          // console.error("Error writing document: ", error);
+        });
+    }
+  }, [dayNotifications])
+
+  useEffect(() => {
+    if (prevWeekNotifications !== undefined && prevWeekNotifications !== weekNotifications) {
+      firestore().collection("users").doc(uid).collection('contentPreferences').doc("preferences").update({
+        weekNotifications: weekNotifications
+      })
+        .then(() => {
+          // console.log("Document successfully written!");
+        })
+        .catch(error => {
+          // console.error("Error writing document: ", error);
+        });
+    }
+  }, [weekNotifications])
 
   function signOut() {
     auth()
       .signOut()
-      .then(() => console.log('User signed out!'));
+      .then(() =>
+        console.log('User signed out!'))
+      ;
   }
 
   return (
     <View style={{ flex: 1 }}>
+      <Text style={{ ...reusableStyles.date, paddingTop: 24, paddingLeft: 16, paddingBottom: 8 }}>COUNTDOWN NOTIFICATIONS</Text>
       <View style={styles.itemContainer}>
         <View style={styles.item}>
-          <Text style={{ ...iOSUIKit.bodyWhiteObject }}>Daily notifications</Text>
+          <Text style={{ ...iOSUIKit.bodyWhiteObject }}>Day Before</Text>
           <Switch
             trackColor={{ false: "red", true: iOSColors.blue }}
             style={{ marginRight: 16 }}
@@ -74,7 +96,7 @@ function Profile({ route, navigation }: any) {
       </View>
       <View style={{ ...styles.itemContainer, paddingLeft: 0 }}>
         <View style={{ ...styles.item, paddingLeft: 16 }}>
-          <Text style={{ ...iOSUIKit.bodyWhiteObject }}>Weekly notifications</Text>
+          <Text style={{ ...iOSUIKit.bodyWhiteObject }}>Week Before</Text>
           <Switch
             trackColor={{ false: "red", true: iOSColors.blue }}
             style={{ marginRight: 16 }}

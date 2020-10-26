@@ -1,6 +1,7 @@
 import React from "react";
 import { Appearance, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { months } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB, TMDB } from "../../types";
@@ -59,12 +60,21 @@ function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, s
       }, props.style]}>
         {
           props.selected ?
+            // <View style={{
+            //   height: 12,
+            //   width: 12,
+            //   borderRadius: 6,
+            //   backgroundColor: iOSColors.blue,
+            // }} />
             <View style={{
-              height: 12,
-              width: 12,
-              borderRadius: 6,
+              height: 24,
+              width: 24,
+              borderRadius: 12,
               backgroundColor: iOSColors.blue,
-            }} />
+              justifyContent: "center"
+            }}>
+              <Ionicons name="checkmark-outline" color={iOSColors.white} size={20} style={{ textAlign: "center" }} />
+            </View>
             : null
         }
       </View>

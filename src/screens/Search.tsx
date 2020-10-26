@@ -121,27 +121,6 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
   return (
     <>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
-        {/* <SegmentedControl
-          style={{ marginHorizontal: 16, marginTop: 8, paddingVertical: 16 }}
-          values={['Movies', 'Games']}
-          selectedIndex={categoryIndex}
-          onChange={(event) => {
-            if (event.nativeEvent.selectedSegmentIndex === 0) {
-              setGames(initGames);
-            }
-            if (event.nativeEvent.selectedSegmentIndex === 1) {
-              setMovies(initMovies);
-            }
-            // setSearchValue("");
-            searchRef.current?.clear();
-            setCategoryIndex(event.nativeEvent.selectedSegmentIndex);
-            // scrollRef?.current?.scrollToIndex({
-            //   index: 0,
-            //   animated: false
-            // })
-          }}
-          appearance="dark"
-        /> */}
         <CategoryControl buttons={['Movies', 'Games']} categoryIndex={categoryIndex} handleCategoryChange={(index: number) => handleCategoryChange(index)} marginTop={8} />
       </View>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
@@ -163,7 +142,6 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
           onSubmitEditing={searchValue ? async (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
             if (categoryIndex === 0) {
               setMovies([]);
-              // setMovies(await searchMovies(searchValue))
               getMovies()
             }
             if (categoryIndex === 1) {

@@ -212,17 +212,7 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
             </View>
           }
         </View>
-        {/* <SegmentedControl
-          style={{ marginHorizontal: 16, paddingVertical: 16 }}
-          values={media.type === "movie" ? ["Cast & Crew", "Trailers"] : ["Credits", "Trailers"]}
-          selectedIndex={detailIndex}
-          onChange={(event) => {
-            setDetailIndex(event.nativeEvent.selectedSegmentIndex)
-          }}
-          appearance="dark"
-        /> */}
         <CategoryControl buttons={media.type === "movie" ? ["Cast & Crew", "Trailers"] : ["Credits", "Trailers"]} categoryIndex={detailIndex} handleCategoryChange={(index: number) => setDetailIndex(index)} />
-
         <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
           <View style={detailIndex !== 0 && media.type === "movie" ? { display: "none" } : {}}>
             {movieDetails?.credits?.crew?.find(person => person?.job === "Director") &&

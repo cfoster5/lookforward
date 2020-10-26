@@ -10,13 +10,14 @@ import {
   FlatList
 } from 'react-native';
 import { SearchBar, Image } from 'react-native-elements';
-import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from '../../helpers/requests';
+import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from '../helpers/requests';
 import { IGDB, Navigation, TMDB } from '../../types';
-import { reusableStyles } from '../../styles';
+import { reusableStyles } from '../helpers/styles';
 import SegmentedControl from '@react-native-community/segmented-control';
 import MediaItem from '../components/MediaItem';
-import usePrevious, { convertReleasesToGames, onResult } from '../../helpers/helpers';
+import usePrevious, { convertReleasesToGames, onResult } from '../helpers/helpers';
 import { useScrollToTop } from '@react-navigation/native';
+import CategoryControl from '../components/CategoryControl';
 
 function Search({ route, navigation, countdownMovies, countdownGames }: Navigation.FindScreenProps) {
   const [searchValue, setSearchValue] = useState("")
@@ -105,10 +106,22 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
     />
   );
 
+  function handleCategoryChange(index: number) {
+    if (index === 0) {
+      setGames(initGames);
+    }
+    if (index === 1) {
+      setMovies(initMovies);
+    }
+    setSearchValue("");
+    searchRef.current?.clear();
+    setCategoryIndex(index);
+  }
+
   return (
     <>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
-        <SegmentedControl
+        {/* <SegmentedControl
           style={{ marginHorizontal: 16, marginTop: 8, paddingVertical: 16 }}
           values={['Movies', 'Games']}
           selectedIndex={categoryIndex}
@@ -128,12 +141,16 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
             // })
           }}
           appearance="dark"
-        />
+        /> */}
+        <CategoryControl buttons={['Movies', 'Games']} categoryIndex={categoryIndex} handleCategoryChange={(index: number) => handleCategoryChange(index)} marginTop={8} />
       </View>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
         <SearchBar
+          // cancelIcon={{ color: "#999999" }}
+          cancelIcon={{ color: "white" }}
+          clearIcon={{ color: Platform.OS === "android" ? "white" : undefined }}
           ref={searchRef}
-          containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: 8 } : { marginHorizontal: 8 }}
+          containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: Platform.OS === "ios" ? 8 : 16 } : { marginHorizontal: 8 }}
           inputContainerStyle={colorScheme === "dark" ? { backgroundColor: "#1f1f1f" } : {}}
           placeholderTextColor={colorScheme === "dark" ? "#999999" : undefined}
           searchIcon={colorScheme === "dark" ? { color: "#999999" } : {}}

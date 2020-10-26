@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SectionList,
   Animated,
+  Platform,
 } from 'react-native';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -74,8 +75,49 @@ function Countdown({ route, navigation }: any) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
-        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton} left>
-          {showButtons &&
+        Platform.OS === "ios" ?
+          <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton} left>
+            {showButtons &&
+              <Item title="Delete" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: selections.length === 0 ? "#48494a" : iOSColors.red }} onPress={() => {
+                if (selections.length > 0) {
+                  setShowButtons(false);
+                  deleteItems();
+                  setSelections([]);
+                  startAnimation();
+                }
+              }} />
+            }
+          </HeaderButtons>
+          : null
+      ),
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+          {!showButtons &&
+            <Item title="Edit" onPress={() => { setShowButtons(true); startAnimation() }} />
+          }
+          {Platform.OS === "ios" ?
+            showButtons &&
+            <Item title="Done" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: iOSColors.blue }} onPress={() => {
+              setShowButtons(false);
+              setSelections([]);
+              startAnimation()
+            }} />
+            :
+            showButtons && selections.length === 0 && Platform.OS === "android" &&
+            <Item title="Done" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: iOSColors.blue }} onPress={() => {
+              setShowButtons(false);
+              setSelections([]);
+              startAnimation()
+            }} />
+          }
+          {/* {(showButtons && Platform.OS === "ios") || (showButtons && selections.length === 0 && Platform.OS === "android") &&
+            <Item title="Done" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: iOSColors.blue }} onPress={() => {
+              setShowButtons(false);
+              setSelections([]);
+              startAnimation()
+            }} />
+          } */}
+          {Platform.OS === "android" && showButtons && selections.length > 0 &&
             <Item title="Delete" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: selections.length === 0 ? "#48494a" : iOSColors.red }} onPress={() => {
               if (selections.length > 0) {
                 setShowButtons(false);
@@ -83,20 +125,6 @@ function Countdown({ route, navigation }: any) {
                 setSelections([]);
                 startAnimation();
               }
-            }} />
-          }
-        </HeaderButtons>
-      ),
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-          {!showButtons &&
-            <Item title="Edit" onPress={() => { setShowButtons(true); startAnimation() }} />
-          }
-          {showButtons &&
-            <Item title="Done" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: iOSColors.blue }} onPress={() => {
-              setShowButtons(false);
-              setSelections([]);
-              startAnimation()
             }} />
           }
         </HeaderButtons>

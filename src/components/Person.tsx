@@ -2,7 +2,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { Appearance, Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { reusableStyles } from "../../styles";
+import { reusableStyles } from "../helpers/styles";
 import { Navigation, TMDB } from "../../types";
 
 interface Props {

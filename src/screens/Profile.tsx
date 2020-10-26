@@ -11,8 +11,8 @@ import auth from '@react-native-firebase/auth';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { Navigation } from '../../types';
-import usePrevious from '../../helpers/helpers';
-import { reusableStyles } from '../../styles';
+import usePrevious from '../helpers/helpers';
+import { reusableStyles } from '../helpers/styles';
 
 function Profile({ route, navigation }: Navigation.ProfileScreenProps) {
   const uid = route.params.uid;

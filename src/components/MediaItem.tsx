@@ -2,7 +2,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { Appearance, Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { reusableStyles } from "../../styles";
+import { reusableStyles } from "../helpers/styles";
 import { IGDB, Navigation, TMDB } from "../../types";
 
 interface Props {
@@ -30,7 +30,7 @@ function MediaItem({ navigation, mediaType, data, inCountdown }: Props) {
         <View
           style={{
             ...reusableStyles.itemRight,
-            borderWidth: 1,
+            // borderWidth: 1,
             borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0",
             flexDirection: 'row',
             alignItems: "center",

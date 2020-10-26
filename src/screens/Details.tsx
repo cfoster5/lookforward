@@ -12,19 +12,20 @@ import {
 import moment from 'moment';
 import { IGDB, Navigation, TMDB } from '../../types';
 import { Image } from 'react-native-elements';
-import { getMovieDetails } from '../../helpers/requests';
-import { reusableStyles } from '../../styles';
+import { getMovieDetails } from '../helpers/requests';
+import { reusableStyles } from '../helpers/styles';
 import { iOSColors, iOSUIKit } from 'react-native-typography'
 import Trailer from '../components/Trailer';
-import Cast from '../../Cast';
+import Cast from './Cast';
 import SegmentedControl from '@react-native-community/segmented-control';
 import MediaItem from '../components/MediaItem';
 import Person from '../components/Person';
 import { Modalize } from 'react-native-modalize';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { HeaderButton, HeaderButtonProps, HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { months } from '../../helpers/helpers';
+import { months } from '../helpers/helpers';
 import firestore from '@react-native-firebase/firestore';
+import CategoryControl from '../components/CategoryControl';
 
 function Details({ route, navigation, countdownMovies, countdownGames }: Navigation.DetailsScreenProps) {
   const media = route.params;
@@ -211,7 +212,7 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
             </View>
           }
         </View>
-        <SegmentedControl
+        {/* <SegmentedControl
           style={{ marginHorizontal: 16, paddingVertical: 16 }}
           values={media.type === "movie" ? ["Cast & Crew", "Trailers"] : ["Credits", "Trailers"]}
           selectedIndex={detailIndex}
@@ -219,7 +220,9 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
             setDetailIndex(event.nativeEvent.selectedSegmentIndex)
           }}
           appearance="dark"
-        />
+        /> */}
+        <CategoryControl buttons={media.type === "movie" ? ["Cast & Crew", "Trailers"] : ["Credits", "Trailers"]} categoryIndex={detailIndex} handleCategoryChange={(index: number) => setDetailIndex(index)} />
+
         <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
           <View style={detailIndex !== 0 && media.type === "movie" ? { display: "none" } : {}}>
             {movieDetails?.credits?.crew?.find(person => person?.job === "Director") &&

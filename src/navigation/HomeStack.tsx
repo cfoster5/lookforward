@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
-import Actor from "../../Actor";
+import Actor from '../screens/Actor';
 import Details from "../screens/Details";
 import Search from "../screens/Search";
 import { Navigation } from "../../types";
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
-import { onResult } from '../../helpers/helpers';
+import { onResult } from '../helpers/helpers';
 
 const HomeStack = createStackNavigator<Navigation.HomeStackParamList>();
 export function HomeStackScreen({ route }: any) {

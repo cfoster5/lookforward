@@ -1,8 +1,8 @@
 import React from "react";
 import { Appearance, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { months } from "../../helpers/helpers";
-import { reusableStyles } from "../../styles";
+import { months } from "../helpers/helpers";
+import { reusableStyles } from "../helpers/styles";
 import { IGDB, TMDB } from "../../types";
 
 function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, SlideView, FadeView }: any) {
@@ -86,7 +86,7 @@ function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, s
       width: 92 / 1.75,
       height: 132 / 1.75,
       borderRadius: 8,
-      resizeMode: "stretch",
+      resizeMode: "cover",
       marginLeft: 16,
       marginTop: 8,
       marginBottom: 8,

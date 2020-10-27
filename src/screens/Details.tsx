@@ -203,11 +203,32 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
           </View> */}
           <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{media.type === "game" ? (media.data as IGDB.Game.Game).summary : (media.data as TMDB.Movie.Movie).overview}</Text>
           {media.type === "game" &&
-            <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Genres: {(media.data as IGDB.Game.Game).genres.map((genre, i) => <React.Fragment key={i}>{i > 0 ? `, ${genre.name}` : genre.name}</React.Fragment>)}</Text>
+            // <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+            //   Genres: {(media.data as IGDB.Game.Game).genres.map((genre, i) =>
+            //   <React.Fragment key={i}>{i > 0 ? `, ${genre.name}` : genre.name}</React.Fragment>)}
+            // </Text>
+            <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+              <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text>
+              {(media.data as IGDB.Game.Game).genres.map((genre, i) =>
+                <View style={{ flexDirection: "row" }} key={i}>
+                  {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
+                  {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
+                </View>
+              )}
+            </View>
           }
           {media.type === "movie" &&
             <View>
-              <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Genres: {movieDetails?.genres.map((genre: { id: number, name: string }, i: number) => <React.Fragment key={i}>{i > 0 ? `, ${genre.name}` : genre.name}</React.Fragment>)}</Text>
+              {/* <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Genres: {movieDetails?.genres.map((genre: { id: number, name: string }, i: number) => <React.Fragment key={i}>{i > 0 ? `, ${genre.name}` : genre.name}</React.Fragment>)}</Text> */}
+              <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+              <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text>
+              {movieDetails?.genres.map((genre: { id: number, name: string }, i: number) =>
+                <View style={{ flexDirection: "row" }} key={i}>
+                  {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
+                  {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
+                </View>
+              )}
+            </View>
               <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Status: {movieDetails?.status}</Text>
             </View>
           }
@@ -248,12 +269,22 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
                 </Text>
               }
               {(media.data as IGDB.Game.Game).involved_companies?.find(company => company.supporting) &&
-                <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Supported by:
-                {(media.data as IGDB.Game.Game).involved_companies.filter(company => company.supporting)
+                // <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Supported by:
+                // {(media.data as IGDB.Game.Game).involved_companies.filter(company => company.supporting)
+                //     .map((company, i) =>
+                //       <React.Fragment key={i}>{i > 0 ? `, ${company.company.name}` : ` ${company.company.name}`}</React.Fragment>
+                //     )}
+                // </Text>
+                <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+                  <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Supported by: </Text>
+                  {(media.data as IGDB.Game.Game).involved_companies.filter(company => company.supporting)
                     .map((company, i) =>
-                      <React.Fragment key={i}>{i > 0 ? `, ${company.company.name}` : ` ${company.company.name}`}</React.Fragment>
+                      <View style={{ flexDirection: "row" }} key={i}>
+                        {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
+                        {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{company.company.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{company.company.name}</Text>}
+                      </View>
                     )}
-                </Text>
+                </View>
               }
               {/* <Text style={colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>Ported by:
                 {(media.data as IGDB.Game.Game).involved_companies.filter(company => company.porting)

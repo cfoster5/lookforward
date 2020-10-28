@@ -76,7 +76,7 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
 
   useEffect(() => {
     // Scroll to top on category change; Only after setting initial value
-    if (prevCategoryIndex) {
+    if (prevCategoryIndex !== undefined && prevCategoryIndex !== categoryIndex) {
       scrollRef?.current?.scrollToIndex({
         index: 0,
         animated: false

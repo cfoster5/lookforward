@@ -10,7 +10,7 @@ import {
   FlatList
 } from 'react-native';
 import { SearchBar, Image } from 'react-native-elements';
-import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from '../helpers/requests';
+import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getIGDBToken } from '../helpers/requests';
 import { IGDB, Navigation, TMDB } from '../../types';
 import { reusableStyles } from '../helpers/styles';
 import SegmentedControl from '@react-native-community/segmented-control';
@@ -31,6 +31,7 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
   useScrollToTop(scrollRef);
   const searchRef = useRef<SearchBar>(null);
   const prevCategoryIndex = usePrevious(categoryIndex);
+  const [igdbToken, setIgdbToken] = useState("")
 
   // function removeOldReleases(games: game[]) {
   //   let tempGames: game[] = [];
@@ -49,25 +50,29 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
         setMovies(movies);
       };
     })
-    // getGameReleases().then(games => {
-    getUpcomingGameReleases().then(async releaseDates => {
-      await convertReleasesToGames(releaseDates).then(games => {
-        // console.log(games)
-        if (isMounted) {
-          setInitGames(games);
-          setGames(games);
-        }
-      })
-        .catch(error => {
-          console.log("error 1", error)
-        })
-      // if (isMounted) setGames(releaseDates);
-    })
-      .catch(error => {
-        console.log("error 2", error)
-      })
+    getIGDBToken().then(token => setIgdbToken((token.data() as { "access_token": string, "expires_in": number, "modified": number, "token_type": "bearer" }).access_token))
     return () => { isMounted = false };
   }, [])
+
+  useEffect(() => {
+    if (igdbToken) {
+      // getGameReleases().then(games => {
+      getUpcomingGameReleases(igdbToken).then(async releaseDates => {
+        await convertReleasesToGames(releaseDates).then(games => {
+          // console.log(games)
+          setInitGames(games);
+          setGames(games);
+        })
+          .catch(error => {
+            console.log("error 1", error)
+          })
+        // if (isMounted) setGames(releaseDates);
+      })
+        .catch(error => {
+          console.log("error 2", error)
+        })
+    }
+  }, [igdbToken])
 
   useEffect(() => {
     // Scroll to top on category change; Only after setting initial value
@@ -146,7 +151,7 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
             }
             if (categoryIndex === 1) {
               setGames([]);
-              setGames(await searchGames(searchValue));
+              setGames(await searchGames(searchValue, igdbToken));
             }
             // setResults(removeOldReleases(await getGamesSearch(searchValue)))
           } : undefined}

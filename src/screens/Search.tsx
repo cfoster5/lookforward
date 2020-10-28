@@ -180,6 +180,8 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
         contentContainerStyle={{ marginHorizontal: 16 }}
         columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
         ref={scrollRef}
+        keyExtractor={(item, index) => item.id.toString()}
+        initialNumToRender={6}
       />
     </>
   );

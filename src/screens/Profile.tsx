@@ -46,7 +46,7 @@ function Profile({ route, navigation }: Navigation.ProfileScreenProps) {
 
   useEffect(() => {
     if (prevDayNotifications !== undefined && prevDayNotifications !== dayNotifications) {
-      firestore().collection("users").doc(uid).collection('contentPreferences').doc("preferences").update({
+      firestore().collection("users").doc(uid).collection('contentPreferences').doc("preferences").set({
         dayNotifications: dayNotifications
       })
         .then(() => {
@@ -60,7 +60,7 @@ function Profile({ route, navigation }: Navigation.ProfileScreenProps) {
 
   useEffect(() => {
     if (prevWeekNotifications !== undefined && prevWeekNotifications !== weekNotifications) {
-      firestore().collection("users").doc(uid).collection('contentPreferences').doc("preferences").update({
+      firestore().collection("users").doc(uid).collection('contentPreferences').doc("preferences").set({
         weekNotifications: weekNotifications
       })
         .then(() => {
@@ -73,11 +73,7 @@ function Profile({ route, navigation }: Navigation.ProfileScreenProps) {
   }, [weekNotifications])
 
   function signOut() {
-    auth()
-      .signOut()
-      .then(() =>
-        console.log('User signed out!'))
-      ;
+    auth().signOut().then(() => console.log('User signed out!'));
   }
 
   return (

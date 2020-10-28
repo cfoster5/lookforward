@@ -48,7 +48,7 @@ export default function App() {
     const authStatus = await messaging().requestPermission();
     const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
     if (enabled) {
-      firestore().collection("users").doc(user?.uid).collection('contentPreferences').doc("preferences").update({
+      firestore().collection("users").doc(user?.uid).collection('contentPreferences').doc("preferences").set({
         weekNotifications: true,
         dayNotifications: true
       })

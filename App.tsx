@@ -50,7 +50,7 @@ export default function App() {
     if (enabled) {
       firestore().collection("users").doc(user?.uid).collection('contentPreferences').doc("preferences").update({
         weekNotifications: true,
-        dayNotifcations: true
+        dayNotifications: true
       })
         .then(() => {
           // console.log("Document successfully written!");

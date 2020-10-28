@@ -127,7 +127,7 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
         <SearchBar
           // cancelIcon={{ color: "#999999" }}
           cancelIcon={{ color: "white" }}
-          clearIcon={{ color: Platform.OS === "android" ? "white" : undefined }}
+          clearIcon={Platform.OS === "android" ? { color: "white" } : undefined}
           ref={searchRef}
           containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: Platform.OS === "ios" ? 8 : 16 } : { marginHorizontal: 8 }}
           inputContainerStyle={colorScheme === "dark" ? { backgroundColor: "#1f1f1f" } : {}}

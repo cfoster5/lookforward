@@ -20,7 +20,7 @@ function PasswordReset() {
   async function signIn() {
     try {
       await auth().sendPasswordResetEmail(email);
-      navigation.navigate("Sign In", { emailSent: true })
+      navigation.navigate("Sign In", { emailSent: true, email: email })
     }
     catch (error) {
       if (error.code === 'auth/invalid-email') {

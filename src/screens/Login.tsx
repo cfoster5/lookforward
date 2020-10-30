@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   TextInput,
@@ -6,7 +6,6 @@ import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
@@ -17,6 +16,12 @@ function Login({ route }: any) {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    if (route.params.email) {
+      setEmail(route.params.email);
+    }
+  }, [route.params.email])
 
   async function signIn() {
     try {
@@ -34,7 +39,7 @@ function Login({ route }: any) {
   }
 
   return (
-    <Pressable onPress={() => Keyboard.dismiss()} style={{flex: 1}}>
+    <Pressable onPress={() => Keyboard.dismiss()} style={{ flex: 1 }}>
       <KeyboardAvoidingView
         style={{ flex: 1, justifyContent: 'center', marginHorizontal: 16 }}
         behavior="padding"

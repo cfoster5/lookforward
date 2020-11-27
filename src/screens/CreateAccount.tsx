@@ -47,6 +47,7 @@ function CreateAccount() {
           <TextInput
             style={{ ...iOSUIKit.bodyObject, backgroundColor: "#3a3a3c", color: "white", padding: 16, borderRadius: 8, marginVertical: 8 }}
             placeholder="Email"
+            placeholderTextColor="#6e6f73"
             autoCapitalize="none"
             keyboardType={"email-address"}
             value={email}
@@ -55,6 +56,7 @@ function CreateAccount() {
           <TextInput
             style={{ ...iOSUIKit.bodyObject, backgroundColor: "#3a3a3c", color: "white", padding: 16, borderRadius: 8, marginVertical: 8 }}
             placeholder="Password"
+            placeholderTextColor="#6e6f73"
             secureTextEntry={true}
             value={password}
             onChangeText={text => setPassword(text)}

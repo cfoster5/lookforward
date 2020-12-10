@@ -7,8 +7,8 @@ import { Navigation } from "../../types";
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
 
-const HomeStack = createStackNavigator<Navigation.HomeStackParamList>();
-export function HomeStackScreen({ route }: any) {
+const FindStack = createStackNavigator<Navigation.FindStackParamList>();
+export function FindStackScreen({ route }: Navigation.FindScreenProps) {
   const [countdownMovies, setCountdownMovies] = useState([]);
   const [countdownGames, setCountdownGames] = useState([]);
 
@@ -32,18 +32,18 @@ export function HomeStackScreen({ route }: any) {
   //   console.log('homeStack changed')
   // }, [countdownMovies, countdownMovies])
 
-  return <HomeStack.Navigator>
-    {/* {props => <HomeStack.Screen name="Find" component={Search} {...props} extraData={{}} />}
-    {props => <HomeStack.Screen name="Details" component={Details} {...props} extraData={{}} />} */}
+  return <FindStack.Navigator>
+    {/* {props => <FindStack.Screen name="Find" component={Search} {...props} extraData={{}} />}
+    {props => <FindStack.Screen name="Details" component={Details} {...props} extraData={{}} />} */}
 
-    {/* <HomeStack.Screen name="Find" component={Search} initialParams={{ uid: route.params.uid }} /> */}
-    <HomeStack.Screen name="Find">
+    {/* <FindStack.Screen name="Find" component={Search} initialParams={{ uid: route.params.uid }} /> */}
+    <FindStack.Screen name="Find">
       {props => <Search {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} />}
-    </HomeStack.Screen>
-    {/* <HomeStack.Screen name="Details" component={Details} initialParams={{ uid: route.params.uid }} /> */}
-    <HomeStack.Screen name="Details" initialParams={{ uid: route.params.uid }}>
+    </FindStack.Screen>
+    {/* <FindStack.Screen name="Details" component={Details} initialParams={{ uid: route.params.uid }} /> */}
+    <FindStack.Screen name="Details" initialParams={{ uid: route.params.uid }}>
       {props => <Details {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} />}
-    </HomeStack.Screen>
-    <HomeStack.Screen name="Actor" component={Actor} />
-  </HomeStack.Navigator>
+    </FindStack.Screen>
+    <FindStack.Screen name="Actor" component={Actor} />
+  </FindStack.Navigator>
 }

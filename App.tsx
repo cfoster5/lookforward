@@ -11,7 +11,7 @@ import { Navigation } from './types';
 import { AuthStackScreen } from './src/navigation/AuthStack';
 import { TabNavigation } from './src/navigation/TabNavigator';
 
-const Stack = createStackNavigator<Navigation.StackParamList>();
+const Stack = createStackNavigator<Navigation.RootStackParamList>();
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
@@ -101,7 +101,7 @@ export default function App() {
       <>
         <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />
         <Stack.Navigator>
-          {user ? <Stack.Screen name="Home" component={TabNavigation} initialParams={{ uid: user?.uid }} options={{ headerShown: false }} /> : <Stack.Screen name="Welcome" component={AuthStackScreen} options={{ headerShown: false }} />}
+          {user ? <Stack.Screen name="Tabs" component={TabNavigation} initialParams={{ uid: user?.uid }} options={{ headerShown: false }} /> : <Stack.Screen name="Welcome" component={AuthStackScreen} options={{ headerShown: false }} />}
         </Stack.Navigator>
       </>
     </OverflowMenuProvider>

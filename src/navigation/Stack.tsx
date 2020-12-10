@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
 import { TabNavigation } from './TabNavigator';
-import { HomeStackScreen } from './HomeStack';
 import { Navigation } from '../../types';
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
-import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import { AuthStackScreen } from './AuthStack';
 
-const Stack = createStackNavigator<Navigation.StackParamList>();
+const Stack = createStackNavigator<Navigation.RootStackParamList>();
 
 export function StackNavigator({ user }: { user: FirebaseAuthTypes.User | undefined }) {
   return <Stack.Navigator>
     {user ? <Stack.Screen
-      name="Home"
+      name="Tabs"
       component={TabNavigation}
+      initialParams={{ uid: user?.uid }}
       options={{ headerShown: false }}
-      initialParams={{ user: user }}
     /> :
       <Stack.Screen
         name="Welcome"
-        component={HomeStackScreen}
+        component={AuthStackScreen}
         options={{ headerShown: false }}
       />}
   </Stack.Navigator>

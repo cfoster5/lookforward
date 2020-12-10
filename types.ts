@@ -270,16 +270,35 @@ export namespace TMDB {
 
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack"
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 // export declare module Navigation {
 export namespace Navigation {
-  export type HomeStackParamList = {
+  export type RootStackParamList = {
+    Tabs: { uid: string | undefined },
+    Welcome: undefined
+  }
+
+  export type TabNavigationParamList = {
+    Find: { uid: string }
+    Countdown: { uid: string }
+    Profile: { uid: string }
+  }
+
+  type TabsScreenRouteProp = RouteProp<RootStackParamList, "Tabs">
+  type TabsScreenNavigationProp = BottomTabNavigationProp<RootStackParamList, "Tabs">;
+  export type TabsScreenProps = {
+    route: TabsScreenRouteProp;
+    navigation: TabsScreenNavigationProp;
+  }
+
+  export type FindStackParamList = {
     Find: { uid: string | undefined },
     Details: { type: "game" | "movie", data: IGDB.Game.Game | TMDB.Movie.Movie, uid: string | undefined },
     Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }
 
-  type FindScreenRouteProp = RouteProp<HomeStackParamList, 'Find'>;
-  type FindScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'Find'>;
+  type FindScreenRouteProp = RouteProp<FindStackParamList, 'Find'>;
+  type FindScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Find'>;
   export type FindScreenProps = {
     route: FindScreenRouteProp;
     navigation: FindScreenNavigationProp;
@@ -287,8 +306,8 @@ export namespace Navigation {
     countdownGames: any;
   }
 
-  type DetailsScreenRouteProp = RouteProp<HomeStackParamList, 'Details'>;
-  type DetailsScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'Details'>;
+  type DetailsScreenRouteProp = RouteProp<FindStackParamList, 'Details'>;
+  type DetailsScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Details'>;
   export type DetailsScreenProps = {
     route: DetailsScreenRouteProp;
     navigation: DetailsScreenNavigationProp;
@@ -296,8 +315,8 @@ export namespace Navigation {
     countdownGames: any;
   }
 
-  type ActorScreenRouteProp = RouteProp<HomeStackParamList, 'Actor'>;
-  type ActorScreenNavigationProp = StackNavigationProp<HomeStackParamList, 'Actor'>;
+  type ActorScreenRouteProp = RouteProp<FindStackParamList, 'Actor'>;
+  type ActorScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Actor'>;
   export type ActorScreenProps = {
     route: ActorScreenRouteProp;
     navigation: ActorScreenNavigationProp;
@@ -308,10 +327,6 @@ export namespace Navigation {
     "Create Account": undefined
     "Sign In": undefined
     "Password Reset": undefined
-  }
-  export type StackParamList = {
-    Home: { uid: string | undefined },
-    Welcome: undefined
   }
 
   export type ProfileStackParamList = {

@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { HomeStackScreen } from './HomeStack';
+import { FindStackScreen } from './FindStack';
 import { CountdownStackScreen } from './CountdownStack';
 import { ProfileStackScreen } from './ProfileStack';
+import { Navigation } from '../../types';
 
-const Tab = createBottomTabNavigator();
-export function TabNavigation({ route, navigation }: any) {
+const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
+export function TabNavigation({ route, navigation }: Navigation.TabsScreenProps) {
   return <Tab.Navigator
     screenOptions={({ route }) => ({
       tabBarIcon: ({ focused, color, size }) => {
@@ -27,7 +28,7 @@ export function TabNavigation({ route, navigation }: any) {
       inactiveTintColor: 'gray',
     }}
   >
-    <Tab.Screen name="Find" component={HomeStackScreen} initialParams={{ uid: route.params.uid }} />
+    <Tab.Screen name="Find" component={FindStackScreen} initialParams={{ uid: route.params.uid }} />
     <Tab.Screen name="Countdown" component={CountdownStackScreen} initialParams={{ uid: route.params.uid }} />
     <Tab.Screen name="Profile" component={ProfileStackScreen} initialParams={{ uid: route.params.uid }} />
   </Tab.Navigator>

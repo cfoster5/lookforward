@@ -106,11 +106,14 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
   }
 
   async function addToList() {
-    let data = media.data;
-    data.mediaType = media.type
+    console.log('media', media)
     try {
-      await firestore().collection("users").doc(route.params.uid).collection('items').add(data);
+      await firestore().collection("movies").doc(media.data.id.toString()).set(media.data, { merge: true });
       console.log("Document successfully written!");
+      await firestore().collection("movies").doc(media.data.id.toString()).update({
+        subscribers: firestore.FieldValue.arrayUnion(route.params.uid)
+      })
+      console.log("Document updated written!");
     } catch (error) {
       console.error("Error writing document: ", error);
     }
@@ -118,7 +121,9 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
 
   async function deleteItem() {
     try {
-      await firestore().collection("users").doc(route.params.uid).collection('items').doc(countdownId).delete();
+      media.type === "movie" ? await firestore().collection("movies").doc(media.data.id.toString()).update({
+        subscribers: firestore.FieldValue.arrayRemove(route.params.uid)
+      }) : await firestore().collection("users").doc(route.params.uid).collection('items').doc(countdownId).delete();
       console.log("Document successfully written!");
     } catch (error) {
       console.error("Error writing document: ", error);
@@ -221,14 +226,14 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
             <View>
               {/* <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Genres: {movieDetails?.genres.map((genre: { id: number, name: string }, i: number) => <React.Fragment key={i}>{i > 0 ? `, ${genre.name}` : genre.name}</React.Fragment>)}</Text> */}
               <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
-              <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text>
-              {movieDetails?.genres.map((genre: { id: number, name: string }, i: number) =>
-                <View style={{ flexDirection: "row" }} key={i}>
-                  {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
-                  {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
-                </View>
-              )}
-            </View>
+                <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text>
+                {movieDetails?.genres.map((genre: { id: number, name: string }, i: number) =>
+                  <View style={{ flexDirection: "row" }} key={i}>
+                    {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
+                    {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
+                  </View>
+                )}
+              </View>
               <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Status: {movieDetails?.status}</Text>
             </View>
           }

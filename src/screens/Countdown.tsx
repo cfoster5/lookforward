@@ -18,7 +18,7 @@ import { useScrollToTop } from '@react-navigation/native';
 function Countdown({ route, navigation }: any) {
   // const colorScheme = Appearance.getColorScheme();
   const [showButtons, setShowButtons] = useState(false);
-  const [selections, setSelections] = useState<string[]>([]);
+  const [selections, setSelections] = useState<{ documentID: string, sectionName: string }[]>([]);
   const [countdownMovies, setCountdownMovies] = useState([]);
   const [countdownGames, setCountdownGames] = useState([]);
   const scrollRef = useRef<SectionList>(null);
@@ -26,7 +26,7 @@ function Countdown({ route, navigation }: any) {
 
   useEffect(() => {
     if (route.params.uid) {
-      const movieSubscription = firestore().collection('users').doc(route.params.uid).collection('items').orderBy("release_date").where("mediaType", "==", "movie")
+      const movieSubscription = firestore().collection('movies').orderBy("release_date").where("subscribers", "array-contains", route.params.uid)
         .onSnapshot(querySnapshot => { onResult(querySnapshot, "movies") }, onError);
 
       const gameSubscription = firestore().collection("users").doc(route.params.uid).collection('items').orderBy("date").where("mediaType", "==", "game")
@@ -199,11 +199,12 @@ function Countdown({ route, navigation }: any) {
   </Text>
   </View>;
 
-  function updateSelections(documentID: string) {
+  function updateSelections(documentID: string, sectionName: string) {
+    console.log('sectionName', sectionName)
     let tempSelections = selections.slice();
-    let selectionIndex = tempSelections.indexOf(documentID)
+    let selectionIndex = tempSelections.findIndex(obj => obj.documentID === documentID)
     if (selectionIndex === -1) {
-      tempSelections.push(documentID);
+      tempSelections.push({ documentID: documentID, sectionName: sectionName });
     }
     else {
       tempSelections.splice(selectionIndex, 1)
@@ -211,13 +212,18 @@ function Countdown({ route, navigation }: any) {
     setSelections(tempSelections);
   }
 
-  function deleteItems() {
-    selections.forEach(documentID => {
+  async function deleteItems() {
+    selections.forEach(async selection => {
       // Animate as if deleting and then delete
       // Animate height to 0
-      firestore().collection('users').doc(route.params.uid).collection("items").doc(documentID).delete().then(() => {
-        console.log('Document deleted!');
-      });
+      try {
+        selection.sectionName === "Movies" ? await firestore().collection("movies").doc(selection.documentID).update({
+          subscribers: firestore.FieldValue.arrayRemove(route.params.uid)
+        }) : await firestore().collection("users").doc(route.params.uid).collection('items').doc(selection.documentID).delete();
+        console.log("Document successfully written!");
+      } catch (error) {
+        console.error("Error writing document: ", error);
+      }
       setSelections([]);
     });
   }
@@ -236,8 +242,8 @@ function Countdown({ route, navigation }: any) {
           // isLastInSection={data.section.title === "Movies" ? data.index + 1 === route.params.movies.length : data.index + 1 === route.params.games.length}
           isLastInSection={data.section.title === "Movies" ? data.index + 1 === countdownMovies.length : data.index + 1 === countdownGames.length}
           showButtons={showButtons}
-          selected={selections.indexOf(data.item.documentID) > -1}
-          updateSelections={updateSelections}
+          selected={selections.findIndex(obj => obj.documentID === data.item.documentID) > -1}
+          updateSelections={documentID => updateSelections(documentID, data.section.title)}
           SlideView={SlideView}
           FadeView={FadeView}
         />

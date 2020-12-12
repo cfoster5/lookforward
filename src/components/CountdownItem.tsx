@@ -6,11 +6,23 @@ import { months } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB, TMDB } from "../../types";
 
-function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, SlideView, FadeView }: any) {
+interface Props {
+  item: any
+  sectionName: "Movies" | "Games"
+  isFirstInSection: boolean
+  isLastInSection: boolean
+  showButtons: boolean
+  selected: boolean
+  updateSelections: (documentID: string) => void
+  SlideView: (props: any) => JSX.Element
+  FadeView: (props: any) => JSX.Element
+}
+
+function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, SlideView, FadeView }: Props) {
   // const colorScheme = Appearance.getColorScheme();
 
-  function getReleaseDate(item): string {
-    if (item.mediaType === "movie") {
+  function getReleaseDate(): string {
+    if (sectionName === "Movies") {
       let monthIndex = new Date((item as TMDB.Movie.Movie).release_date).getUTCMonth();
       // return `${months[monthIndex].toUpperCase()} ${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}, ${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
       return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate().toString().length < 2 ? "0" : ""}${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
@@ -23,8 +35,8 @@ function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, s
     }
   }
 
-  function getCountdownDays(item): number {
-    if (item.mediaType === "movie") {
+  function getCountdownDays(): number {
+    if (sectionName === "Movies") {
       let year = new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear();
       let month = new Date((item as TMDB.Movie.Movie).release_date).getUTCMonth();
       let day = new Date((item as TMDB.Movie.Movie).release_date).getUTCDate();
@@ -131,15 +143,15 @@ function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, s
           <View style={{ justifyContent: "center" }}>
             <Image
               style={styles.image}
-              source={{ uri: item.mediaType === "movie" ? `https://image.tmdb.org/t/p/w92${item.poster_path}` : `https:${item.game.cover.url.replace("thumb", "cover_big_2x")}` }}
+              source={{ uri: sectionName === "Movies" ? `https://image.tmdb.org/t/p/w92${item.poster_path}` : `https:${item.game.cover.url.replace("thumb", "cover_big_2x")}` }}
             />
           </View>
           <View style={styles.middle}>
-            <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{item.mediaType === "movie" ? item.title : item.game.name}</Text>
-            <Text style={{ ...reusableStyles.date }}>{getReleaseDate(item)}</Text>
+            <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{sectionName === "Movies" ? item.title : item.game.name}</Text>
+            <Text style={{ ...reusableStyles.date }}>{getReleaseDate()}</Text>
           </View>
           <View style={styles.countdown}>
-            <Text style={{ ...iOSUIKit.title3EmphasizedWhiteObject, color: iOSColors.blue }}>{getCountdownDays(item)}</Text>
+            <Text style={{ ...iOSUIKit.title3EmphasizedWhiteObject, color: iOSColors.blue }}>{getCountdownDays()}</Text>
             <Text style={{ ...iOSUIKit.bodyWhiteObject, color: iOSColors.blue }}>days</Text>
           </View>
         </SlideView>

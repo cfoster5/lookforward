@@ -13,7 +13,7 @@ export function FindStackScreen({ route }: Navigation.FindScreenProps) {
   const [countdownGames, setCountdownGames] = useState([]);
 
   useEffect(() => {
-    const movieSubscription = firestore().collection('users').doc(route.params.uid).collection('items').orderBy("release_date").where("mediaType", "==", "movie")
+    const movieSubscription = firestore().collection('movies').orderBy("release_date").where("subscribers", "array-contains", route.params.uid)
       .onSnapshot(querySnapshot => { setCountdownMovies(onResult(querySnapshot, "movies")) }, (error) => console.error("error", error));
 
     const gameSubscription = firestore().collection("users").doc(route.params.uid).collection('items').orderBy("date").where("mediaType", "==", "game")

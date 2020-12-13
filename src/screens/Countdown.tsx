@@ -29,7 +29,7 @@ function Countdown({ route, navigation }: any) {
       const movieSubscription = firestore().collection('movies').orderBy("release_date").where("subscribers", "array-contains", route.params.uid)
         .onSnapshot(querySnapshot => { onResult(querySnapshot, "movies") }, onError);
 
-      const gameSubscription = firestore().collection("users").doc(route.params.uid).collection('items').orderBy("date").where("mediaType", "==", "game")
+      const gameSubscription = firestore().collection("gameReleases").orderBy("date").where("subscribers", "array-contains", route.params.uid)
         // firestore().collection("games").orderBy("date").where("owner", "==", user.uid)
         .onSnapshot(querySnapshot => { onResult(querySnapshot, "games") }, onError);
 
@@ -217,9 +217,9 @@ function Countdown({ route, navigation }: any) {
       // Animate as if deleting and then delete
       // Animate height to 0
       try {
-        selection.sectionName === "Movies" ? await firestore().collection("movies").doc(selection.documentID).update({
+        await firestore().collection(selection.sectionName === "Movies" ? "movies" : "gameReleases").doc(selection.documentID).update({
           subscribers: firestore.FieldValue.arrayRemove(route.params.uid)
-        }) : await firestore().collection("users").doc(route.params.uid).collection('items').doc(selection.documentID).delete();
+        })
         console.log("Document successfully written!");
       } catch (error) {
         console.error("Error writing document: ", error);

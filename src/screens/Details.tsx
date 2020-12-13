@@ -120,10 +120,12 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
   }
 
   async function deleteItem() {
+    console.log('media.data.id', countdownId)
+    // console.log('media.type', media.type)
     try {
-      media.type === "movie" ? await firestore().collection("movies").doc(media.data.id.toString()).update({
+      await firestore().collection(media.type === "movie" ? "movies" : "gameReleases").doc(countdownId).update({
         subscribers: firestore.FieldValue.arrayRemove(route.params.uid)
-      }) : await firestore().collection("users").doc(route.params.uid).collection('items').doc(countdownId).delete();
+      })
       console.log("Document successfully written!");
     } catch (error) {
       console.error("Error writing document: ", error);
@@ -132,7 +134,6 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
 
   async function addGameRelease(releaseDate: IGDB.Game.ReleaseDate) {
     // console.log("releaseDate", releaseDate);
-    releaseDate.mediaType = "game";
     let game = {
       cover: (media.data as IGDB.Game.Game).cover,
       id: (media.data as IGDB.Game.Game).id,
@@ -142,8 +143,12 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
     // console.log(game);
     releaseDate.game = game;
     try {
-      await firestore().collection("users").doc(route.params.uid).collection('items').add(releaseDate);
+      await firestore().collection("gameReleases").doc(releaseDate.id.toString()).set(releaseDate, { merge: true })
       console.log("Document successfully written!");
+      await firestore().collection("gameReleases").doc(releaseDate.id.toString()).update({
+        subscribers: firestore.FieldValue.arrayUnion(route.params.uid)
+      })
+      console.log("Document updated successfully.")
       modalizeRef.current?.close()
     } catch (error) {
       console.error("Error writing document: ", error);

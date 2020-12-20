@@ -1,9 +1,10 @@
 import { StackNavigationProp } from "@react-navigation/stack";
-import React from "react";
+import React, { useEffect } from "react";
 import { Appearance, Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB, Navigation, TMDB } from "../../types";
+import PosterButton, { newFunction } from "./PosterButton";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.HomeStackParamList, "Find"> | StackNavigationProp<Navigation.HomeStackParamList, "Details">,
@@ -11,15 +12,19 @@ interface Props {
   // data: TMDB.Movie.Movie | IGDB.ReleaseDate.ReleaseDate
   data: TMDB.Movie.Movie | IGDB.Game.Game
   inCountdown: boolean;
+  uid: string;
 }
 
 // const colorScheme = Appearance.getColorScheme();
 const colorScheme = "dark"
 
-function MediaItem({ navigation, mediaType, data, inCountdown }: Props) {
-  // console.log(inCountdown)
+function MediaItem({ navigation, mediaType, data, inCountdown, uid }: Props) {
+  useEffect(() => {
+    console.log('data', data)
+  }, [data])
   return (
     <Pressable onPress={() => navigation.push('Details', { type: mediaType, data: data })}>
+      <PosterButton mediaType={mediaType} data={data} inCountdown={inCountdown} uid={uid} />
       {mediaType === "movie" && (data as TMDB.Movie.Movie).poster_path &&
         <Image
           style={reusableStyles.itemRight}

@@ -100,9 +100,12 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
   const colorScheme = "dark"
 
   const renderItem = ({ item }: { item: TMDB.Movie.Movie | IGDB.Game.Game }) => (
-    <MediaItem navigation={navigation} mediaType={categoryIndex === 0 ? "movie" : "game"} data={item}
-      inCountdown={categoryIndex === 0 ?
-        countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === item.id) : false}
+    <MediaItem
+      navigation={navigation}
+      mediaType={categoryIndex === 0 ? "movie" : "game"}
+      data={item}
+      inCountdown={categoryIndex === 0 ? countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === item.id) : false}
+      uid={route.params.uid}
     />
   );
 

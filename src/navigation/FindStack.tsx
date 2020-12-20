@@ -37,7 +37,7 @@ export function FindStackScreen({ route }: Navigation.FindScreenProps) {
     {props => <FindStack.Screen name="Details" component={Details} {...props} extraData={{}} />} */}
 
     {/* <FindStack.Screen name="Find" component={Search} initialParams={{ uid: route.params.uid }} /> */}
-    <FindStack.Screen name="Find">
+    <FindStack.Screen name="Find" initialParams={{ uid: route.params.uid }}>
       {props => <Search {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} />}
     </FindStack.Screen>
     {/* <FindStack.Screen name="Details" component={Details} initialParams={{ uid: route.params.uid }} /> */}

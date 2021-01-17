@@ -4,7 +4,7 @@ import { Appearance, Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB, Navigation, TMDB } from "../../types";
-import PosterButton, { newFunction } from "./PosterButton";
+import PosterButton from "./PosterButton";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.HomeStackParamList, "Find"> | StackNavigationProp<Navigation.HomeStackParamList, "Details">,

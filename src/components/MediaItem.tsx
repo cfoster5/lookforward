@@ -19,9 +19,6 @@ interface Props {
 const colorScheme = "dark"
 
 function MediaItem({ navigation, mediaType, data, inCountdown, uid }: Props) {
-  useEffect(() => {
-    console.log('data', data)
-  }, [data])
   return (
     <Pressable onPress={() => navigation.push('Details', { type: mediaType, data: data })}>
       <PosterButton mediaType={mediaType} data={data} inCountdown={inCountdown} uid={uid} />

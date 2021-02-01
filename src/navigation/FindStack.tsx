@@ -4,7 +4,7 @@ import Actor from '../screens/Actor';
 import Details from "../screens/Details";
 import Search from "../screens/Search";
 import { Navigation } from "../../types";
-import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
 
 const FindStack = createStackNavigator<Navigation.FindStackParamList>();

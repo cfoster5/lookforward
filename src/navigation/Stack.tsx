@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
 import { TabNavigation } from './TabNavigator';
 import { Navigation } from '../../types';
@@ -12,7 +12,7 @@ export function StackNavigator({ user }: { user: FirebaseAuthTypes.User | undefi
     {user ? <Stack.Screen
       name="Tabs"
       component={TabNavigation}
-      initialParams={{ uid: user?.uid }}
+      initialParams={{ uid: user.uid }}
       options={{ headerShown: false }}
     /> :
       <Stack.Screen

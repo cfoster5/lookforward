@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, StatusBar, Appearance, Alert, Image, Dimensions } from 'react-native';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { OverflowMenuProvider } from 'react-navigation-header-buttons';
 import SplashScreen from 'react-native-splash-screen'
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import firestore from '@react-native-firebase/firestore';
-import { Navigation } from './types';
-import { AuthStackScreen } from './src/navigation/AuthStack';
-import { TabNavigation } from './src/navigation/TabNavigator';
-
-const Stack = createStackNavigator<Navigation.RootStackParamList>();
+import { StackNavigator } from './src/navigation/Stack';
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
@@ -100,9 +95,7 @@ export default function App() {
     <OverflowMenuProvider>
       <>
         <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />
-        <Stack.Navigator>
-          {user ? <Stack.Screen name="Tabs" component={TabNavigation} initialParams={{ uid: user?.uid }} options={{ headerShown: false }} /> : <Stack.Screen name="Welcome" component={AuthStackScreen} options={{ headerShown: false }} />}
-        </Stack.Navigator>
+        <StackNavigator user={user} />
       </>
     </OverflowMenuProvider>
   </NavigationContainer>

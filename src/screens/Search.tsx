@@ -1,21 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  ScrollView,
   View,
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
   Platform,
-  Pressable,
-  Appearance,
   FlatList
 } from 'react-native';
 import { SearchBar, Image } from 'react-native-elements';
 import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from '../helpers/requests';
 import { IGDB, Navigation, TMDB } from '../../types';
-import { reusableStyles } from '../helpers/styles';
-import SegmentedControl from '@react-native-community/segmented-control';
 import MediaItem from '../components/MediaItem';
-import usePrevious, { convertReleasesToGames, onResult } from '../helpers/helpers';
+import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
 import { useScrollToTop } from '@react-navigation/native';
 import CategoryControl from '../components/CategoryControl';
 

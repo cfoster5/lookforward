@@ -17,7 +17,6 @@ import { reusableStyles } from '../helpers/styles';
 import { iOSColors, iOSUIKit } from 'react-native-typography'
 import Trailer from '../components/Trailer';
 import Cast from './Cast';
-import SegmentedControl from '@react-native-community/segmented-control';
 import MediaItem from '../components/MediaItem';
 import Person from '../components/Person';
 import { Modalize } from 'react-native-modalize';
@@ -98,8 +97,8 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
     }
   }
 
-  function formatDate(item) {
-    let date = new Date((item as IGDB.ReleaseDate.ReleaseDate).date * 1000);
+  function formatDate(item: IGDB.Game.ReleaseDate) {
+    let date = new Date(item.date * 1000);
     let monthIndex = new Date(date).getUTCMonth();
     // return `${months[monthIndex].toUpperCase()} ${date.getUTCDate()}, ${new Date(date).getUTCFullYear()}`
     return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${date.getUTCDate().toString().length < 2 ? "0" : ""}${date.getUTCDate()}/${new Date(date).getUTCFullYear()}`;
@@ -313,11 +312,11 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
               }
             </>
           }
-          <View style={{ flexGrow: 1, flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -16, marginTop: 16, marginBottom: -16, display: detailIndex !== 2 ? "none" : "flex" }}>
+          {/* <View style={{ flexGrow: 1, flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -16, marginTop: 16, marginBottom: -16, display: detailIndex !== 2 ? "none" : "flex" }}>
             {movieDetails?.similar.results.filter(movie => moment(movie.release_date, "YYYY-MM-DD").isSameOrAfter(moment().format("YYYY-MM-DD"))).map((movieRelease, i) => (
-              <MediaItem key={i} navigation={navigation} mediaType="movie" index={i} data={movieRelease} />
+              <MediaItem key={i} navigation={navigation} mediaType="movie" data={movieRelease} />
             ))}
-          </View>
+          </View> */}
         </View>
       </ScrollView>
     </>

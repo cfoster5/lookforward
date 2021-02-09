@@ -45,7 +45,7 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
       };
     })
     // getGameReleases().then(games => {
-    getUpcomingGameReleases().then(async releaseDates => {
+    getUpcomingGameReleases(route.params.igdbCreds.access_token).then(async releaseDates => {
       await convertReleasesToGames(releaseDates).then(games => {
         // console.log(games)
         if (isMounted) {
@@ -144,7 +144,7 @@ function Search({ route, navigation, countdownMovies, countdownGames }: Navigati
             }
             if (categoryIndex === 1) {
               setGames([]);
-              setGames(await searchGames(searchValue));
+              setGames(await searchGames(route.params.igdbCreds.access_token, searchValue));
             }
             // setResults(removeOldReleases(await getGamesSearch(searchValue)))
           } : undefined}

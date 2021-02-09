@@ -12,6 +12,7 @@ export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<FirebaseAuthTypes.User>();
+  const [igdbCreds, setIgdbCreds] = useState<any>(null);
 
   useEffect(() => {
     // monitorTimeConsumingTask().then(result => setInitializing(false))
@@ -19,7 +20,11 @@ export default function App() {
       if (user) {
         // Signed in
         setUser(user);
-        if (initializing) { setInitializing(false); SplashScreen.hide(); }
+        if (initializing) {
+          firestore().collection('igdbAuth').doc("creds").get().then(creds => {
+            setIgdbCreds(creds.data())
+          });
+        }
 
         // const unsubscribe = messaging().onMessage(async remoteMessage => {
         //   Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
@@ -27,7 +32,13 @@ export default function App() {
       } else {
         // Signed out
         setUser(undefined);
-        if (initializing) { setInitializing(false); SplashScreen.hide(); }
+        if (initializing) {
+          firestore().collection('igdbAuth').doc("creds").get().then(creds => {
+            setIgdbCreds(creds.data())
+          });
+          setInitializing(false);
+          // SplashScreen.hide();
+        }
       }
     });
     return subscriber; // unsubscribe on unmount
@@ -38,6 +49,19 @@ export default function App() {
       requestUserPermission();
     }
   }, [user])
+
+  useEffect(() => {
+    if (igdbCreds) {
+      console.log(igdbCreds)
+      setInitializing(false);
+    }
+  }, [igdbCreds])
+
+  useEffect(() => {
+    if (!initializing) {
+      SplashScreen.hide();
+    }
+  }, [initializing])
 
   async function requestUserPermission() {
     const authStatus = await messaging().requestPermission();
@@ -95,7 +119,7 @@ export default function App() {
     <OverflowMenuProvider>
       <>
         <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />
-        <StackNavigator user={user} />
+        <StackNavigator user={user} igdbCreds={igdbCreds} />
       </>
     </OverflowMenuProvider>
   </NavigationContainer>

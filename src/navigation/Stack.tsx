@@ -7,12 +7,12 @@ import { AuthStackScreen } from './AuthStack';
 
 const Stack = createStackNavigator<Navigation.RootStackParamList>();
 
-export function StackNavigator({ user }: { user: FirebaseAuthTypes.User | undefined }) {
+export function StackNavigator({ user, igdbCreds }: { user: FirebaseAuthTypes.User | undefined, igdbCreds: any }) {
   return <Stack.Navigator>
     {user ? <Stack.Screen
       name="Tabs"
       component={TabNavigation}
-      initialParams={{ uid: user.uid }}
+      initialParams={{ uid: user.uid, igdbCreds: igdbCreds }}
       options={{ headerShown: false }}
     /> :
       <Stack.Screen

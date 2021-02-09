@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		00E356F31AD99517003FC87E /* lookforwardTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* lookforwardTests.m */; };
-		046271D325422A5700D7BF43 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		0474B3A62501C067006B9E01 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0474B3A52501C067006B9E01 /* GoogleService-Info.plist */; };
+		04C6E88D25C8EC3700082AD5 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 04C6E88C25C8EC3700082AD5 /* Launch Screen.storyboard */; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -46,6 +46,7 @@
 		00FDF26244DE423D7BB62E6D /* Pods-lookforward.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lookforward.debug.xcconfig"; path = "Target Support Files/Pods-lookforward/Pods-lookforward.debug.xcconfig"; sourceTree = "<group>"; };
 		04087ECD253FACA300828331 /* lookforward.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = lookforward.entitlements; path = lookforward/lookforward.entitlements; sourceTree = "<group>"; };
 		0474B3A52501C067006B9E01 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		04C6E88C25C8EC3700082AD5 /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		139800268A8C609857F80B60 /* libPods-lookforward.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lookforward.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* lookforward.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = lookforward.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = lookforward/AppDelegate.h; sourceTree = "<group>"; };
@@ -56,7 +57,6 @@
 		2D02E47B1E0B4A5D006451C7 /* lookforward-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "lookforward-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* lookforward-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "lookforward-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		51641FF3640A9B737B71D066 /* libPods-lookforward-lookforwardTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lookforward-lookforwardTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = lookforward/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		91E135DEB7D0E718A6E22562 /* Pods-lookforward.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lookforward.release.xcconfig"; path = "Target Support Files/Pods-lookforward/Pods-lookforward.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -124,8 +124,8 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				04C6E88C25C8EC3700082AD5 /* Launch Screen.storyboard */,
 			);
 			name = lookforward;
 			sourceTree = "<group>";
@@ -328,7 +328,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				046271D325422A5700D7BF43 /* LaunchScreen.storyboard in Resources */,
+				04C6E88D25C8EC3700082AD5 /* Launch Screen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0474B3A62501C067006B9E01 /* GoogleService-Info.plist in Resources */,
 			);
@@ -684,7 +684,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = lookforward/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 3.1.0;
+				MARKETING_VERSION = 3.1.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -710,7 +710,7 @@
 				DEVELOPMENT_TEAM = 8F5TGKNLXU;
 				INFOPLIST_FILE = lookforward/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 3.1.0;
+				MARKETING_VERSION = 3.1.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

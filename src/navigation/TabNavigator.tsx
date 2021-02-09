@@ -28,7 +28,7 @@ export function TabNavigation({ route, navigation }: Navigation.TabsScreenProps)
       inactiveTintColor: 'gray',
     }}
   >
-    <Tab.Screen name="Find" component={FindStackScreen} initialParams={{ uid: route.params.uid }} />
+    <Tab.Screen name="Find" component={FindStackScreen} initialParams={{ uid: route.params.uid, igdbCreds: route.params.igdbCreds }} />
     <Tab.Screen name="Countdown" component={CountdownStackScreen} initialParams={{ uid: route.params.uid }} />
     <Tab.Screen name="Profile" component={ProfileStackScreen} initialParams={{ uid: route.params.uid }} />
   </Tab.Navigator>

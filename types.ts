@@ -274,12 +274,12 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 // export declare module Navigation {
 export namespace Navigation {
   export type RootStackParamList = {
-    Tabs: { uid: string | undefined },
+    Tabs: { uid: string | undefined, igdbCreds: any },
     Welcome: undefined
   }
 
   export type TabNavigationParamList = {
-    Find: { uid: string }
+    Find: { uid: string, igdbCreds: any }
     Countdown: { uid: string }
     Profile: { uid: string }
   }
@@ -292,7 +292,7 @@ export namespace Navigation {
   }
 
   export type FindStackParamList = {
-    Find: { uid: string | undefined },
+    Find: { uid: string | undefined, igdbCreds: any },
     Details: { type: "game" | "movie", data: IGDB.Game.Game | TMDB.Movie.Movie, uid: string | undefined },
     Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }

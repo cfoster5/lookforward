@@ -4,7 +4,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-#import <React/RCTLinkingManager.h> s
+#import <React/RCTLinkingManager.h>
 #import "RNSplashScreen.h"
 
 #ifdef FB_SONARKIT_ENABLED

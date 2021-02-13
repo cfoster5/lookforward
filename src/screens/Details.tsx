@@ -25,6 +25,7 @@ import { HeaderButton, HeaderButtonProps, HeaderButtons, Item } from 'react-navi
 import { months } from '../helpers/helpers';
 import firestore from '@react-native-firebase/firestore';
 import CategoryControl from '../components/CategoryControl';
+import GameReleaseModal from '../components/Details/GameDetailModal';
 
 function Details({ route, navigation, countdownMovies, countdownGames }: Navigation.DetailsScreenProps) {
   const media = route.params;
@@ -97,13 +98,6 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
     }
   }
 
-  function formatDate(item: IGDB.Game.ReleaseDate) {
-    let date = new Date(item.date * 1000);
-    let monthIndex = new Date(date).getUTCMonth();
-    // return `${months[monthIndex].toUpperCase()} ${date.getUTCDate()}, ${new Date(date).getUTCFullYear()}`
-    return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${date.getUTCDate().toString().length < 2 ? "0" : ""}${date.getUTCDate()}/${new Date(date).getUTCFullYear()}`;
-  }
-
   async function addToList() {
     console.log('media', media)
     try {
@@ -131,56 +125,10 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
     }
   }
 
-  async function addGameRelease(releaseDate: IGDB.Game.ReleaseDate) {
-    // console.log("releaseDate", releaseDate);
-    let game = {
-      cover: (media.data as IGDB.Game.Game).cover,
-      id: (media.data as IGDB.Game.Game).id,
-      name: (media.data as IGDB.Game.Game).name,
-      summary: (media.data as IGDB.Game.Game).summary
-    }
-    // console.log(game);
-    releaseDate.game = game;
-    try {
-      await firestore().collection("gameReleases").doc(releaseDate.id.toString()).set(releaseDate, { merge: true })
-      console.log("Document successfully written!");
-      await firestore().collection("gameReleases").doc(releaseDate.id.toString()).update({
-        subscribers: firestore.FieldValue.arrayUnion(route.params.uid)
-      })
-      console.log("Document updated successfully.")
-      modalizeRef.current?.close()
-    } catch (error) {
-      console.error("Error writing document: ", error);
-    }
-  }
-
   return (
     <>
       {media.type === "game" &&
-        <Modalize ref={modalizeRef} adjustToContentHeight={true} childrenStyle={{ marginBottom: 16 }} modalStyle={colorScheme === "dark" ? { backgroundColor: "#121212" } : {}}>
-          {/* {(media.data as IGDB.Game.Game).release_dates.map((releaseDate, i) => ( */}
-          {(media.data as IGDB.Game.Game).release_dates.map((releaseDate, i) => (
-            (releaseDate.region === 2 || releaseDate.region === 8) &&
-            <Pressable
-              key={i}
-              onPress={() => addGameRelease(releaseDate)}
-              style={{
-                marginHorizontal: 16,
-                marginTop: 16,
-                paddingBottom: i < (media.data as IGDB.Game.Game).release_dates.filter(releaseDate => releaseDate.region === 2 || releaseDate.region === 8).length - 1 ? 16 : 0,
-                borderBottomWidth: i < (media.data as IGDB.Game.Game).release_dates.filter(releaseDate => releaseDate.region === 2 || releaseDate.region === 8).length - 1 ? StyleSheet.hairlineWidth : 0,
-                borderColor: i < (media.data as IGDB.Game.Game).release_dates.filter(releaseDate => releaseDate.region === 2 || releaseDate.region === 8).length - 1 ? "#3c3d41" : undefined
-              }}
-            >
-              <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
-                <Text style={colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>{releaseDate.platform.name}</Text>
-                {getReleaseDate() === "MULTIPLE DATES" &&
-                  <Text style={reusableStyles.date}>{formatDate(releaseDate)}</Text>
-                }
-              </View>
-            </Pressable>
-          ))}
-        </Modalize>
+        <GameReleaseModal modalizeRef={modalizeRef} game={media.data as IGDB.Game.Game} uid={media.uid as string} getReleaseDate={getReleaseDate} />
       }
       <ScrollView>
         {/* <Image
@@ -211,36 +159,18 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
             <Text style={colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>{media.type === "movie" ? `${Math.floor(movieDetails?.runtime / 60)} h ${movieDetails?.runtime % 60} min` : null}</Text>
           </View> */}
           <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{media.type === "game" ? (media.data as IGDB.Game.Game).summary : (media.data as TMDB.Movie.Movie).overview}</Text>
-          {media.type === "game" &&
-            // <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>
-            //   Genres: {(media.data as IGDB.Game.Game).genres.map((genre, i) =>
-            //   <React.Fragment key={i}>{i > 0 ? `, ${genre.name}` : genre.name}</React.Fragment>)}
-            // </Text>
-            <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
-              <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text>
-              {(media.data as IGDB.Game.Game).genres.map((genre, i) =>
-                <View style={{ flexDirection: "row" }} key={i}>
-                  {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
-                  {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
-                </View>
-              )}
-            </View>
-          }
-          {media.type === "movie" &&
-            <View>
-              {/* <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Genres: {movieDetails?.genres.map((genre: { id: number, name: string }, i: number) => <React.Fragment key={i}>{i > 0 ? `, ${genre.name}` : genre.name}</React.Fragment>)}</Text> */}
-              <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
-                <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text>
-                {movieDetails?.genres.map((genre: { id: number, name: string }, i: number) =>
-                  <View style={{ flexDirection: "row" }} key={i}>
-                    {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
-                    {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
-                  </View>
-                )}
+          <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+            <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text>
+            {(media.type === "game" ? media.data as IGDB.Game.Game : movieDetails)?.genres.map((genre, i) =>
+              <View style={{ flexDirection: "row" }} key={i}>
+                {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
+                {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
               </View>
+            )}
+            {media.type === "movie" &&
               <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Status: {movieDetails?.status}</Text>
-            </View>
-          }
+            }
+          </View>
         </View>
         <CategoryControl buttons={media.type === "movie" ? ["Cast & Crew", "Trailers"] : ["Credits", "Trailers"]} categoryIndex={detailIndex} handleCategoryChange={(index: number) => setDetailIndex(index)} />
         <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
@@ -322,22 +252,5 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Navigat
     </>
   );
 };
-
-const styles = StyleSheet.create({
-  modalItem: {
-    // width: (Dimensions.get("window").width / 2) - 32, // is 50% of container width
-    // height: (4 / 3) * ((Dimensions.get("window").width / 2) - 32),
-    width: (Dimensions.get("window").width / 2) - 24, // is 50% of container width
-    height: (713 / 500) * ((Dimensions.get("window").width / 2) - 24),
-    borderRadius: 8,
-    resizeMode: "stretch",
-    // marginTop: 16,
-    marginBottom: 16,
-    // marginLeft: 24,
-    // marginRight: 8
-    marginLeft: 16,
-    marginRight: 8
-  },
-})
 
 export default Details;

@@ -271,15 +271,23 @@ export namespace TMDB {
 import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack"
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+
+export interface IGDBCredentials {
+  access_token: string;
+  expires_in: number;
+  modified: number;
+  token_type: "bearer";
+}
+
 // export declare module Navigation {
 export namespace Navigation {
   export type RootStackParamList = {
-    Tabs: { uid: string | undefined, igdbCreds: any },
+    Tabs: { uid: string | undefined, igdbCreds: IGDBCredentials },
     Welcome: undefined
   }
 
   export type TabNavigationParamList = {
-    Find: { uid: string, igdbCreds: any }
+    Find: { uid: string, igdbCreds: IGDBCredentials }
     Countdown: { uid: string }
     Profile: { uid: string }
   }
@@ -292,7 +300,7 @@ export namespace Navigation {
   }
 
   export type FindStackParamList = {
-    Find: { uid: string | undefined, igdbCreds: any },
+    Find: { uid: string | undefined, igdbCreds: IGDBCredentials },
     Details: { type: "game" | "movie", data: IGDB.Game.Game | TMDB.Movie.Movie, uid: string | undefined },
     Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }

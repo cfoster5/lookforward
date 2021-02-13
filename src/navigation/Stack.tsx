@@ -1,13 +1,13 @@
 import React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
 import { TabNavigation } from './TabNavigator';
-import { Navigation } from '../../types';
+import { IGDBCredentials, Navigation } from '../../types';
 import { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import { AuthStackScreen } from './AuthStack';
 
 const Stack = createStackNavigator<Navigation.RootStackParamList>();
 
-export function StackNavigator({ user, igdbCreds }: { user: FirebaseAuthTypes.User | undefined, igdbCreds: any }) {
+export function StackNavigator({ user, igdbCreds }: { user: FirebaseAuthTypes.User | undefined, igdbCreds: IGDBCredentials }) {
   return <Stack.Navigator>
     {user ? <Stack.Screen
       name="Tabs"

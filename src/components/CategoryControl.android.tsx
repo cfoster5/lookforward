@@ -5,11 +5,10 @@ import { iOSUIKit } from "react-native-typography";
 interface Props {
   buttons: string[],
   categoryIndex: number,
-  handleCategoryChange: (index: number) => void,
-  marginTop: number
+  handleCategoryChange: (index: number) => void
 }
 
-function CategoryControl({ buttons, categoryIndex, handleCategoryChange, marginTop }: Props) {
+function CategoryControl({ buttons, categoryIndex, handleCategoryChange }: Props) {
   return (
     // <SegmentedControl
     //   style={{ marginHorizontal: 16, marginTop: 8, paddingVertical: 16 }}
@@ -26,7 +25,7 @@ function CategoryControl({ buttons, categoryIndex, handleCategoryChange, marginT
       flexWrap: 'wrap',
       alignItems: 'flex-start',
       paddingHorizontal: 16,
-      marginTop: marginTop
+      marginTop: 8
     }}>
       {buttons.map((button, i) => (
         <Pressable

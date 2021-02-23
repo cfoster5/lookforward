@@ -1,17 +1,32 @@
 import React from 'react';
-import { createStackNavigator } from "@react-navigation/stack";
+import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
 import Countdown from '../screens/Countdown';
+import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
+import { Navigation } from '../../types';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 
-const CountdownStack = createStackNavigator<any>();
-export function CountdownStackScreen({ route, navigation }: any) {
-  return <CountdownStack.Navigator>
-    <CountdownStack.Screen
-      name="Countdown"
-      component={Countdown}
-      initialParams={{
-        // user: route.params.user
-        uid: route.params.uid
-      }}
-    />
-  </CountdownStack.Navigator>
+type CountdownStackNavProp = CompositeNavigationProp<
+  StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
+  BottomTabNavigationProp<Navigation.TabNavigationParamList>
+>;
+
+interface Props {
+  navigation: CountdownStackNavProp,
+  route: RouteProp<Navigation.TabNavigationParamList, "Countdown">
+}
+
+const Stack = createStackNavigator<any>();
+export function CountdownStack({ navigation, route }: Props) {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Countdown"
+        component={Countdown}
+        initialParams={{
+          // user: route.params.user
+          uid: route.params.uid
+        }}
+      />
+    </Stack.Navigator>
+  )
 }

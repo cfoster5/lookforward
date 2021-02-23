@@ -1,9 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { FindStackScreen } from './FindStack';
-import { CountdownStackScreen } from './CountdownStack';
-import { ProfileStackScreen } from './ProfileStack';
+import { FindStack } from './FindStack';
+import { CountdownStack } from './CountdownStack';
+import { ProfileStack } from './ProfileStack';
 import { IGDBCredentials, Navigation } from '../../types';
 
 interface Props {
@@ -34,9 +34,9 @@ export function TabNavigation({ uid, igdbCreds }: Props) {
         inactiveTintColor: 'gray',
       }}
     >
-      <Tabs.Screen name="Find" component={FindStackScreen} initialParams={{ uid: uid, igdbCreds: igdbCreds }} />
-      <Tabs.Screen name="Countdown" component={CountdownStackScreen} initialParams={{ uid: uid }} />
-      <Tabs.Screen name="Profile" component={ProfileStackScreen} initialParams={{ uid: uid }} />
+      <Tabs.Screen name="Find" component={FindStack} initialParams={{ uid: uid, igdbCreds: igdbCreds }} />
+      <Tabs.Screen name="Countdown" component={CountdownStack} initialParams={{ uid: uid }} />
+      <Tabs.Screen name="Profile" component={ProfileStack} initialParams={{ uid: uid }} />
     </Tabs.Navigator>
   )
 }

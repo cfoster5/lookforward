@@ -326,6 +326,10 @@ export namespace Navigation {
   //   navigation: ActorScreenNavigationProp;
   // }
 
+  export type CountdownStackParamList = {
+    Countdown: { uid: string }
+  }
+
   export type AuthStackParamList = {
     Welcome: undefined,
     "Create Account": undefined

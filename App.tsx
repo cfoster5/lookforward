@@ -6,7 +6,6 @@ import SplashScreen from 'react-native-splash-screen'
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import firestore from '@react-native-firebase/firestore';
-import { StackNavigator } from './src/navigation/RootStack';
 import { TabNavigation } from './src/navigation/TabNavigator';
 import { AuthStack } from './src/navigation/AuthStack';
 

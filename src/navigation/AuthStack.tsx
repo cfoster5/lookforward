@@ -7,7 +7,6 @@ import Login from '../screens/Login';
 import PasswordReset from '../screens/PasswordReset';
 
 const Stack = createStackNavigator<Navigation.AuthStackParamList>();
-
 export function AuthStack() {
   return (
     <Stack.Navigator>

@@ -6,7 +6,9 @@ import SplashScreen from 'react-native-splash-screen'
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import firestore from '@react-native-firebase/firestore';
-import { StackNavigator } from './src/navigation/Stack';
+import { StackNavigator } from './src/navigation/RootStack';
+import { TabNavigation } from './src/navigation/TabNavigator';
+import { AuthStack } from './src/navigation/AuthStack';
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
@@ -115,12 +117,14 @@ export default function App() {
     //   style={{ height: Dimensions.get("window").height, width: Dimensions.get("window").width }}
     // />
   }
-  return <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-    <OverflowMenuProvider>
-      <>
-        <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />
-        <StackNavigator user={user} igdbCreds={igdbCreds} />
-      </>
-    </OverflowMenuProvider>
-  </NavigationContainer>
+  return (
+    <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <OverflowMenuProvider>
+        <>
+          <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />
+          {user ? <TabNavigation uid={user.uid} igdbCreds={igdbCreds} /> : <AuthStack />}
+        </>
+      </OverflowMenuProvider>
+    </NavigationContainer>
+  )
 }

@@ -281,10 +281,6 @@ export interface IGDBCredentials {
 
 // export declare module Navigation {
 export namespace Navigation {
-  export type RootStackParamList = {
-    Tabs: { uid: string | undefined, igdbCreds: IGDBCredentials },
-    Welcome: undefined
-  }
 
   export type TabNavigationParamList = {
     Find: { uid: string, igdbCreds: IGDBCredentials }
@@ -292,43 +288,43 @@ export namespace Navigation {
     Profile: { uid: string }
   }
 
-  type TabsScreenRouteProp = RouteProp<RootStackParamList, "Tabs">
-  type TabsScreenNavigationProp = BottomTabNavigationProp<RootStackParamList, "Tabs">;
-  export type TabsScreenProps = {
-    route: TabsScreenRouteProp;
-    navigation: TabsScreenNavigationProp;
-  }
+  // type TabsScreenRouteProp = RouteProp<RootStackParamList, "Tabs">
+  // type TabsScreenNavigationProp = BottomTabNavigationProp<RootStackParamList, "Tabs">;
+  // export type TabsScreenProps = {
+  //   route: TabsScreenRouteProp;
+  //   navigation: TabsScreenNavigationProp;
+  // }
 
   export type FindStackParamList = {
-    Find: { uid: string | undefined, igdbCreds: IGDBCredentials },
-    Details: { type: "game" | "movie", data: IGDB.Game.Game | TMDB.Movie.Movie, uid: string | undefined },
+    Find: { uid: string, igdbCreds: IGDBCredentials },
+    Details: { type: "game" | "movie", data: IGDB.Game.Game | TMDB.Movie.Movie, uid: string },
     Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }
 
-  type FindScreenRouteProp = RouteProp<FindStackParamList, 'Find'>;
-  type FindScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Find'>;
-  export type FindScreenProps = {
-    route: FindScreenRouteProp;
-    navigation: FindScreenNavigationProp;
-    countdownMovies: any;
-    countdownGames: any;
-  }
+  // type FindScreenRouteProp = RouteProp<FindStackParamList, 'Find'>;
+  // type FindScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Find'>;
+  // export type FindScreenProps = {
+  //   route: FindScreenRouteProp;
+  //   navigation: FindScreenNavigationProp;
+  //   countdownMovies: any;
+  //   countdownGames: any;
+  // }
 
-  type DetailsScreenRouteProp = RouteProp<FindStackParamList, 'Details'>;
-  type DetailsScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Details'>;
-  export type DetailsScreenProps = {
-    route: DetailsScreenRouteProp;
-    navigation: DetailsScreenNavigationProp;
-    countdownMovies: any;
-    countdownGames: any;
-  }
+  // type DetailsScreenRouteProp = RouteProp<FindStackParamList, 'Details'>;
+  // type DetailsScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Details'>;
+  // export type DetailsScreenProps = {
+  //   route: DetailsScreenRouteProp;
+  //   navigation: DetailsScreenNavigationProp;
+  //   countdownMovies: any;
+  //   countdownGames: any;
+  // }
 
-  type ActorScreenRouteProp = RouteProp<FindStackParamList, 'Actor'>;
-  type ActorScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Actor'>;
-  export type ActorScreenProps = {
-    route: ActorScreenRouteProp;
-    navigation: ActorScreenNavigationProp;
-  }
+  // type ActorScreenRouteProp = RouteProp<FindStackParamList, 'Actor'>;
+  // type ActorScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Actor'>;
+  // export type ActorScreenProps = {
+  //   route: ActorScreenRouteProp;
+  //   navigation: ActorScreenNavigationProp;
+  // }
 
   export type AuthStackParamList = {
     Welcome: undefined,

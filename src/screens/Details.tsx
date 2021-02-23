@@ -26,8 +26,17 @@ import { months } from '../helpers/helpers';
 import firestore from '@react-native-firebase/firestore';
 import CategoryControl from '../components/CategoryControl';
 import GameReleaseModal from '../components/Details/GameDetailModal';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
-function Details({ route, navigation, countdownMovies, countdownGames }: Navigation.DetailsScreenProps) {
+interface Props {
+  navigation: StackNavigationProp<Navigation.FindStackParamList, 'Details'>,
+  route: RouteProp<Navigation.FindStackParamList, 'Details'>,
+  countdownMovies: any;
+  countdownGames: any;
+}
+
+function Details({ route, navigation, countdownMovies, countdownGames }: Props) {
   const media = route.params;
   const [movieDetails, setMovieDetails] = useState<TMDB.Movie.Details>();
   const [detailIndex, setDetailIndex] = useState(0)

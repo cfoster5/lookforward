@@ -11,10 +11,18 @@ import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames }
 import { IGDB, Navigation, TMDB } from '../../types';
 import MediaItem from '../components/MediaItem';
 import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
-import { useScrollToTop } from '@react-navigation/native';
+import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import CategoryControl from '../components/CategoryControl';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-function Search({ route, navigation, countdownMovies, countdownGames }: Navigation.FindScreenProps) {
+interface Props {
+  navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
+  route: RouteProp<Navigation.FindStackParamList, 'Find'>,
+  countdownMovies: any,
+  countdownGames: any
+}
+
+function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
   const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([])

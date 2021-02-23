@@ -1,5 +1,5 @@
+import React from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useEffect } from "react";
 import { Appearance, Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
@@ -7,7 +7,7 @@ import { IGDB, Navigation, TMDB } from "../../types";
 import PosterButton from "./PosterButton";
 
 interface Props {
-  navigation: StackNavigationProp<Navigation.HomeStackParamList, "Find"> | StackNavigationProp<Navigation.HomeStackParamList, "Details">,
+  navigation: StackNavigationProp<Navigation.FindStackParamList, "Find"> | StackNavigationProp<Navigation.FindStackParamList, "Details">,
   mediaType: "game" | "movie",
   // data: TMDB.Movie.Movie | IGDB.ReleaseDate.ReleaseDate
   data: TMDB.Movie.Movie | IGDB.Game.Game
@@ -20,7 +20,7 @@ const colorScheme = "dark"
 
 function MediaItem({ navigation, mediaType, data, inCountdown, uid }: Props) {
   return (
-    <Pressable onPress={() => navigation.push('Details', { type: mediaType, data: data })}>
+    <Pressable onPress={() => navigation.navigate('Details', { type: mediaType, data: data })}>
       <PosterButton mediaType={mediaType} data={data} inCountdown={inCountdown} uid={uid} />
       {mediaType === "movie" && (data as TMDB.Movie.Movie).poster_path &&
         <Image

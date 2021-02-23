@@ -12,8 +12,15 @@ import { Navigation, TMDB } from '../../types';
 import { getMovieCredits } from '../helpers/requests';
 import { reusableStyles } from '../helpers/styles';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
 
-function Actor({ route, navigation }: Navigation.ActorScreenProps) {
+interface Props {
+  navigation: StackNavigationProp<Navigation.FindStackParamList, 'Actor'>,
+  route: RouteProp<Navigation.FindStackParamList, 'Actor'>
+}
+
+function Actor({ route, navigation }: Props) {
   const actor = route.params;
   const [credits, setCredits] = useState<TMDB.Person.Credits>();
 

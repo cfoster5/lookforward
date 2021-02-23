@@ -6,7 +6,7 @@ import { reusableStyles } from "../helpers/styles";
 import { Navigation, TMDB } from "../../types";
 
 interface Props {
-  navigation: StackNavigationProp<Navigation.HomeStackParamList, "Details">,
+  navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">,
   type: "cast" | "crew",
   person: TMDB.Movie.Cast | TMDB.Movie.Crew
 }

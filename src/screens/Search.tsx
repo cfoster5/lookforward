@@ -73,6 +73,18 @@ function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
   }, [])
 
   useEffect(() => {
+    if (categoryIndex !== 0) {
+      setMovies(initMovies);
+    }
+    if (categoryIndex !== 1) {
+      setShows(initShows);
+    }
+    if (categoryIndex !== 2) {
+      setGames(initGames);
+    }
+    setSearchValue("");
+    searchRef.current?.clear();
+
     // Scroll to top on category change; Only after setting initial value
     if (prevCategoryIndex !== undefined && prevCategoryIndex !== categoryIndex) {
       scrollRef?.current?.scrollToIndex({
@@ -112,22 +124,14 @@ function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
     />
   );
 
-  function handleCategoryChange(index: number) {
-    if (index === 0) {
-      setGames(initGames);
-    }
-    if (index === 1) {
-      setMovies(initMovies);
-    }
-    setSearchValue("");
-    searchRef.current?.clear();
-    setCategoryIndex(index);
-  }
-
   return (
     <>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
-        <CategoryControl buttons={['Movies', 'Games']} categoryIndex={categoryIndex} handleCategoryChange={(index: number) => handleCategoryChange(index)} />
+        <CategoryControl
+          buttons={['Movies', 'TV', 'Games']}
+          categoryIndex={categoryIndex}
+          handleCategoryChange={index => setCategoryIndex(index)}
+        />
       </View>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
         <SearchBar

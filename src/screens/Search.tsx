@@ -77,9 +77,6 @@ function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
       setMovies(initMovies);
     }
     if (categoryIndex !== 1) {
-      setShows(initShows);
-    }
-    if (categoryIndex !== 2) {
       setGames(initGames);
     }
     setSearchValue("");
@@ -128,7 +125,7 @@ function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
     <>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
         <CategoryControl
-          buttons={['Movies', 'TV', 'Games']}
+          buttons={['Movies', 'Games']}
           categoryIndex={categoryIndex}
           handleCategoryChange={index => setCategoryIndex(index)}
         />

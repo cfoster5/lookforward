@@ -12,59 +12,33 @@ import { iOSColors, iOSUIKit } from 'react-native-typography';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CountdownItem from '../components/CountdownItem';
 import { HeaderButton, HeaderButtons, Item } from 'react-navigation-header-buttons';
-import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 import { useScrollToTop } from '@react-navigation/native';
 
-function Countdown({ route, navigation }: any) {
+interface Props {
+  route: any,
+  navigation: any,
+  countdownMovies: any[],
+  countdownGames: any[]
+}
+
+function Countdown({ route, navigation, countdownMovies, countdownGames }: Props) {
   // const colorScheme = Appearance.getColorScheme();
   const [showButtons, setShowButtons] = useState(false);
   const [selections, setSelections] = useState<{ documentID: string, sectionName: string }[]>([]);
-  const [countdownMovies, setCountdownMovies] = useState([]);
-  const [countdownGames, setCountdownGames] = useState([]);
+  // const [listData, setListData] = useState([
+  //   { data: countdownMovies, title: "Movies" },
+  //   { data: countdownGames, title: "Games" }
+  // ])
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
 
-  useEffect(() => {
-    if (route.params.uid) {
-      const movieSubscription = firestore().collection('movies').orderBy("release_date").where("subscribers", "array-contains", route.params.uid)
-        .onSnapshot(querySnapshot => { onResult(querySnapshot, "movies") }, onError);
-
-      const gameSubscription = firestore().collection("gameReleases").orderBy("date").where("subscribers", "array-contains", route.params.uid)
-        // firestore().collection("games").orderBy("date").where("owner", "==", user.uid)
-        .onSnapshot(querySnapshot => { onResult(querySnapshot, "games") }, onError);
-
-      // Stop listening for updates when no longer required
-      return () => {
-        // Unmounting
-        movieSubscription();
-        gameSubscription();
-      };
-    }
-  }, [route.params.uid]);
-
-  useEffect(() => {
-    setListData([
-      { data: countdownMovies, title: "Movies" },
-      { data: countdownGames, title: "Games" }
-    ])
-  }, [countdownGames, countdownMovies])
-
-  function onResult(querySnapshot: FirebaseFirestoreTypes.QuerySnapshot, mediaType: "movies" | "games") {
-    // console.log(querySnapshot.docs);
-    let tempMedia: any = []
-    querySnapshot.docs.forEach(doc => {
-      // console.log(doc.data())
-      let data = doc.data();
-      data.documentID = doc.id;
-      tempMedia.push(data);
-    });
-    // State change here is forcing user back to home page on addToList();
-    mediaType === "movies" ? setCountdownMovies(tempMedia) : setCountdownGames(tempMedia);
-  }
-
-  function onError(error: any) {
-    console.error("error", error);
-  }
+  // useEffect(() => {
+  //   setListData([
+  //     { data: countdownMovies, title: "Movies" },
+  //     { data: countdownGames, title: "Games" }
+  //   ])
+  // }, [countdownGames, countdownMovies])
 
   const IoniconsHeaderButton = (props) => (
     // the `props` here come from <Item ... />
@@ -236,6 +210,7 @@ function Countdown({ route, navigation }: any) {
       keyExtractor={(item, index) => item + index}
       renderItem={data =>
         <CountdownItem
+          navigation={navigation}
           item={data.item}
           sectionName={data.section.title}
           isFirstInSection={data.index === 0}

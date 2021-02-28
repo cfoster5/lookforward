@@ -205,7 +205,11 @@ function Countdown({ route, navigation, countdownMovies, countdownGames }: Props
   return (
     <SectionList
       contentContainerStyle={{ paddingVertical: 16, marginHorizontal: 16 }}
-      sections={listData}
+      // sections={listData}
+      sections={[
+        { data: countdownMovies, title: "Movies" },
+        { data: countdownGames, title: "Games" }
+      ]}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}
       renderItem={data =>

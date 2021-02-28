@@ -163,15 +163,19 @@ function Countdown({ route, navigation, countdownMovies, countdownGames }: Props
     { data: countdownGames, title: "Games" }
   ])
 
-  const renderSectionHeader = ({ section }) => <View style={{ backgroundColor: "#1f1f1f" }}><Text style={{
-    ...iOSUIKit.title3EmphasizedWhiteObject,
-    marginLeft: 16,
-    marginVertical: 8,
-  }}
-  >
-    {section.title}
-  </Text>
-  </View>;
+
+  const renderSectionHeader = ({ section }) => (
+    <View style={{ backgroundColor: "#1f1f1f" }}>
+      <Text style={{
+        ...iOSUIKit.title3EmphasizedWhiteObject,
+        marginLeft: 16,
+        marginVertical: 8,
+      }}
+      >
+        {section.title}
+      </Text>
+    </View>
+  );
 
   function updateSelections(documentID: string, sectionName: string) {
     console.log('sectionName', sectionName)

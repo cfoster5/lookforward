@@ -1,5 +1,5 @@
 import React from "react";
-import { Appearance, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Animated, Appearance, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { months } from "../helpers/helpers";
@@ -7,6 +7,7 @@ import { reusableStyles } from "../helpers/styles";
 import { IGDB, TMDB } from "../../types";
 
 interface Props {
+  navigation: any
   item: any
   sectionName: "Movies" | "Games"
   isFirstInSection: boolean
@@ -134,7 +135,8 @@ function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, s
   });
 
   return (
-    <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : null}>
+    // <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : navigation.navigate('Details', { type: sectionName === "Movies" ? "movie" : "game", data: item })}>
+    <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : sectionName === "Movies" ? navigation.navigate('Details', { type: sectionName === "Movies" ? "movie" : "game", data: item }) : Alert.alert("This isn't ready just yet")}>
       <View style={styles.rowFront}>
         <SlideView style={styles.slide}>
           <FadeView style={{ justifyContent: "center" }}>

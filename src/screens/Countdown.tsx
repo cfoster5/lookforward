@@ -32,6 +32,8 @@ function Countdown({ route, navigation, countdownMovies, countdownGames }: Props
   // ])
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
+  const transformAnim = useRef(new Animated.Value(!showButtons ? -16 : 16)).current;
+  const opacityAnim = useRef(new Animated.Value(!showButtons ? 0 : 1)).current;
 
   // useEffect(() => {
   //   setListData([
@@ -106,9 +108,6 @@ function Countdown({ route, navigation, countdownMovies, countdownGames }: Props
     });
   }, [navigation, showButtons, selections]);
 
-  const transformAnim = useRef(new Animated.Value(!showButtons ? -16 : 16)).current;
-  const opacityAnim = useRef(new Animated.Value(!showButtons ? 0 : 1)).current;
-
   function startAnimation() {
     Animated.timing(
       transformAnim,
@@ -129,32 +128,7 @@ function Countdown({ route, navigation, countdownMovies, countdownGames }: Props
     ).start();
   }
 
-  const SlideView = (props) => {
-    return (
-      <Animated.View
-        style={{
-          ...props.style,
-          transform:
-            [{ translateX: transformAnim }]
-        }}
       >
-        {props.children}
-      </Animated.View>
-    );
-  }
-
-  const FadeView = (props) => {
-    return (
-      <Animated.View
-        style={{
-          ...props.style,
-          opacity: opacityAnim
-        }}
-      >
-        {props.children}
-      </Animated.View>
-    );
-  }
 
   const [listData, setListData] = useState([
     // { data: route.params.movies, title: "Movies" },
@@ -227,8 +201,8 @@ function Countdown({ route, navigation, countdownMovies, countdownGames }: Props
           showButtons={showButtons}
           selected={selections.findIndex(obj => obj.documentID === data.item.documentID) > -1}
           updateSelections={documentID => updateSelections(documentID, data.section.title)}
-          SlideView={SlideView}
-          FadeView={FadeView}
+          transformAnim={transformAnim}
+          opacityAnim={opacityAnim}
         />
       }
       renderSectionHeader={renderSectionHeader}

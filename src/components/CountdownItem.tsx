@@ -15,11 +15,11 @@ interface Props {
   showButtons: boolean
   selected: boolean
   updateSelections: (documentID: string) => void
-  SlideView: (props: any) => JSX.Element
-  FadeView: (props: any) => JSX.Element
+  transformAnim: Animated.Value,
+  opacityAnim: Animated.Value
 }
 
-function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, SlideView, FadeView }: Props) {
+function CountdownItem({navigation, item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, transformAnim, opacityAnim }: Props) {
   // const colorScheme = Appearance.getColorScheme();
 
   function getReleaseDate(): string {
@@ -133,6 +133,33 @@ function CountdownItem({ item, sectionName, isFirstInSection, isLastInSection, s
       paddingBottom: 8
     }
   });
+
+  const SlideView = ({ children, style }: { children: any, style: { flex: number, flexDirection: "row", flexWrap: "wrap" } }) => {
+    return (
+      <Animated.View
+        style={{
+          ...style,
+          transform:
+            [{ translateX: transformAnim }]
+        }}
+      >
+        {children}
+      </Animated.View>
+    );
+  }
+
+  const FadeView = ({ children, style }: { children: any, style: { justifyContent: "center" } }) => {
+    return (
+      <Animated.View
+        style={{
+          ...style,
+          opacity: opacityAnim
+        }}
+      >
+        {children}
+      </Animated.View>
+    );
+  }
 
   return (
     // <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : navigation.navigate('Details', { type: sectionName === "Movies" ? "movie" : "game", data: item })}>

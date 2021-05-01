@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
+import firestore from '@react-native-firebase/firestore';
 import Actor from '../screens/Actor';
 import Details from "../screens/Details";
 import Search from "../screens/Search";
 import { Navigation } from "../../types";
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { onResult } from '../helpers/helpers';
 
 type FindStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.FindStackParamList, "Find">,
@@ -20,7 +22,31 @@ interface Props {
 }
 
 const Stack = createStackNavigator<Navigation.FindStackParamList>();
-export function FindStack({ navigation, route, countdownMovies, countdownGames }: Props) {
+export function FindStack({ navigation, route }: Props) {
+  const [countdownMovies, setCountdownMovies] = useState([]);
+  const [countdownGames, setCountdownGames] = useState([]);
+
+  useEffect(() => {
+    const movieSubscription = firestore().collection('movies').orderBy("release_date").where("subscribers", "array-contains", route.params.uid)
+      .onSnapshot(querySnapshot => { setCountdownMovies(onResult(querySnapshot, "movies")) }, (error) => console.error("error", error));
+
+    const gameSubscription = firestore().collection("gameReleases").orderBy("date").where("subscribers", "array-contains", route.params.uid)
+      // firestore().collection("games").orderBy("date").where("owner", "==", user.uid)
+      .onSnapshot(querySnapshot => { setCountdownGames(onResult(querySnapshot, "games")) }, (error) => console.error("error", error));
+
+
+    // Stop listening for updates when no longer required
+    return () => {
+      // Unmounting
+      movieSubscription();
+      gameSubscription();
+    };
+  }, [route.params.uid]);
+
+  // useEffect(() => {
+  //   console.log('homeStack changed')
+  // }, [countdownMovies, countdownMovies])
+
   return (
     <Stack.Navigator>
       {/* {props => <Stack.Screen name="Find" component={Search} {...props} extraData={{}} />}

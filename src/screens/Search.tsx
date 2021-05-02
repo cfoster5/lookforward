@@ -9,7 +9,7 @@ import {
 import { SearchBar, Image } from 'react-native-elements';
 import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from '../helpers/requests';
 import { IGDB, Navigation, TMDB } from '../../types';
-import MediaItem from '../components/MediaItem';
+import Poster from '../components/Poster';
 import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
 import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import CategoryControl from '../components/CategoryControl';

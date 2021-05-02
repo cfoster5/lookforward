@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Animated, Appearance, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Alert, Animated, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { months } from "../helpers/helpers";
@@ -20,7 +20,6 @@ interface Props {
 }
 
 function CountdownItem({navigation, item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, transformAnim, opacityAnim }: Props) {
-  // const colorScheme = Appearance.getColorScheme();
 
   function getReleaseDate(): string {
     if (sectionName === "Movies") {

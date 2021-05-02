@@ -23,24 +23,19 @@ interface Props {
 }
 
 function Countdown({ route, navigation, countdownMovies, countdownGames }: Props) {
-  // const colorScheme = Appearance.getColorScheme();
   const [showButtons, setShowButtons] = useState(false);
   const [selections, setSelections] = useState<{ documentID: string, sectionName: string }[]>([]);
-  // const [listData, setListData] = useState([
-  //   { data: countdownMovies, title: "Movies" },
-  //   { data: countdownGames, title: "Games" }
-  // ])
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
   const transformAnim = useRef(new Animated.Value(!showButtons ? -16 : 16)).current;
   const opacityAnim = useRef(new Animated.Value(!showButtons ? 0 : 1)).current;
 
-  // useEffect(() => {
-  //   setListData([
-  //     { data: countdownMovies, title: "Movies" },
-  //     { data: countdownGames, title: "Games" }
-  //   ])
-  // }, [countdownGames, countdownMovies])
+  useEffect(() => {
+    setListData([
+      { data: countdownMovies, title: "Movies" },
+      { data: countdownGames, title: "Games" }
+    ])
+  }, [countdownGames, countdownMovies])
 
   const IoniconsHeaderButton = (props) => (
     // the `props` here come from <Item ... />
@@ -127,8 +122,6 @@ function Countdown({ route, navigation, countdownMovies, countdownGames }: Props
       }
     ).start();
   }
-
-      >
 
   const [listData, setListData] = useState([
     // { data: route.params.movies, title: "Movies" },

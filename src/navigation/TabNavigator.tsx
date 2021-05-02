@@ -7,14 +7,16 @@ import { ProfileStack } from './ProfileStack';
 import { IGDBCredentials, Navigation } from '../../types';
 import firestore from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
+import { ColorSchemeName } from 'react-native';
 
 interface Props {
   uid: string,
-  igdbCreds: IGDBCredentials
+  igdbCreds: IGDBCredentials,
+  colorScheme: ColorSchemeName
 }
 
 const Tabs = createBottomTabNavigator<Navigation.TabNavigationParamList>();
-export function TabNavigation({ uid, igdbCreds }: Props) {
+export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
   const [countdownMovies, setCountdownMovies] = useState([]);
   const [countdownGames, setCountdownGames] = useState([]);
 
@@ -55,10 +57,10 @@ export function TabNavigation({ uid, igdbCreds }: Props) {
       }}
     >
       <Tabs.Screen name="Find" initialParams={{ uid: uid, igdbCreds: igdbCreds }}>
-        {props => <FindStack {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} />}
+        {props => <FindStack {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} colorScheme={colorScheme} />}
       </Tabs.Screen>
       <Tabs.Screen name="Countdown" initialParams={{ uid: uid, igdbCreds: igdbCreds }}>
-        {props => <CountdownStack {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} />}
+        {props => <CountdownStack {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} colorScheme={colorScheme} />}
       </Tabs.Screen>
       <Tabs.Screen name="Profile" component={ProfileStack} initialParams={{ uid: uid }} />
     </Tabs.Navigator>

@@ -3,7 +3,8 @@ import {
   ScrollView,
   View,
   Dimensions,
-  Text
+  Text,
+  ColorSchemeName
 } from 'react-native';
 
 import { IGDB, Navigation } from '../../../types';
@@ -20,10 +21,11 @@ interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
   game: IGDB.Game.Game;
   uid: string
-  modalizeRef: any
+  modalizeRef: any,
+  colorScheme: ColorSchemeName
 }
 
-function GameDetails({ navigation, game, uid, modalizeRef }: Props) {
+function GameDetails({ navigation, game, uid, modalizeRef, colorScheme }: Props) {
   const [detailIndex, setDetailIndex] = useState(0)
   // const modalizeRef = useRef<Modalize>(null);
   // const [game, setGame] = useState();
@@ -42,9 +44,6 @@ function GameDetails({ navigation, game, uid, modalizeRef }: Props) {
   //     })
   //   return () => { isMounted = false };
   // }, [route.params])
-
-  // const colorScheme = Appearance.getColorScheme();
-  const colorScheme = "dark"
 
   function getReleaseDate(): string {
     let dates: number[] = [];
@@ -67,7 +66,7 @@ function GameDetails({ navigation, game, uid, modalizeRef }: Props) {
 
   return (
     <>
-      <GameReleaseModal modalizeRef={modalizeRef} game={game} uid={uid} getReleaseDate={getReleaseDate} />
+      <GameReleaseModal modalizeRef={modalizeRef} game={game} uid={uid} getReleaseDate={getReleaseDate} colorScheme={colorScheme} />
       <ScrollView>
         {game?.cover?.url &&
           <Image
@@ -129,7 +128,7 @@ function GameDetails({ navigation, game, uid, modalizeRef }: Props) {
           }
           {detailIndex === 1 &&
             <>
-              {game.videos?.map((video, i) => <Trailer key={i} video={video} index={i} />)}
+              {game.videos?.map((video, i) => <Trailer key={i} video={video} index={i} colorScheme={colorScheme} />)}
               {game.videos === undefined &&
                 <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>No trailers yet! Come back later!</Text>
               }

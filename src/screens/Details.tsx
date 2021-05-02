@@ -9,15 +9,17 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import GameDetails from '../components/Details/GameDetails';
 import MovieDetails from '../components/Details/MovieDetails';
+import { ColorSchemeName } from 'react-native';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
   route: RouteProp<Navigation.FindStackParamList, 'Details'>,
   countdownMovies: any[];
   countdownGames: any[];
+  colorScheme: ColorSchemeName
 }
 
-function Details({ route, navigation, countdownMovies, countdownGames }: Props) {
+function Details({ route, navigation, countdownMovies, countdownGames, colorScheme }: Props) {
   const modalizeRef = useRef<Modalize>(null);
   const [countdownId, setCountdownId] = useState();
 
@@ -41,7 +43,7 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Props) 
 
   useEffect(() => {
     // console.log("Details Changes", countdownMovies, countdownGames)
-    let documentID = route.params.type === "movie" ? countdownMovies?.find((movie: TMDB.Movie.Movie) => movie.id === route.params.data.id)?.documentID : countdownGames.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === route.params.data.id)?.documentID;
+    let documentID = route.params.type === "movie" ? countdownMovies?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID : countdownGames.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
     setCountdownId(documentID)
     // setInCountdown(countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === route.params.data.id))
   }, [countdownMovies, countdownGames])
@@ -49,9 +51,9 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Props) 
   async function addToList() {
     console.log('route.params', route.params)
     try {
-      await firestore().collection("movies").doc(route.params.data.id.toString()).set(route.params.data, { merge: true });
+      await firestore().collection("movies").doc((route.params.data as TMDB.Movie.Movie).id.toString()).set(route.params.data, { merge: true });
       console.log("Document successfully written!");
-      await firestore().collection("movies").doc(route.params.data.id.toString()).update({
+      await firestore().collection("movies").doc((route.params.data as TMDB.Movie.Movie).id.toString()).update({
         subscribers: firestore.FieldValue.arrayUnion(route.params.uid)
       })
       console.log("Document updated written!");
@@ -76,10 +78,10 @@ function Details({ route, navigation, countdownMovies, countdownGames }: Props) 
   return (
     <>
       {route.params.type === "game" &&
-        <GameDetails game={route.params.data} uid={route.params.uid} modalizeRef={modalizeRef}/>
+        <GameDetails navigation={navigation} game={route.params.data as IGDB.Game.Game} uid={route.params.uid} modalizeRef={modalizeRef} colorScheme={colorScheme} />
       }
       {route.params.type === "movie" &&
-        <MovieDetails movie={route.params.data} />
+        <MovieDetails navigation={navigation} movie={route.params.data as TMDB.Movie.Movie} colorScheme={colorScheme} />
       }
     </>
   );

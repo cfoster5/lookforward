@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar, Appearance, Alert, Image, Dimensions } from 'react-native';
+import { View, StatusBar, Appearance, Alert, Image, Dimensions, ColorSchemeName } from 'react-native';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { OverflowMenuProvider } from 'react-navigation-header-buttons';
 import SplashScreen from 'react-native-splash-screen'
@@ -107,7 +107,7 @@ export default function App() {
   }
 
   // const colorScheme = Appearance.getColorScheme();
-  const colorScheme = "dark";
+  const colorScheme: ColorSchemeName = "dark";
 
   if (initializing) {
     return <View />
@@ -121,7 +121,7 @@ export default function App() {
       <OverflowMenuProvider>
         <>
           <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />
-          {user ? <TabNavigation uid={user.uid} igdbCreds={igdbCreds} /> : <AuthStack />}
+          {user ? <TabNavigation uid={user.uid} igdbCreds={igdbCreds} colorScheme={colorScheme} /> : <AuthStack />}
         </>
       </OverflowMenuProvider>
     </NavigationContainer>

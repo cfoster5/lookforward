@@ -1,6 +1,6 @@
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
-import { Appearance, Image, Pressable, Text, View } from "react-native";
+import { ColorSchemeName, Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation, TMDB } from "../../types";
@@ -8,12 +8,11 @@ import { Navigation, TMDB } from "../../types";
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">,
   type: "cast" | "crew",
-  person: TMDB.Movie.Cast | TMDB.Movie.Crew
+  person: TMDB.Movie.Cast | TMDB.Movie.Crew,
+  colorScheme: ColorSchemeName
 }
 
-function Person({ navigation, type, person }: Props) {
-  // const colorScheme = Appearance.getColorScheme();
-  const colorScheme = "dark"
+function Person({ navigation, type, person, colorScheme }: Props) {
   return (
     <Pressable style={{ flex: 1, flexDirection: 'row', alignItems: "center" }}>
       {person.profile_path &&

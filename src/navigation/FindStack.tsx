@@ -9,7 +9,6 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { getUpcomingTVPremieres } from '../helpers/requests';
 import { onResult } from '../helpers/helpers';
-import firestore from '@react-native-firebase/firestore';
 import { ColorSchemeName } from 'react-native';
 
 type FindStackNavProp = CompositeNavigationProp<

@@ -1,4 +1,4 @@
-import { IGDB, TMDB } from '../../types';
+import { IGDB, TMDB, Trakt } from '../../types';
 
 // export async function getGames(): Promise<IGDB.Game[]> {
 //   const response = await fetch("https://37y5ky2qx5.execute-api.us-east-1.amazonaws.com/games", {
@@ -99,5 +99,10 @@ export async function getMovieDetails(movieId: number): Promise<TMDB.Movie.Detai
 
 export async function getMovieCredits(person: number): Promise<TMDB.Person.Credits> {
   const response = await fetch(`https://api.themoviedb.org/3/person/${person}/movie_credits?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US`);
+  return response.json();
+}
+
+export async function getUpcomingTVPremieres(): Promise<Trakt.ShowPremiere[]> {
+  const response = await fetch(`https://inv57m25xb.execute-api.us-east-1.amazonaws.com/prod`);
   return response.json();
 }

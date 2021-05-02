@@ -3,7 +3,6 @@ import {
   ScrollView,
   View,
   Pressable,
-  Appearance,
   Text,
   ColorSchemeName
 } from 'react-native';

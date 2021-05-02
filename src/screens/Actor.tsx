@@ -4,7 +4,8 @@ import {
   View,
   Pressable,
   Appearance,
-  Text
+  Text,
+  ColorSchemeName
 } from 'react-native';
 
 import { Image } from 'react-native-elements';
@@ -17,10 +18,11 @@ import { RouteProp } from '@react-navigation/native';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Actor'>,
-  route: RouteProp<Navigation.FindStackParamList, 'Actor'>
+  route: RouteProp<Navigation.FindStackParamList, 'Actor'>,
+  colorScheme: ColorSchemeName
 }
 
-function Actor({ route, navigation }: Props) {
+function Actor({ route, navigation, colorScheme }: Props) {
   const actor = route.params;
   const [credits, setCredits] = useState<TMDB.Person.Credits>();
 
@@ -31,8 +33,6 @@ function Actor({ route, navigation }: Props) {
       setCredits(credits)
     })
   }, [])
-
-  const colorScheme = Appearance.getColorScheme();
 
   return (
     <ScrollView>

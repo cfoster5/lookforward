@@ -93,19 +93,6 @@ export default function App() {
     await firestore().collection("users").doc(user?.uid).set({ deviceToken: token })
   }
 
-  async function monitorTimeConsumingTask() {
-    return await performTimeConsumingTask();
-  }
-
-  async function performTimeConsumingTask() {
-    return new Promise((resolve) =>
-      setTimeout(
-        () => { resolve('result') },
-        2000
-      )
-    );
-  }
-
   // const colorScheme = Appearance.getColorScheme();
   const colorScheme: ColorSchemeName = "dark";
 

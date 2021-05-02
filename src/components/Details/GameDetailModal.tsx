@@ -4,6 +4,7 @@ import {
   Pressable,
   Text,
   StyleSheet,
+  ColorSchemeName,
 } from 'react-native';
 
 import { IGDB } from '../../../types';
@@ -12,10 +13,7 @@ import { iOSUIKit } from 'react-native-typography'
 import { Modalize } from 'react-native-modalize';
 import firestore from '@react-native-firebase/firestore';
 
-function GameReleaseModal({ modalizeRef, game, uid, getReleaseDate }: { modalizeRef: any, game: IGDB.Game.Game, uid: string, getReleaseDate: () => string }) {
-
-  // const colorScheme = Appearance.getColorScheme();
-  const colorScheme = "dark"
+function GameReleaseModal({ modalizeRef, game, uid, getReleaseDate, colorScheme }: { modalizeRef: any, game: IGDB.Game.Game, uid: string, getReleaseDate: () => string, colorScheme: ColorSchemeName }) {
 
   function formatDate(item: IGDB.Game.ReleaseDate) {
     let date = new Date(item.date * 1000);

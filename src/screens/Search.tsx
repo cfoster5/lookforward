@@ -79,6 +79,7 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
   }, [])
 
   useEffect(() => {
+    console.log(`searchValue`, searchValue)
     if (categoryIndex !== 0) {
       setMovies(initMovies);
     }
@@ -94,11 +95,8 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
         animated: false
       })
     }
+    console.log(`searchValue`, searchValue)
   }, [categoryIndex])
-
-  // useEffect(() => {
-  //   console.log("Search Changes", countdownMovies, countdownGames)
-  // }, [countdownMovies, countdownGames])
 
   function getMovies() {
     const date = new Date();
@@ -196,7 +194,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
       </View>
 
       <FlatList
-        // data={categoryIndex === 0 ? movies : games}
         data={setData()}
         renderItem={renderItem}
         numColumns={2}

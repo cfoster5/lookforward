@@ -106,3 +106,12 @@ export async function getUpcomingTVPremieres(): Promise<Trakt.ShowPremiere[]> {
   const response = await fetch(`https://inv57m25xb.execute-api.us-east-1.amazonaws.com/prod`);
   return response.json();
 }
+
+export async function getNextEpisode(showId: number): Promise<any[]> {
+  const response = await fetch(`https://api.trakt.tv/shows/${showId}/next_episode`, {
+    headers: {
+      "trakt-api-key": "8c5d0879072bf8414e5d6963e9a4c3bfc69b24db9ac28f1c664ff0431d2e31bb",
+    }
+  });
+  return response.json();
+}

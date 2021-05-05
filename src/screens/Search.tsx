@@ -59,12 +59,8 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
   }, [])
 
   useEffect(() => {
-    if (categoryIndex !== 0) {
-      setMovies(initMovies);
-    }
-    if (categoryIndex !== 1) {
-      setGames(initGames);
-    }
+    if (categoryIndex !== 0) { setMovies(initMovies) };
+    if (categoryIndex !== 1) { setGames(initGames) };
     setSearchValue("");
 
     // Scroll to top on category change; Only after setting initial value

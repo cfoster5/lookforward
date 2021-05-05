@@ -163,8 +163,12 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, countdo
     selections.forEach(async selection => {
       // Animate as if deleting and then delete
       // Animate height to 0
+      let collection = "";
+      if (selection.sectionName === "Movies") { collection = "movies" };
+      if (selection.sectionName === "Games") { collection = "gameReleases" };
+      if (selection.sectionName === "Shows") { collection = "shows" };
       try {
-        await firestore().collection(selection.sectionName === "Movies" ? "movies" : "gameReleases").doc(selection.documentID).update({
+        await firestore().collection(collection).doc(selection.documentID).update({
           subscribers: firestore.FieldValue.arrayRemove(route.params.uid)
         })
         console.log("Document successfully written!");

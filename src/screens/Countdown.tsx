@@ -30,6 +30,13 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, countdo
   useScrollToTop(scrollRef);
   const transformAnim = useRef(new Animated.Value(!showButtons ? -16 : 16)).current;
   const opacityAnim = useRef(new Animated.Value(!showButtons ? 0 : 1)).current;
+  const [listData, setListData] = useState([
+    // { data: route.params.movies, title: "Movies" },
+    // { data: route.params.games, title: "Games" }
+    { data: countdownMovies, title: "Movies" },
+    { data: countdownGames, title: "Games" },
+    { data: countdownShows, title: "Shows" }
+  ])
 
   useEffect(() => {
     setListData([
@@ -125,14 +132,6 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, countdo
     ).start();
   }
 
-  const [listData, setListData] = useState([
-    // { data: route.params.movies, title: "Movies" },
-    // { data: route.params.games, title: "Games" }
-    { data: countdownMovies, title: "Movies" },
-    { data: countdownGames, title: "Games" }
-  ])
-
-
   const renderSectionHeader = ({ section }) => (
     <View style={{ backgroundColor: "#1f1f1f" }}>
       <Text style={{
@@ -147,7 +146,6 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, countdo
   );
 
   function updateSelections(documentID: string, sectionName: string) {
-    console.log('sectionName', sectionName)
     let tempSelections = selections.slice();
     let selectionIndex = tempSelections.findIndex(obj => obj.documentID === documentID)
     if (selectionIndex === -1) {

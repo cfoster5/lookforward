@@ -4,11 +4,12 @@ import {
   NativeSyntheticEvent,
   TextInputSubmitEditingEventData,
   Platform,
-  FlatList
+  FlatList,
+  ColorSchemeName
 } from 'react-native';
 import { SearchBar, Image } from 'react-native-elements';
-import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from '../helpers/requests';
-import { IGDB, Navigation, TMDB } from '../../types';
+import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getUpcomingTVPremieres } from '../helpers/requests';
+import { IGDB, Navigation, TMDB, Trakt } from '../../types';
 import Poster from '../components/Poster';
 import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
 import { RouteProp, useScrollToTop } from '@react-navigation/native';
@@ -19,10 +20,12 @@ interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
   route: RouteProp<Navigation.FindStackParamList, 'Find'>,
   countdownMovies: any,
-  countdownGames: any
+  countdownGames: any,
+  countdownShows: any,
+  colorScheme: ColorSchemeName
 }
 
-function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
+function Search({ navigation, route, countdownMovies, countdownGames, countdownShows, colorScheme }: Props) {
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
   const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([])
@@ -34,6 +37,7 @@ function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
   useScrollToTop(scrollRef);
   const searchRef = useRef<SearchBar>(null);
   const prevCategoryIndex = usePrevious(categoryIndex);
+  const [showPremieres, setShowPremieres] = useState<Trakt.ShowPremiere[]>([]);
 
   // function removeOldReleases(games: game[]) {
   //   let tempGames: game[] = [];
@@ -69,6 +73,9 @@ function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
       .catch(error => {
         console.log("error 2", error)
       })
+
+    getUpcomingTVPremieres().then(premieres => isMounted ? setShowPremieres(premieres) : null);
+
     return () => { isMounted = false };
   }, [])
 
@@ -108,24 +115,45 @@ function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
     });
   }
 
-  // const colorScheme = Appearance.getColorScheme();
-  const colorScheme = "dark"
+  function renderItem({ item }: { item: TMDB.Movie.Movie | Trakt.ShowPremiere | IGDB.Game.Game }) {
+    let mediaType: "movie" | "tv" | "game" = "movie";
+    if (categoryIndex === 0) { mediaType = "movie" };
+    if (categoryIndex === 1) { mediaType = "tv" };
+    if (categoryIndex === 2) { mediaType = "game" };
 
-  const renderItem = ({ item }: { item: TMDB.Movie.Movie | IGDB.Game.Game }) => (
-    <MediaItem
-      navigation={navigation}
-      mediaType={categoryIndex === 0 ? "movie" : "game"}
-      data={item}
-      inCountdown={categoryIndex === 0 ? countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === item.id) : false}
-      uid={route.params.uid}
-    />
-  );
+    let inCountdown = false;
+    if (categoryIndex === 0) { inCountdown = countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === (item as TMDB.Movie.Movie).id) };
+    if (categoryIndex === 1) { inCountdown = countdownShows.some((premiere: Trakt.ShowPremiere) => premiere.show.ids.trakt === (item as Trakt.ShowPremiere).show.ids.trakt) };
+
+    return (
+      <Poster
+        navigation={navigation}
+        mediaType={mediaType}
+        data={item}
+        inCountdown={inCountdown}
+        uid={route.params.uid}
+        colorScheme={colorScheme}
+      />
+    )
+  };
+
+  function setData() {
+    if (categoryIndex === 0) {
+      return movies;
+    }
+    if (categoryIndex === 1) {
+      return showPremieres;
+    }
+    if (categoryIndex === 2) {
+      return games;
+    }
+  }
 
   return (
     <>
       <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
         <CategoryControl
-          buttons={['Movies', 'Games']}
+          buttons={['Movies', 'TV', 'Games']}
           categoryIndex={categoryIndex}
           handleCategoryChange={index => setCategoryIndex(index)}
         />
@@ -175,14 +203,16 @@ function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
           }}
         />
       </View>
+
       <FlatList
-        data={categoryIndex === 0 ? movies : games}
+        // data={categoryIndex === 0 ? movies : games}
+        data={setData()}
         renderItem={renderItem}
         numColumns={2}
         contentContainerStyle={{ marginHorizontal: 16 }}
         columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
         ref={scrollRef}
-        keyExtractor={(item, index) => item.id.toString()}
+        keyExtractor={(item, index) => index.toString()}
         initialNumToRender={6}
       />
     </>

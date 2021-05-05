@@ -139,7 +139,7 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
           onChangeText={value => setSearchValue(value)}
           value={searchValue}
           platform={Platform.OS === "ios" ? "ios" : "android"}
-          onSubmitEditing={searchValue ? async e => {
+          onSubmitEditing={searchValue ? async () => {
             if (categoryIndex === 0) {
               setMovies([]);
               getMovies()

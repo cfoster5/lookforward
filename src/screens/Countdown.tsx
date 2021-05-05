@@ -18,10 +18,12 @@ interface Props {
   route: any,
   navigation: any,
   countdownMovies: any[],
-  countdownGames: any[]
+  countdownGames: any[],
+  countdownShows: any[],
+  nextEpisodes: any[]
 }
 
-function Countdown({ route, navigation, countdownMovies, countdownGames }: Props) {
+function Countdown({ route, navigation, countdownMovies, countdownGames, countdownShows, nextEpisodes }: Props) {
   const [showButtons, setShowButtons] = useState(false);
   const [selections, setSelections] = useState<{ documentID: string, sectionName: string }[]>([]);
   const scrollRef = useRef<SectionList>(null);
@@ -32,7 +34,8 @@ function Countdown({ route, navigation, countdownMovies, countdownGames }: Props
   useEffect(() => {
     setListData([
       { data: countdownMovies, title: "Movies" },
-      { data: countdownGames, title: "Games" }
+      { data: countdownGames, title: "Games" },
+      { data: countdownShows, title: "Shows" }
     ])
   }, [countdownGames, countdownMovies])
 
@@ -178,7 +181,8 @@ function Countdown({ route, navigation, countdownMovies, countdownGames }: Props
       // sections={listData}
       sections={[
         { data: countdownMovies, title: "Movies" },
-        { data: countdownGames, title: "Games" }
+        { data: countdownGames, title: "Games" },
+        { data: countdownShows, title: "Shows" }
       ]}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}

@@ -9,7 +9,7 @@ import { IGDB, TMDB } from "../../types";
 interface Props {
   navigation: any
   item: any
-  sectionName: "Movies" | "Games"
+  sectionName: "Movies" | "Games" | "Shows"
   isFirstInSection: boolean
   isLastInSection: boolean
   showButtons: boolean
@@ -19,7 +19,7 @@ interface Props {
   opacityAnim: Animated.Value
 }
 
-function CountdownItem({navigation, item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, transformAnim, opacityAnim }: Props) {
+function CountdownItem({ navigation, item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, transformAnim, opacityAnim }: Props) {
 
   function getReleaseDate(): string {
     if (sectionName === "Movies") {
@@ -160,6 +160,21 @@ function CountdownItem({navigation, item, sectionName, isFirstInSection, isLastI
     );
   }
 
+  let imageSrc = "";
+  let title = "";
+  if (sectionName === "Movies") {
+    imageSrc = `https://image.tmdb.org/t/p/w92${item.poster_path}`;
+    title = item.title;
+  }
+  if (sectionName === "Games") {
+    imageSrc = `https:${item.game.cover.url.replace("thumb", "cover_big_2x")}`;
+    title = item.game.name;
+  }
+  if (sectionName === "Shows") {
+    imageSrc = `https://image.tmdb.org/t/p/w92${item.show.tmdbData.poster_path}`;
+    title = item.show.title;
+  }
+
   return (
     // <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : navigation.navigate('Details', { type: sectionName === "Movies" ? "movie" : "game", data: item })}>
     <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : sectionName === "Movies" ? navigation.navigate('Details', { type: sectionName === "Movies" ? "movie" : "game", data: item }) : Alert.alert("This isn't ready just yet")}>
@@ -171,11 +186,11 @@ function CountdownItem({navigation, item, sectionName, isFirstInSection, isLastI
           <View style={{ justifyContent: "center" }}>
             <Image
               style={styles.image}
-              source={{ uri: sectionName === "Movies" ? `https://image.tmdb.org/t/p/w92${item.poster_path}` : `https:${item.game.cover.url.replace("thumb", "cover_big_2x")}` }}
+              source={{ uri: imageSrc }}
             />
           </View>
           <View style={styles.middle}>
-            <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{sectionName === "Movies" ? item.title : item.game.name}</Text>
+            <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{title}</Text>
             <Text style={{ ...reusableStyles.date }}>{getReleaseDate()}</Text>
           </View>
           <View style={styles.countdown}>

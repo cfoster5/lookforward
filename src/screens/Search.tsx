@@ -140,18 +140,18 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
               setMovies([]);
               getMovies()
             }
-            if (categoryIndex === 1) {
+            if (categoryIndex === 2) {
               setGames([]);
               setGames(await searchGames(route.params.igdbCreds.access_token, searchValue));
             }
           } : undefined}
           onClear={() => {
             if (categoryIndex === 0) { setMovies(initMovies) }
-            if (categoryIndex === 1) { setGames(initGames) }
+            if (categoryIndex === 2) { setGames(initGames) }
           }}
           onCancel={() => {
             if (categoryIndex === 0) { setMovies(initMovies) }
-            if (categoryIndex === 1) { setGames(initGames) }
+            if (categoryIndex === 2) { setGames(initGames) }
           }}
         />
       </View>

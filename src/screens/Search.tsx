@@ -1,13 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  View,
-  NativeSyntheticEvent,
-  TextInputSubmitEditingEventData,
-  Platform,
-  FlatList,
-  ColorSchemeName
-} from 'react-native';
-import { SearchBar, Image } from 'react-native-elements';
+import { View, Platform, FlatList, ColorSchemeName } from 'react-native';
+import { SearchBar } from 'react-native-elements';
 import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getUpcomingTVPremieres } from '../helpers/requests';
 import { IGDB, Navigation, TMDB, Trakt } from '../../types';
 import Poster from '../components/Poster';
@@ -29,7 +22,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
   const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([])
-  // const [games, setGames] = useState<IGDB.ReleaseDate.ReleaseDate[]>([])
   const [games, setGames] = useState<IGDB.Game.Game[]>([])
   const [initGames, setInitGames] = useState<IGDB.Game.Game[]>([])
   const [categoryIndex, setCategoryIndex] = useState(0)
@@ -37,15 +29,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
   useScrollToTop(scrollRef);
   const prevCategoryIndex = usePrevious(categoryIndex);
   const [showPremieres, setShowPremieres] = useState<Trakt.ShowPremiere[]>([]);
-
-  // function removeOldReleases(games: game[]) {
-  //   let tempGames: game[] = [];
-  //   games.forEach(game => {
-  //     game.release_dates = game.release_dates.filter(releaseDate => moment(moment.unix(releaseDate.date)).isSameOrAfter(moment.unix(moment().unix())));
-  //     tempGames.push(game);
-  //   });
-  //   return tempGames;
-  // }
 
   useEffect(() => {
     let isMounted = true;
@@ -55,10 +38,8 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
         setMovies(movies);
       };
     })
-    // getGameReleases().then(games => {
     getUpcomingGameReleases(route.params.igdbCreds.access_token).then(async releaseDates => {
       await convertReleasesToGames(releaseDates).then(games => {
-        // console.log(games)
         if (isMounted) {
           setInitGames(games);
           setGames(games);
@@ -67,7 +48,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
         .catch(error => {
           console.log("error 1", error)
         })
-      // if (isMounted) setGames(releaseDates);
     })
       .catch(error => {
         console.log("error 2", error)
@@ -102,7 +82,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
     let tempMovies: TMDB.Movie.Movie[] = [];
     years.forEach(async year => {
       const searchData = await searchMovies(searchValue, year)
-      // console.log(...searchData)
       tempMovies = [...tempMovies, ...searchData]
       // Updating state for each year, need to only update once 
       setMovies(tempMovies)
@@ -148,7 +127,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
       </View>
       <View style={{ backgroundColor: colorScheme === "dark" ? "black" : "white" }}>
         <SearchBar
-          // cancelIcon={{ color: "#999999" }}
           cancelIcon={{ color: "white" }}
           clearIcon={Platform.OS === "android" ? { color: "white" } : undefined}
           containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: Platform.OS === "ios" ? 8 : 16 } : { marginHorizontal: 8 }}
@@ -170,23 +148,14 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
               setGames([]);
               setGames(await searchGames(route.params.igdbCreds.access_token, searchValue));
             }
-            // setResults(removeOldReleases(await getGamesSearch(searchValue)))
           } : undefined}
           onClear={() => {
-            if (categoryIndex === 0) {
-              setMovies(initMovies);
-            }
-            if (categoryIndex === 1) {
-              setGames(initGames);
-            }
+            if (categoryIndex === 0) { setMovies(initMovies) }
+            if (categoryIndex === 1) { setGames(initGames) }
           }}
           onCancel={() => {
-            if (categoryIndex === 0) {
-              setMovies(initMovies);
-            }
-            if (categoryIndex === 1) {
-              setGames(initGames);
-            }
+            if (categoryIndex === 0) { setMovies(initMovies) }
+            if (categoryIndex === 1) { setGames(initGames) }
           }}
         />
       </View>

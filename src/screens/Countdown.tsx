@@ -154,8 +154,6 @@ function Countdown({ route, navigation }: any) {
     ).start();
   }
 
-      >
-
   const [listData, setListData] = useState([
     // { data: route.params.movies, title: "Movies" },
     // { data: route.params.games, title: "Games" }

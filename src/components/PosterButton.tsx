@@ -1,23 +1,26 @@
 import React from "react";
 import { Pressable, View } from "react-native";
 import { iOSColors } from "react-native-typography";
-import { IGDB, TMDB } from "../../types";
+import { IGDB, TMDB, Trakt } from "../../types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from '@react-native-firebase/firestore';
 
 interface Props {
-  data: TMDB.Movie.Movie | IGDB.Game.Game
+  data: TMDB.Movie.Movie | Trakt.ShowPremiere;
   inCountdown: boolean;
   uid: string;
+  mediaType: "movie" | "tv"
 }
 
-function PosterButton({ data, inCountdown, uid }: Props) {
+function PosterButton({ data, inCountdown, uid, mediaType }: Props) {
+  let docId = "";
+  docId = mediaType === "movie" ? (data as TMDB.Movie.Movie).id.toString() : (data as Trakt.ShowPremiere).show.ids.trakt.toString();
 
   async function addToList() {
     try {
-      await firestore().collection("movies").doc((data as TMDB.Movie.Movie).id.toString()).set((data as TMDB.Movie.Movie), { merge: true });
+      await firestore().collection(mediaType === "movie" ? "movies" : "shows").doc(docId).set((data), { merge: true });
       console.log("Document successfully written!");
-      await firestore().collection("movies").doc((data as TMDB.Movie.Movie).id.toString()).update({
+      await firestore().collection(mediaType === "movie" ? "movies" : "shows").doc(docId).update({
         subscribers: firestore.FieldValue.arrayUnion(uid)
       })
       console.log("Document updated written!");
@@ -28,7 +31,7 @@ function PosterButton({ data, inCountdown, uid }: Props) {
 
   async function deleteItem() {
     try {
-      await firestore().collection("movies").doc((data as TMDB.Movie.Movie).id.toString()).update({
+      await firestore().collection(mediaType === "movie" ? "movies" : "shows").doc(docId).update({
         subscribers: firestore.FieldValue.arrayRemove(uid)
       })
       console.log("Document successfully written!");

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Platform, FlatList, ColorSchemeName } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getUpcomingTVPremieres } from '../helpers/requests';
+import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getUpcomingTVPremieres, getShowSearch, getShowDetails } from '../helpers/requests';
 import { IGDB, Navigation, TMDB, Trakt } from '../../types';
 import Poster from '../components/Poster';
 import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
@@ -27,7 +27,8 @@ function Search({ navigation, route, countdownMovies, countdownShows, colorSchem
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
   const prevCategoryIndex = usePrevious(categoryIndex);
-  const [showPremieres, setShowPremieres] = useState<Trakt.ShowPremiere[]>([]);
+  const [shows, setShows] = useState<Trakt.ShowPremiere[]>([]);
+  const [initShows, setInitShows] = useState<Trakt.ShowPremiere[]>([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,14 +53,21 @@ function Search({ navigation, route, countdownMovies, countdownShows, colorSchem
         console.log("error 2", error)
       })
 
-    getUpcomingTVPremieres().then(premieres => isMounted ? setShowPremieres(premieres) : null);
+    getUpcomingTVPremieres().then(premieres => {
+      if (isMounted) {
+        setInitShows(premieres);
+        setShows(premieres)
+      }
+    })
 
     return () => { isMounted = false };
   }, [])
 
   useEffect(() => {
+    // Condition eliminates flash when data is reset
     if (categoryIndex !== 0) { setMovies(initMovies) };
-    if (categoryIndex !== 1) { setGames(initGames) };
+    if (categoryIndex !== 1) { setShows(initShows) };
+    if (categoryIndex !== 2) { setGames(initGames) };
     setSearchValue("");
 
     // Scroll to top on category change; Only after setting initial value
@@ -81,6 +89,18 @@ function Search({ navigation, route, countdownMovies, countdownShows, colorSchem
       // Updating state for each year, need to only update once 
       setMovies(tempMovies)
     });
+  }
+
+  async function getMergedShowSearchData() {
+      const results = await getShowSearch(searchValue);
+      // Using for ... of... instead of forEach fixes issue with shows being returned before additional data is retrieved/set
+      for (const result of results) {
+        if (result.show.ids.tmdb) {
+          const data = await getShowDetails(result.show.ids.tmdb);
+          result.show.tmdbData = data;
+        }
+      }
+      return results;
   }
 
   function renderItem({ item }: { item: TMDB.Movie.Movie | Trakt.ShowPremiere | IGDB.Game.Game }) {
@@ -105,9 +125,15 @@ function Search({ navigation, route, countdownMovies, countdownShows, colorSchem
     )
   };
 
+  function reinitialize() {
+    if (categoryIndex === 0) { setMovies(initMovies) }
+    if (categoryIndex === 1) { setShows(initShows) }
+    if (categoryIndex === 2) { setGames(initGames) }
+  }
+
   function setData() {
     if (categoryIndex === 0) { return movies };
-    if (categoryIndex === 1) { return showPremieres };
+    if (categoryIndex === 1) { return shows };
     if (categoryIndex === 2) { return games };
   }
 
@@ -139,19 +165,17 @@ function Search({ navigation, route, countdownMovies, countdownShows, colorSchem
               setMovies([]);
               getMovies()
             }
+            if (categoryIndex === 1) {
+              setShows([]);
+              setShows(await getMergedShowSearchData());
+            }
             if (categoryIndex === 2) {
               setGames([]);
               setGames(await searchGames(route.params.igdbCreds.access_token, searchValue));
             }
           } : undefined}
-          onClear={() => {
-            if (categoryIndex === 0) { setMovies(initMovies) }
-            if (categoryIndex === 2) { setGames(initGames) }
-          }}
-          onCancel={() => {
-            if (categoryIndex === 0) { setMovies(initMovies) }
-            if (categoryIndex === 2) { setGames(initGames) }
-          }}
+          onClear={reinitialize}
+          onCancel={reinitialize}
         />
       </View>
 

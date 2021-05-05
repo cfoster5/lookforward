@@ -115,3 +115,17 @@ export async function getNextEpisode(showId: number): Promise<any[]> {
   });
   return response.json();
 }
+
+export async function getShowSearch(searchVal: string): Promise<any[]> {
+  const response = await fetch(`https://api.trakt.tv/search/show?query=${searchVal}&fields=title`, {
+    headers: {
+      "trakt-api-key": "8c5d0879072bf8414e5d6963e9a4c3bfc69b24db9ac28f1c664ff0431d2e31bb",
+    }
+  });
+  return response.json();
+}
+
+export async function getShowDetails(id: number) {
+  const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=68991fbb0b75dba5ae0ecd8182e967b1`);
+  return response.json();
+}

@@ -9,7 +9,6 @@ import PosterButton from "./PosterButton";
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Find"> | StackNavigationProp<Navigation.FindStackParamList, "Details">,
   mediaType: "game" | "movie" | "tv",
-  // data: TMDB.Movie.Movie | IGDB.ReleaseDate.ReleaseDate
   data: TMDB.Movie.Movie | Trakt.ShowPremiere | IGDB.Game.Game
   inCountdown: boolean;
   uid: string;
@@ -19,7 +18,7 @@ interface Props {
 function MoviePoster({ data, inCountdown, uid, colorScheme }: { data: TMDB.Movie.Movie, inCountdown: boolean, uid: string, colorScheme: ColorSchemeName }) {
   return (
     <>
-      <PosterButton data={data} inCountdown={inCountdown} uid={uid} />
+      <PosterButton data={data} inCountdown={inCountdown} uid={uid} mediaType={"movie"} />
       {data.poster_path
         ? <Image
           style={reusableStyles.itemRight}
@@ -30,15 +29,18 @@ function MoviePoster({ data, inCountdown, uid, colorScheme }: { data: TMDB.Movie
     </>
   )
 }
-function TVPoster({ data, colorScheme }: { data: Trakt.ShowPremiere, colorScheme: ColorSchemeName }) {
+function TVPoster({ data, inCountdown, uid, colorScheme }: { data: Trakt.ShowPremiere, inCountdown: boolean, uid: string, colorScheme: ColorSchemeName }) {
   return (
-    data.show.tmdbData?.poster_path
-      ? <Image
-        style={reusableStyles.itemRight}
-        source={{ uri: `https://image.tmdb.org/t/p/w300${data.show.tmdbData.poster_path}` }}
-      />
-      : <TextPoster text={data.show.title} colorScheme={colorScheme} />
-
+    <>
+      <PosterButton data={data} inCountdown={inCountdown} uid={uid} mediaType={"tv"} />
+      {data.show.tmdbData?.poster_path
+        ? <Image
+          style={reusableStyles.itemRight}
+          source={{ uri: `https://image.tmdb.org/t/p/w300${data.show.tmdbData.poster_path}` }}
+        />
+        : <TextPoster text={data.show.title} colorScheme={colorScheme} />
+      }
+    </>
   )
 }
 
@@ -80,7 +82,7 @@ function Poster({ navigation, mediaType, data, inCountdown, uid, colorScheme }: 
         <MoviePoster data={data as TMDB.Movie.Movie} inCountdown={inCountdown} uid={uid} colorScheme={colorScheme} />
       }
       {mediaType === "tv" &&
-        <TVPoster data={data as Trakt.ShowPremiere} colorScheme={colorScheme} />
+        <TVPoster data={data as Trakt.ShowPremiere} inCountdown={inCountdown} uid={uid} colorScheme={colorScheme} />
       }
       {mediaType === "game" &&
         <GamePoster data={data as IGDB.Game.Game} colorScheme={colorScheme} />

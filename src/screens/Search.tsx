@@ -138,15 +138,9 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
   };
 
   function setData() {
-    if (categoryIndex === 0) {
-      return movies;
-    }
-    if (categoryIndex === 1) {
-      return showPremieres;
-    }
-    if (categoryIndex === 2) {
-      return games;
-    }
+    if (categoryIndex === 0) { return movies };
+    if (categoryIndex === 1) { return showPremieres };
+    if (categoryIndex === 2) { return games };
   }
 
   return (

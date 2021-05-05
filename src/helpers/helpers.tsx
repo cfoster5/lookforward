@@ -54,7 +54,7 @@ export async function convertReleasesToGames(releaseDates: IGDB.ReleaseDate.Rele
   return games;
 }
 
-export function onResult(querySnapshot: FirebaseFirestoreTypes.QuerySnapshot, mediaType: "movies" | "games") {
+export function onResult(querySnapshot: FirebaseFirestoreTypes.QuerySnapshot) {
   // console.log(querySnapshot.docs);
   let tempMedia: any = []
   querySnapshot.docs.forEach(doc => {

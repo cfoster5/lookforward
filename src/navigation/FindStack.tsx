@@ -30,7 +30,6 @@ export function FindStack({ navigation, route, countdownMovies, countdownGames, 
         {props => <Search
           {...props}
           countdownMovies={countdownMovies}
-          countdownGames={countdownGames}
           countdownShows={countdownShows}
           colorScheme={colorScheme}
         />}

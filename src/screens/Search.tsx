@@ -13,12 +13,11 @@ interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
   route: RouteProp<Navigation.FindStackParamList, 'Find'>,
   countdownMovies: any,
-  countdownGames: any,
   countdownShows: any,
   colorScheme: ColorSchemeName
 }
 
-function Search({ navigation, route, countdownMovies, countdownGames, countdownShows, colorScheme }: Props) {
+function Search({ navigation, route, countdownMovies, countdownShows, colorScheme }: Props) {
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
   const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([])

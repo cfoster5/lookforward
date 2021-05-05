@@ -79,7 +79,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
   }, [])
 
   useEffect(() => {
-    console.log(`searchValue`, searchValue)
     if (categoryIndex !== 0) {
       setMovies(initMovies);
     }

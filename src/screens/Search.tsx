@@ -123,14 +123,14 @@ function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
 
   return (
     <>
-      <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
+      <View style={{ backgroundColor: colorScheme === "dark" ? "black" : "white" }}>
         <CategoryControl
           buttons={['Movies', 'Games']}
           categoryIndex={categoryIndex}
           handleCategoryChange={index => setCategoryIndex(index)}
         />
       </View>
-      <View style={colorScheme === "dark" ? { backgroundColor: "black" } : { backgroundColor: "white" }}>
+      <View style={{ backgroundColor: colorScheme === "dark" ? "black" : "white" }}>
         <SearchBar
           // cancelIcon={{ color: "#999999" }}
           cancelIcon={{ color: "white" }}

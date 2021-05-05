@@ -35,7 +35,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
   const [categoryIndex, setCategoryIndex] = useState(0)
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
-  const searchRef = useRef<SearchBar>(null);
   const prevCategoryIndex = usePrevious(categoryIndex);
   const [showPremieres, setShowPremieres] = useState<Trakt.ShowPremiere[]>([]);
 
@@ -87,7 +86,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
       setGames(initGames);
     }
     setSearchValue("");
-    searchRef.current?.clear();
 
     // Scroll to top on category change; Only after setting initial value
     if (prevCategoryIndex !== undefined && prevCategoryIndex !== categoryIndex) {
@@ -157,7 +155,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
           // cancelIcon={{ color: "#999999" }}
           cancelIcon={{ color: "white" }}
           clearIcon={Platform.OS === "android" ? { color: "white" } : undefined}
-          ref={searchRef}
           containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: Platform.OS === "ios" ? 8 : 16 } : { marginHorizontal: 8 }}
           inputContainerStyle={colorScheme === "dark" ? { backgroundColor: "#1f1f1f" } : {}}
           placeholderTextColor={colorScheme === "dark" ? "#999999" : undefined}

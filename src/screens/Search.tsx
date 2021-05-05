@@ -18,11 +18,10 @@ import { StackNavigationProp } from '@react-navigation/stack';
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
   route: RouteProp<Navigation.FindStackParamList, 'Find'>,
-  countdownMovies: any,
-  countdownGames: any
+  countdownMovies: any
 }
 
-function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
+function Search({ navigation, route, countdownMovies }: Props) {
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
   const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([])
@@ -88,10 +87,6 @@ function Search({ navigation, route, countdownMovies, countdownGames }: Props) {
       })
     }
   }, [categoryIndex])
-
-  // useEffect(() => {
-  //   console.log("Search Changes", countdownMovies, countdownGames)
-  // }, [countdownMovies, countdownGames])
 
   function getMovies() {
     const date = new Date();

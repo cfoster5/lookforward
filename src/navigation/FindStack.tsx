@@ -51,7 +51,7 @@ export function FindStack({ navigation, route }: Props) {
 
       {/* <Stack.Screen name="Find" component={Search} initialParams={{ uid: route.params.uid }} /> */}
       <Stack.Screen name="Find" initialParams={{ uid: route.params.uid, igdbCreds: route.params.igdbCreds }}>
-        {props => <Search {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} />}
+        {props => <Search {...props} countdownMovies={countdownMovies} />}
       </Stack.Screen>
       {/* <Stack.Screen name="Details" component={Details} initialParams={{ uid: route.params.uid }} /> */}
       <Stack.Screen name="Details" initialParams={{ uid: route.params.uid }}>

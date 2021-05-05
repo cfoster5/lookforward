@@ -94,7 +94,6 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
         animated: false
       })
     }
-    console.log(`searchValue`, searchValue)
   }, [categoryIndex])
 
   function getMovies() {

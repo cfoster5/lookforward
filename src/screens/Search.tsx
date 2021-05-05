@@ -158,10 +158,10 @@ function Search({ navigation, route, countdownMovies, countdownGames, countdownS
           inputStyle={colorScheme === "dark" ? { color: "white" } : {}}
           cancelButtonProps={colorScheme === "dark" ? { buttonTextStyle: { color: "#428cff" } } : {}}
           placeholder="Search"
-          onChangeText={(value: string) => setSearchValue(value)}
+          onChangeText={value => setSearchValue(value)}
           value={searchValue}
           platform={Platform.OS === "ios" ? "ios" : "android"}
-          onSubmitEditing={searchValue ? async (e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => {
+          onSubmitEditing={searchValue ? async e => {
             if (categoryIndex === 0) {
               setMovies([]);
               getMovies()

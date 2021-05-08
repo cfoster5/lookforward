@@ -20,8 +20,8 @@ const Tabs = createBottomTabNavigator<Navigation.TabNavigationParamList>();
 export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
   const [countdownMovies, setCountdownMovies] = useState([]);
   const [countdownGames, setCountdownGames] = useState([]);
-  const [countdownShows, setCountdownShows] = useState([]);
-  const [nextEpisodes, setNextEpisodes] = useState([]);
+  const [showSubs, setCountdownShows] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
+  const [nextEpisodes, setNextEpisodes] = useState<Trakt.NextEpisode[]>([]);
 
   useEffect(() => {
     const movieSubscription = firestore().collection('movies').orderBy("release_date").where("subscribers", "array-contains", uid)
@@ -43,13 +43,17 @@ export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
   }, []);
 
   useEffect(() => {
-    let tempNextEpisodes = [];
-    for (const show of countdownShows) {
-      getNextEpisode(show?.documentID).then(nextEpisode => {
-        tempNextEpisodes.push(nextEpisode);
-      });
+    let tempNextEpisodes: any[] = [];
+    for (const show of showSubs) {
+      getNextEpisode(show.documentID as number).then(nextEpisode => {
+        // console.log(`nextEpisode`, nextEpisode)
+        (show as any).nextEpisode = nextEpisode;
+        tempNextEpisodes.push((show as any));
+      })
+        .catch(err => console.log(`err`, err));
     }
-  }, [countdownShows])
+    setNextEpisodes(tempNextEpisodes);
+  }, [showSubs])
 
   return (
     <Tabs.Navigator
@@ -77,7 +81,7 @@ export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
           {...props}
           countdownMovies={countdownMovies}
           countdownGames={countdownGames}
-          countdownShows={countdownShows}
+          showSubs={showSubs}
           colorScheme={colorScheme}
         />}
       </Tabs.Screen>
@@ -86,7 +90,7 @@ export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
           {...props}
           countdownMovies={countdownMovies}
           countdownGames={countdownGames}
-          countdownShows={countdownShows}
+          // showSubs={showSubs}
           nextEpisodes={nextEpisodes}
           colorScheme={colorScheme}
         />}

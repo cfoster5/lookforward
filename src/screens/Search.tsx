@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Platform, FlatList, ColorSchemeName } from 'react-native';
+import { View, Platform, FlatList, ColorSchemeName, ActivityIndicator } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getUpcomingTVPremieres, getShowSearch, getShowDetails } from '../helpers/requests';
 import { IGDB, Navigation, TMDB, Trakt } from '../../types';
@@ -13,11 +13,11 @@ interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
   route: RouteProp<Navigation.FindStackParamList, 'Find'>,
   countdownMovies: any,
-  countdownShows: any,
+  showSubs: any,
   colorScheme: ColorSchemeName
 }
 
-function Search({ navigation, route, countdownMovies, countdownShows, colorScheme }: Props) {
+function Search({ navigation, route, countdownMovies, showSubs, colorScheme }: Props) {
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
   const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([])
@@ -27,7 +27,7 @@ function Search({ navigation, route, countdownMovies, countdownShows, colorSchem
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
   const prevCategoryIndex = usePrevious(categoryIndex);
-  const [shows, setShows] = useState<Trakt.ShowPremiere[]>([]);
+  const [shows, setShows] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
   const [initShows, setInitShows] = useState<Trakt.ShowPremiere[]>([]);
 
   useEffect(() => {
@@ -92,18 +92,19 @@ function Search({ navigation, route, countdownMovies, countdownShows, colorSchem
   }
 
   async function getMergedShowSearchData() {
-      const results = await getShowSearch(searchValue);
-      // Using for ... of... instead of forEach fixes issue with shows being returned before additional data is retrieved/set
-      for (const result of results) {
-        if (result.show.ids.tmdb) {
-          const data = await getShowDetails(result.show.ids.tmdb);
-          result.show.tmdbData = data;
-        }
+    const results = await getShowSearch(searchValue);
+    // Using for ... of... instead of forEach fixes issue with shows being returned before additional data is retrieved/set
+    for (const result of results) {
+      if (result.show.ids.tmdb) {
+        // TODO: Should this only get poster data from TMDB or do we need the other data?
+        const data = await getShowDetails(result.show.ids.tmdb);
+        result.show.tmdbData = data;
       }
-      return results;
+    }
+    return results;
   }
 
-  function renderItem({ item }: { item: TMDB.Movie.Movie | Trakt.ShowPremiere | IGDB.Game.Game }) {
+  function renderItem({ item }: { item: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch | IGDB.Game.Game }) {
     let mediaType: "movie" | "tv" | "game" = "movie";
     if (categoryIndex === 0) { mediaType = "movie" };
     if (categoryIndex === 1) { mediaType = "tv" };
@@ -111,7 +112,7 @@ function Search({ navigation, route, countdownMovies, countdownShows, colorSchem
 
     let inCountdown = false;
     if (categoryIndex === 0) { inCountdown = countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === (item as TMDB.Movie.Movie).id) };
-    if (categoryIndex === 1) { inCountdown = countdownShows.some((premiere: Trakt.ShowPremiere) => premiere.show.ids.trakt === (item as Trakt.ShowPremiere).show.ids.trakt) };
+    if (categoryIndex === 1) { inCountdown = showSubs.some((premiere: Trakt.ShowPremiere) => premiere.show.ids.trakt === (item as Trakt.ShowPremiere).show.ids.trakt) };
 
     return (
       <Poster
@@ -179,16 +180,22 @@ function Search({ navigation, route, countdownMovies, countdownShows, colorSchem
         />
       </View>
 
-      <FlatList
-        data={setData()}
-        renderItem={renderItem}
-        numColumns={2}
-        contentContainerStyle={{ marginHorizontal: 16 }}
-        columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
-        ref={scrollRef}
-        keyExtractor={(item, index) => index.toString()}
-        initialNumToRender={6}
-      />
+      {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}
+      {((categoryIndex === 0 && movies.length > 0) || (categoryIndex === 1 && shows.length > 0) || (categoryIndex === 2 && games.length > 0))
+        ? <FlatList
+          data={setData()}
+          renderItem={renderItem}
+          numColumns={2}
+          contentContainerStyle={{ marginHorizontal: 16 }}
+          columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
+          ref={scrollRef}
+          keyExtractor={(item, index) => index.toString()}
+          initialNumToRender={6}
+        />
+        : <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator size="large" />
+        </View>
+      }
     </>
   );
 };

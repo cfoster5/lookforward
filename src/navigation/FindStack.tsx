@@ -18,19 +18,19 @@ interface Props {
   route: RouteProp<Navigation.TabNavigationParamList, "Find">;
   countdownMovies: any[];
   countdownGames: any[];
-  countdownShows: any[];
+  showSubs: any[];
   colorScheme: ColorSchemeName
 }
 
 const Stack = createStackNavigator<Navigation.FindStackParamList>();
-export function FindStack({ navigation, route, countdownMovies, countdownGames, countdownShows, colorScheme }: Props) {
+export function FindStack({ navigation, route, countdownMovies, countdownGames, showSubs, colorScheme }: Props) {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Find" initialParams={{ uid: route.params.uid, igdbCreds: route.params.igdbCreds }}>
         {props => <Search
           {...props}
           countdownMovies={countdownMovies}
-          countdownShows={countdownShows}
+          showSubs={showSubs}
           colorScheme={colorScheme}
         />}
       </Stack.Screen>
@@ -39,7 +39,7 @@ export function FindStack({ navigation, route, countdownMovies, countdownGames, 
           {...props}
           countdownMovies={countdownMovies}
           countdownGames={countdownGames}
-          countdownShows={countdownShows}
+          showSubs={showSubs}
           colorScheme={colorScheme}
         />}
       </Stack.Screen>

@@ -9,7 +9,7 @@ import PosterButton from "./PosterButton";
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Find"> | StackNavigationProp<Navigation.FindStackParamList, "Details">,
   mediaType: "game" | "movie" | "tv",
-  data: TMDB.Movie.Movie | Trakt.ShowPremiere | IGDB.Game.Game
+  data: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch | IGDB.Game.Game
   inCountdown: boolean;
   uid: string;
   colorScheme: ColorSchemeName
@@ -29,7 +29,7 @@ function MoviePoster({ data, inCountdown, uid, colorScheme }: { data: TMDB.Movie
     </>
   )
 }
-function TVPoster({ data, inCountdown, uid, colorScheme }: { data: Trakt.ShowPremiere, inCountdown: boolean, uid: string, colorScheme: ColorSchemeName }) {
+function TVPoster({ data, inCountdown, uid, colorScheme }: { data: Trakt.ShowPremiere | Trakt.ShowSearch, inCountdown: boolean, uid: string, colorScheme: ColorSchemeName }) {
   return (
     <>
       <PosterButton data={data} inCountdown={inCountdown} uid={uid} mediaType={"tv"} />
@@ -79,13 +79,26 @@ function Poster({ navigation, mediaType, data, inCountdown, uid, colorScheme }: 
   return (
     <Pressable onPress={() => navigation.navigate('Details', { type: mediaType, data: data, uid: uid })}>
       {mediaType === "movie" &&
-        <MoviePoster data={data as TMDB.Movie.Movie} inCountdown={inCountdown} uid={uid} colorScheme={colorScheme} />
+        <MoviePoster
+          data={data as TMDB.Movie.Movie}
+          inCountdown={inCountdown}
+          uid={uid}
+          colorScheme={colorScheme}
+        />
       }
       {mediaType === "tv" &&
-        <TVPoster data={data as Trakt.ShowPremiere} inCountdown={inCountdown} uid={uid} colorScheme={colorScheme} />
+        <TVPoster
+          data={data as Trakt.ShowPremiere | Trakt.ShowSearch}
+          inCountdown={inCountdown}
+          uid={uid}
+          colorScheme={colorScheme}
+        />
       }
       {mediaType === "game" &&
-        <GamePoster data={data as IGDB.Game.Game} colorScheme={colorScheme} />
+        <GamePoster
+          data={data as IGDB.Game.Game}
+          colorScheme={colorScheme}
+        />
       }
     </Pressable>
   )

@@ -17,17 +17,17 @@ interface Props {
   route: RouteProp<Navigation.TabNavigationParamList, "Countdown">,
   countdownMovies: any[],
   countdownGames: any[],
-  countdownShows: any[],
+  // showSubs: any[],
   nextEpisodes: any[],
   colorScheme: ColorSchemeName
 }
 
 const Stack = createStackNavigator<any>();
-export function CountdownStack({ navigation, route, countdownMovies, countdownGames, countdownShows, nextEpisodes, colorScheme }: Props) {
+export function CountdownStack({ navigation, route, countdownMovies, countdownGames, nextEpisodes, colorScheme }: Props) {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Countdown" initialParams={{ uid: route.params.uid }}>
-        {props => <Countdown {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} countdownShows={countdownShows} nextEpisodes={nextEpisodes} />}
+        {props => <Countdown {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} nextEpisodes={nextEpisodes} />}
       </Stack.Screen>
       <Stack.Screen name="Details" initialParams={{ uid: route.params.uid, igdbCreds: route.params.igdbCreds }}>
         {props => <Details {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} colorScheme={colorScheme} />}

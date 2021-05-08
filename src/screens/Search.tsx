@@ -54,6 +54,14 @@ function Search({ navigation, route, countdownMovies, showSubs, colorScheme }: P
       })
 
     getUpcomingTVPremieres().then(premieres => {
+      for (const premiere of premieres) {
+        if (premiere.show.ids.tmdb) {
+          getShowDetails(premiere.show.ids.tmdb).then(show => {
+            premiere.show.tmdbData = show;
+          })
+            .catch(err => console.log(`err`, err));
+        }
+      }
       if (isMounted) {
         setInitShows(premieres);
         setShows(premieres)

@@ -103,7 +103,16 @@ export async function getMovieCredits(person: number): Promise<TMDB.Person.Credi
 }
 
 export async function getUpcomingTVPremieres(): Promise<Trakt.ShowPremiere[]> {
-  const response = await fetch(`https://inv57m25xb.execute-api.us-east-1.amazonaws.com/prod`);
+  const year = new Date().getUTCFullYear().toString();
+  const month = (new Date().getUTCMonth() + 1) < 10 ? `0${(new Date().getUTCMonth() + 1)}` : (new Date().getUTCMonth() + 1).toString();
+  const date = new Date().getUTCDate() < 10 ? `0${new Date().getUTCDate()}` : new Date().getUTCDate().toString();
+  const startDate = `${year}-${month}-${date}`;
+
+  const response = await fetch(`https://api.trakt.tv/calendars/all/shows/premieres/${startDate}/7?countries=us&extended=full`, {
+    headers: {
+      "trakt-api-key": "8c5d0879072bf8414e5d6963e9a4c3bfc69b24db9ac28f1c664ff0431d2e31bb",
+    }
+  });
   return response.json();
 }
 

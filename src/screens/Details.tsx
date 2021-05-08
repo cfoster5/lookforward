@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { IGDB, Navigation, TMDB } from '../../types';
+import { IGDB, Navigation, TMDB, Trakt } from '../../types';
 import { iOSColors } from 'react-native-typography'
 import { Modalize } from 'react-native-modalize';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -10,6 +10,7 @@ import { RouteProp } from '@react-navigation/native';
 import GameDetails from '../components/Details/GameDetails';
 import MovieDetails from '../components/Details/MovieDetails';
 import { ColorSchemeName } from 'react-native';
+import ShowDetails from '../components/Details/ShowDetails';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
@@ -78,10 +79,27 @@ function Details({ route, navigation, countdownMovies, countdownGames, colorSche
   return (
     <>
       {route.params.type === "game" &&
-        <GameDetails navigation={navigation} game={route.params.data as IGDB.Game.Game} uid={route.params.uid} modalizeRef={modalizeRef} colorScheme={colorScheme} />
+        <GameDetails
+          navigation={navigation}
+          game={route.params.data as IGDB.Game.Game}
+          uid={route.params.uid}
+          modalizeRef={modalizeRef}
+          colorScheme={colorScheme}
+        />
       }
       {route.params.type === "movie" &&
-        <MovieDetails navigation={navigation} movie={route.params.data as TMDB.Movie.Movie} colorScheme={colorScheme} />
+        <MovieDetails
+          navigation={navigation}
+          movie={route.params.data as TMDB.Movie.Movie}
+          colorScheme={colorScheme}
+        />
+      }
+      {route.params.type === "tv" &&
+        <ShowDetails
+          navigation={navigation}
+          show={route.params.data as Trakt.ShowPremiere | Trakt.ShowSearch}
+          colorScheme={colorScheme}
+        />
       }
     </>
   );

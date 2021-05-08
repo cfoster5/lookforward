@@ -361,9 +361,8 @@ export namespace TMDB {
 
 export namespace Trakt {
 
-  interface Ids {
+  interface EpisodeIds {
     trakt: number;
-    slug?: string;
     tvdb?: number;
     imdb: string;
     tmdb?: number;
@@ -374,10 +373,10 @@ export namespace Trakt {
     season: number;
     number: number;
     title: string;
-    ids: Ids;
+    ids: EpisodeIds;
   }
 
-  interface Ids2 {
+  interface ShowIds {
     trakt: number;
     slug: string;
     tvdb?: number;
@@ -395,7 +394,7 @@ export namespace Trakt {
   export interface Show {
     title: string;
     year: number;
-    ids: Ids2;
+    ids: ShowIds;
     tmdbData?: TMDB.Show.Show;
     overview: string;
     first_aired: Date;
@@ -437,7 +436,7 @@ export namespace Trakt {
     season: number;
     number: number;
     title: string;
-    ids: Ids;
+    ids: EpisodeIds;
     number_abs?: any;
     overview: string;
     rating: number;

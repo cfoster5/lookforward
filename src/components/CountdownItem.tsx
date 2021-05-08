@@ -27,7 +27,11 @@ function CountdownItem({ navigation, item, sectionName, isFirstInSection, isLast
       // return `${months[monthIndex].toUpperCase()} ${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}, ${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
       return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate().toString().length < 2 ? "0" : ""}${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
     }
-    else {
+    if (sectionName === "Shows") {
+      let monthIndex = new Date(item.nextEpisode.first_aired).getUTCMonth();
+      return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${new Date(item.nextEpisode.first_aired).getUTCDate().toString().length < 2 ? "0" : ""}${new Date(item.nextEpisode.first_aired).getUTCDate()}/${new Date(item.nextEpisode.first_aired).getUTCFullYear()}`;
+    }
+    if (sectionName === "Games") {
       let date = new Date((item as IGDB.ReleaseDate.ReleaseDate).date * 1000);
       let monthIndex = new Date(date).getUTCMonth();
       // return `${months[monthIndex].toUpperCase()} ${date.getUTCDate()}, ${new Date(date).getUTCFullYear()}`
@@ -36,27 +40,30 @@ function CountdownItem({ navigation, item, sectionName, isFirstInSection, isLast
   }
 
   function getCountdownDays(): number {
+    let year: number = 0;
+    let month: number = 0;
+    let day: number = 0;
     if (sectionName === "Movies") {
-      let year = new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear();
-      let month = new Date((item as TMDB.Movie.Movie).release_date).getUTCMonth();
-      let day = new Date((item as TMDB.Movie.Movie).release_date).getUTCDate();
-      let remainingSeconds = Math.floor(Date.UTC(year, month, day) / 1000) - Math.floor(Date.now() / 1000);
-      let remainingMinutes = Math.floor(remainingSeconds / 60);
-      let remainingHours = Math.floor(remainingMinutes / 60);
-      let remainingDays = Math.ceil(remainingHours / 24);
-      return remainingDays;
+      year = new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear();
+      month = new Date((item as TMDB.Movie.Movie).release_date).getUTCMonth();
+      day = new Date((item as TMDB.Movie.Movie).release_date).getUTCDate();
     }
-    else {
+    if (sectionName === "Shows") {
+      year = new Date(item.nextEpisode.first_aired).getUTCFullYear();
+      month = new Date(item.nextEpisode.first_aired).getUTCMonth();
+      day = new Date(item.nextEpisode.first_aired).getUTCDate();
+    }
+    if (sectionName === "Games") {
       let date = new Date((item as IGDB.ReleaseDate.ReleaseDate).date * 1000);
-      let year = new Date(date).getUTCFullYear();
-      let month = new Date(date).getUTCMonth();
-      let day = new Date(date).getUTCDate();
-      let remainingSeconds = Math.floor(Date.UTC(year, month, day) / 1000) - Math.floor(Date.now() / 1000);
-      let remainingMinutes = Math.floor(remainingSeconds / 60);
-      let remainingHours = Math.floor(remainingMinutes / 60);
-      let remainingDays = Math.ceil(remainingHours / 24);
-      return remainingDays;
+      year = new Date(date).getUTCFullYear();
+      month = new Date(date).getUTCMonth();
+      day = new Date(date).getUTCDate();
     }
+    let remainingSeconds = Math.floor(Date.UTC(year, month, day) / 1000) - Math.floor(Date.now() / 1000);
+    let remainingMinutes = Math.floor(remainingSeconds / 60);
+    let remainingHours = Math.floor(remainingMinutes / 60);
+    let remainingDays = Math.ceil(remainingHours / 24);
+    return remainingDays;
   }
 
   function RadioButton(props: any) {

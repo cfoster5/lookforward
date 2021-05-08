@@ -19,11 +19,11 @@ interface Props {
   navigation: any,
   countdownMovies: any[],
   countdownGames: any[],
-  countdownShows: any[],
+  // showSubs: any[],
   nextEpisodes: any[]
 }
 
-function Countdown({ route, navigation, countdownMovies, countdownGames, countdownShows, nextEpisodes }: Props) {
+function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpisodes }: Props) {
   const [showButtons, setShowButtons] = useState(false);
   const [selections, setSelections] = useState<{ documentID: string, sectionName: string }[]>([]);
   const scrollRef = useRef<SectionList>(null);
@@ -35,14 +35,14 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, countdo
     // { data: route.params.games, title: "Games" }
     { data: countdownMovies, title: "Movies" },
     { data: countdownGames, title: "Games" },
-    { data: countdownShows, title: "Shows" }
+    { data: nextEpisodes, title: "Shows" }
   ])
 
   useEffect(() => {
     setListData([
       { data: countdownMovies, title: "Movies" },
       { data: countdownGames, title: "Games" },
-      { data: countdownShows, title: "Shows" }
+      { data: nextEpisodes, title: "Shows" }
     ])
   }, [countdownGames, countdownMovies])
 
@@ -184,7 +184,7 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, countdo
       sections={[
         { data: countdownMovies, title: "Movies" },
         { data: countdownGames, title: "Games" },
-        { data: countdownShows, title: "Shows" }
+        { data: nextEpisodes, title: "Shows" }
       ]}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}

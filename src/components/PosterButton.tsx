@@ -6,7 +6,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from '@react-native-firebase/firestore';
 
 interface Props {
-  data: TMDB.Movie.Movie | Trakt.ShowPremiere;
+  data: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch;
   inCountdown: boolean;
   uid: string;
   mediaType: "movie" | "tv"

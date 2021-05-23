@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
-import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
 import usePrevious from '../helpers/helpers';
 import { reusableStyles } from '../helpers/styles';

@@ -10,11 +10,25 @@ import auth from '@react-native-firebase/auth';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import messaging from '@react-native-firebase/messaging';
-import { Navigation } from '../../types';
 import usePrevious from '../helpers/helpers';
 import { reusableStyles } from '../helpers/styles';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
-function Profile({ route, navigation }: Navigation.ProfileScreenProps) {
+type ProfileStackParamList = {
+  Profile: { uid: string | undefined },
+}
+
+type ProfileScreenRouteProp = RouteProp<ProfileStackParamList, 'Profile'>;
+type ProfileScreenNavigationProp = StackNavigationProp<ProfileStackParamList, 'Profile'>;
+type ProfileScreenProps = {
+  route: ProfileScreenRouteProp;
+  navigation: ProfileScreenNavigationProp;
+  dayNotifications: boolean;
+  weekNotifications: boolean;
+}
+
+function Profile({ route, navigation }: ProfileScreenProps) {
   const uid = route.params.uid;
   const [hasPermissions, setHasPermissions] = useState(true);
   const [dayNotifications, setDayNotifications] = useState(false);

@@ -461,7 +461,6 @@ export interface IGDBCredentials {
   token_type: "bearer";
 }
 
-// export declare module Navigation {
 export namespace Navigation {
 
   export type TabNavigationParamList = {
@@ -470,66 +469,14 @@ export namespace Navigation {
     Profile: { uid: string }
   }
 
-  // type TabsScreenRouteProp = RouteProp<RootStackParamList, "Tabs">
-  // type TabsScreenNavigationProp = BottomTabNavigationProp<RootStackParamList, "Tabs">;
-  // export type TabsScreenProps = {
-  //   route: TabsScreenRouteProp;
-  //   navigation: TabsScreenNavigationProp;
-  // }
-
   export type FindStackParamList = {
     Find: { uid: string, igdbCreds: IGDBCredentials },
     Details: { type: "game" | "movie" | "tv", data: IGDB.Game.Game | TMDB.Movie.Movie | Trakt.ShowPremiere, uid: string },
     Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }
 
-  // type FindScreenRouteProp = RouteProp<FindStackParamList, 'Find'>;
-  // type FindScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Find'>;
-  // export type FindScreenProps = {
-  //   route: FindScreenRouteProp;
-  //   navigation: FindScreenNavigationProp;
-  //   countdownMovies: any;
-  //   countdownGames: any;
-  // }
-
-  // type DetailsScreenRouteProp = RouteProp<FindStackParamList, 'Details'>;
-  // type DetailsScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Details'>;
-  // export type DetailsScreenProps = {
-  //   route: DetailsScreenRouteProp;
-  //   navigation: DetailsScreenNavigationProp;
-  //   countdownMovies: any;
-  //   countdownGames: any;
-  // }
-
-  // type ActorScreenRouteProp = RouteProp<FindStackParamList, 'Actor'>;
-  // type ActorScreenNavigationProp = StackNavigationProp<FindStackParamList, 'Actor'>;
-  // export type ActorScreenProps = {
-  //   route: ActorScreenRouteProp;
-  //   navigation: ActorScreenNavigationProp;
-  // }
-
   export type CountdownStackParamList = {
     Countdown: { uid: string }
-  }
-
-  export type AuthStackParamList = {
-    Welcome: undefined,
-    "Create Account": undefined
-    "Sign In": undefined
-    "Password Reset": undefined
-  }
-
-  export type ProfileStackParamList = {
-    Profile: { uid: string | undefined },
-  }
-
-  type ProfileScreenRouteProp = RouteProp<ProfileStackParamList, 'Profile'>;
-  type ProfileScreenNavigationProp = StackNavigationProp<ProfileStackParamList, 'Profile'>;
-  export type ProfileScreenProps = {
-    route: ProfileScreenRouteProp;
-    navigation: ProfileScreenNavigationProp;
-    dayNotifications: boolean;
-    weekNotifications: boolean;
   }
 
 }

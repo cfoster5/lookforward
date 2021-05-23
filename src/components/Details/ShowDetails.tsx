@@ -56,8 +56,8 @@ function MovieDetails({ navigation, show, colorScheme }: Props) {
                 {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{genre[0].toUpperCase() + genre.substring(1)}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre[0].toUpperCase() + genre.substring(1)}</Text>}
               </View>
             )}
-            <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Status: {show.show.status[0].toUpperCase() + show.show.status.substring(1)}</Text>
           </View>
+          <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Status: {show.show.status[0].toUpperCase() + show.show.status.substring(1)}</Text>
         </View>
 
         {/* TODO: Shows have one trailer from Trakt; Maybe it'd be better to show something else? */}

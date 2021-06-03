@@ -20,18 +20,18 @@ const Tabs = createBottomTabNavigator<Navigation.TabNavigationParamList>();
 export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
   const [countdownMovies, setCountdownMovies] = useState([]);
   const [countdownGames, setCountdownGames] = useState([]);
-  const [showSubs, setCountdownShows] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
+  const [showSubs, setShowSubs] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
   const [nextEpisodes, setNextEpisodes] = useState<Trakt.NextEpisode[]>([]);
 
   useEffect(() => {
     const movieSubscription = firestore().collection('movies').orderBy("release_date").where("subscribers", "array-contains", uid)
-      .onSnapshot(querySnapshot => { setCountdownMovies(onResult(querySnapshot)) }, (error) => console.error("error", error));
+      .onSnapshot(querySnapshot => { setCountdownMovies(onResult(querySnapshot)) }, error => console.error("error", error));
 
     const gameSubscription = firestore().collection("gameReleases").orderBy("date").where("subscribers", "array-contains", uid)
-      .onSnapshot(querySnapshot => { setCountdownGames(onResult(querySnapshot)) }, (error) => console.error("error", error));
+      .onSnapshot(querySnapshot => { setCountdownGames(onResult(querySnapshot)) }, error => console.error("error", error));
 
     const showSubscription = firestore().collection("shows").where("subscribers", "array-contains", uid)
-      .onSnapshot(querySnapshot => { setCountdownShows(onResult(querySnapshot)) }, (error) => console.error("error", error));
+      .onSnapshot(querySnapshot => { setShowSubs(onResult(querySnapshot)) }, error => console.error("error", error));
 
     // Stop listening for updates when no longer required
     return () => {
@@ -44,7 +44,8 @@ export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
 
   useEffect(() => {
     // TODO: Fix bug that removes next epidsodes from countdown on addition/removal
-    // console.log(`nextEpisodes`, nextEpisodes)
+
+    // 
     let tempNextEpisodes: any[] = [];
     for (const show of showSubs) {
       getNextEpisode(show.documentID as number).then(nextEpisode => {
@@ -91,7 +92,7 @@ export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
           colorScheme={colorScheme}
         />}
       </Tabs.Screen>
-      <Tabs.Screen name="Countdown" initialParams={{ uid: uid, igdbCreds: igdbCreds }}>
+      <Tabs.Screen name="Countdown" initialParams={{ uid: uid }}>
         {props => <CountdownStack
           {...props}
           countdownMovies={countdownMovies}

@@ -34,7 +34,7 @@ export function CountdownStack({ navigation, route, countdownMovies, countdownGa
       <Stack.Screen name="Countdown" initialParams={{ uid: route.params.uid }}>
         {props => <Countdown {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} nextEpisodes={nextEpisodes} />}
       </Stack.Screen>
-      <Stack.Screen name="Details" initialParams={{ uid: route.params.uid, igdbCreds: route.params.igdbCreds }}>
+      <Stack.Screen name="Details" initialParams={{ uid: route.params.uid }}>
         {props => <Details {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} colorScheme={colorScheme} />}
       </Stack.Screen>
     </Stack.Navigator>

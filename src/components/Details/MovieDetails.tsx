@@ -72,8 +72,10 @@ function MovieDetails({ navigation, movie, colorScheme }: Props) {
             {movieDetails?.credits?.crew?.find(person => person?.job === "Director") &&
               <Person
                 navigation={navigation}
-                type={"crew"}
-                person={movieDetails?.credits?.crew?.find(person => person?.job === "Director") as TMDB.Movie.Crew}
+                profilePath={(movieDetails?.credits?.crew?.find(person => person?.job === "Director") as TMDB.Movie.Crew).profile_path}
+                name={(movieDetails?.credits?.crew?.find(person => person?.job === "Director") as TMDB.Movie.Crew).name}
+                job={(movieDetails?.credits?.crew?.find(person => person?.job === "Director") as TMDB.Movie.Crew).job}
+                character={undefined}
                 colorScheme={colorScheme}
               />
             }
@@ -81,14 +83,16 @@ function MovieDetails({ navigation, movie, colorScheme }: Props) {
               <Person
                 key={i}
                 navigation={navigation}
-                type={"cast"}
-                person={person}
+                profilePath={person.profile_path}
+                name={person.name}
+                job={undefined}
+                character={person.character}
                 colorScheme={colorScheme}
               />
             ))}
           </View>
           <View style={detailIndex !== 1 ? { display: "none" } : {}}>
-            {movieDetails?.videos?.results?.map((video, i) => <Trailer key={i} video={video} index={i} colorScheme={colorScheme}/>)}
+            {movieDetails?.videos?.results?.map((video, i) => <Trailer key={i} video={video} index={i} colorScheme={colorScheme} />)}
             {movieDetails?.videos?.results?.length === 0 &&
               <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>No trailers yet! Come back later!</Text>
             }

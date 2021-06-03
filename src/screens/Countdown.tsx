@@ -1,12 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  SectionList,
-  Animated,
-  Platform,
-} from 'react-native';
+import { Text, View, SectionList, Animated, Platform } from 'react-native';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import CountdownItem from '../components/CountdownItem';
@@ -44,7 +37,11 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpi
       { data: countdownGames, title: "Games" },
       { data: nextEpisodes, title: "Shows" }
     ])
-  }, [countdownGames, countdownMovies])
+  }, [countdownGames, countdownMovies, nextEpisodes])
+
+  useEffect(() => {
+    console.log(`nextEpisodes in Countdown`, nextEpisodes)
+  }, [nextEpisodes])
 
   const IoniconsHeaderButton = (props) => (
     // the `props` here come from <Item ... />
@@ -113,23 +110,18 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpi
   }, [navigation, showButtons, selections]);
 
   function startAnimation() {
-    Animated.timing(
-      transformAnim,
-      {
+    Animated.parallel([
+      Animated.timing(transformAnim, {
         toValue: !showButtons ? 16 : -16,
         duration: 250,
         useNativeDriver: true
-      }
-    ).start();
-
-    Animated.timing(
-      opacityAnim,
-      {
+      }),
+      Animated.timing(opacityAnim, {
         toValue: !showButtons ? 1 : 0,
         duration: 250,
         useNativeDriver: true
-      }
-    ).start();
+      })
+    ]).start();
   }
 
   const renderSectionHeader = ({ section }) => (
@@ -158,7 +150,7 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpi
   }
 
   async function deleteItems() {
-    selections.forEach(async selection => {
+    for (const selection of selections) {
       // Animate as if deleting and then delete
       // Animate height to 0
       let collection = "";
@@ -174,7 +166,7 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpi
         console.error("Error writing document: ", error);
       }
       setSelections([]);
-    });
+    };
   }
 
   return (
@@ -193,7 +185,6 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpi
           navigation={navigation}
           item={data.item}
           sectionName={data.section.title}
-          isFirstInSection={data.index === 0}
           // isLastInSection={data.section.title === "Movies" ? data.index + 1 === route.params.movies.length : data.index + 1 === route.params.games.length}
           isLastInSection={data.section.title === "Movies" ? data.index + 1 === countdownMovies.length : data.index + 1 === countdownGames.length}
           showButtons={showButtons}

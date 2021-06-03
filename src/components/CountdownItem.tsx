@@ -10,7 +10,6 @@ interface Props {
   navigation: any
   item: any
   sectionName: "Movies" | "Games" | "Shows"
-  isFirstInSection: boolean
   isLastInSection: boolean
   showButtons: boolean
   selected: boolean
@@ -19,7 +18,7 @@ interface Props {
   opacityAnim: Animated.Value
 }
 
-function CountdownItem({ navigation, item, sectionName, isFirstInSection, isLastInSection, showButtons, selected, updateSelections, transformAnim, opacityAnim }: Props) {
+function CountdownItem({ navigation, item, sectionName, isLastInSection, showButtons, selected, updateSelections, transformAnim, opacityAnim }: Props) {
 
   function getReleaseDate(): string {
     if (sectionName === "Movies") {

@@ -4,11 +4,12 @@ import {
   View,
   Dimensions,
   Text,
-  ColorSchemeName
+  ColorSchemeName,
+  ActivityIndicator
 } from 'react-native';
 import { Navigation, TMDB, Trakt } from '../../../types';
 import { Image } from 'react-native-elements';
-import { getMovieDetails } from '../../helpers/requests';
+import { getMovieDetails, getPeopleForShow, getPersonDetails } from '../../helpers/requests';
 import { reusableStyles } from '../../helpers/styles';
 import { iOSColors, iOSUIKit } from 'react-native-typography'
 import Trailer from '../Trailer';
@@ -18,16 +19,37 @@ import CategoryControl from '../CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
 
 interface Props {
-  navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
+  navigation: StackNavigationProp<Navigation.FindStackParamList, 'Details'>,
   show: Trakt.ShowPremiere | Trakt.ShowSearch,
   colorScheme: ColorSchemeName
 }
 
 function MovieDetails({ navigation, show, colorScheme }: Props) {
   const [detailIndex, setDetailIndex] = useState(0)
+  // const [people, setPeople] = useState<Trakt.ShowPeople[]>();
+  const [creators, setCreators] = useState<Trakt.Role[]>([]);
+  const [castings, setCast] = useState<Trakt.Cast[]>([]);
 
   useEffect(() => {
-    console.log("show", show.show)
+    // Self invoking async function fixes state being set before tmdbData is added
+    (async () => {
+      const { cast, crew } = await getPeopleForShow(show.show.ids.trakt);
+
+      for (const casting of cast) {
+        const details = await getPersonDetails(casting.person.ids.tmdb);
+        casting.person.tmdbData = details;
+      }
+      setCast(cast);
+
+      for (const creator of crew['created by']) {
+        const details = await getPersonDetails(creator.person.ids.tmdb);
+        creator.person.tmdbData = details;
+      }
+      setCreators(crew['created by'])
+
+
+    })();
+    console.log(`show.show.trailer`, show.show.trailer)
   }, [show])
 
   // function getReleaseDate(): string {
@@ -60,42 +82,54 @@ function MovieDetails({ navigation, show, colorScheme }: Props) {
           <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Status: {show.show.status[0].toUpperCase() + show.show.status.substring(1)}</Text>
         </View>
 
-        {/* TODO: Shows have one trailer from Trakt; Maybe it'd be better to show something else? */}
-        
-        {/* <CategoryControl
+        <CategoryControl
           buttons={["Cast & Crew", "Trailers"]}
           categoryIndex={detailIndex}
           handleCategoryChange={(index: number) => setDetailIndex(index)}
-        /> */}
+        />
 
-        {/* <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-          <View style={detailIndex !== 0 ? { display: "none" } : {}}>
-            {movieDetails?.credits?.crew?.find(person => person?.job === "Director") &&
-              <Person
-                navigation={navigation}
-                type={"crew"}
-                person={movieDetails?.credits?.crew?.find(person => person?.job === "Director") as TMDB.Movie.Crew}
-                colorScheme={colorScheme}
-              />
-            }
-            {movieDetails?.credits.cast.map((person, i) => (
-              <Person
-                key={i}
-                navigation={navigation}
-                type={"cast"}
-                person={person}
-                colorScheme={colorScheme}
-              />
-            ))}
-          </View>
+        <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
+          {/* TODO: Shows that have no credits constantly show ActivityIndicator (I, Sniper) */}
+          {detailIndex === 0 &&
+            <>
+              {creators.length > 0 || castings.length > 0
+                ? <View style={detailIndex !== 0 ? { display: "none" } : {}}>
+                  {creators.map((person, i) => (
+                    <Person
+                      key={i}
+                      navigation={navigation}
+                      profilePath={person.person.tmdbData?.profile_path}
+                      name={person.person.name}
+                      job={person.job}
+                      character={undefined}
+                      colorScheme={colorScheme}
+                    />
+                  ))}
+                  {castings.map((person, i) => (
+                    <Person
+                      key={i}
+                      navigation={navigation}
+                      profilePath={person.person.tmdbData?.profile_path}
+                      name={person.person.name}
+                      job={undefined}
+                      character={person.character}
+                      colorScheme={colorScheme}
+                    />
+                  ))}
+                </View>
+                : <ActivityIndicator style={{ marginTop: 16 }} size="large" />
+              }
+            </>
+          }
+
 
           <View style={detailIndex !== 1 ? { display: "none" } : {}}>
-            {movieDetails?.videos?.results?.map((video, i) => <Trailer key={i} video={video} index={i} colorScheme={colorScheme}/>)}
-            {movieDetails?.videos?.results?.length === 0 &&
+            {show.show.tmdbData?.videos?.results?.map((video, i) => <Trailer key={i} video={video} index={i} colorScheme={colorScheme} />)}
+            {show.show.tmdbData?.videos?.results?.length === 0 &&
               <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>No trailers yet! Come back later!</Text>
             }
           </View>
-        </View> */}
+        </View>
       </ScrollView>
     </>
   );

@@ -124,6 +124,17 @@ export namespace TMDB {
     name: string;
   }
 
+  interface VideoResult {
+    id: string;
+    iso_639_1: string;
+    iso_3166_1: string;
+    key: string;
+    name: string;
+    site: string;
+    size: number;
+    type: string;
+  }
+
   export namespace Movie {
 
     export interface Cast {
@@ -176,17 +187,6 @@ export namespace TMDB {
       total_results: number;
     }
 
-    export interface VideoResult {
-      id: string;
-      iso_639_1: string;
-      iso_3166_1: string;
-      key: string;
-      name: string;
-      site: string;
-      size: number;
-      type: string;
-    }
-
     export interface Details {
       adult: boolean;
       backdrop_path: string;
@@ -220,7 +220,7 @@ export namespace TMDB {
     }
   }
 
-  export namespace Person {
+  export namespace MovieCredits {
     // /person/{person_id}
     export interface Cast {
       character: string;
@@ -353,8 +353,26 @@ export namespace TMDB {
       type: string;
       vote_average: number;
       vote_count: number;
+      videos: { results: VideoResult[] };
     }
 
+  }
+
+  export interface Person {
+    adult: boolean;
+    also_known_as: string[];
+    biography: string;
+    birthday?: string;
+    deathday?: string;
+    gender: number;
+    homepage?: any;
+    id: number;
+    imdb_id: string;
+    known_for_department: string;
+    name: string;
+    place_of_birth: string;
+    popularity: number;
+    profile_path: string;
   }
 
 }
@@ -448,11 +466,54 @@ export namespace Trakt {
     runtime: number;
   }
 
-}
+  interface PersonIds {
+    trakt: number;
+    slug: string;
+    imdb: string;
+    tmdb: number;
+    tvrage?: number;
+  }
 
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack"
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+  interface Person {
+    name: string;
+    ids: PersonIds;
+    tmdbData?: TMDB.Person;
+  }
+
+  export interface Cast {
+    character: string;
+    characters: string[];
+    episode_count: number;
+    person: Person;
+  }
+
+  export interface Role {
+    job: string;
+    jobs: string[];
+    episode_count: number;
+    person: Person;
+  }
+
+  export interface Crew {
+    production: Role[];
+    "visual effects": Role[];
+    writing: Role[];
+    art: Role[];
+    "costume & make-up": Role[];
+    sound: Role[];
+    editing: Role[];
+    camera: Role[];
+    directing: Role[];
+    crew: Role[];
+    "created by": Role[];
+  }
+
+  export interface ShowPeople {
+    cast: Cast[];
+    crew: Crew;
+  }
+
+}
 
 export interface IGDBCredentials {
   access_token: string;

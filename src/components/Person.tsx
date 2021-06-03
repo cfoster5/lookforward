@@ -1,5 +1,5 @@
 import { StackNavigationProp } from "@react-navigation/stack";
-import React from "react";
+import React, { useEffect } from "react";
 import { ColorSchemeName, Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
@@ -7,21 +7,23 @@ import { Navigation, TMDB } from "../../types";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">,
-  type: "cast" | "crew",
-  person: TMDB.Movie.Cast | TMDB.Movie.Crew,
+  profilePath: string | undefined;
+  name: string;
+  job: string | undefined;
+  character: string | undefined;
   colorScheme: ColorSchemeName
 }
 
-function Person({ navigation, type, person, colorScheme }: Props) {
+function Person({ navigation, profilePath, name, job, character, colorScheme }: Props) {
   return (
     <Pressable style={{ flex: 1, flexDirection: 'row', alignItems: "center" }}>
-      {person.profile_path &&
+      {profilePath &&
         <Image
           style={reusableStyles.credit}
-          source={{ uri: `https://image.tmdb.org/t/p/w300${person.profile_path}` }}
+          source={{ uri: `https://image.tmdb.org/t/p/w300${profilePath}` }}
         />
       }
-      {!person.profile_path &&
+      {!profilePath &&
         <View style={{
           ...reusableStyles.credit,
           borderWidth: 1,
@@ -31,14 +33,14 @@ function Person({ navigation, type, person, colorScheme }: Props) {
           justifyContent: 'center'
         }}>
           <Text style={colorScheme === "dark" ? { ...iOSUIKit.title3EmphasizedWhiteObject } : { ...iOSUIKit.title3EmphasizedObject, color: iOSColors.gray }}>
-            {person.name.split(' ').map((i: string) => i.charAt(0))}
+            {name.split(' ').map((i: string) => i.charAt(0))}
           </Text>
         </View>
       }
       <View style={{ marginLeft: 16 }}>
-        <Text style={colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>{person.name}</Text>
+        <Text style={colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>{name}</Text>
         <Text style={colorScheme === "dark" ? { ...iOSUIKit.subheadEmphasizedWhiteObject, color: iOSColors.gray } : { ...iOSUIKit.subheadEmphasizedObject, color: iOSColors.gray }}>
-          {type === "cast" ? (person as TMDB.Movie.Cast).character : (person as TMDB.Movie.Crew).job}
+          {character ? character : job}
         </Text>
       </View>
     </Pressable>

@@ -23,7 +23,7 @@ interface Props {
 
 function Actor({ route, navigation, colorScheme }: Props) {
   const actor = route.params;
-  const [credits, setCredits] = useState<TMDB.Person.Credits>();
+  const [credits, setCredits] = useState<TMDB.MovieCredits.Credits>();
 
   useEffect(() => {
     console.log(actor);

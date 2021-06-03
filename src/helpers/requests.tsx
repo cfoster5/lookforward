@@ -97,7 +97,7 @@ export async function getMovieDetails(movieId: number): Promise<TMDB.Movie.Detai
   return response.json();
 }
 
-export async function getMovieCredits(person: number): Promise<TMDB.Person.Credits> {
+export async function getMovieCredits(person: number): Promise<TMDB.MovieCredits.Credits> {
   const response = await fetch(`https://api.themoviedb.org/3/person/${person}/movie_credits?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US`);
   return response.json();
 }
@@ -113,6 +113,20 @@ export async function getUpcomingTVPremieres(): Promise<Trakt.ShowPremiere[]> {
       "trakt-api-key": "8c5d0879072bf8414e5d6963e9a4c3bfc69b24db9ac28f1c664ff0431d2e31bb",
     }
   });
+  return response.json();
+}
+
+export async function getPeopleForShow(showId: number): Promise<Trakt.ShowPeople> {
+  const response = await fetch(`https://api.trakt.tv/shows/${showId}/people`, {
+    headers: {
+      "trakt-api-key": "8c5d0879072bf8414e5d6963e9a4c3bfc69b24db9ac28f1c664ff0431d2e31bb",
+    }
+  });
+  return response.json();
+}
+
+export async function getPersonDetails(id: number): Promise<TMDB.Person> {
+  const response = await fetch(`https://api.themoviedb.org/3/person/${id}?api_key=68991fbb0b75dba5ae0ecd8182e967b1`);
   return response.json();
 }
 
@@ -135,6 +149,6 @@ export async function getShowSearch(searchVal: string): Promise<Trakt.ShowSearch
 }
 
 export async function getShowDetails(id: number): Promise<TMDB.Show.Show> {
-  const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=68991fbb0b75dba5ae0ecd8182e967b1`);
+  const response = await fetch(`https://api.themoviedb.org/3/tv/${id}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&append_to_response=videos`);
   return response.json();
 }

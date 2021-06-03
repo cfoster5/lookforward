@@ -43,7 +43,7 @@ export function FindStack({ navigation, route, countdownMovies, countdownGames, 
           colorScheme={colorScheme}
         />}
       </Stack.Screen>
-      <Stack.Screen name="Actor" component={Actor} />
+      {/* <Stack.Screen name="Actor" component={Actor} /> */}
     </Stack.Navigator>
   )
 }

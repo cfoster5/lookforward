@@ -43,17 +43,23 @@ export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
   }, []);
 
   useEffect(() => {
+    // TODO: Fix bug that removes next epidsodes from countdown on addition/removal
+    // console.log(`nextEpisodes`, nextEpisodes)
     let tempNextEpisodes: any[] = [];
     for (const show of showSubs) {
       getNextEpisode(show.documentID as number).then(nextEpisode => {
-        // console.log(`nextEpisode`, nextEpisode)
+        // console.log(`nextEpisode from TabNav`, nextEpisode);
         (show as any).nextEpisode = nextEpisode;
-        tempNextEpisodes.push((show as any));
+        tempNextEpisodes.push(show);
       })
         .catch(err => console.log(`err`, err));
     }
     setNextEpisodes(tempNextEpisodes);
   }, [showSubs])
+
+  useEffect(() => {
+    console.log(`nextEpisodes from TabNav`, nextEpisodes)
+  }, [nextEpisodes])
 
   return (
     <Tabs.Navigator

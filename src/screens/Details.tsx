@@ -17,12 +17,17 @@ interface Props {
   route: RouteProp<Navigation.FindStackParamList, 'Details'>,
   countdownMovies: any[];
   countdownGames: any[];
+  showSubs: any[];
   colorScheme: ColorSchemeName
 }
 
-function Details({ route, navigation, countdownMovies, countdownGames, colorScheme }: Props) {
+function Details({ route, navigation, countdownMovies, countdownGames, showSubs, colorScheme }: Props) {
   const modalizeRef = useRef<Modalize>(null);
   const [countdownId, setCountdownId] = useState();
+
+  useEffect(() => {
+    console.log(`route.params.data`, route.params.data)
+  }, [route.params.data])
 
   const IoniconsHeaderButton = (props: JSX.IntrinsicAttributes & JSX.IntrinsicClassAttributes<HeaderButton> & Readonly<HeaderButtonProps> & Readonly<any>) => (
     // the `props` here come from <Item ... />
@@ -36,7 +41,7 @@ function Details({ route, navigation, countdownMovies, countdownGames, colorSche
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           {/* <Item title="search" iconName={route.params.inCountdown ? "remove-circle-outline" : "add-circle-outline"} onPress={() => route.params.type === "movie" ? addToList() : modalizeRef.current?.open()} /> */}
-          <Item title="search" iconName={countdownId ? "checkmark-outline" : "add-outline"} onPress={() => route.params.type === "movie" ? (countdownId ? deleteItem() : addToList()) : (countdownId ? deleteItem() : modalizeRef.current?.open())} />
+          <Item title="search" iconName={countdownId ? "checkmark-outline" : "add-outline"} onPress={() => route.params.type === "movie" || route.params.type === "tv" ? (countdownId ? deleteItem() : addToList()) : (countdownId ? deleteItem() : modalizeRef.current?.open())} />
         </HeaderButtons>
       )
     });
@@ -44,17 +49,29 @@ function Details({ route, navigation, countdownMovies, countdownGames, colorSche
 
   useEffect(() => {
     // console.log("Details Changes", countdownMovies, countdownGames)
-    let documentID = route.params.type === "movie" ? countdownMovies?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID : countdownGames.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
+    // let documentID = route.params.type === "movie" ? countdownMovies?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID : countdownGames.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
+    let documentID;
+    if (route.params.type === "movie") {
+      documentID = countdownMovies?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID;
+    }
+    if (route.params.type === "tv") {
+      documentID = showSubs?.find((show: Trakt.ShowPremiere) => show.show.ids.trakt === (route.params.data as Trakt.ShowPremiere)?.show.ids.trakt)?.documentID;
+    }
+    if (route.params.type === "game") {
+      countdownGames.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
+    }
     setCountdownId(documentID)
     // setInCountdown(countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === route.params.data.id))
-  }, [countdownMovies, countdownGames])
+  }, [countdownMovies, countdownGames, showSubs])
+
+  let docId = "";
+  docId = route.params.type === "movie" ? (route.params.data as TMDB.Movie.Movie).id.toString() : (route.params.data as Trakt.ShowPremiere).show.ids.trakt.toString();
 
   async function addToList() {
-    console.log('route.params', route.params)
     try {
-      await firestore().collection("movies").doc((route.params.data as TMDB.Movie.Movie).id.toString()).set(route.params.data, { merge: true });
+      await firestore().collection(route.params.type === "movie" ? "movies" : "shows").doc(docId).set((route.params.data), { merge: true });
       console.log("Document successfully written!");
-      await firestore().collection("movies").doc((route.params.data as TMDB.Movie.Movie).id.toString()).update({
+      await firestore().collection(route.params.type === "movie" ? "movies" : "shows").doc(docId).update({
         subscribers: firestore.FieldValue.arrayUnion(route.params.uid)
       })
       console.log("Document updated written!");
@@ -66,8 +83,12 @@ function Details({ route, navigation, countdownMovies, countdownGames, colorSche
   async function deleteItem() {
     console.log('route.params.data.id', countdownId)
     // console.log('route.params.type', route.params.type)
+    let collection = "";
+    if (route.params.type === "movie") { collection = "movies" };
+    if (route.params.type === "tv") { collection = "shows" };
+    if (route.params.type === "game") { collection = "gameReleases" };
     try {
-      await firestore().collection(route.params.type === "movie" ? "movies" : "gameReleases").doc(countdownId).update({
+      await firestore().collection(collection).doc(countdownId).update({
         subscribers: firestore.FieldValue.arrayRemove(route.params.uid)
       })
       console.log("Document successfully written!");

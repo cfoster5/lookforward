@@ -525,13 +525,13 @@ export interface IGDBCredentials {
 export namespace Navigation {
 
   export type TabNavigationParamList = {
-    Find: { igdbCreds: IGDBCredentials };
+    Find: undefined;
     Countdown: undefined;
     Profile: undefined;
   }
 
   export type FindStackParamList = {
-    Find: { igdbCreds: IGDBCredentials },
+    Find: undefined,
     Details: { type: "game" | "movie" | "tv", data: IGDB.Game.Game | TMDB.Movie.Movie | Trakt.ShowPremiere },
     Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }

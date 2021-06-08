@@ -9,6 +9,7 @@ import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import CategoryControl from '../components/CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
 import ThemeContext from '../ThemeContext';
+import CredsContext from '../CredsContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
@@ -30,6 +31,7 @@ function Search({ navigation, route, countdownMovies, showSubs }: Props) {
   const [shows, setShows] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
   const [initShows, setInitShows] = useState<Trakt.ShowPremiere[]>([]);
   const colorScheme = useContext(ThemeContext)
+  const igdbCreds = useContext(CredsContext)
 
   useEffect(() => {
     let isMounted = true;
@@ -39,7 +41,7 @@ function Search({ navigation, route, countdownMovies, showSubs }: Props) {
         setMovies(movies);
       };
     })
-    getUpcomingGameReleases(route.params.igdbCreds.access_token).then(async releaseDates => {
+    getUpcomingGameReleases(igdbCreds.access_token).then(async releaseDates => {
       await convertReleasesToGames(releaseDates).then(games => {
         if (isMounted) {
           setInitGames(games);
@@ -179,7 +181,7 @@ function Search({ navigation, route, countdownMovies, showSubs }: Props) {
             }
             if (categoryIndex === 2) {
               setGames([]);
-              setGames(await searchGames(route.params.igdbCreds.access_token, searchValue));
+              setGames(await searchGames(igdbCreds.access_token, searchValue));
             }
           } : undefined}
           onClear={reinitialize}

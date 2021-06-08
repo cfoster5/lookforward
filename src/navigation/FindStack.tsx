@@ -24,7 +24,7 @@ const Stack = createStackNavigator<Navigation.FindStackParamList>();
 export function FindStack({ navigation, route, countdownMovies, countdownGames, showSubs }: Props) {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Find" initialParams={{ igdbCreds: route.params.igdbCreds }}>
+      <Stack.Screen name="Find">
         {props => <Search
           {...props}
           countdownMovies={countdownMovies}

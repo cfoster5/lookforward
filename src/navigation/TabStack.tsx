@@ -4,18 +4,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FindStack } from './FindStack';
 import { CountdownStack } from './CountdownStack';
 import { ProfileStack } from './ProfileStack';
-import { IGDBCredentials, Navigation, Trakt } from '../../types';
+import { Navigation, Trakt } from '../../types';
 import firestore from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
 import { getNextEpisode } from '../helpers/requests';
 import UserContext from '../UserContext';
 
-interface Props {
-  igdbCreds: IGDBCredentials
-}
-
 const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
-export function TabStack({ igdbCreds }: Props) {
+export function TabStack() {
   const [movieSubs, setMovieSubs] = useState([]);
   const [gameSubs, setGameSubs] = useState([]);
   const [showSubs, setShowSubs] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
@@ -82,7 +78,7 @@ export function TabStack({ igdbCreds }: Props) {
         inactiveTintColor: 'gray',
       }}
     >
-      <Tab.Screen name="Find" initialParams={{ igdbCreds: igdbCreds }}>
+      <Tab.Screen name="Find">
         {props => <FindStack
           {...props}
           countdownMovies={movieSubs}

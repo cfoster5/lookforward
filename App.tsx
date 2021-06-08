@@ -10,6 +10,7 @@ import { TabStack } from './src/navigation/TabStack';
 import { AuthStack } from './src/navigation/AuthStack';
 import ThemeContext from './src/ThemeContext';
 import UserContext from './src/UserContext';
+import CredsContext from './src/CredsContext';
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
@@ -56,7 +57,6 @@ export default function App() {
 
   useEffect(() => {
     if (igdbCreds) {
-      console.log(igdbCreds)
       setInitializing(false);
     }
   }, [igdbCreds])
@@ -112,7 +112,9 @@ export default function App() {
             ?
             <ThemeContext.Provider value={colorScheme}>
               <UserContext.Provider value={user.uid}>
-                <TabStack igdbCreds={igdbCreds} />
+                <CredsContext.Provider value={igdbCreds}>
+                  <TabStack />
+                </CredsContext.Provider>
               </UserContext.Provider>
             </ThemeContext.Provider>
             : <AuthStack />

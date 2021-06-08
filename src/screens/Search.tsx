@@ -129,7 +129,6 @@ function Search({ navigation, route, countdownMovies, showSubs }: Props) {
         mediaType={mediaType}
         data={item}
         inCountdown={inCountdown}
-        uid={route.params.uid}
       />
     )
   };

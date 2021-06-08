@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FindStack } from './FindStack';
@@ -8,18 +8,19 @@ import { IGDBCredentials, Navigation, Trakt } from '../../types';
 import firestore from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
 import { getNextEpisode } from '../helpers/requests';
+import UserContext from '../UserContext';
 
 interface Props {
-  uid: string,
   igdbCreds: IGDBCredentials
 }
 
 const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
-export function TabStack({ uid, igdbCreds }: Props) {
+export function TabStack({ igdbCreds }: Props) {
   const [movieSubs, setMovieSubs] = useState([]);
   const [gameSubs, setGameSubs] = useState([]);
   const [showSubs, setShowSubs] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
   const [nextEpisodes, setNextEpisodes] = useState<Trakt.NextEpisode[]>([]);
+  const uid = useContext(UserContext)
 
   useEffect(() => {
     const movieSubscription = firestore().collection('movies').orderBy("release_date").where("subscribers", "array-contains", uid)
@@ -81,7 +82,7 @@ export function TabStack({ uid, igdbCreds }: Props) {
         inactiveTintColor: 'gray',
       }}
     >
-      <Tab.Screen name="Find" initialParams={{ uid: uid, igdbCreds: igdbCreds }}>
+      <Tab.Screen name="Find" initialParams={{ igdbCreds: igdbCreds }}>
         {props => <FindStack
           {...props}
           countdownMovies={movieSubs}
@@ -89,7 +90,7 @@ export function TabStack({ uid, igdbCreds }: Props) {
           showSubs={showSubs}
         />}
       </Tab.Screen>
-      <Tab.Screen name="Countdown" initialParams={{ uid: uid }}>
+      <Tab.Screen name="Countdown">
         {props => <CountdownStack
           {...props}
           countdownMovies={movieSubs}
@@ -98,7 +99,7 @@ export function TabStack({ uid, igdbCreds }: Props) {
           nextEpisodes={nextEpisodes}
         />}
       </Tab.Screen>
-      <Tab.Screen name="Profile" component={ProfileStack} initialParams={{ uid: uid }} />
+      <Tab.Screen name="Profile" component={ProfileStack} />
     </Tab.Navigator>
   )
 }

@@ -6,17 +6,17 @@ import { reusableStyles } from "../helpers/styles";
 import { IGDB, Navigation, TMDB, Trakt } from "../../types";
 import PosterButton from "./PosterButton";
 import ThemeContext from "../ThemeContext";
+import UserContext from "../UserContext";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Find"> | StackNavigationProp<Navigation.FindStackParamList, "Details">,
   mediaType: "game" | "movie" | "tv",
   data: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch | IGDB.Game.Game
   inCountdown: boolean;
-  uid: string;
 }
 
-function MoviePoster({ data, inCountdown, uid }: { data: TMDB.Movie.Movie, inCountdown: boolean, uid: string }) {
-  const colorScheme = useContext(ThemeContext)
+function MoviePoster({ data, inCountdown }: { data: TMDB.Movie.Movie, inCountdown: boolean }) {
+  const uid = useContext(UserContext)
   return (
     <>
       <PosterButton data={data} inCountdown={inCountdown} uid={uid} mediaType={"movie"} />
@@ -30,8 +30,8 @@ function MoviePoster({ data, inCountdown, uid }: { data: TMDB.Movie.Movie, inCou
     </>
   )
 }
-function TVPoster({ data, inCountdown, uid }: { data: Trakt.ShowPremiere | Trakt.ShowSearch, inCountdown: boolean, uid: string }) {
-  const colorScheme = useContext(ThemeContext)
+function TVPoster({ data, inCountdown }: { data: Trakt.ShowPremiere | Trakt.ShowSearch, inCountdown: boolean}) {
+  const uid = useContext(UserContext)
   return (
     <>
       <PosterButton data={data} inCountdown={inCountdown} uid={uid} mediaType={"tv"} />
@@ -47,7 +47,6 @@ function TVPoster({ data, inCountdown, uid }: { data: Trakt.ShowPremiere | Trakt
 }
 
 function GamePoster({ data }: { data: IGDB.Game.Game }) {
-  const colorScheme = useContext(ThemeContext)
   return (
     data.cover?.url
       ? <Image
@@ -79,21 +78,19 @@ function TextPoster({ text }: { text: string }) {
   )
 }
 
-function Poster({ navigation, mediaType, data, inCountdown, uid }: Props) {
+function Poster({ navigation, mediaType, data, inCountdown }: Props) {
   return (
-    <Pressable onPress={() => navigation.navigate('Details', { type: mediaType, data: data, uid: uid })}>
+    <Pressable onPress={() => navigation.navigate('Details', { type: mediaType, data: data })}>
       {mediaType === "movie" &&
         <MoviePoster
           data={data as TMDB.Movie.Movie}
           inCountdown={inCountdown}
-          uid={uid}
         />
       }
       {mediaType === "tv" &&
         <TVPoster
           data={data as Trakt.ShowPremiere | Trakt.ShowSearch}
           inCountdown={inCountdown}
-          uid={uid}
         />
       }
       {mediaType === "game" &&

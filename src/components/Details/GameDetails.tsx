@@ -20,11 +20,10 @@ import ThemeContext from '../../ThemeContext';
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
   game: IGDB.Game.Game;
-  uid: string
   modalizeRef: any
 }
 
-function GameDetails({ navigation, game, uid, modalizeRef }: Props) {
+function GameDetails({ navigation, game, modalizeRef }: Props) {
   const [detailIndex, setDetailIndex] = useState(0)
   const colorScheme = useContext(ThemeContext)
   // const modalizeRef = useRef<Modalize>(null);
@@ -66,7 +65,7 @@ function GameDetails({ navigation, game, uid, modalizeRef }: Props) {
 
   return (
     <>
-      <GameReleaseModal modalizeRef={modalizeRef} game={game} uid={uid} getReleaseDate={getReleaseDate} />
+      <GameReleaseModal modalizeRef={modalizeRef} game={game} getReleaseDate={getReleaseDate} />
       <ScrollView>
         {game?.cover?.url &&
           <Image

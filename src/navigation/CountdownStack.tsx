@@ -29,10 +29,10 @@ export function CountdownStack({ navigation, route, countdownMovies, countdownGa
 
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Countdown" initialParams={{ uid: route.params.uid }}>
+      <Stack.Screen name="Countdown">
         {props => <Countdown {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} nextEpisodes={nextEpisodes} />}
       </Stack.Screen>
-      <Stack.Screen name="Details" initialParams={{ uid: route.params.uid }}>
+      <Stack.Screen name="Details">
         {props => <Details {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} />}
       </Stack.Screen>
     </Stack.Navigator>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { IGDB, Navigation, TMDB, Trakt } from '../../types';
 import { iOSColors } from 'react-native-typography'
 import { Modalize } from 'react-native-modalize';
@@ -10,6 +10,7 @@ import { RouteProp } from '@react-navigation/native';
 import GameDetails from '../components/Details/GameDetails';
 import MovieDetails from '../components/Details/MovieDetails';
 import ShowDetails from '../components/Details/ShowDetails';
+import UserContext from '../UserContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
@@ -22,6 +23,7 @@ interface Props {
 function Details({ route, navigation, countdownMovies, countdownGames, showSubs }: Props) {
   const modalizeRef = useRef<Modalize>(null);
   const [countdownId, setCountdownId] = useState();
+  const uid = useContext(UserContext)
 
   useEffect(() => {
     console.log(`route.params.data`, route.params.data)
@@ -70,7 +72,7 @@ function Details({ route, navigation, countdownMovies, countdownGames, showSubs 
       await firestore().collection(route.params.type === "movie" ? "movies" : "shows").doc(docId).set((route.params.data), { merge: true });
       console.log("Document successfully written!");
       await firestore().collection(route.params.type === "movie" ? "movies" : "shows").doc(docId).update({
-        subscribers: firestore.FieldValue.arrayUnion(route.params.uid)
+        subscribers: firestore.FieldValue.arrayUnion(uid)
       })
       console.log("Document updated written!");
     } catch (error) {
@@ -87,7 +89,7 @@ function Details({ route, navigation, countdownMovies, countdownGames, showSubs 
     if (route.params.type === "game") { collection = "gameReleases" };
     try {
       await firestore().collection(collection).doc(countdownId).update({
-        subscribers: firestore.FieldValue.arrayRemove(route.params.uid)
+        subscribers: firestore.FieldValue.arrayRemove(uid)
       })
       console.log("Document successfully written!");
     } catch (error) {
@@ -101,7 +103,6 @@ function Details({ route, navigation, countdownMovies, countdownGames, showSubs 
         <GameDetails
           navigation={navigation}
           game={route.params.data as IGDB.Game.Game}
-          uid={route.params.uid}
           modalizeRef={modalizeRef}
         />
       }

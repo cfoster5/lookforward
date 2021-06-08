@@ -9,6 +9,7 @@ import firestore from '@react-native-firebase/firestore';
 import { TabStack } from './src/navigation/TabStack';
 import { AuthStack } from './src/navigation/AuthStack';
 import ThemeContext from './src/ThemeContext';
+import UserContext from './src/UserContext';
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
@@ -110,7 +111,9 @@ export default function App() {
           {user
             ?
             <ThemeContext.Provider value={colorScheme}>
-              <TabStack uid={user.uid} igdbCreds={igdbCreds} />
+              <UserContext.Provider value={user.uid}>
+                <TabStack igdbCreds={igdbCreds} />
+              </UserContext.Provider>
             </ThemeContext.Provider>
             : <AuthStack />
           }

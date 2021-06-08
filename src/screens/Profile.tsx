@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Pressable,
   StyleSheet,
@@ -14,13 +14,11 @@ import usePrevious from '../helpers/helpers';
 import { reusableStyles } from '../helpers/styles';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import UserContext from '../UserContext';
+import { Navigation } from '../../types';
 
-type ProfileStackParamList = {
-  Profile: { uid: string | undefined },
-}
-
-type ProfileScreenRouteProp = RouteProp<ProfileStackParamList, 'Profile'>;
-type ProfileScreenNavigationProp = StackNavigationProp<ProfileStackParamList, 'Profile'>;
+type ProfileScreenRouteProp = RouteProp<Navigation.ProfileStackParamList, 'Profile'>;
+type ProfileScreenNavigationProp = StackNavigationProp<Navigation.ProfileStackParamList, 'Profile'>;
 type ProfileScreenProps = {
   route: ProfileScreenRouteProp;
   navigation: ProfileScreenNavigationProp;
@@ -29,7 +27,7 @@ type ProfileScreenProps = {
 }
 
 function Profile({ route, navigation }: ProfileScreenProps) {
-  const uid = route.params.uid;
+  const uid = useContext(UserContext)
   const [hasPermissions, setHasPermissions] = useState(true);
   const [dayNotifications, setDayNotifications] = useState(false);
   const [weekNotifications, setWeekNotifications] = useState(false);

@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Text, View, SectionList, Animated, Platform } from 'react-native';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -6,6 +6,7 @@ import CountdownItem from '../components/CountdownItem';
 import { HeaderButton, HeaderButtons, Item } from 'react-navigation-header-buttons';
 import firestore from '@react-native-firebase/firestore';
 import { useScrollToTop } from '@react-navigation/native';
+import UserContext from '../UserContext';
 
 interface Props {
   route: any,
@@ -30,6 +31,7 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpi
     { data: countdownGames, title: "Games" },
     { data: nextEpisodes, title: "Shows" }
   ])
+  const uid = useContext(UserContext)
 
   useEffect(() => {
     setListData([
@@ -159,7 +161,7 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpi
       if (selection.sectionName === "Shows") { collection = "shows" };
       try {
         await firestore().collection(collection).doc(selection.documentID).update({
-          subscribers: firestore.FieldValue.arrayRemove(route.params.uid)
+          subscribers: firestore.FieldValue.arrayRemove(uid)
         })
         console.log("Document successfully written!");
       } catch (error) {

@@ -525,19 +525,24 @@ export interface IGDBCredentials {
 export namespace Navigation {
 
   export type TabNavigationParamList = {
-    Find: { uid: string, igdbCreds: IGDBCredentials }
-    Countdown: { uid: string }
-    Profile: { uid: string }
+    Find: { igdbCreds: IGDBCredentials };
+    Countdown: undefined;
+    Profile: undefined;
   }
 
   export type FindStackParamList = {
-    Find: { uid: string, igdbCreds: IGDBCredentials },
-    Details: { type: "game" | "movie" | "tv", data: IGDB.Game.Game | TMDB.Movie.Movie | Trakt.ShowPremiere, uid: string },
+    Find: { igdbCreds: IGDBCredentials },
+    Details: { type: "game" | "movie" | "tv", data: IGDB.Game.Game | TMDB.Movie.Movie | Trakt.ShowPremiere },
     Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }
 
   export type CountdownStackParamList = {
-    Countdown: { uid: string }
+    Countdown: undefined
+    Details: { type: "game" | "movie" | "tv", data: IGDB.Game.Game | TMDB.Movie.Movie | Trakt.ShowPremiere }
+  }
+
+  export type ProfileStackParamList = {
+    Profile: undefined,
   }
 
 }

@@ -15,30 +15,14 @@ type FindStackNavProp = CompositeNavigationProp<
 interface Props {
   navigation: FindStackNavProp;
   route: RouteProp<Navigation.TabNavigationParamList, "Find">;
-  countdownMovies: any[];
-  countdownGames: any[];
-  showSubs: any[];
 }
 
 const Stack = createStackNavigator<Navigation.FindStackParamList>();
-export function FindStack({ navigation, route, countdownMovies, countdownGames, showSubs }: Props) {
+export function FindStack({ navigation, route }: Props) {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Find">
-        {props => <Search
-          {...props}
-          countdownMovies={countdownMovies}
-          showSubs={showSubs}
-        />}
-      </Stack.Screen>
-      <Stack.Screen name="Details">
-        {props => <Details
-          {...props}
-          countdownMovies={countdownMovies}
-          countdownGames={countdownGames}
-          showSubs={showSubs}
-        />}
-      </Stack.Screen>
+      <Stack.Screen name="Find" component={Search} />
+      <Stack.Screen name="Details" component={Details} />
       {/* <Stack.Screen name="Actor" component={Actor} /> */}
     </Stack.Navigator>
   )

@@ -9,6 +9,7 @@ import firestore from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
 import { getNextEpisode } from '../helpers/requests';
 import UserContext from '../UserContext';
+import { GameSubContext, MovieSubContext, ShowSubContext } from '../SubContexts';
 
 const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
 export function TabStack() {
@@ -58,44 +59,44 @@ export function TabStack() {
   }, [nextEpisodes])
 
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName = "";
-          if (route.name === 'Find') {
-            iconName = "search"
-          } else if (route.name === "Countdown") {
-            iconName = "timer-outline"
-          }
-          else if (route.name === "Profile") {
-            iconName = "person-circle-outline"
-          }
-          return <Ionicons name={iconName} size={size} color={color} />;
-        }
-      })}
-      tabBarOptions={{
-        activeTintColor: '#3880ff',
-        inactiveTintColor: 'gray',
-      }}
-    >
-      <Tab.Screen name="Find">
-        {props => <FindStack
-          {...props}
-          countdownMovies={movieSubs}
-          countdownGames={gameSubs}
-          showSubs={showSubs}
-        />}
-      </Tab.Screen>
-      <Tab.Screen name="Countdown">
-        {props => <CountdownStack
-          {...props}
-          countdownMovies={movieSubs}
-          countdownGames={gameSubs}
-          // showSubs={showSubs}
-          nextEpisodes={nextEpisodes}
-        />}
-      </Tab.Screen>
-      <Tab.Screen name="Profile" component={ProfileStack} />
-    </Tab.Navigator>
+    <MovieSubContext.Provider value={movieSubs}>
+      <GameSubContext.Provider value={gameSubs}>
+        <ShowSubContext.Provider value={showSubs}>
+          <Tab.Navigator
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ focused, color, size }) => {
+                let iconName = "";
+                if (route.name === 'Find') {
+                  iconName = "search"
+                } else if (route.name === "Countdown") {
+                  iconName = "timer-outline"
+                }
+                else if (route.name === "Profile") {
+                  iconName = "person-circle-outline"
+                }
+                return <Ionicons name={iconName} size={size} color={color} />;
+              }
+            })}
+            tabBarOptions={{
+              activeTintColor: '#3880ff',
+              inactiveTintColor: 'gray',
+            }}
+          >
+            <Tab.Screen name="Find" component={FindStack} />
+            <Tab.Screen name="Countdown">
+              {props =>
+                <CountdownStack
+                  {...props}
+                  // showSubs={showSubs}
+                  nextEpisodes={nextEpisodes}
+                />
+              }
+            </Tab.Screen>
+            <Tab.Screen name="Profile" component={ProfileStack} />
+          </Tab.Navigator>
+        </ShowSubContext.Provider>
+      </GameSubContext.Provider>
+    </MovieSubContext.Provider>
+
   )
 }

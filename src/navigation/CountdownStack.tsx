@@ -14,14 +14,12 @@ type CountdownStackNavProp = CompositeNavigationProp<
 interface Props {
   navigation: CountdownStackNavProp,
   route: RouteProp<Navigation.TabNavigationParamList, "Countdown">,
-  countdownMovies: any[],
-  countdownGames: any[],
   // showSubs: any[],
   nextEpisodes: any[]
 }
 
 const Stack = createStackNavigator<any>();
-export function CountdownStack({ navigation, route, countdownMovies, countdownGames, nextEpisodes }: Props) {
+export function CountdownStack({ navigation, route, nextEpisodes }: Props) {
 
   useEffect(() => {
     console.log(`nextEpisodes from CountdownStack`, nextEpisodes)
@@ -30,11 +28,9 @@ export function CountdownStack({ navigation, route, countdownMovies, countdownGa
   return (
     <Stack.Navigator>
       <Stack.Screen name="Countdown">
-        {props => <Countdown {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} nextEpisodes={nextEpisodes} />}
+        {props => <Countdown {...props} nextEpisodes={nextEpisodes} />}
       </Stack.Screen>
-      <Stack.Screen name="Details">
-        {props => <Details {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} />}
-      </Stack.Screen>
+      <Stack.Screen name="Details" component={Details} />
     </Stack.Navigator>
   )
 }

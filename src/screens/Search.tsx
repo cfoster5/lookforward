@@ -10,15 +10,14 @@ import CategoryControl from '../components/CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
 import ThemeContext from '../ThemeContext';
 import CredsContext from '../CredsContext';
+import { MovieSubContext, ShowSubContext } from '../SubContexts';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
   route: RouteProp<Navigation.FindStackParamList, 'Find'>,
-  countdownMovies: any,
-  showSubs: any
 }
 
-function Search({ navigation, route, countdownMovies, showSubs }: Props) {
+function Search({ navigation, route }: Props) {
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
   const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([])
@@ -32,6 +31,8 @@ function Search({ navigation, route, countdownMovies, showSubs }: Props) {
   const [initShows, setInitShows] = useState<Trakt.ShowPremiere[]>([]);
   const colorScheme = useContext(ThemeContext)
   const igdbCreds = useContext(CredsContext)
+  const movieSubs = useContext(MovieSubContext)
+  const showSubs = useContext(ShowSubContext)
 
   useEffect(() => {
     let isMounted = true;
@@ -122,7 +123,7 @@ function Search({ navigation, route, countdownMovies, showSubs }: Props) {
     if (categoryIndex === 2) { mediaType = "game" };
 
     let inCountdown = false;
-    if (categoryIndex === 0) { inCountdown = countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === (item as TMDB.Movie.Movie).id) };
+    if (categoryIndex === 0) { inCountdown = movieSubs.some((movie: TMDB.Movie.Movie) => movie.id === (item as TMDB.Movie.Movie).id) };
     if (categoryIndex === 1) { inCountdown = showSubs.some((premiere: Trakt.ShowPremiere) => premiere.show.ids.trakt === (item as Trakt.ShowPremiere).show.ids.trakt) };
 
     return (

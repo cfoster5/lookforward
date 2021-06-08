@@ -30,6 +30,7 @@ function MoviePoster({ data, inCountdown }: { data: TMDB.Movie.Movie, inCountdow
     </>
   )
 }
+
 function TVPoster({ data, inCountdown }: { data: Trakt.ShowPremiere | Trakt.ShowSearch, inCountdown: boolean}) {
   const uid = useContext(UserContext)
   return (

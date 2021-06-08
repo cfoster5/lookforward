@@ -7,39 +7,40 @@ import { HeaderButton, HeaderButtons, Item } from 'react-navigation-header-butto
 import firestore from '@react-native-firebase/firestore';
 import { useScrollToTop } from '@react-navigation/native';
 import UserContext from '../UserContext';
+import { GameSubContext, MovieSubContext } from '../SubContexts';
 
 interface Props {
   route: any,
   navigation: any,
-  countdownMovies: any[],
-  countdownGames: any[],
   // showSubs: any[],
   nextEpisodes: any[]
 }
 
-function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpisodes }: Props) {
+function Countdown({ route, navigation, nextEpisodes }: Props) {
   const [showButtons, setShowButtons] = useState(false);
   const [selections, setSelections] = useState<{ documentID: string, sectionName: string }[]>([]);
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
   const transformAnim = useRef(new Animated.Value(!showButtons ? -16 : 16)).current;
   const opacityAnim = useRef(new Animated.Value(!showButtons ? 0 : 1)).current;
+  const movieSubs = useContext(MovieSubContext)
+  const gameSubs = useContext(GameSubContext)
   const [listData, setListData] = useState([
     // { data: route.params.movies, title: "Movies" },
     // { data: route.params.games, title: "Games" }
-    { data: countdownMovies, title: "Movies" },
-    { data: countdownGames, title: "Games" },
+    { data: movieSubs, title: "Movies" },
+    { data: gameSubs, title: "Games" },
     { data: nextEpisodes, title: "Shows" }
   ])
   const uid = useContext(UserContext)
 
   useEffect(() => {
     setListData([
-      { data: countdownMovies, title: "Movies" },
-      { data: countdownGames, title: "Games" },
+      { data: movieSubs, title: "Movies" },
+      { data: gameSubs, title: "Games" },
       { data: nextEpisodes, title: "Shows" }
     ])
-  }, [countdownGames, countdownMovies, nextEpisodes])
+  }, [gameSubs, movieSubs, nextEpisodes])
 
   useEffect(() => {
     console.log(`nextEpisodes in Countdown`, nextEpisodes)
@@ -176,8 +177,8 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpi
       contentContainerStyle={{ paddingVertical: 16, marginHorizontal: 16 }}
       // sections={listData}
       sections={[
-        { data: countdownMovies, title: "Movies" },
-        { data: countdownGames, title: "Games" },
+        { data: movieSubs, title: "Movies" },
+        { data: gameSubs, title: "Games" },
         { data: nextEpisodes, title: "Shows" }
       ]}
       stickySectionHeadersEnabled={false}
@@ -188,7 +189,7 @@ function Countdown({ route, navigation, countdownMovies, countdownGames, nextEpi
           item={data.item}
           sectionName={data.section.title}
           // isLastInSection={data.section.title === "Movies" ? data.index + 1 === route.params.movies.length : data.index + 1 === route.params.games.length}
-          isLastInSection={data.section.title === "Movies" ? data.index + 1 === countdownMovies.length : data.index + 1 === countdownGames.length}
+          isLastInSection={data.section.title === "Movies" ? data.index + 1 === movieSubs.length : data.index + 1 === gameSubs.length}
           showButtons={showButtons}
           selected={selections.findIndex(obj => obj.documentID === data.item.documentID) > -1}
           updateSelections={documentID => updateSelections(documentID, data.section.title)}

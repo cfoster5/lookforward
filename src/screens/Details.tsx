@@ -11,19 +11,20 @@ import GameDetails from '../components/Details/GameDetails';
 import MovieDetails from '../components/Details/MovieDetails';
 import ShowDetails from '../components/Details/ShowDetails';
 import UserContext from '../UserContext';
+import { GameSubContext, MovieSubContext, ShowSubContext } from '../SubContexts';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
   route: RouteProp<Navigation.FindStackParamList, 'Details'>,
-  countdownMovies: any[];
-  countdownGames: any[];
-  showSubs: any[];
 }
 
-function Details({ route, navigation, countdownMovies, countdownGames, showSubs }: Props) {
+function Details({ route, navigation }: Props) {
   const modalizeRef = useRef<Modalize>(null);
   const [countdownId, setCountdownId] = useState();
   const uid = useContext(UserContext)
+  const movieSubs = useContext(MovieSubContext)
+  const gameSubs = useContext(GameSubContext)
+  const showSubs = useContext(ShowSubContext)
 
   useEffect(() => {
     console.log(`route.params.data`, route.params.data)
@@ -48,21 +49,21 @@ function Details({ route, navigation, countdownMovies, countdownGames, showSubs 
   }, [navigation, countdownId]);
 
   useEffect(() => {
-    // console.log("Details Changes", countdownMovies, countdownGames)
-    // let documentID = route.params.type === "movie" ? countdownMovies?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID : countdownGames.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
+    // console.log("Details Changes", movieSubs, gameSubs)
+    // let documentID = route.params.type === "movie" ? movieSubs?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID : gameSubs.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
     let documentID;
     if (route.params.type === "movie") {
-      documentID = countdownMovies?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID;
+      documentID = movieSubs?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID;
     }
     if (route.params.type === "tv") {
       documentID = showSubs?.find((show: Trakt.ShowPremiere) => show.show.ids.trakt === (route.params.data as Trakt.ShowPremiere)?.show.ids.trakt)?.documentID;
     }
     if (route.params.type === "game") {
-      documentID = countdownGames.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
+      documentID = gameSubs.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
     }
     setCountdownId(documentID)
-    // setInCountdown(countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === route.params.data.id))
-  }, [countdownMovies, countdownGames, showSubs])
+    // setInCountdown(movieSubs.some((movie: TMDB.Movie.Movie) => movie.id === route.params.data.id))
+  }, [movieSubs, gameSubs, showSubs])
 
   let docId = "";
   if (route.params.type === "movie") { docId = (route.params.data as TMDB.Movie.Movie).id.toString(); }

@@ -58,14 +58,15 @@ function Details({ route, navigation, countdownMovies, countdownGames, showSubs 
       documentID = showSubs?.find((show: Trakt.ShowPremiere) => show.show.ids.trakt === (route.params.data as Trakt.ShowPremiere)?.show.ids.trakt)?.documentID;
     }
     if (route.params.type === "game") {
-      countdownGames.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
+      documentID = countdownGames.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
     }
     setCountdownId(documentID)
     // setInCountdown(countdownMovies.some((movie: TMDB.Movie.Movie) => movie.id === route.params.data.id))
   }, [countdownMovies, countdownGames, showSubs])
 
   let docId = "";
-  docId = route.params.type === "movie" ? (route.params.data as TMDB.Movie.Movie).id.toString() : (route.params.data as Trakt.ShowPremiere).show.ids.trakt.toString();
+  if (route.params.type === "movie") { docId = (route.params.data as TMDB.Movie.Movie).id.toString(); }
+  if (route.params.type === "tv") { docId = (route.params.data as Trakt.ShowPremiere).show.ids.trakt.toString(); }
 
   async function addToList() {
     try {

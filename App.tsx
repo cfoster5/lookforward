@@ -105,21 +105,19 @@ export default function App() {
   }
   return (
     <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />
       <OverflowMenuProvider>
-        <>
-          <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />
-          {user
-            ?
-            <ThemeContext.Provider value={colorScheme}>
-              <UserContext.Provider value={user.uid}>
-                <CredsContext.Provider value={igdbCreds}>
-                  <TabStack />
-                </CredsContext.Provider>
-              </UserContext.Provider>
-            </ThemeContext.Provider>
-            : <AuthStack />
-          }
-        </>
+        {user
+          ?
+          <ThemeContext.Provider value={colorScheme}>
+            <UserContext.Provider value={user.uid}>
+              <CredsContext.Provider value={igdbCreds}>
+                <TabStack />
+              </CredsContext.Provider>
+            </UserContext.Provider>
+          </ThemeContext.Provider>
+          : <AuthStack />
+        }
       </OverflowMenuProvider>
     </NavigationContainer>
   )

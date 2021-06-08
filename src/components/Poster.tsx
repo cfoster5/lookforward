@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { ColorSchemeName, Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB, Navigation, TMDB, Trakt } from "../../types";
 import PosterButton from "./PosterButton";
+import ThemeContext from "../ThemeContext";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Find"> | StackNavigationProp<Navigation.FindStackParamList, "Details">,
@@ -12,10 +13,10 @@ interface Props {
   data: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch | IGDB.Game.Game
   inCountdown: boolean;
   uid: string;
-  colorScheme: ColorSchemeName
 }
 
-function MoviePoster({ data, inCountdown, uid, colorScheme }: { data: TMDB.Movie.Movie, inCountdown: boolean, uid: string, colorScheme: ColorSchemeName }) {
+function MoviePoster({ data, inCountdown, uid }: { data: TMDB.Movie.Movie, inCountdown: boolean, uid: string }) {
+  const colorScheme = useContext(ThemeContext)
   return (
     <>
       <PosterButton data={data} inCountdown={inCountdown} uid={uid} mediaType={"movie"} />
@@ -24,12 +25,13 @@ function MoviePoster({ data, inCountdown, uid, colorScheme }: { data: TMDB.Movie
           style={reusableStyles.itemRight}
           source={{ uri: `https://image.tmdb.org/t/p/w300${data.poster_path}` }}
         />
-        : <TextPoster text={data.title} colorScheme={colorScheme} />
+        : <TextPoster text={data.title} />
       }
     </>
   )
 }
-function TVPoster({ data, inCountdown, uid, colorScheme }: { data: Trakt.ShowPremiere | Trakt.ShowSearch, inCountdown: boolean, uid: string, colorScheme: ColorSchemeName }) {
+function TVPoster({ data, inCountdown, uid }: { data: Trakt.ShowPremiere | Trakt.ShowSearch, inCountdown: boolean, uid: string }) {
+  const colorScheme = useContext(ThemeContext)
   return (
     <>
       <PosterButton data={data} inCountdown={inCountdown} uid={uid} mediaType={"tv"} />
@@ -38,13 +40,14 @@ function TVPoster({ data, inCountdown, uid, colorScheme }: { data: Trakt.ShowPre
           style={reusableStyles.itemRight}
           source={{ uri: `https://image.tmdb.org/t/p/w300${data.show.tmdbData.poster_path}` }}
         />
-        : <TextPoster text={data.show.title} colorScheme={colorScheme} />
+        : <TextPoster text={data.show.title} />
       }
     </>
   )
 }
 
-function GamePoster({ data, colorScheme }: { data: IGDB.Game.Game, colorScheme: ColorSchemeName }) {
+function GamePoster({ data }: { data: IGDB.Game.Game }) {
+  const colorScheme = useContext(ThemeContext)
   return (
     data.cover?.url
       ? <Image
@@ -52,11 +55,12 @@ function GamePoster({ data, colorScheme }: { data: IGDB.Game.Game, colorScheme: 
         // source={{ uri: `https:${(data as IGDB.ReleaseDate.ReleaseDate)?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}
         source={{ uri: `https:${data.cover?.url.replace("thumb", "cover_big_2x")}` }}
       />
-      : <TextPoster text={data.name} colorScheme={colorScheme} />
+      : <TextPoster text={data.name} />
   )
 }
 
-function TextPoster({ text, colorScheme }: { text: string, colorScheme: ColorSchemeName }) {
+function TextPoster({ text }: { text: string }) {
+  const colorScheme = useContext(ThemeContext)
   return (
     <View
       style={{
@@ -75,7 +79,7 @@ function TextPoster({ text, colorScheme }: { text: string, colorScheme: ColorSch
   )
 }
 
-function Poster({ navigation, mediaType, data, inCountdown, uid, colorScheme }: Props) {
+function Poster({ navigation, mediaType, data, inCountdown, uid }: Props) {
   return (
     <Pressable onPress={() => navigation.navigate('Details', { type: mediaType, data: data, uid: uid })}>
       {mediaType === "movie" &&
@@ -83,7 +87,6 @@ function Poster({ navigation, mediaType, data, inCountdown, uid, colorScheme }: 
           data={data as TMDB.Movie.Movie}
           inCountdown={inCountdown}
           uid={uid}
-          colorScheme={colorScheme}
         />
       }
       {mediaType === "tv" &&
@@ -91,13 +94,11 @@ function Poster({ navigation, mediaType, data, inCountdown, uid, colorScheme }: 
           data={data as Trakt.ShowPremiere | Trakt.ShowSearch}
           inCountdown={inCountdown}
           uid={uid}
-          colorScheme={colorScheme}
         />
       }
       {mediaType === "game" &&
         <GamePoster
           data={data as IGDB.Game.Game}
-          colorScheme={colorScheme}
         />
       }
     </Pressable>

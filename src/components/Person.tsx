@@ -1,9 +1,10 @@
 import { StackNavigationProp } from "@react-navigation/stack";
-import React, { useEffect } from "react";
-import { ColorSchemeName, Image, Pressable, Text, View } from "react-native";
+import React, { useContext, useEffect } from "react";
+import { Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation, TMDB } from "../../types";
+import ThemeContext from "../ThemeContext";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">,
@@ -11,10 +12,10 @@ interface Props {
   name: string;
   job: string | undefined;
   character: string | undefined;
-  colorScheme: ColorSchemeName
 }
 
-function Person({ navigation, profilePath, name, job, character, colorScheme }: Props) {
+function Person({ navigation, profilePath, name, job, character }: Props) {
+  const colorScheme = useContext(ThemeContext)
   return (
     <Pressable style={{ flex: 1, flexDirection: 'row', alignItems: "center" }}>
       {profilePath &&

@@ -9,7 +9,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import GameDetails from '../components/Details/GameDetails';
 import MovieDetails from '../components/Details/MovieDetails';
-import { ColorSchemeName } from 'react-native';
 import ShowDetails from '../components/Details/ShowDetails';
 
 interface Props {
@@ -18,10 +17,9 @@ interface Props {
   countdownMovies: any[];
   countdownGames: any[];
   showSubs: any[];
-  colorScheme: ColorSchemeName
 }
 
-function Details({ route, navigation, countdownMovies, countdownGames, showSubs, colorScheme }: Props) {
+function Details({ route, navigation, countdownMovies, countdownGames, showSubs }: Props) {
   const modalizeRef = useRef<Modalize>(null);
   const [countdownId, setCountdownId] = useState();
 
@@ -105,21 +103,18 @@ function Details({ route, navigation, countdownMovies, countdownGames, showSubs,
           game={route.params.data as IGDB.Game.Game}
           uid={route.params.uid}
           modalizeRef={modalizeRef}
-          colorScheme={colorScheme}
         />
       }
       {route.params.type === "movie" &&
         <MovieDetails
           navigation={navigation}
           movie={route.params.data as TMDB.Movie.Movie}
-          colorScheme={colorScheme}
         />
       }
       {route.params.type === "tv" &&
         <ShowDetails
           navigation={navigation}
           show={route.params.data as Trakt.ShowPremiere | Trakt.ShowSearch}
-          colorScheme={colorScheme}
         />
       }
     </>

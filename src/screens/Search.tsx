@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Platform, FlatList, ColorSchemeName, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { View, Platform, FlatList, ActivityIndicator } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getUpcomingTVPremieres, getShowSearch, getShowDetails } from '../helpers/requests';
 import { IGDB, Navigation, TMDB, Trakt } from '../../types';
@@ -8,16 +8,16 @@ import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
 import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import CategoryControl from '../components/CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
+import ThemeContext from '../ThemeContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
   route: RouteProp<Navigation.FindStackParamList, 'Find'>,
   countdownMovies: any,
-  showSubs: any,
-  colorScheme: ColorSchemeName
+  showSubs: any
 }
 
-function Search({ navigation, route, countdownMovies, showSubs, colorScheme }: Props) {
+function Search({ navigation, route, countdownMovies, showSubs }: Props) {
   const [searchValue, setSearchValue] = useState("")
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([])
   const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([])
@@ -29,6 +29,7 @@ function Search({ navigation, route, countdownMovies, showSubs, colorScheme }: P
   const prevCategoryIndex = usePrevious(categoryIndex);
   const [shows, setShows] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
   const [initShows, setInitShows] = useState<Trakt.ShowPremiere[]>([]);
+  const colorScheme = useContext(ThemeContext)
 
   useEffect(() => {
     let isMounted = true;
@@ -129,7 +130,6 @@ function Search({ navigation, route, countdownMovies, showSubs, colorScheme }: P
         data={item}
         inCountdown={inCountdown}
         uid={route.params.uid}
-        colorScheme={colorScheme}
       />
     )
   };

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   ScrollView,
   View,
   Dimensions,
   Text,
-  ColorSchemeName,
   ActivityIndicator
 } from 'react-native';
 import { Navigation, TMDB, Trakt } from '../../../types';
@@ -17,18 +16,19 @@ import Person from '../Person';
 import { months } from '../../helpers/helpers';
 import CategoryControl from '../CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
+import ThemeContext from '../../ThemeContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Details'>,
-  show: Trakt.ShowPremiere | Trakt.ShowSearch,
-  colorScheme: ColorSchemeName
+  show: Trakt.ShowPremiere | Trakt.ShowSearch
 }
 
-function MovieDetails({ navigation, show, colorScheme }: Props) {
+function MovieDetails({ navigation, show }: Props) {
   const [detailIndex, setDetailIndex] = useState(0)
   // const [people, setPeople] = useState<Trakt.ShowPeople[]>();
   const [creators, setCreators] = useState<Trakt.Role[]>([]);
   const [castings, setCast] = useState<Trakt.Cast[]>([]);
+  const colorScheme = useContext(ThemeContext)
 
   useEffect(() => {
     // Self invoking async function fixes state being set before tmdbData is added
@@ -102,7 +102,6 @@ function MovieDetails({ navigation, show, colorScheme }: Props) {
                       name={person.person.name}
                       job={person.job}
                       character={undefined}
-                      colorScheme={colorScheme}
                     />
                   ))}
                   {castings.map((person, i) => (
@@ -113,7 +112,6 @@ function MovieDetails({ navigation, show, colorScheme }: Props) {
                       name={person.person.name}
                       job={undefined}
                       character={person.character}
-                      colorScheme={colorScheme}
                     />
                   ))}
                 </View>
@@ -124,7 +122,7 @@ function MovieDetails({ navigation, show, colorScheme }: Props) {
 
 
           <View style={detailIndex !== 1 ? { display: "none" } : {}}>
-            {show.show.tmdbData?.videos?.results?.map((video, i) => <Trailer key={i} video={video} index={i} colorScheme={colorScheme} />)}
+            {show.show.tmdbData?.videos?.results?.map((video, i) => <Trailer key={i} video={video} index={i} />)}
             {show.show.tmdbData?.videos?.results?.length === 0 &&
               <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>No trailers yet! Come back later!</Text>
             }

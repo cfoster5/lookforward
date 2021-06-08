@@ -7,28 +7,26 @@ import { ProfileStack } from './ProfileStack';
 import { IGDBCredentials, Navigation, Trakt } from '../../types';
 import firestore from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
-import { ColorSchemeName } from 'react-native';
 import { getNextEpisode } from '../helpers/requests';
 
 interface Props {
   uid: string,
-  igdbCreds: IGDBCredentials,
-  colorScheme: ColorSchemeName
+  igdbCreds: IGDBCredentials
 }
 
-const Tabs = createBottomTabNavigator<Navigation.TabNavigationParamList>();
-export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
-  const [countdownMovies, setCountdownMovies] = useState([]);
-  const [countdownGames, setCountdownGames] = useState([]);
+const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
+export function TabStack({ uid, igdbCreds }: Props) {
+  const [movieSubs, setMovieSubs] = useState([]);
+  const [gameSubs, setGameSubs] = useState([]);
   const [showSubs, setShowSubs] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
   const [nextEpisodes, setNextEpisodes] = useState<Trakt.NextEpisode[]>([]);
 
   useEffect(() => {
     const movieSubscription = firestore().collection('movies').orderBy("release_date").where("subscribers", "array-contains", uid)
-      .onSnapshot(querySnapshot => { setCountdownMovies(onResult(querySnapshot)) }, error => console.error("error", error));
+      .onSnapshot(querySnapshot => { setMovieSubs(onResult(querySnapshot)) }, error => console.error("error", error));
 
     const gameSubscription = firestore().collection("gameReleases").orderBy("date").where("subscribers", "array-contains", uid)
-      .onSnapshot(querySnapshot => { setCountdownGames(onResult(querySnapshot)) }, error => console.error("error", error));
+      .onSnapshot(querySnapshot => { setGameSubs(onResult(querySnapshot)) }, error => console.error("error", error));
 
     const showSubscription = firestore().collection("shows").where("subscribers", "array-contains", uid)
       .onSnapshot(querySnapshot => { setShowSubs(onResult(querySnapshot)) }, error => console.error("error", error));
@@ -63,7 +61,7 @@ export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
   }, [nextEpisodes])
 
   return (
-    <Tabs.Navigator
+    <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName = "";
@@ -83,26 +81,24 @@ export function TabNavigation({ uid, igdbCreds, colorScheme }: Props) {
         inactiveTintColor: 'gray',
       }}
     >
-      <Tabs.Screen name="Find" initialParams={{ uid: uid, igdbCreds: igdbCreds }}>
+      <Tab.Screen name="Find" initialParams={{ uid: uid, igdbCreds: igdbCreds }}>
         {props => <FindStack
           {...props}
-          countdownMovies={countdownMovies}
-          countdownGames={countdownGames}
+          countdownMovies={movieSubs}
+          countdownGames={gameSubs}
           showSubs={showSubs}
-          colorScheme={colorScheme}
         />}
-      </Tabs.Screen>
-      <Tabs.Screen name="Countdown" initialParams={{ uid: uid }}>
+      </Tab.Screen>
+      <Tab.Screen name="Countdown" initialParams={{ uid: uid }}>
         {props => <CountdownStack
           {...props}
-          countdownMovies={countdownMovies}
-          countdownGames={countdownGames}
+          countdownMovies={movieSubs}
+          countdownGames={gameSubs}
           // showSubs={showSubs}
           nextEpisodes={nextEpisodes}
-          colorScheme={colorScheme}
         />}
-      </Tabs.Screen>
-      <Tabs.Screen name="Profile" component={ProfileStack} initialParams={{ uid: uid }} />
-    </Tabs.Navigator>
+      </Tab.Screen>
+      <Tab.Screen name="Profile" component={ProfileStack} initialParams={{ uid: uid }} />
+    </Tab.Navigator>
   )
 }

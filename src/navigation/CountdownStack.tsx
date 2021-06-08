@@ -5,7 +5,6 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { Navigation } from '../../types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Details from '../screens/Details';
-import { ColorSchemeName } from 'react-native';
 
 type CountdownStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
@@ -18,12 +17,11 @@ interface Props {
   countdownMovies: any[],
   countdownGames: any[],
   // showSubs: any[],
-  nextEpisodes: any[],
-  colorScheme: ColorSchemeName
+  nextEpisodes: any[]
 }
 
 const Stack = createStackNavigator<any>();
-export function CountdownStack({ navigation, route, countdownMovies, countdownGames, nextEpisodes, colorScheme }: Props) {
+export function CountdownStack({ navigation, route, countdownMovies, countdownGames, nextEpisodes }: Props) {
 
   useEffect(() => {
     console.log(`nextEpisodes from CountdownStack`, nextEpisodes)
@@ -35,7 +33,7 @@ export function CountdownStack({ navigation, route, countdownMovies, countdownGa
         {props => <Countdown {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} nextEpisodes={nextEpisodes} />}
       </Stack.Screen>
       <Stack.Screen name="Details" initialParams={{ uid: route.params.uid }}>
-        {props => <Details {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} colorScheme={colorScheme} />}
+        {props => <Details {...props} countdownMovies={countdownMovies} countdownGames={countdownGames} />}
       </Stack.Screen>
     </Stack.Navigator>
   )

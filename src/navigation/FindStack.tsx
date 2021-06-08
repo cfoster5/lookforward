@@ -6,7 +6,6 @@ import Search from "../screens/Search";
 import { Navigation } from "../../types";
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { ColorSchemeName } from 'react-native';
 
 type FindStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.FindStackParamList, "Find">,
@@ -19,11 +18,10 @@ interface Props {
   countdownMovies: any[];
   countdownGames: any[];
   showSubs: any[];
-  colorScheme: ColorSchemeName
 }
 
 const Stack = createStackNavigator<Navigation.FindStackParamList>();
-export function FindStack({ navigation, route, countdownMovies, countdownGames, showSubs, colorScheme }: Props) {
+export function FindStack({ navigation, route, countdownMovies, countdownGames, showSubs }: Props) {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Find" initialParams={{ uid: route.params.uid, igdbCreds: route.params.igdbCreds }}>
@@ -31,7 +29,6 @@ export function FindStack({ navigation, route, countdownMovies, countdownGames, 
           {...props}
           countdownMovies={countdownMovies}
           showSubs={showSubs}
-          colorScheme={colorScheme}
         />}
       </Stack.Screen>
       <Stack.Screen name="Details" initialParams={{ uid: route.params.uid }}>
@@ -40,7 +37,6 @@ export function FindStack({ navigation, route, countdownMovies, countdownGames, 
           countdownMovies={countdownMovies}
           countdownGames={countdownGames}
           showSubs={showSubs}
-          colorScheme={colorScheme}
         />}
       </Stack.Screen>
       {/* <Stack.Screen name="Actor" component={Actor} /> */}

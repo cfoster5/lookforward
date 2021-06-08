@@ -1,9 +1,11 @@
-import React from "react";
-import { ColorSchemeName, Dimensions, Image, Linking, Pressable, Text, View } from "react-native";
+import React, { useContext } from "react";
+import { Dimensions, Image, Linking, Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { IGDB, TMDB } from "../../types";
+import ThemeContext from "../ThemeContext";
 
-function Trailer({ video, index, colorScheme }: { video: TMDB.Movie.VideoResult | IGDB.Game.Video, index: number, colorScheme: ColorSchemeName }) {
+function Trailer({ video, index }: { video: TMDB.Movie.VideoResult | IGDB.Game.Video, index: number}) {
+  const colorScheme = useContext(ThemeContext)
   return (
     // <Pressable key={index} onPress={() => Linking.openURL(`https://www.youtube.com/watch?v=${video.key}`)}>
     <Pressable key={index} onPress={() => Linking.openURL((video as TMDB.Movie.VideoResult).key ? `https://www.youtube.com/watch?v=${(video as TMDB.Movie.VideoResult).key}`: `https://www.youtube.com/watch?v=${(video as IGDB.Game.Video).video_id}`)}>

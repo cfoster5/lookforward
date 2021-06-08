@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar, Appearance, Alert, Image, Dimensions, ColorSchemeName } from 'react-native';
+import { View, StatusBar } from 'react-native';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { OverflowMenuProvider } from 'react-navigation-header-buttons';
 import SplashScreen from 'react-native-splash-screen'
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 import firestore from '@react-native-firebase/firestore';
-import { TabNavigation } from './src/navigation/TabNavigator';
+import { TabStack } from './src/navigation/TabStack';
 import { AuthStack } from './src/navigation/AuthStack';
+import ThemeContext from './src/ThemeContext';
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<FirebaseAuthTypes.User>();
   const [igdbCreds, setIgdbCreds] = useState<any>(null);
+  const [colorScheme, setColorScheme] = useState("dark")
 
   useEffect(() => {
     // monitorTimeConsumingTask().then(result => setInitializing(false))
@@ -93,9 +95,6 @@ export default function App() {
     await firestore().collection("users").doc(user?.uid).set({ deviceToken: token })
   }
 
-  // const colorScheme = Appearance.getColorScheme();
-  const colorScheme: ColorSchemeName = "dark";
-
   if (initializing) {
     return <View />
     // return <Image
@@ -108,7 +107,13 @@ export default function App() {
       <OverflowMenuProvider>
         <>
           <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />
-          {user ? <TabNavigation uid={user.uid} igdbCreds={igdbCreds} colorScheme={colorScheme} /> : <AuthStack />}
+          {user
+            ?
+            <ThemeContext.Provider value={colorScheme}>
+              <TabStack uid={user.uid} igdbCreds={igdbCreds} />
+            </ThemeContext.Provider>
+            : <AuthStack />
+          }
         </>
       </OverflowMenuProvider>
     </NavigationContainer>

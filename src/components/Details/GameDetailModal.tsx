@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   View,
   Pressable,
   Text,
-  StyleSheet,
-  ColorSchemeName,
+  StyleSheet
 } from 'react-native';
 
 import { IGDB } from '../../../types';
@@ -12,8 +11,10 @@ import { reusableStyles } from '../../helpers/styles';
 import { iOSUIKit } from 'react-native-typography'
 import { Modalize } from 'react-native-modalize';
 import firestore from '@react-native-firebase/firestore';
+import ThemeContext from '../../ThemeContext';
 
-function GameReleaseModal({ modalizeRef, game, uid, getReleaseDate, colorScheme }: { modalizeRef: any, game: IGDB.Game.Game, uid: string, getReleaseDate: () => string, colorScheme: ColorSchemeName }) {
+function GameReleaseModal({ modalizeRef, game, uid, getReleaseDate }: { modalizeRef: any, game: IGDB.Game.Game, uid: string, getReleaseDate: () => string}) {
+  const colorScheme = useContext(ThemeContext)
 
   function formatDate(item: IGDB.Game.ReleaseDate) {
     let date = new Date(item.date * 1000);

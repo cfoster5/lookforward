@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   ScrollView,
   View,
   Pressable,
-  Text,
-  ColorSchemeName
+  Text
 } from 'react-native';
 
 import { Image } from 'react-native-elements';
@@ -14,16 +13,17 @@ import { reusableStyles } from '../helpers/styles';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
+import ThemeContext from '../ThemeContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Actor'>,
-  route: RouteProp<Navigation.FindStackParamList, 'Actor'>,
-  colorScheme: ColorSchemeName
+  route: RouteProp<Navigation.FindStackParamList, 'Actor'>
 }
 
-function Actor({ route, navigation, colorScheme }: Props) {
+function Actor({ route, navigation }: Props) {
   const actor = route.params;
   const [credits, setCredits] = useState<TMDB.MovieCredits.Credits>();
+  const colorScheme = useContext(ThemeContext)
 
   useEffect(() => {
     console.log(actor);

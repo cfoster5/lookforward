@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   ScrollView,
   View,
   Dimensions,
-  Text,
-  ColorSchemeName
+  Text
 } from 'react-native';
 import { Navigation, TMDB } from '../../../types';
 import { Image } from 'react-native-elements';
@@ -16,16 +15,17 @@ import Person from '../Person';
 import { months } from '../../helpers/helpers';
 import CategoryControl from '../CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
+import ThemeContext from '../../ThemeContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
-  movie: TMDB.Movie.Movie,
-  colorScheme: ColorSchemeName
+  movie: TMDB.Movie.Movie
 }
 
-function MovieDetails({ navigation, movie, colorScheme }: Props) {
+function MovieDetails({ navigation, movie }: Props) {
   const [movieDetails, setMovieDetails] = useState<TMDB.Movie.Details>();
   const [detailIndex, setDetailIndex] = useState(0)
+  const colorScheme = useContext(ThemeContext)
 
   useEffect(() => {
     getMovieDetails(movie.id).then(movie => {
@@ -76,7 +76,6 @@ function MovieDetails({ navigation, movie, colorScheme }: Props) {
                 name={(movieDetails?.credits?.crew?.find(person => person?.job === "Director") as TMDB.Movie.Crew).name}
                 job={(movieDetails?.credits?.crew?.find(person => person?.job === "Director") as TMDB.Movie.Crew).job}
                 character={undefined}
-                colorScheme={colorScheme}
               />
             }
             {movieDetails?.credits.cast.map((person, i) => (
@@ -87,12 +86,11 @@ function MovieDetails({ navigation, movie, colorScheme }: Props) {
                 name={person.name}
                 job={undefined}
                 character={person.character}
-                colorScheme={colorScheme}
               />
             ))}
           </View>
           <View style={detailIndex !== 1 ? { display: "none" } : {}}>
-            {movieDetails?.videos?.results?.map((video, i) => <Trailer key={i} video={video} index={i} colorScheme={colorScheme} />)}
+            {movieDetails?.videos?.results?.map((video, i) => <Trailer key={i} video={video} index={i} />)}
             {movieDetails?.videos?.results?.length === 0 &&
               <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>No trailers yet! Come back later!</Text>
             }

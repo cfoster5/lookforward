@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
   ScrollView,
   View,
   Dimensions,
-  Text,
-  ColorSchemeName
+  Text
 } from 'react-native';
 
 import { IGDB, Navigation } from '../../../types';
@@ -16,17 +15,18 @@ import { months } from '../../helpers/helpers';
 import CategoryControl from '../CategoryControl';
 import GameReleaseModal from './GameDetailModal';
 import { StackNavigationProp } from '@react-navigation/stack';
+import ThemeContext from '../../ThemeContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
   game: IGDB.Game.Game;
   uid: string
-  modalizeRef: any,
-  colorScheme: ColorSchemeName
+  modalizeRef: any
 }
 
-function GameDetails({ navigation, game, uid, modalizeRef, colorScheme }: Props) {
+function GameDetails({ navigation, game, uid, modalizeRef }: Props) {
   const [detailIndex, setDetailIndex] = useState(0)
+  const colorScheme = useContext(ThemeContext)
   // const modalizeRef = useRef<Modalize>(null);
   // const [game, setGame] = useState();
 
@@ -66,7 +66,7 @@ function GameDetails({ navigation, game, uid, modalizeRef, colorScheme }: Props)
 
   return (
     <>
-      <GameReleaseModal modalizeRef={modalizeRef} game={game} uid={uid} getReleaseDate={getReleaseDate} colorScheme={colorScheme} />
+      <GameReleaseModal modalizeRef={modalizeRef} game={game} uid={uid} getReleaseDate={getReleaseDate} />
       <ScrollView>
         {game?.cover?.url &&
           <Image
@@ -128,7 +128,7 @@ function GameDetails({ navigation, game, uid, modalizeRef, colorScheme }: Props)
           }
           {detailIndex === 1 &&
             <>
-              {game.videos?.map((video, i) => <Trailer key={i} video={video} index={i} colorScheme={colorScheme} />)}
+              {game.videos?.map((video, i) => <Trailer key={i} video={video} index={i} />)}
               {game.videos === undefined &&
                 <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>No trailers yet! Come back later!</Text>
               }

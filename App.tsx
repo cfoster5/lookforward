@@ -8,9 +8,9 @@ import messaging from '@react-native-firebase/messaging';
 import firestore from '@react-native-firebase/firestore';
 import { TabStack } from './src/navigation/TabStack';
 import { AuthStack } from './src/navigation/AuthStack';
-import ThemeContext from './src/ThemeContext';
-import UserContext from './src/UserContext';
-import CredsContext from './src/CredsContext';
+import ThemeContext from './src/contexts/ThemeContext';
+import UserContext from './src/contexts/UserContext';
+import CredsContext from './src/contexts/CredsContext';
 
 export default function App() {
   // Set an initializing state whilst Firebase connects

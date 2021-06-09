@@ -8,8 +8,8 @@ import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
 import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import CategoryControl from '../components/CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
-import ThemeContext from '../ThemeContext';
-import CredsContext from '../CredsContext';
+import ThemeContext from '../contexts/ThemeContext';
+import CredsContext from '../contexts/CredsContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,

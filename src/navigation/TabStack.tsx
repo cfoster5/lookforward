@@ -7,8 +7,8 @@ import { ProfileStack } from './ProfileStack';
 import { Navigation, Trakt } from '../../types';
 import firestore from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
-import UserContext from '../UserContext';
-import { GameSubContext, MovieSubContext, ShowSubContext } from '../SubContexts';
+import UserContext from '../contexts/UserContext';
+import { GameSubContext, MovieSubContext, ShowSubContext } from '../contexts/SubContexts';
 
 const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
 export function TabStack() {

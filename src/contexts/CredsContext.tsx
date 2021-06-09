@@ -1,5 +1,5 @@
 import React from "react";
-import { IGDBCredentials } from "../types";
+import { IGDBCredentials } from "../../types";
 
 export const CredsContext = React.createContext<IGDBCredentials>({
   access_token: "",

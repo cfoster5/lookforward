@@ -5,26 +5,30 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import CountdownItem from '../components/CountdownItem';
 import { HeaderButton, HeaderButtons, Item } from 'react-navigation-header-buttons';
 import firestore from '@react-native-firebase/firestore';
-import { useScrollToTop } from '@react-navigation/native';
+import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import UserContext from '../UserContext';
-import { GameSubContext, MovieSubContext } from '../SubContexts';
+import { GameSubContext, MovieSubContext, ShowSubContext } from '../SubContexts';
+import { getNextEpisode } from '../helpers/requests';
+import { Navigation, Trakt } from '../../types';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 interface Props {
-  route: any,
-  navigation: any,
-  // showSubs: any[],
-  nextEpisodes: any[]
+  route: RouteProp<Navigation.CountdownStackParamList, 'Countdown'>
+  navigation: StackNavigationProp<Navigation.CountdownStackParamList, 'Countdown'>;
 }
 
-function Countdown({ route, navigation, nextEpisodes }: Props) {
+function Countdown({ route, navigation }: Props) {
   const [showButtons, setShowButtons] = useState(false);
   const [selections, setSelections] = useState<{ documentID: string, sectionName: string }[]>([]);
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
   const transformAnim = useRef(new Animated.Value(!showButtons ? -16 : 16)).current;
   const opacityAnim = useRef(new Animated.Value(!showButtons ? 0 : 1)).current;
+  const uid = useContext(UserContext)
   const movieSubs = useContext(MovieSubContext)
   const gameSubs = useContext(GameSubContext)
+  const showSubs = useContext(ShowSubContext)
+  const [nextEpisodes, setNextEpisodes] = useState<Trakt.NextEpisode[]>([]);
   const [listData, setListData] = useState([
     // { data: route.params.movies, title: "Movies" },
     // { data: route.params.games, title: "Games" }
@@ -32,7 +36,24 @@ function Countdown({ route, navigation, nextEpisodes }: Props) {
     { data: gameSubs, title: "Games" },
     { data: nextEpisodes, title: "Shows" }
   ])
-  const uid = useContext(UserContext)
+
+  useEffect(() => {
+    // TODO: Fix bug that removes next epidsodes from countdown on addition/removal
+    let tempNextEpisodes: any[] = [];
+    for (const show of showSubs) {
+      getNextEpisode(show.documentID as number).then(nextEpisode => {
+        // console.log(`nextEpisode from TabNav`, nextEpisode);
+        (show as any).nextEpisode = nextEpisode;
+        tempNextEpisodes.push(show);
+      })
+        .catch(err => console.log(`err`, err));
+    }
+    setNextEpisodes(tempNextEpisodes);
+  }, [showSubs])
+
+  useEffect(() => {
+    console.log(`nextEpisodes from Countdown`, nextEpisodes)
+  }, [nextEpisodes])
 
   useEffect(() => {
     setListData([
@@ -41,10 +62,6 @@ function Countdown({ route, navigation, nextEpisodes }: Props) {
       { data: nextEpisodes, title: "Shows" }
     ])
   }, [gameSubs, movieSubs, nextEpisodes])
-
-  useEffect(() => {
-    console.log(`nextEpisodes in Countdown`, nextEpisodes)
-  }, [nextEpisodes])
 
   const IoniconsHeaderButton = (props) => (
     // the `props` here come from <Item ... />

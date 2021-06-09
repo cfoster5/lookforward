@@ -1,18 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Pressable, View } from "react-native";
 import { iOSColors } from "react-native-typography";
 import { IGDB, TMDB, Trakt } from "../../types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from '@react-native-firebase/firestore';
+import UserContext from "../UserContext";
 
 interface Props {
   data: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch;
   inCountdown: boolean;
-  uid: string;
   mediaType: "movie" | "tv"
 }
 
-function PosterButton({ data, inCountdown, uid, mediaType }: Props) {
+function PosterButton({ data, inCountdown, mediaType }: Props) {
+  const uid = useContext(UserContext);
   let docId = "";
   docId = mediaType === "movie" ? (data as TMDB.Movie.Movie).id.toString() : (data as Trakt.ShowPremiere).show.ids.trakt.toString();
 

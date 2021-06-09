@@ -6,98 +6,99 @@ import { reusableStyles } from "../helpers/styles";
 import { IGDB, Navigation, TMDB, Trakt } from "../../types";
 import PosterButton from "./PosterButton";
 import ThemeContext from "../ThemeContext";
-import UserContext from "../UserContext";
+import { MovieSubContext, ShowSubContext } from "../SubContexts";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Find"> | StackNavigationProp<Navigation.FindStackParamList, "Details">,
-  mediaType: "game" | "movie" | "tv",
   data: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch | IGDB.Game.Game
-  inCountdown: boolean;
+  categoryIndex: number;
 }
 
-function MoviePoster({ data, inCountdown }: { data: TMDB.Movie.Movie, inCountdown: boolean }) {
-  const uid = useContext(UserContext)
-  return (
-    <>
-      <PosterButton data={data} inCountdown={inCountdown} uid={uid} mediaType={"movie"} />
-      {data.poster_path
+function Poster({ navigation, data, categoryIndex }: Props) {
+  const movieSubs = useContext(MovieSubContext);
+  const showSubs = useContext(ShowSubContext);
+  const colorScheme = useContext(ThemeContext);
+
+  let mediaType: "movie" | "tv" | "game" = "movie";
+  if (categoryIndex === 0) { mediaType = "movie" };
+  if (categoryIndex === 1) { mediaType = "tv" };
+  if (categoryIndex === 2) { mediaType = "game" };
+
+  let inCountdown = false;
+  if (categoryIndex === 0) { inCountdown = movieSubs.some((movie: TMDB.Movie.Movie) => movie.id === (data as TMDB.Movie.Movie).id) };
+  if (categoryIndex === 1) { inCountdown = showSubs.some((premiere: Trakt.ShowPremiere) => premiere.show.ids.trakt === (data as Trakt.ShowPremiere).show.ids.trakt) };
+
+  function MoviePoster() {
+    return (
+      <>
+        <PosterButton data={data as TMDB.Movie.Movie} inCountdown={inCountdown} mediaType={"movie"} />
+        {(data as TMDB.Movie.Movie).poster_path
+          ? <Image
+            style={reusableStyles.itemRight}
+            source={{ uri: `https://image.tmdb.org/t/p/w300${(data as TMDB.Movie.Movie).poster_path}` }}
+          />
+          : <TextPoster text={(data as TMDB.Movie.Movie).title} />
+        }
+      </>
+    )
+  }
+
+  function TVPoster() {
+    return (
+      <>
+        <PosterButton data={data as Trakt.ShowPremiere | Trakt.ShowSearch} inCountdown={inCountdown} mediaType={"tv"} />
+        {(data as Trakt.ShowPremiere | Trakt.ShowSearch).show.tmdbData?.poster_path
+          ? <Image
+            style={reusableStyles.itemRight}
+            source={{ uri: `https://image.tmdb.org/t/p/w300${(data as Trakt.ShowPremiere | Trakt.ShowSearch).show.tmdbData.poster_path}` }}
+          />
+          : <TextPoster text={(data as Trakt.ShowPremiere | Trakt.ShowSearch).show.title} />
+        }
+      </>
+    )
+  }
+
+  function GamePoster() {
+    return (
+      (data as IGDB.Game.Game).cover?.url
         ? <Image
           style={reusableStyles.itemRight}
-          source={{ uri: `https://image.tmdb.org/t/p/w300${data.poster_path}` }}
+          // source={{ uri: `https:${(data as IGDB.ReleaseDate.ReleaseDate)?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}
+          source={{ uri: `https:${(data as IGDB.Game.Game).cover?.url.replace("thumb", "cover_big_2x")}` }}
         />
-        : <TextPoster text={data.title} />
-      }
-    </>
-  )
-}
+        : <TextPoster text={(data as IGDB.Game.Game).name} />
+    )
+  }
 
-function TVPoster({ data, inCountdown }: { data: Trakt.ShowPremiere | Trakt.ShowSearch, inCountdown: boolean}) {
-  const uid = useContext(UserContext)
-  return (
-    <>
-      <PosterButton data={data} inCountdown={inCountdown} uid={uid} mediaType={"tv"} />
-      {data.show.tmdbData?.poster_path
-        ? <Image
-          style={reusableStyles.itemRight}
-          source={{ uri: `https://image.tmdb.org/t/p/w300${data.show.tmdbData.poster_path}` }}
-        />
-        : <TextPoster text={data.show.title} />
-      }
-    </>
-  )
-}
+  function TextPoster({ text }: { text: string }) {
+    return (
+      <View
+        style={{
+          ...reusableStyles.itemRight,
+          // borderWidth: 1,
+          borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0",
+          flexDirection: 'row',
+          alignItems: "center",
+          justifyContent: 'center'
+        }}
+      >
+        <Text style={colorScheme === "dark" ? { ...iOSUIKit.title3EmphasizedWhiteObject, textAlign: "center" } : { ...iOSUIKit.title3EmphasizedObject, color: iOSColors.gray, textAlign: "center" }}>
+          {text}
+        </Text>
+      </View>
+    )
+  }
 
-function GamePoster({ data }: { data: IGDB.Game.Game }) {
-  return (
-    data.cover?.url
-      ? <Image
-        style={reusableStyles.itemRight}
-        // source={{ uri: `https:${(data as IGDB.ReleaseDate.ReleaseDate)?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}
-        source={{ uri: `https:${data.cover?.url.replace("thumb", "cover_big_2x")}` }}
-      />
-      : <TextPoster text={data.name} />
-  )
-}
-
-function TextPoster({ text }: { text: string }) {
-  const colorScheme = useContext(ThemeContext)
-  return (
-    <View
-      style={{
-        ...reusableStyles.itemRight,
-        // borderWidth: 1,
-        borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0",
-        flexDirection: 'row',
-        alignItems: "center",
-        justifyContent: 'center'
-      }}
-    >
-      <Text style={colorScheme === "dark" ? { ...iOSUIKit.title3EmphasizedWhiteObject, textAlign: "center" } : { ...iOSUIKit.title3EmphasizedObject, color: iOSColors.gray, textAlign: "center" }}>
-        {text}
-      </Text>
-    </View>
-  )
-}
-
-function Poster({ navigation, mediaType, data, inCountdown }: Props) {
   return (
     <Pressable onPress={() => navigation.navigate('Details', { type: mediaType, data: data })}>
       {mediaType === "movie" &&
-        <MoviePoster
-          data={data as TMDB.Movie.Movie}
-          inCountdown={inCountdown}
-        />
+        <MoviePoster />
       }
       {mediaType === "tv" &&
-        <TVPoster
-          data={data as Trakt.ShowPremiere | Trakt.ShowSearch}
-          inCountdown={inCountdown}
-        />
+        <TVPoster />
       }
       {mediaType === "game" &&
-        <GamePoster
-          data={data as IGDB.Game.Game}
-        />
+        <GamePoster />
       }
     </Pressable>
   )

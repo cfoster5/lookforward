@@ -532,7 +532,7 @@ export namespace Navigation {
 
   export type FindStackParamList = {
     Find: undefined,
-    Details: { type: "game" | "movie" | "tv", data: IGDB.Game.Game | TMDB.Movie.Movie | Trakt.ShowPremiere },
+    Details: { type: "game" | "movie" | "tv", data: IGDB.Game.Game | TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch },
     Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }
 

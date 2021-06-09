@@ -10,7 +10,6 @@ import CategoryControl from '../components/CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
 import ThemeContext from '../ThemeContext';
 import CredsContext from '../CredsContext';
-import { MovieSubContext, ShowSubContext } from '../SubContexts';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
@@ -31,8 +30,6 @@ function Search({ navigation, route }: Props) {
   const [initShows, setInitShows] = useState<Trakt.ShowPremiere[]>([]);
   const colorScheme = useContext(ThemeContext)
   const igdbCreds = useContext(CredsContext)
-  const movieSubs = useContext(MovieSubContext)
-  const showSubs = useContext(ShowSubContext)
 
   useEffect(() => {
     let isMounted = true;
@@ -116,26 +113,6 @@ function Search({ navigation, route }: Props) {
     return results;
   }
 
-  function renderItem({ item }: { item: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch | IGDB.Game.Game }) {
-    let mediaType: "movie" | "tv" | "game" = "movie";
-    if (categoryIndex === 0) { mediaType = "movie" };
-    if (categoryIndex === 1) { mediaType = "tv" };
-    if (categoryIndex === 2) { mediaType = "game" };
-
-    let inCountdown = false;
-    if (categoryIndex === 0) { inCountdown = movieSubs.some((movie: TMDB.Movie.Movie) => movie.id === (item as TMDB.Movie.Movie).id) };
-    if (categoryIndex === 1) { inCountdown = showSubs.some((premiere: Trakt.ShowPremiere) => premiere.show.ids.trakt === (item as Trakt.ShowPremiere).show.ids.trakt) };
-
-    return (
-      <Poster
-        navigation={navigation}
-        mediaType={mediaType}
-        data={item}
-        inCountdown={inCountdown}
-      />
-    )
-  };
-
   function reinitialize() {
     if (categoryIndex === 0) { setMovies(initMovies) }
     if (categoryIndex === 1) { setShows(initShows) }
@@ -194,7 +171,13 @@ function Search({ navigation, route }: Props) {
       {((categoryIndex === 0 && movies.length > 0) || (categoryIndex === 1 && shows.length > 0) || (categoryIndex === 2 && games.length > 0))
         ? <FlatList
           data={setData()}
-          renderItem={renderItem}
+          renderItem={({ item }: { item: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch | IGDB.Game.Game }) => (
+            <Poster
+              navigation={navigation}
+              data={item}
+              categoryIndex={categoryIndex}
+            />
+          )}
           numColumns={2}
           contentContainerStyle={{ marginHorizontal: 16 }}
           columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}

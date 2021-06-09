@@ -4,7 +4,7 @@ import { Image, Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation, TMDB } from "../../types";
-import ThemeContext from "../ThemeContext";
+import ThemeContext from "../contexts/ThemeContext";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">,

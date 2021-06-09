@@ -5,8 +5,8 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB, Navigation, TMDB, Trakt } from "../../types";
 import PosterButton from "./PosterButton";
-import ThemeContext from "../ThemeContext";
-import { MovieSubContext, ShowSubContext } from "../SubContexts";
+import ThemeContext from "../contexts/ThemeContext";
+import { MovieSubContext, ShowSubContext } from "../contexts/SubContexts";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Find"> | StackNavigationProp<Navigation.FindStackParamList, "Details">,

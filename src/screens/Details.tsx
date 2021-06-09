@@ -10,8 +10,8 @@ import { RouteProp } from '@react-navigation/native';
 import GameDetails from '../components/Details/GameDetails';
 import MovieDetails from '../components/Details/MovieDetails';
 import ShowDetails from '../components/Details/ShowDetails';
-import UserContext from '../UserContext';
-import { GameSubContext, MovieSubContext, ShowSubContext } from '../SubContexts';
+import UserContext from '../contexts/UserContext';
+import { GameSubContext, MovieSubContext, ShowSubContext } from '../contexts/SubContexts';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,

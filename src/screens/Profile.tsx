@@ -14,7 +14,7 @@ import usePrevious from '../helpers/helpers';
 import { reusableStyles } from '../helpers/styles';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import UserContext from '../UserContext';
+import UserContext from '../contexts/UserContext';
 import { Navigation } from '../../types';
 
 type ProfileScreenRouteProp = RouteProp<Navigation.ProfileStackParamList, 'Profile'>;

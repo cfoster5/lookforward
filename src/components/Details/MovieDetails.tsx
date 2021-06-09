@@ -15,7 +15,7 @@ import Person from '../Person';
 import { months } from '../../helpers/helpers';
 import CategoryControl from '../CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
-import ThemeContext from '../../ThemeContext';
+import ThemeContext from '../../contexts/ThemeContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,

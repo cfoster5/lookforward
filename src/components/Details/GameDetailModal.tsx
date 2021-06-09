@@ -11,8 +11,8 @@ import { reusableStyles } from '../../helpers/styles';
 import { iOSUIKit } from 'react-native-typography'
 import { Modalize } from 'react-native-modalize';
 import firestore from '@react-native-firebase/firestore';
-import ThemeContext from '../../ThemeContext';
-import UserContext from '../../UserContext';
+import ThemeContext from '../../contexts/ThemeContext';
+import UserContext from '../../contexts/UserContext';
 
 function GameReleaseModal({ modalizeRef, game, getReleaseDate }: { modalizeRef: any, game: IGDB.Game.Game, getReleaseDate: () => string}) {
   const colorScheme = useContext(ThemeContext)

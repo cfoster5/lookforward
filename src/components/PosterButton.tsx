@@ -4,7 +4,7 @@ import { iOSColors } from "react-native-typography";
 import { IGDB, TMDB, Trakt } from "../../types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from '@react-native-firebase/firestore';
-import UserContext from "../UserContext";
+import UserContext from "../contexts/UserContext";
 
 interface Props {
   data: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch;

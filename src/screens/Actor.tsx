@@ -13,7 +13,7 @@ import { reusableStyles } from '../helpers/styles';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
-import ThemeContext from '../ThemeContext';
+import ThemeContext from '../contexts/ThemeContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Actor'>,

@@ -37,11 +37,9 @@ function GameReleaseModal({ modalizeRef, game, getReleaseDate }: { modalizeRef: 
     releaseDate.game = tempGame;
     try {
       await firestore().collection("gameReleases").doc(releaseDate.id.toString()).set(releaseDate, { merge: true })
-      console.log("Document successfully written!");
       await firestore().collection("gameReleases").doc(releaseDate.id.toString()).update({
         subscribers: firestore.FieldValue.arrayUnion(uid)
       })
-      console.log("Document updated successfully.")
       modalizeRef.current?.close()
     } catch (error) {
       console.error("Error writing document: ", error);

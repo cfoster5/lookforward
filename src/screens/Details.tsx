@@ -72,11 +72,9 @@ function Details({ route, navigation }: Props) {
   async function addToList() {
     try {
       await firestore().collection(route.params.type === "movie" ? "movies" : "shows").doc(docId).set((route.params.data), { merge: true });
-      console.log("Document successfully written!");
       await firestore().collection(route.params.type === "movie" ? "movies" : "shows").doc(docId).update({
         subscribers: firestore.FieldValue.arrayUnion(uid)
       })
-      console.log("Document updated written!");
     } catch (error) {
       console.error("Error writing document: ", error);
     }
@@ -93,7 +91,6 @@ function Details({ route, navigation }: Props) {
       await firestore().collection(collection).doc(countdownId).update({
         subscribers: firestore.FieldValue.arrayRemove(uid)
       })
-      console.log("Document successfully written!");
     } catch (error) {
       console.error("Error writing document: ", error);
     }

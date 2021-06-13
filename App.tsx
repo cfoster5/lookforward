@@ -98,11 +98,8 @@ export default function App() {
 
   if (initializing) {
     return <View />
-    // return <Image
-    //   source={require("./src/assets/splash.png")}
-    //   style={{ height: Dimensions.get("window").height, width: Dimensions.get("window").width }}
-    // />
   }
+  
   return (
     <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />

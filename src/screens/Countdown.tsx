@@ -38,6 +38,7 @@ function Countdown({ route, navigation }: Props) {
   ])
 
   useEffect(() => {
+    // console.log(`showSubs from Countdown`, showSubs)
     // TODO: Fix bug that removes next epidsodes from countdown on addition/removal
     let tempNextEpisodes: any[] = [];
     for (const show of showSubs) {
@@ -181,7 +182,6 @@ function Countdown({ route, navigation }: Props) {
         await firestore().collection(collection).doc(selection.documentID).update({
           subscribers: firestore.FieldValue.arrayRemove(uid)
         })
-        console.log("Document successfully written!");
       } catch (error) {
         console.error("Error writing document: ", error);
       }

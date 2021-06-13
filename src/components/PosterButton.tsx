@@ -20,11 +20,9 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
   async function addToList() {
     try {
       await firestore().collection(mediaType === "movie" ? "movies" : "shows").doc(docId).set((data), { merge: true });
-      console.log("Document successfully written!");
       await firestore().collection(mediaType === "movie" ? "movies" : "shows").doc(docId).update({
         subscribers: firestore.FieldValue.arrayUnion(uid)
       })
-      console.log("Document updated written!");
     } catch (error) {
       console.error("Error writing document: ", error);
     }
@@ -35,7 +33,6 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
       await firestore().collection(mediaType === "movie" ? "movies" : "shows").doc(docId).update({
         subscribers: firestore.FieldValue.arrayRemove(uid)
       })
-      console.log("Document successfully written!");
     } catch (error) {
       console.error("Error writing document: ", error);
     }

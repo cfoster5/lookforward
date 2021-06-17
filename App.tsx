@@ -19,17 +19,8 @@ export default function App() {
 
   useEffect(() => {
     // monitorTimeConsumingTask().then(result => setInitializing(false))
-    const subscriber = auth().onAuthStateChanged((user) => {
-      if (user) {
-        // Signed in
-        setUser(user);
-        // const unsubscribe = messaging().onMessage(async remoteMessage => {
-        //   Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
-        // });
-      } else {
-        // Signed out
-        setUser(undefined);
-      }
+    const subscriber = auth().onAuthStateChanged(user => {
+      setUser(user ? user : undefined)
     });
     return subscriber; // unsubscribe on unmount
   }, []);

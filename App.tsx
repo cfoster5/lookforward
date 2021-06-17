@@ -10,13 +10,11 @@ import { TabStack } from './src/navigation/TabStack';
 import { AuthStack } from './src/navigation/AuthStack';
 import ThemeContext from './src/contexts/ThemeContext';
 import UserContext from './src/contexts/UserContext';
-import CredsContext from './src/contexts/CredsContext';
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<FirebaseAuthTypes.User>();
-  const [igdbCreds, setIgdbCreds] = useState<any>(null);
   const [colorScheme, setColorScheme] = useState("dark")
 
   useEffect(() => {
@@ -25,25 +23,12 @@ export default function App() {
       if (user) {
         // Signed in
         setUser(user);
-        if (initializing) {
-          firestore().collection('igdbAuth').doc("creds").get().then(creds => {
-            setIgdbCreds(creds.data())
-          });
-        }
-
         // const unsubscribe = messaging().onMessage(async remoteMessage => {
         //   Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
         // });
       } else {
         // Signed out
         setUser(undefined);
-        if (initializing) {
-          firestore().collection('igdbAuth').doc("creds").get().then(creds => {
-            setIgdbCreds(creds.data())
-          });
-          setInitializing(false);
-          // SplashScreen.hide();
-        }
       }
     });
     return subscriber; // unsubscribe on unmount
@@ -52,14 +37,9 @@ export default function App() {
   useEffect(() => {
     if (user) {
       requestUserPermission();
-    }
-  }, [user])
-
-  useEffect(() => {
-    if (igdbCreds) {
       setInitializing(false);
     }
-  }, [igdbCreds])
+  }, [user])
 
   useEffect(() => {
     if (!initializing) {
@@ -99,7 +79,6 @@ export default function App() {
   if (initializing) {
     return <View />
   }
-  
   return (
     <NavigationContainer theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <StatusBar barStyle={colorScheme === 'dark' ? "light-content" : "dark-content"} />
@@ -108,9 +87,7 @@ export default function App() {
           ?
           <ThemeContext.Provider value={colorScheme}>
             <UserContext.Provider value={user.uid}>
-              <CredsContext.Provider value={igdbCreds}>
-                <TabStack />
-              </CredsContext.Provider>
+              <TabStack />
             </UserContext.Provider>
           </ThemeContext.Provider>
           : <AuthStack />

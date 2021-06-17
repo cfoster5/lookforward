@@ -9,7 +9,6 @@ import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import CategoryControl from '../components/CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
 import ThemeContext from '../contexts/ThemeContext';
-import CredsContext from '../contexts/CredsContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
@@ -29,7 +28,6 @@ function Search({ navigation, route }: Props) {
   const [shows, setShows] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
   const [initShows, setInitShows] = useState<Trakt.ShowPremiere[]>([]);
   const colorScheme = useContext(ThemeContext)
-  const igdbCreds = useContext(CredsContext)
 
   useEffect(() => {
     let isMounted = true;
@@ -39,7 +37,7 @@ function Search({ navigation, route }: Props) {
         setMovies(movies);
       };
     })
-    getUpcomingGameReleases(igdbCreds.access_token).then(async releaseDates => {
+    getUpcomingGameReleases().then(async releaseDates => {
       await convertReleasesToGames(releaseDates).then(games => {
         if (isMounted) {
           setInitGames(games);
@@ -159,7 +157,7 @@ function Search({ navigation, route }: Props) {
             }
             if (categoryIndex === 2) {
               setGames([]);
-              setGames(await searchGames(igdbCreds.access_token, searchValue));
+              setGames(await searchGames(searchValue));
             }
           } : undefined}
           onClear={reinitialize}

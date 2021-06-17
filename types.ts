@@ -515,13 +515,6 @@ export namespace Trakt {
 
 }
 
-export interface IGDBCredentials {
-  access_token: string;
-  expires_in: number;
-  modified: number;
-  token_type: "bearer";
-}
-
 export namespace Navigation {
 
   export type TabNavigationParamList = {

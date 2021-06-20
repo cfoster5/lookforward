@@ -8,13 +8,12 @@ import { Navigation, Trakt } from '../../types';
 import firestore from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
 import UserContext from '../contexts/UserContext';
-import { GameSubContext, MovieSubContext, ShowSubContext } from '../contexts/SubContexts';
+import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
 
 const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
 export function TabStack() {
   const [movieSubs, setMovieSubs] = useState([]);
   const [gameSubs, setGameSubs] = useState([]);
-  const [showSubs, setShowSubs] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
   const uid = useContext(UserContext);
 
   useEffect(() => {
@@ -24,22 +23,17 @@ export function TabStack() {
     const gameSubscription = firestore().collection("gameReleases").orderBy("date").where("subscribers", "array-contains", uid)
       .onSnapshot(querySnapshot => { setGameSubs(onResult(querySnapshot)) }, error => console.error("error", error));
 
-    const showSubscription = firestore().collection("shows").where("subscribers", "array-contains", uid)
-      .onSnapshot(querySnapshot => { setShowSubs(onResult(querySnapshot)) }, error => console.error("error", error));
-
     // Stop listening for updates when no longer required
     return () => {
       // Unmounting
       movieSubscription();
       gameSubscription();
-      showSubscription();
     };
   }, []);
 
   return (
     <MovieSubContext.Provider value={movieSubs}>
       <GameSubContext.Provider value={gameSubs}>
-        <ShowSubContext.Provider value={showSubs}>
           <Tab.Navigator
             screenOptions={({ route }) => ({
               tabBarIcon: ({ focused, color, size }) => {
@@ -64,7 +58,6 @@ export function TabStack() {
             <Tab.Screen name="Countdown" component={CountdownStack} />
             <Tab.Screen name="Profile" component={ProfileStack} />
           </Tab.Navigator>
-        </ShowSubContext.Provider>
       </GameSubContext.Provider>
     </MovieSubContext.Provider>
 

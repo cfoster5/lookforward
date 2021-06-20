@@ -1,26 +1,26 @@
 import React, { useContext } from "react";
 import { Pressable, View } from "react-native";
 import { iOSColors } from "react-native-typography";
-import { IGDB, TMDB, Trakt } from "../../types";
+import { TMDB } from "../../types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from '@react-native-firebase/firestore';
 import UserContext from "../contexts/UserContext";
 
 interface Props {
-  data: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch;
+  data: TMDB.Movie.Movie;
   inCountdown: boolean;
-  mediaType: "movie" | "tv"
+  mediaType: "movie"
 }
 
 function PosterButton({ data, inCountdown, mediaType }: Props) {
   const uid = useContext(UserContext);
   let docId = "";
-  docId = mediaType === "movie" ? (data as TMDB.Movie.Movie).id.toString() : (data as Trakt.ShowPremiere).show.ids.trakt.toString();
+  docId = data.id.toString()
 
   async function addToList() {
     try {
-      await firestore().collection(mediaType === "movie" ? "movies" : "shows").doc(docId).set((data), { merge: true });
-      await firestore().collection(mediaType === "movie" ? "movies" : "shows").doc(docId).update({
+      await firestore().collection("movies").doc(docId).set((data), { merge: true });
+      await firestore().collection("movies").doc(docId).update({
         subscribers: firestore.FieldValue.arrayUnion(uid)
       })
     } catch (error) {
@@ -30,7 +30,7 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
 
   async function deleteItem() {
     try {
-      await firestore().collection(mediaType === "movie" ? "movies" : "shows").doc(docId).update({
+      await firestore().collection("movies").doc(docId).update({
         subscribers: firestore.FieldValue.arrayRemove(uid)
       })
     } catch (error) {

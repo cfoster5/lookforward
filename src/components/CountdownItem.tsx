@@ -9,7 +9,7 @@ import { IGDB, TMDB } from "../../types";
 interface Props {
   navigation: any
   item: any
-  sectionName: "Movies" | "Games" | "Shows"
+  sectionName: "Movies" | "Games"
   isLastInSection: boolean
   showButtons: boolean
   selected: boolean
@@ -25,10 +25,6 @@ function CountdownItem({ navigation, item, sectionName, isLastInSection, showBut
       let monthIndex = new Date((item as TMDB.Movie.Movie).release_date).getUTCMonth();
       // return `${months[monthIndex].toUpperCase()} ${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}, ${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
       return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate().toString().length < 2 ? "0" : ""}${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
-    }
-    if (sectionName === "Shows") {
-      let monthIndex = new Date(item.nextEpisode.first_aired).getUTCMonth();
-      return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${new Date(item.nextEpisode.first_aired).getUTCDate().toString().length < 2 ? "0" : ""}${new Date(item.nextEpisode.first_aired).getUTCDate()}/${new Date(item.nextEpisode.first_aired).getUTCFullYear()}`;
     }
     if (sectionName === "Games") {
       let date = new Date((item as IGDB.ReleaseDate.ReleaseDate).date * 1000);
@@ -46,11 +42,6 @@ function CountdownItem({ navigation, item, sectionName, isLastInSection, showBut
       year = new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear();
       month = new Date((item as TMDB.Movie.Movie).release_date).getUTCMonth();
       day = new Date((item as TMDB.Movie.Movie).release_date).getUTCDate();
-    }
-    if (sectionName === "Shows") {
-      year = new Date(item.nextEpisode.first_aired).getUTCFullYear();
-      month = new Date(item.nextEpisode.first_aired).getUTCMonth();
-      day = new Date(item.nextEpisode.first_aired).getUTCDate();
     }
     if (sectionName === "Games") {
       let date = new Date((item as IGDB.ReleaseDate.ReleaseDate).date * 1000);
@@ -176,14 +167,10 @@ function CountdownItem({ navigation, item, sectionName, isLastInSection, showBut
     imageSrc = `https:${item.game.cover.url.replace("thumb", "cover_big_2x")}`;
     title = item.game.name;
   }
-  if (sectionName === "Shows") {
-    imageSrc = `https://image.tmdb.org/t/p/w92${item.show.tmdbData.poster_path}`;
-    title = item.show.title;
-  }
 
   return (
     // <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : navigation.navigate('Details', { type: sectionName === "Movies" ? "movie" : "game", data: item })}>
-    <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : sectionName === "Movies" ? navigation.navigate('Details', { type: sectionName === "Movies" ? "movie" : "game", data: item }) : Alert.alert("This isn't ready just yet")}>
+    <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : sectionName === "Movies" ? navigation.navigate('Details', { type: sectionName === "Movies" ? "movie" : "game", data: item }) : undefined}>
       <View style={styles.rowFront}>
         <SlideView style={styles.slide}>
           <FadeView style={{ justifyContent: "center" }}>

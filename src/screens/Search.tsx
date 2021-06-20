@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { View, Platform, FlatList, ActivityIndicator } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getUpcomingTVPremieres, getShowSearch, getShowDetails } from '../helpers/requests';
-import { IGDB, Navigation, TMDB, Trakt } from '../../types';
+import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from '../helpers/requests';
+import { IGDB, Navigation, TMDB } from '../../types';
 import Poster from '../components/Poster';
 import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
 import { RouteProp, useScrollToTop } from '@react-navigation/native';
@@ -25,8 +25,6 @@ function Search({ navigation, route }: Props) {
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
   const prevCategoryIndex = usePrevious(categoryIndex);
-  const [shows, setShows] = useState<Trakt.ShowPremiere[] | Trakt.ShowSearch[]>([]);
-  const [initShows, setInitShows] = useState<Trakt.ShowPremiere[]>([]);
   const colorScheme = useContext(ThemeContext)
 
   useEffect(() => {
@@ -52,29 +50,13 @@ function Search({ navigation, route }: Props) {
         console.log("error 2", error)
       })
 
-    getUpcomingTVPremieres().then(premieres => {
-      for (const premiere of premieres) {
-        if (premiere.show.ids.tmdb) {
-          getShowDetails(premiere.show.ids.tmdb).then(show => {
-            premiere.show.tmdbData = show;
-          })
-            .catch(err => console.log(`err`, err));
-        }
-      }
-      if (isMounted) {
-        setInitShows(premieres);
-        setShows(premieres)
-      }
-    })
-
     return () => { isMounted = false };
   }, [])
 
   useEffect(() => {
     // Condition eliminates flash when data is reset
     if (categoryIndex !== 0) { setMovies(initMovies) };
-    if (categoryIndex !== 1) { setShows(initShows) };
-    if (categoryIndex !== 2) { setGames(initGames) };
+    if (categoryIndex !== 1) { setGames(initGames) };
     setSearchValue("");
 
     // Scroll to top on category change; Only after setting initial value
@@ -98,36 +80,21 @@ function Search({ navigation, route }: Props) {
     });
   }
 
-  async function getMergedShowSearchData() {
-    const results = await getShowSearch(searchValue);
-    // Using for ... of... instead of forEach fixes issue with shows being returned before additional data is retrieved/set
-    for (const result of results) {
-      if (result.show.ids.tmdb) {
-        // TODO: Should this only get poster data from TMDB or do we need the other data?
-        const data = await getShowDetails(result.show.ids.tmdb);
-        result.show.tmdbData = data;
-      }
-    }
-    return results;
-  }
-
   function reinitialize() {
     if (categoryIndex === 0) { setMovies(initMovies) }
-    if (categoryIndex === 1) { setShows(initShows) }
-    if (categoryIndex === 2) { setGames(initGames) }
+    if (categoryIndex === 1) { setGames(initGames) }
   }
 
   function setData() {
     if (categoryIndex === 0) { return movies };
-    if (categoryIndex === 1) { return shows };
-    if (categoryIndex === 2) { return games };
+    if (categoryIndex === 1) { return games };
   }
 
   return (
     <>
       <View style={{ backgroundColor: colorScheme === "dark" ? "black" : "white" }}>
         <CategoryControl
-          buttons={['Movies', 'TV', 'Games']}
+          buttons={['Movies', 'Games']}
           categoryIndex={categoryIndex}
           handleCategoryChange={index => setCategoryIndex(index)}
         />
@@ -152,10 +119,6 @@ function Search({ navigation, route }: Props) {
               getMovies()
             }
             if (categoryIndex === 1) {
-              setShows([]);
-              setShows(await getMergedShowSearchData());
-            }
-            if (categoryIndex === 2) {
               setGames([]);
               setGames(await searchGames(searchValue));
             }
@@ -166,10 +129,10 @@ function Search({ navigation, route }: Props) {
       </View>
 
       {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}
-      {((categoryIndex === 0 && movies.length > 0) || (categoryIndex === 1 && shows.length > 0) || (categoryIndex === 2 && games.length > 0))
+      {((categoryIndex === 0 && movies.length > 0) || (categoryIndex === 1 && games.length > 0))
         ? <FlatList
           data={setData()}
-          renderItem={({ item }: { item: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch | IGDB.Game.Game }) => (
+          renderItem={({ item }: { item: TMDB.Movie.Movie | IGDB.Game.Game }) => (
             <Poster
               navigation={navigation}
               data={item}
@@ -180,7 +143,7 @@ function Search({ navigation, route }: Props) {
           contentContainerStyle={{ marginHorizontal: 16 }}
           columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
           ref={scrollRef}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item, index) => item.id.toString()}
           initialNumToRender={6}
         />
         : <View style={{ flex: 1, justifyContent: "center" }}>

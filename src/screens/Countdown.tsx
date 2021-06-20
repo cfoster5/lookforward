@@ -7,8 +7,7 @@ import { HeaderButton, HeaderButtons, Item } from 'react-navigation-header-butto
 import firestore from '@react-native-firebase/firestore';
 import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import UserContext from '../contexts/UserContext';
-import { GameSubContext, MovieSubContext, ShowSubContext } from '../contexts/SubContexts';
-import { getNextEpisode } from '../helpers/requests';
+import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
 import { Navigation, Trakt } from '../../types';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -27,42 +26,19 @@ function Countdown({ route, navigation }: Props) {
   const uid = useContext(UserContext)
   const movieSubs = useContext(MovieSubContext)
   const gameSubs = useContext(GameSubContext)
-  const showSubs = useContext(ShowSubContext)
-  const [nextEpisodes, setNextEpisodes] = useState<Trakt.NextEpisode[]>([]);
   const [listData, setListData] = useState([
     // { data: route.params.movies, title: "Movies" },
     // { data: route.params.games, title: "Games" }
     { data: movieSubs, title: "Movies" },
     { data: gameSubs, title: "Games" },
-    { data: nextEpisodes, title: "Shows" }
   ])
-
-  useEffect(() => {
-    // console.log(`showSubs from Countdown`, showSubs)
-    // TODO: Fix bug that removes next epidsodes from countdown on addition/removal
-    let tempNextEpisodes: any[] = [];
-    for (const show of showSubs) {
-      getNextEpisode(show.documentID as number).then(nextEpisode => {
-        // console.log(`nextEpisode from TabNav`, nextEpisode);
-        (show as any).nextEpisode = nextEpisode;
-        tempNextEpisodes.push(show);
-      })
-        .catch(err => console.log(`err`, err));
-    }
-    setNextEpisodes(tempNextEpisodes);
-  }, [showSubs])
-
-  useEffect(() => {
-    console.log(`nextEpisodes from Countdown`, nextEpisodes)
-  }, [nextEpisodes])
 
   useEffect(() => {
     setListData([
       { data: movieSubs, title: "Movies" },
       { data: gameSubs, title: "Games" },
-      { data: nextEpisodes, title: "Shows" }
     ])
-  }, [gameSubs, movieSubs, nextEpisodes])
+  }, [gameSubs, movieSubs])
 
   const IoniconsHeaderButton = (props) => (
     // the `props` here come from <Item ... />
@@ -177,7 +153,6 @@ function Countdown({ route, navigation }: Props) {
       let collection = "";
       if (selection.sectionName === "Movies") { collection = "movies" };
       if (selection.sectionName === "Games") { collection = "gameReleases" };
-      if (selection.sectionName === "Shows") { collection = "shows" };
       try {
         await firestore().collection(collection).doc(selection.documentID).update({
           subscribers: firestore.FieldValue.arrayRemove(uid)
@@ -196,7 +171,6 @@ function Countdown({ route, navigation }: Props) {
       sections={[
         { data: movieSubs, title: "Movies" },
         { data: gameSubs, title: "Games" },
-        { data: nextEpisodes, title: "Shows" }
       ]}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}

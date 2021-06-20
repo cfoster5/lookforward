@@ -6,7 +6,7 @@ import { reusableStyles } from "../helpers/styles";
 import { IGDB, Navigation, TMDB, Trakt } from "../../types";
 import PosterButton from "./PosterButton";
 import ThemeContext from "../contexts/ThemeContext";
-import { MovieSubContext, ShowSubContext } from "../contexts/SubContexts";
+import { MovieSubContext } from "../contexts/SubContexts";
 
 function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
   const movieSubs = useContext(MovieSubContext);
@@ -21,24 +21,6 @@ function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
           source={{ uri: `https://image.tmdb.org/t/p/w300${item.poster_path}` }}
         />
         : <TextPoster text={item.title} />
-      }
-    </>
-  )
-}
-
-function TVPoster({ item }: { item: Trakt.ShowPremiere | Trakt.ShowSearch }) {
-  const showSubs = useContext(ShowSubContext);
-  let inCountdown = false;
-  inCountdown = showSubs.some(premiere => premiere.show.ids.trakt === item.show.ids.trakt);
-  return (
-    <>
-      <PosterButton data={item} inCountdown={inCountdown} mediaType={"tv"} />
-      {item.show.tmdbData?.poster_path
-        ? <Image
-          style={reusableStyles.itemRight}
-          source={{ uri: `https://image.tmdb.org/t/p/w300${item.show.tmdbData.poster_path}` }}
-        />
-        : <TextPoster text={item.show.title} />
       }
     </>
   )
@@ -78,23 +60,19 @@ function TextPoster({ text }: { text: string }) {
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Find"> | StackNavigationProp<Navigation.FindStackParamList, "Details">,
-  data: TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch | IGDB.Game.Game
+  data: TMDB.Movie.Movie | IGDB.Game.Game
   categoryIndex: number;
 }
 
 function Poster({ navigation, data, categoryIndex }: Props) {
   let mediaType: "movie" | "tv" | "game" = "movie";
   if (categoryIndex === 0) { mediaType = "movie" };
-  if (categoryIndex === 1) { mediaType = "tv" };
-  if (categoryIndex === 2) { mediaType = "game" };
+  if (categoryIndex === 1) { mediaType = "game" };
 
   return (
     <Pressable onPress={() => navigation.navigate('Details', { type: mediaType, data: data })}>
       {mediaType === "movie" &&
         <MoviePoster item={data as TMDB.Movie.Movie} />
-      }
-      {mediaType === "tv" &&
-        <TVPoster item={data as Trakt.ShowPremiere | Trakt.ShowSearch} />
       }
       {mediaType === "game" &&
         <GamePoster item={data as IGDB.Game.Game} />

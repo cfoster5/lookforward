@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { IGDB, Navigation, TMDB, Trakt } from '../../types';
+import { IGDB, Navigation, TMDB } from '../../types';
 import { iOSColors } from 'react-native-typography'
 import { Modalize } from 'react-native-modalize';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,9 +9,8 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import GameDetails from '../components/Details/GameDetails';
 import MovieDetails from '../components/Details/MovieDetails';
-import ShowDetails from '../components/Details/ShowDetails';
 import UserContext from '../contexts/UserContext';
-import { GameSubContext, MovieSubContext, ShowSubContext } from '../contexts/SubContexts';
+import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
@@ -24,7 +23,6 @@ function Details({ route, navigation }: Props) {
   const uid = useContext(UserContext)
   const movieSubs = useContext(MovieSubContext)
   const gameSubs = useContext(GameSubContext)
-  const showSubs = useContext(ShowSubContext)
 
   useEffect(() => {
     console.log(`route.params.data`, route.params.data)
@@ -55,24 +53,20 @@ function Details({ route, navigation }: Props) {
     if (route.params.type === "movie") {
       documentID = movieSubs?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID;
     }
-    if (route.params.type === "tv") {
-      documentID = showSubs?.find((show: Trakt.ShowPremiere) => show.show.ids.trakt === (route.params.data as Trakt.ShowPremiere)?.show.ids.trakt)?.documentID;
-    }
     if (route.params.type === "game") {
       documentID = gameSubs.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
     }
     setCountdownId(documentID)
     // setInCountdown(movieSubs.some((movie: TMDB.Movie.Movie) => movie.id === route.params.data.id))
-  }, [movieSubs, gameSubs, showSubs])
+  }, [movieSubs, gameSubs])
 
   let docId = "";
   if (route.params.type === "movie") { docId = (route.params.data as TMDB.Movie.Movie).id.toString(); }
-  if (route.params.type === "tv") { docId = (route.params.data as Trakt.ShowPremiere).show.ids.trakt.toString(); }
 
   async function addToList() {
     try {
-      await firestore().collection(route.params.type === "movie" ? "movies" : "shows").doc(docId).set((route.params.data), { merge: true });
-      await firestore().collection(route.params.type === "movie" ? "movies" : "shows").doc(docId).update({
+      await firestore().collection("movies").doc(docId).set((route.params.data), { merge: true });
+      await firestore().collection("movies").doc(docId).update({
         subscribers: firestore.FieldValue.arrayUnion(uid)
       })
     } catch (error) {
@@ -85,7 +79,6 @@ function Details({ route, navigation }: Props) {
     // console.log('route.params.type', route.params.type)
     let collection = "";
     if (route.params.type === "movie") { collection = "movies" };
-    if (route.params.type === "tv") { collection = "shows" };
     if (route.params.type === "game") { collection = "gameReleases" };
     try {
       await firestore().collection(collection).doc(countdownId).update({
@@ -109,12 +102,6 @@ function Details({ route, navigation }: Props) {
         <MovieDetails
           navigation={navigation}
           movie={route.params.data as TMDB.Movie.Movie}
-        />
-      }
-      {route.params.type === "tv" &&
-        <ShowDetails
-          navigation={navigation}
-          show={route.params.data as Trakt.ShowPremiere | Trakt.ShowSearch}
         />
       }
     </>

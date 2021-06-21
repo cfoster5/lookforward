@@ -7,6 +7,7 @@ import { IGDB, Navigation, TMDB, Trakt } from "../../types";
 import PosterButton from "./PosterButton";
 import ThemeContext from "../contexts/ThemeContext";
 import { MovieSubContext } from "../contexts/SubContexts";
+import FastImage from "react-native-fast-image";
 
 function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
   const movieSubs = useContext(MovieSubContext);
@@ -16,7 +17,7 @@ function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
     <>
       <PosterButton data={item} inCountdown={inCountdown} mediaType={"movie"} />
       {item.poster_path
-        ? <Image
+        ? <FastImage
           style={reusableStyles.itemRight}
           source={{ uri: `https://image.tmdb.org/t/p/w300${item.poster_path}` }}
         />
@@ -29,7 +30,7 @@ function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
 function GamePoster({ item }: { item: IGDB.Game.Game }) {
   return (
     item.cover?.url
-      ? <Image
+      ? <FastImage
         style={reusableStyles.itemRight}
         // source={{ uri: `https:${(data as IGDB.ReleaseDate.ReleaseDate)?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}
         source={{ uri: `https:${item.cover?.url.replace("thumb", "cover_big_2x")}` }}
@@ -65,7 +66,7 @@ interface Props {
 }
 
 function Poster({ navigation, data, categoryIndex }: Props) {
-  let mediaType: "movie" | "tv" | "game" = "movie";
+  let mediaType: "movie" | "game" = "movie";
   if (categoryIndex === 0) { mediaType = "movie" };
   if (categoryIndex === 1) { mediaType = "game" };
 

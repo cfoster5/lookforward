@@ -1,10 +1,16 @@
-import React, { useContext } from "react";
-import { Pressable, View } from "react-native";
+import React, { useContext, useRef } from "react";
+import { Animated, Pressable, View, Easing } from "react-native";
 import { iOSColors } from "react-native-typography";
 import { TMDB } from "../../types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from '@react-native-firebase/firestore';
 import UserContext from "../contexts/UserContext";
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false
+};
 
 interface Props {
   data: TMDB.Movie.Movie;
@@ -17,25 +23,60 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
   let docId = "";
   docId = data.id.toString()
 
+  const transformAnim = useRef(new Animated.Value(1)).current
+
   async function addToList() {
-    try {
-      await firestore().collection("movies").doc(docId).set((data), { merge: true });
-      await firestore().collection("movies").doc(docId).update({
-        subscribers: firestore.FieldValue.arrayUnion(uid)
-      })
-    } catch (error) {
-      console.error("Error writing document: ", error);
-    }
+    Animated.timing(transformAnim, {
+      toValue: 0,
+      duration: 50,
+      useNativeDriver: true,
+      easing: Easing.inOut(Easing.ease)
+    })
+      .start(
+        async () => {
+          try {
+            await firestore().collection("movies").doc(docId).set((data), { merge: true });
+            await firestore().collection("movies").doc(docId).update({
+              subscribers: firestore.FieldValue.arrayUnion(uid)
+            })
+            Animated.timing(transformAnim, {
+              toValue: 1,
+              duration: 50,
+              useNativeDriver: true,
+              easing: Easing.inOut(Easing.ease)
+            }).start(
+              () => ReactNativeHapticFeedback.trigger("impactLight", options)
+            )
+          } catch (error) {
+            console.error("Error writing document: ", error);
+          }
+        }
+      );
   }
 
   async function deleteItem() {
-    try {
-      await firestore().collection("movies").doc(docId).update({
-        subscribers: firestore.FieldValue.arrayRemove(uid)
-      })
-    } catch (error) {
-      console.error("Error writing document: ", error);
-    }
+    Animated.timing(transformAnim, {
+      toValue: 0,
+      duration: 50,
+      useNativeDriver: true,
+      easing: Easing.inOut(Easing.ease)
+    }).start(
+      async () => {
+        try {
+          await firestore().collection("movies").doc(docId).update({
+            subscribers: firestore.FieldValue.arrayRemove(uid)
+          })
+          Animated.timing(transformAnim, {
+            toValue: 1,
+            duration: 50,
+            useNativeDriver: true,
+            easing: Easing.inOut(Easing.ease)
+          }).start()
+        } catch (error) {
+          console.error("Error writing document: ", error);
+        }
+      }
+    )
   }
 
   return (
@@ -57,7 +98,9 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
           alignItems: 'center',
           justifyContent: 'center',
         }}>
-          <Ionicons name={inCountdown ? "checkmark-outline" : "add-outline"} color={iOSColors.white} size={28} style={{ textAlign: "center" }} />
+          <Animated.View style={{ transform: [{ scale: transformAnim }] }}>
+            <Ionicons name={inCountdown ? "checkmark-outline" : "add-outline"} color={iOSColors.white} size={28} style={{ textAlign: "center" }} />
+          </Animated.View>
         </View>
       </View>
     </Pressable>

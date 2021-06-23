@@ -13,6 +13,7 @@ import { Modalize } from 'react-native-modalize';
 import firestore from '@react-native-firebase/firestore';
 import ThemeContext from '../../contexts/ThemeContext';
 import UserContext from '../../contexts/UserContext';
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 function GameReleaseModal({ modalizeRef, game, getReleaseDate }: { modalizeRef: any, game: IGDB.Game.Game, getReleaseDate: () => string}) {
   const colorScheme = useContext(ThemeContext)
@@ -39,6 +40,10 @@ function GameReleaseModal({ modalizeRef, game, getReleaseDate }: { modalizeRef: 
       await firestore().collection("gameReleases").doc(releaseDate.id.toString()).set(releaseDate, { merge: true })
       await firestore().collection("gameReleases").doc(releaseDate.id.toString()).update({
         subscribers: firestore.FieldValue.arrayUnion(uid)
+      })
+      ReactNativeHapticFeedback.trigger("impactLight", {
+        enableVibrateFallback: true,
+        ignoreAndroidSystemSettings: false
       })
       modalizeRef.current?.close()
     } catch (error) {

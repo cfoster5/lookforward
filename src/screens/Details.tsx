@@ -11,6 +11,7 @@ import GameDetails from '../components/Details/GameDetails';
 import MovieDetails from '../components/Details/MovieDetails';
 import UserContext from '../contexts/UserContext';
 import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
@@ -68,6 +69,10 @@ function Details({ route, navigation }: Props) {
       await firestore().collection("movies").doc(docId).set((route.params.data), { merge: true });
       await firestore().collection("movies").doc(docId).update({
         subscribers: firestore.FieldValue.arrayUnion(uid)
+      })
+      ReactNativeHapticFeedback.trigger("impactLight", {
+        enableVibrateFallback: true,
+        ignoreAndroidSystemSettings: false
       })
     } catch (error) {
       console.error("Error writing document: ", error);

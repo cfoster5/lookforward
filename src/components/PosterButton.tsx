@@ -7,11 +7,6 @@ import firestore from '@react-native-firebase/firestore';
 import UserContext from "../contexts/UserContext";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
-const options = {
-  enableVibrateFallback: true,
-  ignoreAndroidSystemSettings: false
-};
-
 interface Props {
   data: TMDB.Movie.Movie;
   inCountdown: boolean;
@@ -45,7 +40,10 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
               useNativeDriver: true,
               easing: Easing.inOut(Easing.ease)
             }).start(
-              () => ReactNativeHapticFeedback.trigger("impactLight", options)
+              () => ReactNativeHapticFeedback.trigger("impactLight", {
+                enableVibrateFallback: true,
+                ignoreAndroidSystemSettings: false
+              })
             )
           } catch (error) {
             console.error("Error writing document: ", error);

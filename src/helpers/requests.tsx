@@ -1,27 +1,5 @@
 import { IGDB, TMDB } from '../../types';
 
-// export async function getGames(): Promise<IGDB.Game[]> {
-//   const response = await fetch("https://37y5ky2qx5.execute-api.us-east-1.amazonaws.com/games", {
-//     method: 'POST',
-//     headers: {
-//       'user-key': "8ee8062725cb2dc2a465c8b304954582"
-//     },
-//     body: `fields name, summary, cover.*, release_dates.*, release_dates.platform.*, genres.name; where release_dates.date > ${Math.floor(Date.now() / 1000)}; limit 50;`
-//   });
-//   return response.json();
-// }
-
-// export async function getGameReleases(): Promise<IGDB.ReleaseDate[]> {
-//   const response = await fetch("https://37y5ky2qx5.execute-api.us-east-1.amazonaws.com/release_dates", {
-//     method: 'POST',
-//     headers: {
-//       'user-key': "8ee8062725cb2dc2a465c8b304954582"
-//     },
-//     body: `fields *, game.name, game.summary, game.cover.*, game.genres.name, platform.abbreviation, platform.name; where date > ${Math.floor(Date.now() / 1000)}; limit 50; sort date;`
-//   });
-//   return response.json();
-// }
-
 export async function getUpcomingGameReleases(): Promise<IGDB.ReleaseDate.ReleaseDate[]> {
   const response = await fetch("https://gou4rcsh6i.execute-api.us-east-1.amazonaws.com/prod/release_dates", {
     method: 'POST',
@@ -29,31 +7,6 @@ export async function getUpcomingGameReleases(): Promise<IGDB.ReleaseDate.Releas
   });
   return response.json();
 }
-
-// export async function getGameDetails(gameId: number): Promise<IGDB.Game.Game> {
-//   const response = await fetch("https://api.igdb.com/v4/games", {
-//     method: 'POST',
-//     headers: {
-//       "Client-ID": "lj3tlp1tz4vmha6gousdpge7x12s5m",
-//       Authorization: "Bearer th5tlsqnsrioc41qtstchdirh5owhu"
-//     },
-//     body: `fields videos.name, videos.video_id, similar_games.*; where id = ${gameId};`
-//   });
-//   const games: IGDB.Game.Game[] = await response.json();
-//   return games[0];
-// }
-
-// export async function getUpcomingGames(): Promise<IGDB.Game.Game[]> {
-//   const response = await fetch("https://api.igdb.com/v4/games", {
-//     method: 'POST',
-//     headers: {
-//       "Client-ID": "lj3tlp1tz4vmha6gousdpge7x12s5m",
-//       Authorization: "Bearer th5tlsqnsrioc41qtstchdirh5owhu"
-//     },
-//     body: `fields name, summary, cover.*, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name, genres.name; where release_dates.date > ${Math.floor(Date.now() / 1000)}; limit 50; sort date;`
-//   });
-//   return response.json();
-// }
 
 export async function searchGames(searchVal: string): Promise<IGDB.Game.Game[]> {
   const response = await fetch("https://gou4rcsh6i.execute-api.us-east-1.amazonaws.com/prod/games", {

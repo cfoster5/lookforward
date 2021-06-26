@@ -9,6 +9,9 @@ import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import CategoryControl from '../components/CategoryControl';
 import { StackNavigationProp } from '@react-navigation/stack';
 import ThemeContext from '../contexts/ThemeContext';
+import GameContext from '../contexts/GamePlatformPickerContexts';
+import GameReleaseModal from '../components/GamePlatformPicker';
+import { Modalize } from 'react-native-modalize';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
@@ -26,6 +29,8 @@ function Search({ navigation, route }: Props) {
   useScrollToTop(scrollRef);
   const prevCategoryIndex = usePrevious(categoryIndex);
   const colorScheme = useContext(ThemeContext)
+  const modalizeRef = useRef<Modalize>(null)
+  const [game, setGame] = useState();
 
   useEffect(() => {
     let isMounted = true;
@@ -67,6 +72,11 @@ function Search({ navigation, route }: Props) {
       })
     }
   }, [categoryIndex])
+
+  useEffect(() => {
+    // Open GamePlatformPicker if game is changed
+    modalizeRef.current?.open()
+  }, [game])
 
   function getMovies() {
     const date = new Date();
@@ -130,22 +140,26 @@ function Search({ navigation, route }: Props) {
 
       {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}
       {((categoryIndex === 0 && movies.length > 0) || (categoryIndex === 1 && games.length > 0))
-        ? <FlatList
-          data={setData()}
-          renderItem={({ item }: { item: TMDB.Movie.Movie | IGDB.Game.Game }) => (
-            <Poster
-              navigation={navigation}
-              data={item}
-              categoryIndex={categoryIndex}
-            />
-          )}
-          numColumns={2}
-          contentContainerStyle={{ marginHorizontal: 16 }}
-          columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
-          ref={scrollRef}
-          keyExtractor={(item, index) => item.id.toString()}
-          initialNumToRender={6}
-        />
+        ?
+        <GameContext.Provider value={{ game, setGame }}>
+          <FlatList
+            data={setData()}
+            renderItem={({ item }: { item: TMDB.Movie.Movie | IGDB.Game.Game }) => (
+              <Poster
+                navigation={navigation}
+                data={item}
+                categoryIndex={categoryIndex}
+              />
+            )}
+            numColumns={2}
+            contentContainerStyle={{ marginHorizontal: 16 }}
+            columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
+            ref={scrollRef}
+            keyExtractor={(item, index) => item.id.toString()}
+            initialNumToRender={6}
+          />
+          <GameReleaseModal modalizeRef={modalizeRef} game={game} />
+        </GameContext.Provider>
         : <View style={{ flex: 1, justifyContent: "center" }}>
           <ActivityIndicator size="large" />
         </View>

@@ -18,6 +18,7 @@ export const months = [
 ]
 
 export async function convertReleasesToGames(releaseDates: IGDB.ReleaseDate.ReleaseDate[]): Promise<IGDB.Game.Game[]> {
+  // Converts releases into one game with many releases
   // console.log(releaseDates)
   let games: IGDB.Game.Game[] = [];
   releaseDates.forEach(releaseDate => {

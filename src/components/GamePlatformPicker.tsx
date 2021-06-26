@@ -1,23 +1,25 @@
-import React, { useContext } from 'react';
+import React, { RefObject, useContext } from 'react';
 import {
   View,
   Pressable,
   Text,
   StyleSheet
 } from 'react-native';
-
-import { IGDB } from '../../../types';
-import { reusableStyles } from '../../helpers/styles';
+import { IGDB } from '../../types';
+import { reusableStyles } from '../helpers/styles';
 import { iOSUIKit } from 'react-native-typography'
 import { Modalize } from 'react-native-modalize';
 import firestore from '@react-native-firebase/firestore';
-import ThemeContext from '../../contexts/ThemeContext';
-import UserContext from '../../contexts/UserContext';
+import ThemeContext from '../contexts/ThemeContext';
+import UserContext from '../contexts/UserContext';
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import GameContext from '../contexts/GamePlatformPickerContexts';
+import { IHandles } from 'react-native-modalize/lib/options';
 
-function GameReleaseModal({ modalizeRef, game, getReleaseDate }: { modalizeRef: any, game: IGDB.Game.Game, getReleaseDate: () => string}) {
+function GamePlatformPicker({ modalizeRef, game }: { modalizeRef: RefObject<IHandles>, game: IGDB.Game.Game }) {
   const colorScheme = useContext(ThemeContext)
   const uid = useContext(UserContext)
+  const { setGame } = useContext(GameContext);
 
   function formatDate(item: IGDB.Game.ReleaseDate) {
     let date = new Date(item.date * 1000);
@@ -45,16 +47,21 @@ function GameReleaseModal({ modalizeRef, game, getReleaseDate }: { modalizeRef: 
         enableVibrateFallback: true,
         ignoreAndroidSystemSettings: false
       })
-      modalizeRef.current?.close()
+      modalizeRef.current?.close();
     } catch (error) {
       console.error("Error writing document: ", error);
     }
   }
 
   return (
-    <Modalize ref={modalizeRef} adjustToContentHeight={true} childrenStyle={{ marginBottom: 16 }} modalStyle={colorScheme === "dark" ? { backgroundColor: "#121212" } : {}}>
-      {/* {game.release_dates.map((releaseDate, i) => ( */}
-      {game.release_dates.map((releaseDate, i) => (
+    <Modalize
+      ref={modalizeRef}
+      adjustToContentHeight={true}
+      childrenStyle={{ marginBottom: 16 }}
+      modalStyle={colorScheme === "dark" ? { backgroundColor: "#121212" } : {}}
+      onClosed={() => setGame(null)}
+    >
+      {game?.release_dates.map((releaseDate, i) => (
         (releaseDate.region === 2 || releaseDate.region === 8) &&
         <Pressable
           key={i}
@@ -69,15 +76,12 @@ function GameReleaseModal({ modalizeRef, game, getReleaseDate }: { modalizeRef: 
         >
           <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
             <Text style={colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>{releaseDate.platform.name}</Text>
-            {getReleaseDate() === "MULTIPLE DATES" &&
-              <Text style={reusableStyles.date}>{formatDate(releaseDate)}</Text>
-            }
+            <Text style={reusableStyles.date}>{formatDate(releaseDate)}</Text>
           </View>
         </Pressable>
       ))}
     </Modalize>
-
   );
 };
 
-export default GameReleaseModal;
+export default GamePlatformPicker;

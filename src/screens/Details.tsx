@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext, useLayoutEffect } from 'react';
 import { IGDB, Navigation, TMDB } from '../../types';
 import { iOSColors } from 'react-native-typography'
 import { Modalize } from 'react-native-modalize';
@@ -12,6 +12,7 @@ import MovieDetails from '../components/Details/MovieDetails';
 import UserContext from '../contexts/UserContext';
 import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import GameReleaseModal from '../components/GamePlatformPicker';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
@@ -36,12 +37,19 @@ function Details({ route, navigation }: Props) {
     <HeaderButton IconComponent={Ionicons} iconSize={30} color={iOSColors.blue} {...props} />
   );
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-          {/* <Item title="search" iconName={route.params.inCountdown ? "remove-circle-outline" : "add-circle-outline"} onPress={() => route.params.type === "movie" ? addToList() : modalizeRef.current?.open()} /> */}
-          <Item title="search" iconName={countdownId ? "checkmark-outline" : "add-outline"} onPress={() => route.params.type === "movie" || route.params.type === "tv" ? (countdownId ? deleteItem() : addToList()) : (countdownId ? deleteItem() : modalizeRef.current?.open())} />
+          <Item
+            title="search"
+            iconName={countdownId ? "checkmark-outline" : "add-outline"}
+            onPress={
+              () => route.params.type === "movie" || route.params.type === "tv"
+                ? (countdownId ? deleteItem() : addMovieToList())
+                : (countdownId ? deleteItem() : modalizeRef.current?.open())
+            }
+          />
         </HeaderButtons>
       )
     });
@@ -64,7 +72,7 @@ function Details({ route, navigation }: Props) {
   let docId = "";
   if (route.params.type === "movie") { docId = (route.params.data as TMDB.Movie.Movie).id.toString(); }
 
-  async function addToList() {
+  async function addMovieToList() {
     try {
       await firestore().collection("movies").doc(docId).set((route.params.data), { merge: true });
       await firestore().collection("movies").doc(docId).update({
@@ -97,11 +105,13 @@ function Details({ route, navigation }: Props) {
   return (
     <>
       {route.params.type === "game" &&
-        <GameDetails
-          navigation={navigation}
-          game={route.params.data as IGDB.Game.Game}
-          modalizeRef={modalizeRef}
-        />
+        <>
+          <GameDetails
+            navigation={navigation}
+            game={route.params.data as IGDB.Game.Game}
+          />
+          <GameReleaseModal modalizeRef={modalizeRef} game={route.params.data as IGDB.Game.Game} />
+        </>
       }
       {route.params.type === "movie" &&
         <MovieDetails

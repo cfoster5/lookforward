@@ -1,26 +1,36 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { Animated, Pressable, View, Easing } from "react-native";
 import { iOSColors } from "react-native-typography";
-import { TMDB } from "../../types";
+import { IGDB, TMDB } from "../../types";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from '@react-native-firebase/firestore';
 import UserContext from "../contexts/UserContext";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import GameContext from "../contexts/GamePlatformPickerContexts";
+import { GameSubContext } from "../contexts/SubContexts";
 
 interface Props {
-  data: TMDB.Movie.Movie;
+  data: TMDB.Movie.Movie | IGDB.Game.Game;
   inCountdown: boolean;
-  mediaType: "movie"
+  mediaType: "movie" | "game"
 }
 
 function PosterButton({ data, inCountdown, mediaType }: Props) {
   const uid = useContext(UserContext);
+  const { setGame } = useContext(GameContext);
+  const gameSubs = useContext(GameSubContext);
+
   let docId = "";
-  docId = data.id.toString()
+  if (mediaType === "movie") {
+    docId = data.id.toString();
+  }
+  if (mediaType === "game") {
+    docId = gameSubs.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === data.id)?.documentID;
+  }
 
   const transformAnim = useRef(new Animated.Value(1)).current
 
-  async function addToList() {
+  async function addMovieToList() {
     Animated.timing(transformAnim, {
       toValue: 0,
       duration: 50,
@@ -52,7 +62,7 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
       );
   }
 
-  async function deleteItem() {
+  async function deleteItem(collection: string) {
     Animated.timing(transformAnim, {
       toValue: 0,
       duration: 50,
@@ -61,7 +71,8 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
     }).start(
       async () => {
         try {
-          await firestore().collection("movies").doc(docId).update({
+          console.log(`docId`, docId)
+          await firestore().collection(collection).doc(docId).update({
             subscribers: firestore.FieldValue.arrayRemove(uid)
           })
           Animated.timing(transformAnim, {
@@ -77,8 +88,21 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
     )
   }
 
+  function handlePress() {
+    if (mediaType === "movie") {
+      inCountdown ? deleteItem("movies") : addMovieToList()
+    }
+    if (mediaType === "game") {
+      console.log(`data`, data)
+      inCountdown ? deleteItem("gameReleases") : setGame(data as IGDB.Game.Game);
+    }
+  }
+
   return (
-    <Pressable onPress={() => inCountdown ? deleteItem() : addToList()} style={{ position: "absolute", zIndex: 1, bottom: 4, right: 4 }}>
+    <Pressable
+      onPress={handlePress}
+      style={{ position: "absolute", zIndex: 1, bottom: 4, right: 4 }}
+    >
       <View style={{
         height: 36,
         width: 36,

@@ -6,7 +6,7 @@ import { reusableStyles } from "../helpers/styles";
 import { IGDB, Navigation, TMDB, Trakt } from "../../types";
 import PosterButton from "./PosterButton";
 import ThemeContext from "../contexts/ThemeContext";
-import { MovieSubContext } from "../contexts/SubContexts";
+import { GameSubContext, MovieSubContext } from "../contexts/SubContexts";
 import FastImage from "react-native-fast-image";
 
 function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
@@ -28,14 +28,21 @@ function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
 }
 
 function GamePoster({ item }: { item: IGDB.Game.Game }) {
+  const gameSubs = useContext(GameSubContext);
+  let inCountdown = false;
+  inCountdown = gameSubs.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === item.id)?.documentID;
   return (
-    item.cover?.url
-      ? <FastImage
-        style={reusableStyles.itemRight}
-        // source={{ uri: `https:${(data as IGDB.ReleaseDate.ReleaseDate)?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}
-        source={{ uri: `https:${item.cover?.url.replace("thumb", "cover_big_2x")}` }}
-      />
-      : <TextPoster text={item.name} />
+    <>
+      <PosterButton data={item} inCountdown={inCountdown} mediaType={"game"} />
+      {item.cover?.url
+        ? <FastImage
+          style={reusableStyles.itemRight}
+          // source={{ uri: `https:${(data as IGDB.ReleaseDate.ReleaseDate)?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}
+          source={{ uri: `https:${item.cover?.url.replace("thumb", "cover_big_2x")}` }}
+        />
+        : <TextPoster text={item.name} />
+      }
+    </>
   )
 }
 

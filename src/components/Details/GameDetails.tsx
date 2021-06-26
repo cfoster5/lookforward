@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useContext, Fragment } from 'react';
 import {
   ScrollView,
   View,
@@ -13,42 +13,21 @@ import { iOSColors, iOSUIKit } from 'react-native-typography'
 import Trailer from '../Trailer';
 import { months } from '../../helpers/helpers';
 import CategoryControl from '../CategoryControl';
-import GameReleaseModal from './GameDetailModal';
 import { StackNavigationProp } from '@react-navigation/stack';
 import ThemeContext from '../../contexts/ThemeContext';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
   game: IGDB.Game.Game;
-  modalizeRef: any
 }
 
-function GameDetails({ navigation, game, modalizeRef }: Props) {
-  const [detailIndex, setDetailIndex] = useState(0)
-  const colorScheme = useContext(ThemeContext)
-  // const modalizeRef = useRef<Modalize>(null);
-  // const [game, setGame] = useState();
+function GameDetails({ navigation, game }: Props) {
+  const [detailIndex, setDetailIndex] = useState(0);
+  const colorScheme = useContext(ThemeContext);
 
-  // useEffect(() => {
-  //   let isMounted = true;
-  //   console.log(game.id)
-  //   getGame(route.params.igdbCreds.access_token, game.game.id).then(async games => {
-  //     console.log(games)
-  //     if (isMounted) {
-  //       setGame(games[0]);
-  //     }
-  //   })
-  //     .catch(error => {
-  //       console.log("error 2", error)
-  //     })
-  //   return () => { isMounted = false };
-  // }, [route.params])
-
-  function getReleaseDate(): string {
+  function getReleaseDate(game: IGDB.Game.Game): string {
     let dates: number[] = [];
-    // console.log(game.release_dates)
     game.release_dates?.forEach(releaseDate => {
-      // console.log(releaseDate)
       if (dates.indexOf(releaseDate.date) === -1 && (releaseDate.region === 2 || releaseDate.region === 8)) {
         dates.push(releaseDate.date)
       }
@@ -65,7 +44,6 @@ function GameDetails({ navigation, game, modalizeRef }: Props) {
 
   return (
     <>
-      <GameReleaseModal modalizeRef={modalizeRef} game={game} getReleaseDate={getReleaseDate} />
       <ScrollView>
         {game?.cover?.url &&
           <Image
@@ -75,7 +53,7 @@ function GameDetails({ navigation, game, modalizeRef }: Props) {
         }
         <View style={{ margin: 16 }}>
           <Text style={colorScheme === "dark" ? iOSUIKit.largeTitleEmphasizedWhite : iOSUIKit.largeTitleEmphasized}>{game.name}</Text>
-          <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
+          <Text style={reusableStyles.date}>{getReleaseDate(game)}</Text>
           <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{game.summary}</Text>
           <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
             <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text>
@@ -99,7 +77,7 @@ function GameDetails({ navigation, game, modalizeRef }: Props) {
                 <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Published by:
                 {game.involved_companies.filter(company => company.publisher)
                     .map((company, i) =>
-                      <React.Fragment key={i}>{i > 0 ? `, ${company.company.name}` : ` ${company.company.name}`}</React.Fragment>
+                      <Fragment key={i}>{i > 0 ? `, ${company.company.name}` : ` ${company.company.name}`}</Fragment>
                     )}
                 </Text>
               }
@@ -107,7 +85,7 @@ function GameDetails({ navigation, game, modalizeRef }: Props) {
                 <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Developed by:
                 {game.involved_companies.filter(company => company.developer)
                     .map((company, i) =>
-                      <React.Fragment key={i}>{i > 0 ? `, ${company.company.name}` : ` ${company.company.name}`}</React.Fragment>
+                      <Fragment key={i}>{i > 0 ? `, ${company.company.name}` : ` ${company.company.name}`}</Fragment>
                     )}
                 </Text>
               }

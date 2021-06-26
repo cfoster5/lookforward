@@ -1,8 +1,7 @@
 import React from "react";
-import { Alert, Animated, Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Animated, Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { months } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB, TMDB } from "../../types";
 
@@ -23,13 +22,11 @@ function CountdownItem({ navigation, item, sectionName, isLastInSection, showBut
   function getReleaseDate(): string {
     if (sectionName === "Movies") {
       let monthIndex = new Date((item as TMDB.Movie.Movie).release_date).getUTCMonth();
-      // return `${months[monthIndex].toUpperCase()} ${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}, ${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
       return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate().toString().length < 2 ? "0" : ""}${new Date((item as TMDB.Movie.Movie).release_date).getUTCDate()}/${new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear()}`;
     }
     if (sectionName === "Games") {
       let date = new Date((item as IGDB.ReleaseDate.ReleaseDate).date * 1000);
       let monthIndex = new Date(date).getUTCMonth();
-      // return `${months[monthIndex].toUpperCase()} ${date.getUTCDate()}, ${new Date(date).getUTCFullYear()}`
       return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${monthIndex + 1}/${date.getUTCDate().toString().length < 2 ? "0" : ""}${date.getUTCDate()}/${new Date(date).getUTCFullYear()}`;
     }
   }
@@ -67,14 +64,8 @@ function CountdownItem({ navigation, item, sectionName, isLastInSection, showBut
         alignItems: 'center',
         justifyContent: 'center',
       }, props.style]}>
-        {
-          props.selected ?
-            // <View style={{
-            //   height: 12,
-            //   width: 12,
-            //   borderRadius: 6,
-            //   backgroundColor: iOSColors.blue,
-            // }} />
+        {props.selected
+            ?
             <View style={{
               height: 24,
               width: 24,

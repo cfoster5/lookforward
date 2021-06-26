@@ -1,5 +1,5 @@
-import React from "react";
+import { createContext } from "react";
 
-export const MovieSubContext = React.createContext([]);
-export const GameSubContext= React.createContext([]);
+export const MovieSubContext = createContext([]);
+export const GameSubContext = createContext([]);
 

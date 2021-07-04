@@ -30,6 +30,9 @@ export default function App() {
       requestUserPermission();
       setInitializing(false);
     }
+    else {
+      setInitializing(false);
+    }
   }, [user])
 
   useEffect(() => {

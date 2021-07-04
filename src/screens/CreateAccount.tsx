@@ -35,15 +35,24 @@ function CreateAccount() {
     }
   }
 
+  async function skipAccountCreation() {
+    try {
+      await auth().signInAnonymously();
+    }
+    catch (error) {
+
+    }
+  }
+
   return (
-    <Pressable onPress={() => Keyboard.dismiss()} style={{flex: 1}}>
+    <Pressable onPress={() => Keyboard.dismiss()} style={{ flex: 1 }}>
       <KeyboardAvoidingView
         style={{ flex: 1, justifyContent: 'center', marginHorizontal: 16 }}
         behavior="padding"
       >
         <View>
           <Text style={{ ...iOSUIKit.largeTitleEmphasizedWhiteObject }}>Hello!</Text>
-          <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.gray, marginBottom: 8 }}>Create an account</Text>
+          <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.gray, marginBottom: 8 }}>Create an account for the best experience</Text>
           <TextInput
             style={{ ...iOSUIKit.bodyObject, backgroundColor: "#3a3a3c", color: "white", padding: 16, borderRadius: 8, marginVertical: 8 }}
             placeholder="Email"
@@ -61,6 +70,9 @@ function CreateAccount() {
             value={password}
             onChangeText={text => setPassword(text)}
           />
+          <Pressable style={{ alignItems: "flex-end" }} onPress={() => skipAccountCreation()}>
+            <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.gray, marginVertical: 8 }}>Skip?</Text>
+          </Pressable>
           <Pressable style={{ backgroundColor: iOSColors.blue, width: "100%", marginTop: 16, paddingVertical: 16, borderRadius: 8, opacity: email && password ? 1 : .5 }} onPress={() => email && password ? createAccount() : null}>
             <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, textAlign: "center" }}>Continue</Text>
           </Pressable>

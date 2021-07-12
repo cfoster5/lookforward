@@ -44,3 +44,17 @@ export async function getMovieCredits(person: number): Promise<TMDB.MovieCredits
   const response = await fetch(`https://api.themoviedb.org/3/person/${person}/movie_credits?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US`);
   return response.json();
 }
+
+export async function getTrendingMovies(): Promise<TMDB.Movie.Movie[]> {
+  const response = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=68991fbb0b75dba5ae0ecd8182e967b1`);
+  const json: TMDB.Movie.Response = await response.json();
+  return json.results;
+}
+
+export async function getHypedGames(): Promise<IGDB.Game.Game[]> {
+  const response = await fetch("https://gou4rcsh6i.execute-api.us-east-1.amazonaws.com/prod/games", {
+    method: 'POST',
+    body: `fields name, category, hypes, first_release_date, cover.*, release_dates.*; where category = 0 & first_release_date > ${Math.floor(Date.now() / 1000)} & release_dates.region = (2,8) & hypes != null & cover.url != null; sort hypes desc; limit 10;`
+  });
+  return response.json();
+}

@@ -48,6 +48,7 @@ function PasswordReset() {
             placeholderTextColor="#6e6f73"
             autoCapitalize="none"
             keyboardType={"email-address"}
+            textContentType={"username"}
             value={email}
             onChangeText={text => setEmail(text)}
           />

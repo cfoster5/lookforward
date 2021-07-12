@@ -54,6 +54,7 @@ function Login({ route }: any) {
             placeholderTextColor="#6e6f73"
             autoCapitalize="none"
             keyboardType={"email-address"}
+            textContentType={"username"}
             value={email}
             onChangeText={text => setEmail(text)}
           />
@@ -62,6 +63,7 @@ function Login({ route }: any) {
             placeholder="Password"
             placeholderTextColor="#6e6f73"
             secureTextEntry={true}
+            textContentType={"password"}
             value={password}
             onChangeText={text => setPassword(text)}
           />

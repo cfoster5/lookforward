@@ -6,7 +6,6 @@ import {
   Pressable,
   Text,
   TextInput,
-  TouchableWithoutFeedback,
   View,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
@@ -31,7 +30,6 @@ function CreateAccount() {
       if (error.code === 'auth/weak-password') {
         Alert.alert("Weak Password", 'That password is invalid!');
       }
-      // console.error(error);
     }
   }
 
@@ -39,9 +37,7 @@ function CreateAccount() {
     try {
       await auth().signInAnonymously();
     }
-    catch (error) {
-
-    }
+    catch (error) { }
   }
 
   return (
@@ -59,6 +55,7 @@ function CreateAccount() {
             placeholderTextColor="#6e6f73"
             autoCapitalize="none"
             keyboardType={"email-address"}
+            textContentType={"username"}
             value={email}
             onChangeText={text => setEmail(text)}
           />
@@ -67,13 +64,20 @@ function CreateAccount() {
             placeholder="Password"
             placeholderTextColor="#6e6f73"
             secureTextEntry={true}
+            textContentType={"password"}
             value={password}
             onChangeText={text => setPassword(text)}
           />
-          <Pressable style={{ alignItems: "flex-end" }} onPress={() => skipAccountCreation()}>
+          <Pressable
+            style={{ alignItems: "flex-end" }}
+            onPress={() => skipAccountCreation()}
+          >
             <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.gray, marginVertical: 8 }}>Skip?</Text>
           </Pressable>
-          <Pressable style={{ backgroundColor: iOSColors.blue, width: "100%", marginTop: 16, paddingVertical: 16, borderRadius: 8, opacity: email && password ? 1 : .5 }} onPress={() => email && password ? createAccount() : null}>
+          <Pressable
+            style={{ backgroundColor: iOSColors.blue, width: "100%", marginTop: 16, paddingVertical: 16, borderRadius: 8, opacity: email && password ? 1 : .5 }}
+            onPress={() => email && password ? createAccount() : null}
+          >
             <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, textAlign: "center" }}>Continue</Text>
           </Pressable>
         </View>

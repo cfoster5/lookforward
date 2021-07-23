@@ -1,4 +1,4 @@
-import React, { useState, useContext, Fragment } from 'react';
+import React, { useState, useContext, Fragment, useEffect } from 'react';
 import {
   ScrollView,
   View,
@@ -13,8 +13,10 @@ import { iOSColors, iOSUIKit } from 'react-native-typography'
 import Trailer from '../Trailer';
 import { months } from '../../helpers/helpers';
 import CategoryControl from '../CategoryControl';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
 import ThemeContext from '../../contexts/ThemeContext';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
@@ -24,6 +26,16 @@ interface Props {
 function GameDetails({ navigation, game }: Props) {
   const [detailIndex, setDetailIndex] = useState(0);
   const colorScheme = useContext(ThemeContext);
+  const tabBarheight = useBottomTabBarHeight();
+  const headerHeight = useHeaderHeight();
+  const [initHeaderHeight, setInitHeaderHeight] = useState(0);
+  const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    if (initHeaderHeight === 0) {
+      setInitHeaderHeight(headerHeight);
+    }
+  }, [headerHeight])
 
   function getReleaseDate(game: IGDB.Game.Game): string {
     let dates: number[] = [];
@@ -44,7 +56,10 @@ function GameDetails({ navigation, game }: Props) {
 
   return (
     <>
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{ paddingTop: initHeaderHeight, paddingBottom: tabBarheight }}
+        scrollIndicatorInsets={{ top: initHeaderHeight - insets.top, bottom: tabBarheight - 16 }}
+      >
         {game?.cover?.url &&
           <Image
             style={{ width: Dimensions.get("window").width, height: (720 / 1280) * Dimensions.get("window").width }}
@@ -75,7 +90,7 @@ function GameDetails({ navigation, game }: Props) {
             <>
               {game.involved_companies?.find(company => company.publisher) &&
                 <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Published by:
-                {game.involved_companies.filter(company => company.publisher)
+                  {game.involved_companies.filter(company => company.publisher)
                     .map((company, i) =>
                       <Fragment key={i}>{i > 0 ? `, ${company.company.name}` : ` ${company.company.name}`}</Fragment>
                     )}
@@ -83,7 +98,7 @@ function GameDetails({ navigation, game }: Props) {
               }
               {game.involved_companies?.find(company => company.developer) &&
                 <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Developed by:
-                {game.involved_companies.filter(company => company.developer)
+                  {game.involved_companies.filter(company => company.developer)
                     .map((company, i) =>
                       <Fragment key={i}>{i > 0 ? `, ${company.company.name}` : ` ${company.company.name}`}</Fragment>
                     )}

@@ -12,6 +12,7 @@ import ThemeContext from '../contexts/ThemeContext';
 import GameContext from '../contexts/GamePlatformPickerContexts';
 import GameReleaseModal from '../components/GamePlatformPicker';
 import { Modalize } from 'react-native-modalize';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
@@ -31,6 +32,7 @@ function Search({ navigation, route }: Props) {
   const colorScheme = useContext(ThemeContext)
   const modalizeRef = useRef<Modalize>(null)
   const [game, setGame] = useState();
+  const tabBarheight = useBottomTabBarHeight();
 
   useEffect(() => {
     let isMounted = true;
@@ -152,11 +154,12 @@ function Search({ navigation, route }: Props) {
               />
             )}
             numColumns={2}
-            contentContainerStyle={{ marginHorizontal: 16 }}
+            contentContainerStyle={{ marginHorizontal: 16, paddingBottom: tabBarheight }}
             columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
             ref={scrollRef}
             keyExtractor={(item, index) => item.id.toString()}
             initialNumToRender={6}
+            scrollIndicatorInsets={{bottom: tabBarheight - 16}}
           />
           <GameReleaseModal modalizeRef={modalizeRef} game={game} />
         </GameContext.Provider>

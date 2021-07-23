@@ -14,8 +14,10 @@ import Trailer from '../Trailer';
 import Person from '../Person';
 import { months } from '../../helpers/helpers';
 import CategoryControl from '../CategoryControl';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
 import ThemeContext from '../../contexts/ThemeContext';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
@@ -26,6 +28,16 @@ function MovieDetails({ navigation, movie }: Props) {
   const [movieDetails, setMovieDetails] = useState<TMDB.Movie.Details>();
   const [detailIndex, setDetailIndex] = useState(0)
   const colorScheme = useContext(ThemeContext)
+  const tabBarheight = useBottomTabBarHeight();
+  const headerHeight = useHeaderHeight();
+  const [initHeaderHeight, setInitHeaderHeight] = useState(0);
+  const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    if (initHeaderHeight === 0) {
+      setInitHeaderHeight(headerHeight);
+    }
+  }, [headerHeight])
 
   useEffect(() => {
     getMovieDetails(movie.id).then(movie => {
@@ -40,7 +52,10 @@ function MovieDetails({ navigation, movie }: Props) {
 
   return (
     <>
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{ paddingTop: initHeaderHeight, paddingBottom: tabBarheight }}
+        scrollIndicatorInsets={{ top: initHeaderHeight - insets.top, bottom: tabBarheight - 16 }}
+      >
         {movie?.backdrop_path &&
           <Image
             style={{ width: Dimensions.get("window").width, height: (720 / 1280) * Dimensions.get("window").width }}

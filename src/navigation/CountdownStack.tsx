@@ -5,6 +5,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { Navigation } from '../../types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Details from '../screens/Details';
+import { BlurHeader } from '../components/BlurHeader';
 
 type CountdownStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
@@ -16,12 +17,26 @@ interface Props {
   route: RouteProp<Navigation.TabNavigationParamList, "Countdown">,
 }
 
-const Stack = createStackNavigator<any>();
+const Stack = createStackNavigator();
 export function CountdownStack({ navigation, route }: Props) {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="Countdown" component={Countdown} />
-      <Stack.Screen name="Details" component={Details} />
+    <Stack.Navigator headerMode="screen">
+      <Stack.Screen
+        name="Countdown"
+        component={Countdown}
+        options={{
+          header: (props) => <BlurHeader {...props} />,
+          headerTransparent: true
+        }}
+      />
+      <Stack.Screen
+        name="Details"
+        component={Details}
+        options={{
+          header: (props) => <BlurHeader {...props} />,
+          headerTransparent: true
+        }}
+      />
     </Stack.Navigator>
   )
 }

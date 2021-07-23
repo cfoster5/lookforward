@@ -9,7 +9,9 @@ import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import UserContext from '../contexts/UserContext';
 import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
 import { Navigation, Trakt } from '../../types';
-import { StackNavigationProp } from '@react-navigation/stack';
+import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   route: RouteProp<Navigation.CountdownStackParamList, 'Countdown'>
@@ -32,6 +34,16 @@ function Countdown({ route, navigation }: Props) {
     { data: movieSubs, title: "Movies" },
     { data: gameSubs, title: "Games" },
   ])
+  const tabBarheight = useBottomTabBarHeight();
+  const headerHeight = useHeaderHeight();
+  const [initHeaderHeight, setInitHeaderHeight] = useState(0);
+  const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    if (initHeaderHeight === 0) {
+      setInitHeaderHeight(headerHeight);
+    }
+  }, [headerHeight])
 
   useEffect(() => {
     setListData([
@@ -166,7 +178,9 @@ function Countdown({ route, navigation }: Props) {
 
   return (
     <SectionList
-      contentContainerStyle={{ paddingVertical: 16, marginHorizontal: 16 }}
+      contentContainerStyle={{ paddingTop: initHeaderHeight + 16, paddingBottom: tabBarheight + 16, marginHorizontal: 16 }}
+      // contentContainerStyle={{ paddingTop: 16, paddingBottom: tabBarheight + 16, marginHorizontal: 16 }}
+      scrollIndicatorInsets={{ top: initHeaderHeight - insets.top + 16, bottom: tabBarheight - 16 }}
       // sections={listData}
       sections={[
         { data: movieSubs, title: "Movies" },

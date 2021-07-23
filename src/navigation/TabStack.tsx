@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FindStack } from './FindStack';
 import { CountdownStack } from './CountdownStack';
@@ -9,6 +9,20 @@ import firestore from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
 import UserContext from '../contexts/UserContext';
 import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
+import { BlurView } from '@react-native-community/blur';
+
+const CustomTabs = (props) => (
+  <BlurView
+    style={{
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0
+    }}
+  >
+    <BottomTabBar {...props} />
+  </BlurView>
+);
 
 const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
 export function TabStack() {
@@ -34,30 +48,40 @@ export function TabStack() {
   return (
     <MovieSubContext.Provider value={movieSubs}>
       <GameSubContext.Provider value={gameSubs}>
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              tabBarIcon: ({ focused, color, size }) => {
-                let iconName = "";
-                if (route.name === 'Find') {
-                  iconName = "search"
-                } else if (route.name === "Countdown") {
-                  iconName = "timer-outline"
-                }
-                else if (route.name === "Profile") {
-                  iconName = "person-circle-outline"
-                }
-                return <Ionicons name={iconName} size={size} color={color} />;
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => {
+              let iconName = "";
+              if (route.name === 'Find') {
+                iconName = "search"
+              } else if (route.name === "Countdown") {
+                iconName = "timer-outline"
               }
-            })}
-            tabBarOptions={{
-              activeTintColor: '#3880ff',
-              inactiveTintColor: 'gray',
-            }}
-          >
-            <Tab.Screen name="Find" component={FindStack} />
-            <Tab.Screen name="Countdown" component={CountdownStack} />
-            <Tab.Screen name="Profile" component={ProfileStack} />
-          </Tab.Navigator>
+              else if (route.name === "Profile") {
+                iconName = "person-circle-outline"
+              }
+              return <Ionicons name={iconName} size={size} color={color} />;
+            }
+          })}
+          // tabBarOptions={{
+          // activeTintColor: '#3880ff',
+          // inactiveTintColor: 'gray',
+          // }}
+          tabBar={(props) => <CustomTabs {...props} />}
+          tabBarOptions={{
+            activeTintColor: '#3880ff',
+            inactiveTintColor: 'gray',
+            style: {
+              // borderTopColor: '#666666',
+              borderTopColor: 'rgb(39, 39, 41)',
+              backgroundColor: 'transparent'
+            }
+          }}
+        >
+          <Tab.Screen name="Find" component={FindStack} />
+          <Tab.Screen name="Countdown" component={CountdownStack} />
+          <Tab.Screen name="Profile" component={ProfileStack} />
+        </Tab.Navigator>
       </GameSubContext.Provider>
     </MovieSubContext.Provider>
 

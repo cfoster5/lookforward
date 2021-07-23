@@ -15,11 +15,13 @@ import UserContext from '../contexts/UserContext';
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import GameContext from '../contexts/GamePlatformPickerContexts';
 import { IHandles } from 'react-native-modalize/lib/options';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 
 function GamePlatformPicker({ modalizeRef, game }: { modalizeRef: RefObject<IHandles>, game: IGDB.Game.Game }) {
   const colorScheme = useContext(ThemeContext)
   const uid = useContext(UserContext)
   const { setGame } = useContext(GameContext);
+  const tabBarheight = useBottomTabBarHeight();
 
   function formatDate(item: IGDB.Game.ReleaseDate) {
     let date = new Date(item.date * 1000);
@@ -57,7 +59,7 @@ function GamePlatformPicker({ modalizeRef, game }: { modalizeRef: RefObject<IHan
     <Modalize
       ref={modalizeRef}
       adjustToContentHeight={true}
-      childrenStyle={{ marginBottom: 16 }}
+      childrenStyle={{ marginBottom: tabBarheight + 16 }}
       modalStyle={colorScheme === "dark" ? { backgroundColor: "#121212" } : {}}
       onClosed={() => setGame(null)}
     >

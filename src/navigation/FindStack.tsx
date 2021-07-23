@@ -1,11 +1,12 @@
 import React from 'react';
-import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
+import { createStackNavigator, HeaderTitle, StackNavigationProp } from "@react-navigation/stack";
 import Actor from '../screens/Actor';
 import Details from "../screens/Details";
 import Search from "../screens/Search";
 import { Navigation } from "../../types";
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { BlurHeader } from '../components/BlurHeader';
 
 type FindStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.FindStackParamList, "Find">,
@@ -20,9 +21,16 @@ interface Props {
 const Stack = createStackNavigator<Navigation.FindStackParamList>();
 export function FindStack({ navigation, route }: Props) {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator headerMode="screen">
       <Stack.Screen name="Find" component={Search} />
-      <Stack.Screen name="Details" component={Details} />
+      <Stack.Screen
+        name="Details"
+        component={Details}
+        options={{
+          header: props => <BlurHeader {...props} />,
+          headerTransparent: true
+        }}
+      />
       {/* <Stack.Screen name="Actor" component={Actor} /> */}
     </Stack.Navigator>
   )

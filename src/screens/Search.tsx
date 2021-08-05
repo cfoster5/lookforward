@@ -62,17 +62,18 @@ function Search({ navigation, route }: Props) {
 
   useEffect(() => {
     // Condition eliminates flash when data is reset
-    if (categoryIndex !== 0) { setMovies(initMovies) };
-    if (categoryIndex !== 1) { setGames(initGames) };
+    if (prevCategoryIndex === 0) { setMovies(initMovies) };
+    if (prevCategoryIndex === 1) { setGames(initGames) };
     setSearchValue("");
 
     // Scroll to top on category change; Only after setting initial value
-    if (prevCategoryIndex !== undefined && prevCategoryIndex !== categoryIndex) {
-      scrollRef?.current?.scrollToIndex({
-        index: 0,
-        animated: false
-      })
-    }
+    // I don't think this is needed after splitting results into 3 separate flatlists
+    // if (prevCategoryIndex !== undefined && prevCategoryIndex !== categoryIndex) {
+    //   scrollRef?.current?.scrollToIndex({
+    //     index: 0,
+    //     animated: false
+    //   })
+    // }
   }, [categoryIndex])
 
   useEffect(() => {
@@ -95,11 +96,6 @@ function Search({ navigation, route }: Props) {
   function reinitialize() {
     if (categoryIndex === 0) { setMovies(initMovies) }
     if (categoryIndex === 1) { setGames(initGames) }
-  }
-
-  function setData() {
-    if (categoryIndex === 0) { return movies };
-    if (categoryIndex === 1) { return games };
   }
 
   return (
@@ -141,31 +137,62 @@ function Search({ navigation, route }: Props) {
       </View>
 
       {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}
-      {((categoryIndex === 0 && movies.length > 0) || (categoryIndex === 1 && games.length > 0))
-        ?
-        <GameContext.Provider value={{ game, setGame }}>
-          <FlatList
-            data={setData()}
-            renderItem={({ item }: { item: TMDB.Movie.Movie | IGDB.Game.Game }) => (
-              <Poster
-                navigation={navigation}
-                data={item}
-                categoryIndex={categoryIndex}
+      {categoryIndex === 0 &&
+        (
+          movies.length > 0
+            ?
+            <FlatList
+              data={movies}
+              renderItem={({ item }: { item: TMDB.Movie.Movie }) => (
+                <Poster
+                  navigation={navigation}
+                  data={item}
+                  categoryIndex={categoryIndex}
+                />
+              )}
+              numColumns={2}
+              contentContainerStyle={{ marginHorizontal: 16, paddingBottom: tabBarheight }}
+              columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
+              ref={scrollRef}
+              keyExtractor={(item, index) => item.id.toString()}
+              initialNumToRender={6}
+              scrollIndicatorInsets={{ bottom: tabBarheight - 16 }}
+            />
+            :
+            <View style={{ flex: 1, justifyContent: "center" }}>
+              <ActivityIndicator size="large" />
+            </View>
+        )
+      }
+      {categoryIndex === 1 &&
+        (
+          games.length > 0
+            ?
+            <GameContext.Provider value={{ game, setGame }}>
+              <FlatList
+                data={games}
+                renderItem={({ item }: { item: IGDB.Game.Game }) => (
+                  <Poster
+                    navigation={navigation}
+                    data={item}
+                    categoryIndex={categoryIndex}
+                  />
+                )}
+                numColumns={2}
+                contentContainerStyle={{ marginHorizontal: 16, paddingBottom: tabBarheight }}
+                columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
+                ref={scrollRef}
+                keyExtractor={(item, index) => item.id.toString()}
+                initialNumToRender={6}
+                scrollIndicatorInsets={{ bottom: tabBarheight - 16 }}
               />
-            )}
-            numColumns={2}
-            contentContainerStyle={{ marginHorizontal: 16, paddingBottom: tabBarheight }}
-            columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
-            ref={scrollRef}
-            keyExtractor={(item, index) => item.id.toString()}
-            initialNumToRender={6}
-            scrollIndicatorInsets={{bottom: tabBarheight - 16}}
-          />
-          <GameReleaseModal modalizeRef={modalizeRef} game={game} />
-        </GameContext.Provider>
-        : <View style={{ flex: 1, justifyContent: "center" }}>
-          <ActivityIndicator size="large" />
-        </View>
+              <GameReleaseModal modalizeRef={modalizeRef} game={game} />
+            </GameContext.Provider>
+            :
+            <View style={{ flex: 1, justifyContent: "center" }}>
+              <ActivityIndicator size="large" />
+            </View>
+        )
       }
     </>
   );

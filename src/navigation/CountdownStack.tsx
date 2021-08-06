@@ -6,6 +6,7 @@ import { Navigation } from '../../types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Details from '../screens/Details';
 import { BlurHeader } from '../components/BlurHeader';
+import MovieGenre from '../screens/MovieGenre';
 
 type CountdownStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
@@ -32,6 +33,14 @@ export function CountdownStack({ navigation, route }: Props) {
       <Stack.Screen
         name="Details"
         component={Details}
+        options={{
+          header: (props) => <BlurHeader {...props} />,
+          headerTransparent: true
+        }}
+      />
+      <Stack.Screen
+        name="MovieGenre"
+        component={MovieGenre}
         options={{
           header: (props) => <BlurHeader {...props} />,
           headerTransparent: true

@@ -3,7 +3,8 @@ import {
   ScrollView,
   View,
   Dimensions,
-  Text
+  Text,
+  Pressable
 } from 'react-native';
 import { Navigation, TMDB } from '../../../types';
 import { Image } from 'react-native-elements';
@@ -40,6 +41,7 @@ function MovieDetails({ navigation, movie }: Props) {
   }, [headerHeight])
 
   useEffect(() => {
+    setMovieDetails(undefined)
     getMovieDetails(movie.id).then(movie => {
       setMovieDetails(movie);
     })
@@ -67,15 +69,45 @@ function MovieDetails({ navigation, movie }: Props) {
           <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
           <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</Text>
           <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
-            <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text>
-            {movieDetails?.genres?.map((genre, i) =>
-              <View style={{ flexDirection: "row" }} key={i}>
-                {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
-                {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
+            {/* <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text> */}
+            {/* {movieDetails?.genres?.map((genre, i) =>
+              // <View style={{ flexDirection: "row" }} key={i}>
+              //   {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
+              //   {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
+              // </View>
+              <View
+                key={i}
+                style={{
+                  backgroundColor: iOSColors.gray,
+                  borderRadius: 16,
+                  paddingHorizontal: 8,
+                  paddingVertical: 4,
+                  marginRight: 8,
+                  marginBottom: 16
+                }}
+              >
+                <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>
               </View>
+            )} */}
+            {movieDetails?.genres?.map((genre, i) =>
+              <Pressable
+                onPress={() => navigation.push("MovieGenre", genre)}
+                key={i}
+                style={{
+                  backgroundColor: "rgb(91, 91, 96)",
+                  borderRadius: 16,
+                  paddingHorizontal: 24,
+                  paddingVertical: 8,
+                  marginRight: 8,
+                  marginBottom: 16,
+                  justifyContent: "center"
+                }}
+              >
+                <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>
+              </Pressable>
             )}
           </View>
-          <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>Status: {movieDetails?.status}</Text>
+          <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Status: {movieDetails?.status}</Text>
         </View>
         <CategoryControl
           buttons={["Cast & Crew", "Trailers"]}

@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { IGDB, TMDB } from '../../types';
 
 export async function getUpcomingGameReleases(): Promise<IGDB.ReleaseDate.ReleaseDate[]> {
@@ -57,4 +58,10 @@ export async function getHypedGames(): Promise<IGDB.Game.Game[]> {
     body: `fields name, category, hypes, first_release_date, cover.*, release_dates.*; where category = 0 & first_release_date > ${Math.floor(Date.now() / 1000)} & release_dates.region = (2,8) & hypes != null & cover.url != null; sort hypes desc; limit 10;`
   });
   return response.json();
+}
+
+export async function getDiscoverMovies(genreId: number): Promise<TMDB.Movie.Movie[]> {
+  const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1&with_genres=${genreId}&region=US&primary_release_date.gte=${moment()}&sort_by=primary_release_date.asc`);
+  const json: TMDB.Movie.Response = await response.json();
+  return json.results;
 }

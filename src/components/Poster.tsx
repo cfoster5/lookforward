@@ -78,7 +78,7 @@ function Poster({ navigation, data, categoryIndex }: Props) {
   if (categoryIndex === 1) { mediaType = "game" };
 
   return (
-    <Pressable onPress={() => navigation.navigate('Details', { type: mediaType, data: data })}>
+    <Pressable onPress={() => navigation.push('Details', { type: mediaType, data: data })}>
       {mediaType === "movie" &&
         <MoviePoster item={data as TMDB.Movie.Movie} />
       }

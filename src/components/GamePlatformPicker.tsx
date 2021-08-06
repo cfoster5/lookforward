@@ -3,7 +3,8 @@ import {
   View,
   Pressable,
   Text,
-  StyleSheet
+  StyleSheet,
+  Platform
 } from 'react-native';
 import { IGDB } from '../../types';
 import { reusableStyles } from '../helpers/styles';
@@ -59,7 +60,7 @@ function GamePlatformPicker({ modalizeRef, game }: { modalizeRef: RefObject<IHan
     <Modalize
       ref={modalizeRef}
       adjustToContentHeight={true}
-      childrenStyle={{ marginBottom: tabBarheight + 16 }}
+      childrenStyle={{ marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16 }}
       modalStyle={colorScheme === "dark" ? { backgroundColor: "#121212" } : {}}
       onClosed={() => setGame(null)}
     >

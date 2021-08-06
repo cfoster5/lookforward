@@ -7,6 +7,7 @@ import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Details from '../screens/Details';
 import { BlurHeader } from '../components/BlurHeader';
 import MovieGenre from '../screens/MovieGenre';
+import { Platform } from 'react-native';
 
 type CountdownStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
@@ -27,7 +28,7 @@ export function CountdownStack({ navigation, route }: Props) {
         component={Countdown}
         options={{
           header: (props) => <BlurHeader {...props} />,
-          headerTransparent: true
+          headerTransparent: Platform.OS === "ios" ? true : false
         }}
       />
       <Stack.Screen
@@ -35,7 +36,7 @@ export function CountdownStack({ navigation, route }: Props) {
         component={Details}
         options={{
           header: (props) => <BlurHeader {...props} />,
-          headerTransparent: true
+          headerTransparent: Platform.OS === "ios" ? true : false
         }}
       />
       <Stack.Screen
@@ -43,7 +44,7 @@ export function CountdownStack({ navigation, route }: Props) {
         component={MovieGenre}
         options={{
           header: (props) => <BlurHeader {...props} />,
-          headerTransparent: true
+          headerTransparent: Platform.OS === "ios" ? true : false
         }}
       />
     </Stack.Navigator>

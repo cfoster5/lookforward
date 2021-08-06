@@ -151,12 +151,12 @@ function Search({ navigation, route }: Props) {
                 />
               )}
               numColumns={2}
-              contentContainerStyle={{ marginHorizontal: 16, paddingBottom: tabBarheight }}
+              contentContainerStyle={{ marginHorizontal: 16, paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined }}
               columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
               ref={scrollRef}
               keyExtractor={(item, index) => item.id.toString()}
               initialNumToRender={6}
-              scrollIndicatorInsets={{ bottom: tabBarheight - 16 }}
+              scrollIndicatorInsets={Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined}
             />
             :
             <View style={{ flex: 1, justifyContent: "center" }}>
@@ -179,12 +179,12 @@ function Search({ navigation, route }: Props) {
                   />
                 )}
                 numColumns={2}
-                contentContainerStyle={{ marginHorizontal: 16, paddingBottom: tabBarheight }}
+                contentContainerStyle={{ marginHorizontal: 16, paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined }}
                 columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: 16 }}
                 ref={scrollRef}
                 keyExtractor={(item, index) => item.id.toString()}
                 initialNumToRender={6}
-                scrollIndicatorInsets={{ bottom: tabBarheight - 16 }}
+                scrollIndicatorInsets={Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined}
               />
               <GameReleaseModal modalizeRef={modalizeRef} game={game} />
             </GameContext.Provider>

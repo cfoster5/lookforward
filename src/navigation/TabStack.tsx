@@ -10,18 +10,23 @@ import { onResult } from '../helpers/helpers';
 import UserContext from '../contexts/UserContext';
 import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
 import { BlurView } from '@react-native-community/blur';
+import { Platform } from 'react-native';
 
 const CustomTabs = (props) => (
-  <BlurView
-    style={{
-      position: 'absolute',
-      bottom: 0,
-      left: 0,
-      right: 0
-    }}
-  >
+  Platform.OS === "ios"
+    ?
+    <BlurView
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0
+      }}
+    >
+      <BottomTabBar {...props} />
+    </BlurView>
+    :
     <BottomTabBar {...props} />
-  </BlurView>
 );
 
 const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
@@ -68,15 +73,24 @@ export function TabStack() {
           // inactiveTintColor: 'gray',
           // }}
           tabBar={(props) => <CustomTabs {...props} />}
-          tabBarOptions={{
-            activeTintColor: '#3880ff',
-            inactiveTintColor: 'gray',
-            style: {
-              // borderTopColor: '#666666',
-              borderTopColor: 'rgb(39, 39, 41)',
-              backgroundColor: 'transparent'
-            }
-          }}
+          tabBarOptions={
+            Platform.OS === "ios"
+              ?
+              {
+                activeTintColor: '#3880ff',
+                inactiveTintColor: 'gray',
+                style: {
+                  // borderTopColor: '#666666',
+                  borderTopColor: 'rgb(39, 39, 41)',
+                  backgroundColor: 'transparent'
+                }
+              }
+              :
+              {
+                activeTintColor: '#3880ff',
+                inactiveTintColor: 'gray',
+              }
+          }
         >
           <Tab.Screen name="Find" component={FindStack} />
           <Tab.Screen name="Countdown" component={CountdownStack} />

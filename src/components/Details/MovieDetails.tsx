@@ -4,7 +4,8 @@ import {
   View,
   Dimensions,
   Text,
-  Pressable
+  Pressable,
+  Platform
 } from 'react-native';
 import { Navigation, TMDB } from '../../../types';
 import { Image } from 'react-native-elements';
@@ -55,8 +56,8 @@ function MovieDetails({ navigation, movie }: Props) {
   return (
     <>
       <ScrollView
-        contentContainerStyle={{ paddingTop: initHeaderHeight, paddingBottom: tabBarheight }}
-        scrollIndicatorInsets={{ top: initHeaderHeight - insets.top, bottom: tabBarheight - 16 }}
+        contentContainerStyle={Platform.OS === "ios" ? { paddingTop: initHeaderHeight, paddingBottom: tabBarheight } : undefined}
+        scrollIndicatorInsets={Platform.OS === "ios" ? { top: initHeaderHeight - insets.top, bottom: tabBarheight - 16 } : undefined}
       >
         {movie?.backdrop_path &&
           <Image

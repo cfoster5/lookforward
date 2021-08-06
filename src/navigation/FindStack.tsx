@@ -8,6 +8,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { BlurHeader } from '../components/BlurHeader';
 import MovieGenre from '../screens/MovieGenre';
+import { Platform } from 'react-native';
 
 type FindStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.FindStackParamList, "Find">,
@@ -29,7 +30,7 @@ export function FindStack({ navigation, route }: Props) {
         component={Details}
         options={{
           header: props => <BlurHeader {...props} />,
-          headerTransparent: true
+          headerTransparent: Platform.OS === "ios" ? true : false
         }}
       />
       <Stack.Screen
@@ -37,7 +38,7 @@ export function FindStack({ navigation, route }: Props) {
         component={MovieGenre}
         options={{
           header: props => <BlurHeader {...props} />,
-          headerTransparent: true
+          headerTransparent: Platform.OS === "ios" ? true : false
         }}
       />
       {/* <Stack.Screen name="Actor" component={Actor} /> */}

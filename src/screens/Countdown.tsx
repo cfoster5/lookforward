@@ -178,9 +178,9 @@ function Countdown({ route, navigation }: Props) {
 
   return (
     <SectionList
-      contentContainerStyle={{ paddingTop: initHeaderHeight + 16, paddingBottom: tabBarheight + 16, marginHorizontal: 16 }}
+      contentContainerStyle={Platform.OS == "ios" ? { paddingTop: initHeaderHeight + 16, paddingBottom: tabBarheight + 16, marginHorizontal: 16 } : { paddingVertical: 16, marginHorizontal: 16 }}
       // contentContainerStyle={{ paddingTop: 16, paddingBottom: tabBarheight + 16, marginHorizontal: 16 }}
-      scrollIndicatorInsets={{ top: initHeaderHeight - insets.top + 16, bottom: tabBarheight - 16 }}
+      scrollIndicatorInsets={Platform.OS == "ios" ? { top: initHeaderHeight - insets.top + 16, bottom: tabBarheight - 16 } : undefined}
       // sections={listData}
       sections={[
         { data: movieSubs, title: "Movies" },

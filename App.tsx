@@ -10,12 +10,13 @@ import { TabStack } from './src/navigation/TabStack';
 import { AuthStack } from './src/navigation/AuthStack';
 import ThemeContext from './src/contexts/ThemeContext';
 import UserContext from './src/contexts/UserContext';
+import { finishTransactionAsync, IAPResponseCode, setPurchaseListener } from 'expo-in-app-purchases';
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<FirebaseAuthTypes.User>();
-  const [colorScheme, setColorScheme] = useState("dark")
+  const [colorScheme, setColorScheme] = useState("dark");
 
   useEffect(() => {
     // monitorTimeConsumingTask().then(result => setInitializing(false))
@@ -70,6 +71,26 @@ export default function App() {
     await firestore().collection("users").doc(user?.uid).set({ deviceToken: token })
   }
 
+  setPurchaseListener(({ responseCode, results, errorCode }) => {
+    // Purchase was successful
+    if (responseCode === IAPResponseCode.OK) {
+      results?.forEach(purchase => {
+        if (!purchase.acknowledged) {
+          console.log(`Successfully purchased ${purchase.productId}`);
+          // Process transaction here and unlock content...
+          // Then when you're done
+          finishTransactionAsync(purchase, true);
+        }
+      });
+    } else if (responseCode === IAPResponseCode.USER_CANCELED) {
+      console.log('User canceled the transaction');
+    } else if (responseCode === IAPResponseCode.DEFERRED) {
+      console.log('User does not have permissions to buy but requested parental approval (iOS only)');
+    } else {
+      console.warn(`Something went wrong with the purchase. Received errorCode ${errorCode}`);
+    }
+  });
+
   if (initializing) {
     return <View />
   }
@@ -84,7 +105,8 @@ export default function App() {
               <TabStack />
             </UserContext.Provider>
           </ThemeContext.Provider>
-          : <AuthStack />
+          :
+          <AuthStack />
         }
       </OverflowMenuProvider>
     </NavigationContainer>

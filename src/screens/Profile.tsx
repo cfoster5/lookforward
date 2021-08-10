@@ -1,5 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import {
+  ActivityIndicator,
+  Platform,
   Pressable,
   StyleSheet,
   Switch,
@@ -16,6 +18,11 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import UserContext from '../contexts/UserContext';
 import { Navigation } from '../../types';
+import { Modalize } from 'react-native-modalize';
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import ThemeContext from '../contexts/ThemeContext';
+import { connectAsync, getProductsAsync, IAPItemDetails, IAPResponseCode, purchaseItemAsync } from 'expo-in-app-purchases';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 type ProfileScreenRouteProp = RouteProp<Navigation.ProfileStackParamList, 'Profile'>;
 type ProfileScreenNavigationProp = StackNavigationProp<Navigation.ProfileStackParamList, 'Profile'>;
@@ -35,6 +42,31 @@ function Profile({ route, navigation }: ProfileScreenProps) {
   const toggleWeekSwitch = () => setWeekNotifications(previousState => !previousState);
   const prevDayNotifications = usePrevious(dayNotifications);
   const prevWeekNotifications = usePrevious(weekNotifications);
+  const modalizeRef = useRef<Modalize>(null);
+  const tabBarheight = useBottomTabBarHeight();
+  const colorScheme = useContext(ThemeContext);
+  const [connected, setConnected] = useState(false);
+  const [iapItems, setIapItems] = useState<IAPItemDetails[]>();
+
+  useEffect(() => {
+    if (Platform.OS === "ios") {
+      connectAsync()
+        .then(() => setConnected(true))
+        .catch(() => console.log(`connection error`));
+    }
+  }, [])
+
+  useEffect(() => {
+    if (Platform.OS === "ios" && connected) {
+      getProductsAsync(["com.lookforward.tip1", "com.lookforward.tip3", "com.lookforward.tip5"])
+        .then(response => {
+          if (response.responseCode === IAPResponseCode.OK) {
+            setIapItems(response.results)
+          }
+        })
+        .catch(() => console.log("connection error"));
+    }
+  }, [connected])
 
   useEffect(() => {
     if (uid) {
@@ -102,40 +134,111 @@ function Profile({ route, navigation }: ProfileScreenProps) {
     }
   }
 
-  return (
-    <View style={{ flex: 1 }}>
-      <Text style={{ ...reusableStyles.date, paddingTop: 24, paddingLeft: 16, paddingBottom: 8 }}>COUNTDOWN NOTIFICATIONS</Text>
+  function NotificationSetting({ title, onValueChange, value }: { title: string, onValueChange: () => void, value: boolean }) {
+    return (
       <View style={styles.itemContainer}>
         <View style={styles.item}>
-          <Text style={{ ...iOSUIKit.bodyWhiteObject }}>Day Before</Text>
+          <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{title}</Text>
           <Switch
             trackColor={{ false: "red", true: iOSColors.blue }}
             style={{ marginRight: 16 }}
-            onValueChange={toggleDaySwitch}
-            value={dayNotifications}
+            onValueChange={onValueChange}
+            value={value}
           />
         </View>
       </View>
-      <View style={{ ...styles.itemContainer, paddingLeft: 0 }}>
-        <View style={{ ...styles.item, paddingLeft: 16 }}>
-          <Text style={{ ...iOSUIKit.bodyWhiteObject }}>Week Before</Text>
-          <Switch
-            trackColor={{ false: "red", true: iOSColors.blue }}
-            style={{ marginRight: 16 }}
-            onValueChange={toggleWeekSwitch}
-            value={weekNotifications}
-          />
-        </View>
+    )
+  }
+
+  function Icon({ details }: { details: IAPItemDetails }) {
+    let name = "";
+    let color = "";
+    if (details.title === "Coffee-Sized Tip") {
+      name = "cafe";
+      color = "brown";
+    }
+    else if (details.title === "Snack-Sized Tip") {
+      name = "ice-cream"
+      color = "lightgreen";
+    }
+    else if (details.title === "Pizza-Sized Tip") {
+      name = "pizza"
+      color = iOSColors.yellow;
+    }
+    return <Ionicons name={name} color={color} size={28} />
+  }
+
+  function TipModal() {
+    return (
+      <Modalize
+        ref={modalizeRef}
+        adjustToContentHeight={true}
+        childrenStyle={{ marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16 }}
+        modalStyle={colorScheme === "dark" ? { backgroundColor: "#121212" } : {}}
+        onClosed={() => null}
+      >
+        <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, marginHorizontal: 16, marginVertical: 16 } : iOSUIKit.body}>
+          If you're feeling generous and would like to support LookForward's development further, any tip helps!
+        </Text>
+        {iapItems?.length > 0
+          ?
+          iapItems?.map((details, i) => {
+            return (
+              <Pressable
+                key={i}
+                onPress={() => purchaseItemAsync(details.productId)}
+                style={{
+                  marginHorizontal: 16,
+                  marginTop: 16,
+                  paddingBottom: i < iapItems.length - 1 ? 16 : 0,
+                  borderBottomWidth: i < iapItems.length - 1 ? StyleSheet.hairlineWidth : 0,
+                  borderColor: i < iapItems.length - 1 ? "#3c3d41" : undefined
+                }}
+              >
+                <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-between" }}>
+                  {/* <Text style={colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>{JSON.stringify(details)}</Text> */}
+                  <View style={{ flex: 1, flexDirection: "row" }}>
+                    <Icon details={details} />
+                    <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, marginHorizontal: 16 } : iOSUIKit.body}>{details.title}</Text>
+                  </View>
+                  <Text style={reusableStyles.date}>{details.price}</Text>
+                </View>
+              </Pressable>
+            )
+          })
+          :
+          <View style={{ flex: 1, justifyContent: "center" }}>
+            <ActivityIndicator size="large" />
+          </View>
+        }
+      </Modalize>
+    )
+  }
+
+  return (
+    <>
+      <View style={{ flex: 1 }}>
+        <Text style={{ ...reusableStyles.date, paddingTop: 24, paddingLeft: 16, paddingBottom: 8 }}>COUNTDOWN NOTIFICATIONS</Text>
+        <NotificationSetting title="Day Before" onValueChange={toggleDaySwitch} value={dayNotifications} />
+        <NotificationSetting title="Week Before" onValueChange={toggleWeekSwitch} value={weekNotifications} />
+        {!hasPermissions &&
+          <Text style={{ ...reusableStyles.date, paddingTop: 8, paddingLeft: 16 }}>Please enable notifications in your device's settings</Text>
+        }
+        {Platform.OS === "ios" &&
+          <Pressable style={{ ...styles.buttonContainer }} onPress={() => modalizeRef.current?.open()}>
+            <View style={styles.button}>
+              <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.blue }}>Tip Jar</Text>
+            </View>
+          </Pressable>
+        }
+        <Pressable style={{ ...styles.buttonContainer }} onPress={() => signOut()}>
+          <View style={styles.button}>
+            <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.red }}>Sign Out</Text>
+          </View>
+        </Pressable>
       </View>
-      {!hasPermissions &&
-        <Text style={{ ...reusableStyles.date, paddingTop: 8, paddingLeft: 16 }}>Please enable notifications in your device's settings</Text>
-      }
-      <Pressable style={{ ...styles.buttonContainer }} onPress={() => signOut()}>
-        <View style={styles.button}>
-          <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.red }}>Sign Out</Text>
-        </View>
-      </Pressable>
-    </View>
+      <TipModal />
+    </>
   );
 };
 

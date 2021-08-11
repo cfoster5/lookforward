@@ -5,7 +5,8 @@ import {
   Dimensions,
   Text,
   Pressable,
-  Platform
+  Platform,
+  ActivityIndicator
 } from 'react-native';
 import { Navigation, TMDB } from '../../../types';
 import { Image } from 'react-native-elements';
@@ -36,14 +37,13 @@ function MovieDetails({ navigation, movie }: Props) {
   const insets = useSafeAreaInsets();
 
   useEffect(() => {
-    if (initHeaderHeight === 0) {
-      setInitHeaderHeight(headerHeight);
-    }
+    if (initHeaderHeight === 0) { setInitHeaderHeight(headerHeight) }
   }, [headerHeight])
 
   useEffect(() => {
     setMovieDetails(undefined)
     getMovieDetails(movie.id).then(movie => {
+      console.log(`movie`, movie)
       setMovieDetails(movie);
     })
   }, [movie])
@@ -55,96 +55,126 @@ function MovieDetails({ navigation, movie }: Props) {
 
   return (
     <>
-      <ScrollView
-        contentContainerStyle={Platform.OS === "ios" ? { paddingTop: initHeaderHeight, paddingBottom: tabBarheight } : undefined}
-        scrollIndicatorInsets={Platform.OS === "ios" ? { top: initHeaderHeight - insets.top, bottom: tabBarheight - 16 } : undefined}
-      >
-        {movie?.backdrop_path &&
-          <Image
-            style={{ width: Dimensions.get("window").width, height: (720 / 1280) * Dimensions.get("window").width }}
-            source={{ uri: `https://image.tmdb.org/t/p/w780${movie.backdrop_path}` }}
+      {movieDetails
+        ?
+        <ScrollView
+          contentContainerStyle={Platform.OS === "ios" ? { paddingTop: initHeaderHeight, paddingBottom: tabBarheight } : undefined}
+          scrollIndicatorInsets={Platform.OS === "ios" ? { top: initHeaderHeight - insets.top, bottom: tabBarheight - 16 } : undefined}
+        >
+          {movie?.backdrop_path &&
+            <Image
+              style={{ width: Dimensions.get("window").width, height: (720 / 1280) * Dimensions.get("window").width }}
+              source={{ uri: `https://image.tmdb.org/t/p/w780${movie.backdrop_path}` }}
+            />
+          }
+          <View style={{ margin: 16 }}>
+            <Text style={colorScheme === "dark" ? iOSUIKit.largeTitleEmphasizedWhite : iOSUIKit.largeTitleEmphasized}>{movie.title}</Text>
+            <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
+            <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</Text>
+            <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+              {movieDetails?.genres?.map((genre, i) =>
+                <Pressable
+                  onPress={() => navigation.push("MovieDiscover", { genre: genre })}
+                  key={i}
+                  style={{
+                    backgroundColor: "rgb(91, 91, 96)",
+                    borderRadius: 16,
+                    paddingHorizontal: 24,
+                    paddingVertical: 8,
+                    marginRight: 8,
+                    marginBottom: 16,
+                    justifyContent: "center"
+                  }}
+                >
+                  <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>
+                </Pressable>
+              )}
+            </View>
+            <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Status: {movieDetails?.status}</Text>
+          </View>
+          <CategoryControl
+            buttons={["Cast & Crew", "Trailers", "Discover"]}
+            categoryIndex={detailIndex}
+            handleCategoryChange={(index: number) => setDetailIndex(index)}
           />
-        }
-        <View style={{ margin: 16 }}>
-          <Text style={colorScheme === "dark" ? iOSUIKit.largeTitleEmphasizedWhite : iOSUIKit.largeTitleEmphasized}>{movie.title}</Text>
-          <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
-          <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</Text>
-          <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
-            {/* <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text> */}
-            {/* {movieDetails?.genres?.map((genre, i) =>
-              // <View style={{ flexDirection: "row" }} key={i}>
-              //   {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
-              //   {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
-              // </View>
-              <View
-                key={i}
-                style={{
-                  backgroundColor: iOSColors.gray,
-                  borderRadius: 16,
-                  paddingHorizontal: 8,
-                  paddingVertical: 4,
-                  marginRight: 8,
-                  marginBottom: 16
-                }}
-              >
-                <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>
+          <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
+            {detailIndex === 0 &&
+              <View>
+                {movieDetails?.credits?.crew?.filter(person => person?.job === "Director").map((person, i) => (
+                  <Person
+                    key={i}
+                    navigation={navigation}
+                    person={person}
+                  />
+                ))}
+                {movieDetails?.credits.cast.map((person, i) => (
+                  <Person
+                    key={i}
+                    navigation={navigation}
+                    person={person}
+                  />
+                ))}
               </View>
-            )} */}
-            {movieDetails?.genres?.map((genre, i) =>
-              <Pressable
-                onPress={() => navigation.push("MovieGenre", genre)}
-                key={i}
-                style={{
-                  backgroundColor: "rgb(91, 91, 96)",
-                  borderRadius: 16,
-                  paddingHorizontal: 24,
-                  paddingVertical: 8,
-                  marginRight: 8,
-                  marginBottom: 16,
-                  justifyContent: "center"
-                }}
-              >
-                <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>
-              </Pressable>
-            )}
-          </View>
-          <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Status: {movieDetails?.status}</Text>
-        </View>
-        <CategoryControl
-          buttons={["Cast & Crew", "Trailers"]}
-          categoryIndex={detailIndex}
-          handleCategoryChange={(index: number) => setDetailIndex(index)}
-        />
-        <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-          <View style={detailIndex !== 0 ? { display: "none" } : {}}>
-            {movieDetails?.credits?.crew?.find(person => person?.job === "Director") &&
-              <Person
-                navigation={navigation}
-                profilePath={(movieDetails?.credits?.crew?.find(person => person?.job === "Director") as TMDB.Movie.Crew).profile_path}
-                name={(movieDetails?.credits?.crew?.find(person => person?.job === "Director") as TMDB.Movie.Crew).name}
-                job={(movieDetails?.credits?.crew?.find(person => person?.job === "Director") as TMDB.Movie.Crew).job}
-                character={undefined}
-              />
             }
-            {movieDetails?.credits.cast.map((person, i) => (
-              <Person
-                key={i}
-                navigation={navigation}
-                profilePath={person.profile_path}
-                name={person.name}
-                job={undefined}
-                character={person.character}
-              />
-            ))}
-          </View>
-          <View style={detailIndex !== 1 ? { display: "none" } : {}}>
-            {movieDetails?.videos?.results?.map((video, i) => <Trailer key={i} video={video} index={i} />)}
-            {movieDetails?.videos?.results?.length === 0 &&
-              <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>No trailers yet! Come back later!</Text>
+            {detailIndex === 1 &&
+              <View>
+                {movieDetails?.videos?.results?.map((video, i) => <Trailer key={i} video={video} index={i} />)}
+                {movieDetails?.videos?.results?.length === 0 &&
+                  <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>No trailers yet! Come back later!</Text>
+                }
+              </View>
+            }
+            {detailIndex === 2 &&
+              <>
+                <Text style={colorScheme === "dark" ? { ...iOSUIKit.subheadEmphasizedWhiteObject, color: iOSColors.gray, textAlign: "center", marginTop: 16 } : { ...iOSUIKit.bodyObject }}>Production</Text>
+                <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+                  {movieDetails?.production_companies?.map((company, i) => (
+                    <Pressable
+                      onPress={() => navigation.push("MovieDiscover", { company: company })}
+                      key={i}
+                      style={{
+                        backgroundColor: "rgb(91, 91, 96)",
+                        borderRadius: 16,
+                        paddingHorizontal: 24,
+                        paddingVertical: 8,
+                        marginRight: 8,
+                        marginBottom: 16,
+                        justifyContent: "center"
+                      }}
+                    >
+                      <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{company.name}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+                <Text style={colorScheme === "dark" ? { ...iOSUIKit.subheadEmphasizedWhiteObject, color: iOSColors.gray, textAlign: "center" } : { ...iOSUIKit.bodyObject }}>Keywords</Text>
+                <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+                  {movieDetails?.keywords?.keywords?.map((keyword, i) => (
+                    <Pressable
+                      onPress={() => navigation.push("MovieDiscover", { keyword: keyword })}
+                      key={i}
+                      style={{
+                        backgroundColor: "rgb(91, 91, 96)",
+                        borderRadius: 16,
+                        paddingHorizontal: 24,
+                        paddingVertical: 8,
+                        marginRight: 8,
+                        marginBottom: 16,
+                        justifyContent: "center"
+                      }}
+                    >
+                      <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{keyword.name}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+              </>
             }
           </View>
+        </ScrollView>
+        :
+        <View style={{ flex: 1, justifyContent: "center" }}>
+          <ActivityIndicator size="large" />
         </View>
-      </ScrollView>
+      }
     </>
   );
 };

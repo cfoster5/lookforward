@@ -40,6 +40,15 @@ export function FindStack({ navigation, route }: Props) {
         options={{
           header: props => <BlurHeader {...props} />,
           headerTransparent: Platform.OS === "ios" ? true : false
+      <Stack.Screen
+        name="GameDiscover"
+        component={GameDiscover}
+        options={{
+          header: props => <BlurHeader {...props} />,
+          headerTransparent: Platform.OS === "ios" ? true : false,
+          title: ""
+        }}
+      />
         }}
       />
       {/* <Stack.Screen name="Actor" component={Actor} /> */}

@@ -4,7 +4,8 @@ import {
   View,
   Dimensions,
   Text,
-  Platform
+  Platform,
+  Pressable
 } from 'react-native';
 
 import { IGDB, Navigation } from '../../../types';
@@ -38,7 +39,7 @@ function GameDetails({ navigation, game }: Props) {
     }
   }, [headerHeight])
 
-  function getReleaseDate(game: IGDB.Game.Game): string {
+  function getReleaseDate(): string {
     let dates: number[] = [];
     game.release_dates?.forEach(releaseDate => {
       if (dates.indexOf(releaseDate.date) === -1 && (releaseDate.region === 2 || releaseDate.region === 8)) {
@@ -67,17 +68,27 @@ function GameDetails({ navigation, game }: Props) {
             source={{ uri: `https:${game.cover.url.replace("thumb", "screenshot_big")}` }}
           />
         }
-        <View style={{ margin: 16 }}>
+        <View style={{ margin: 16, marginBottom: 0 }}>
           <Text style={colorScheme === "dark" ? iOSUIKit.largeTitleEmphasizedWhite : iOSUIKit.largeTitleEmphasized}>{game.name}</Text>
-          <Text style={reusableStyles.date}>{getReleaseDate(game)}</Text>
+          <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
           <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{game.summary}</Text>
           <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
-            <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Genres: </Text>
             {game?.genres?.map((genre, i) =>
-              <View style={{ flexDirection: "row" }} key={i}>
-                {i > 0 ? <View style={{ width: 5, height: 5, borderRadius: 5, marginHorizontal: 5, backgroundColor: iOSColors.blue, alignSelf: "center" }} /> : null}
-                {i > 0 ? <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text> : <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>}
-              </View>
+              <Pressable
+                onPress={() => navigation.push("GameDiscover", { genre: genre })}
+                key={i}
+                style={{
+                  backgroundColor: "rgb(91, 91, 96)",
+                  borderRadius: 16,
+                  paddingHorizontal: 24,
+                  paddingVertical: 8,
+                  marginRight: 8,
+                  marginBottom: 16,
+                  justifyContent: "center"
+                }}
+              >
+                <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>
+              </Pressable>
             )}
           </View>
         </View>

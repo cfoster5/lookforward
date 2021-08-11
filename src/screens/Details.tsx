@@ -28,6 +28,14 @@ function Details({ route, navigation }: Props) {
 
   useEffect(() => {
     console.log(`route.params.data`, route.params.data)
+    let title = "";
+    if (route.params.type === "movie") {
+      title = (route.params.data as TMDB.Movie.Movie).title;
+    }
+    else if (route.params.type === "game") {
+      title = (route.params.data as IGDB.Game.Game).name;
+    }
+    navigation.setOptions({ title: title });
   }, [route.params.data])
 
   const IoniconsHeaderButton = (props: JSX.IntrinsicAttributes & JSX.IntrinsicClassAttributes<HeaderButton> & Readonly<HeaderButtonProps> & Readonly<any>) => (

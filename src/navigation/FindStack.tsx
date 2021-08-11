@@ -30,7 +30,8 @@ export function FindStack({ navigation, route }: Props) {
         component={Details}
         options={{
           header: props => <BlurHeader {...props} />,
-          headerTransparent: Platform.OS === "ios" ? true : false
+          headerTransparent: Platform.OS === "ios" ? true : false,
+          title: ""
         }}
       />
       <Stack.Screen

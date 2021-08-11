@@ -101,12 +101,12 @@ export namespace IGDB {
 
 export namespace TMDB {
 
-  interface Genre {
+  export interface Genre {
     id: number;
     name: string;
   }
 
-  interface ProductionCompany {
+  export interface ProductionCompany {
     id: number;
     logo_path: string;
     name: string;
@@ -187,6 +187,10 @@ export namespace TMDB {
       total_results: number;
     }
 
+    export interface Keywords {
+      keywords: { id: number, name: string }[]
+    }
+
     export interface Details {
       adult: boolean;
       backdrop_path: string;
@@ -196,6 +200,7 @@ export namespace TMDB {
       homepage: string;
       id: number;
       imdb_id: string;
+      keywords: Keywords;
       original_language: string;
       original_title: string;
       overview: string;
@@ -373,6 +378,18 @@ export namespace TMDB {
     place_of_birth: string;
     popularity: number;
     profile_path: string;
+    movie_credits: { cast: TMDB.MovieCredits.Cast[], crew: TMDB.MovieCredits.Crew[] }
+    images: {
+      profiles: {
+        aspect_ratio: number;
+        height: number;
+        iso_639_1?: any;
+        file_path: string;
+        vote_average: number;
+        vote_count: number;
+        width: number;
+      }[]
+    };
   }
 
 }
@@ -526,14 +543,16 @@ export namespace Navigation {
   export type FindStackParamList = {
     Find: undefined,
     Details: { type: "game" | "movie" | "tv", data: IGDB.Game.Game | TMDB.Movie.Movie | Trakt.ShowPremiere | Trakt.ShowSearch },
-    MovieGenre: { id: number, name: string }
+    MovieDiscover: { genre?: any, company?: any, keyword?: any },
+    GameDiscover: { genre?: any, company?: any, keyword?: any },
     Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }
 
   export type CountdownStackParamList = {
     Countdown: undefined
     Details: { type: "game" | "movie" | "tv", data: IGDB.Game.Game | TMDB.Movie.Movie | Trakt.ShowPremiere },
-    MovieGenre: { id: number, name: string }
+    MovieDiscover: { genre?: TMDB.Genre, company?: TMDB.ProductionCompany, keyword?: TMDB.Movie.Keywords },
+    Actor: TMDB.Movie.Cast | TMDB.Movie.Crew
   }
 
   export type ProfileStackParamList = {

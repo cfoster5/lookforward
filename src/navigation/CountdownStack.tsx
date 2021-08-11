@@ -8,6 +8,10 @@ import Details from '../screens/Details';
 import { BlurHeader } from '../components/BlurHeader';
 import MovieGenre from '../screens/MovieGenre';
 import { Platform } from 'react-native';
+import ProductionCompany from '../screens/ProductionCompany';
+import MovieKeyword from '../screens/MovieKeyword';
+import MovieDiscover from '../screens/MovieDiscover';
+import Actor from '../screens/Actor';
 
 type CountdownStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
@@ -41,11 +45,21 @@ export function CountdownStack({ navigation, route }: Props) {
         }}
       />
       <Stack.Screen
-        name="MovieGenre"
-        component={MovieGenre}
+        name="MovieDiscover"
+        component={MovieDiscover}
         options={{
-          header: (props) => <BlurHeader {...props} />,
-          headerTransparent: Platform.OS === "ios" ? true : false
+          header: props => <BlurHeader {...props} />,
+          headerTransparent: Platform.OS === "ios" ? true : false,
+          title: ""
+        }}
+      />
+      <Stack.Screen
+        name="Actor"
+        component={Actor}
+        options={{
+          header: props => <BlurHeader {...props} />,
+          headerTransparent: Platform.OS === "ios" ? true : false,
+          title: ""
         }}
       />
     </Stack.Navigator>

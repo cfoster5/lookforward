@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  Platform,
   View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -53,8 +54,8 @@ function MovieDiscover({ route, navigation }: any) {
     movies.length > 0
       ?
       <FlatList
-        contentContainerStyle={{ paddingTop: initHeaderHeight + 16, paddingBottom: tabBarheight, marginHorizontal: 16 }}
-        scrollIndicatorInsets={{ top: initHeaderHeight - insets.top + 16, bottom: tabBarheight - 16 }}
+        contentContainerStyle={{ paddingTop: Platform.OS === "ios" ? initHeaderHeight + 16 : 16, paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined, marginHorizontal: 16 }}
+        scrollIndicatorInsets={Platform.OS === "ios" ? { top: initHeaderHeight - insets.top + 16, bottom: tabBarheight - 16 } : undefined}
         data={movies}
         renderItem={({ item }: { item: TMDB.Movie.Movie }) => (
           <Poster

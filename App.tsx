@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, Platform } from 'react-native';
 import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
 import { OverflowMenuProvider } from 'react-navigation-header-buttons';
 import SplashScreen from 'react-native-splash-screen'
@@ -71,25 +71,27 @@ export default function App() {
     await firestore().collection("users").doc(user?.uid).set({ deviceToken: token })
   }
 
-  setPurchaseListener(({ responseCode, results, errorCode }) => {
-    // Purchase was successful
-    if (responseCode === IAPResponseCode.OK) {
-      results?.forEach(purchase => {
-        if (!purchase.acknowledged) {
-          console.log(`Successfully purchased ${purchase.productId}`);
-          // Process transaction here and unlock content...
-          // Then when you're done
-          finishTransactionAsync(purchase, true);
-        }
-      });
-    } else if (responseCode === IAPResponseCode.USER_CANCELED) {
-      console.log('User canceled the transaction');
-    } else if (responseCode === IAPResponseCode.DEFERRED) {
-      console.log('User does not have permissions to buy but requested parental approval (iOS only)');
-    } else {
-      console.warn(`Something went wrong with the purchase. Received errorCode ${errorCode}`);
-    }
-  });
+  if (Platform.OS === "ios") {
+    setPurchaseListener(({ responseCode, results, errorCode }) => {
+      // Purchase was successful
+      if (responseCode === IAPResponseCode.OK) {
+        results?.forEach(purchase => {
+          if (!purchase.acknowledged) {
+            console.log(`Successfully purchased ${purchase.productId}`);
+            // Process transaction here and unlock content...
+            // Then when you're done
+            finishTransactionAsync(purchase, true);
+          }
+        });
+      } else if (responseCode === IAPResponseCode.USER_CANCELED) {
+        console.log('User canceled the transaction');
+      } else if (responseCode === IAPResponseCode.DEFERRED) {
+        console.log('User does not have permissions to buy but requested parental approval (iOS only)');
+      } else {
+        console.warn(`Something went wrong with the purchase. Received errorCode ${errorCode}`);
+      }
+    });
+  }
 
   if (initializing) {
     return <View />

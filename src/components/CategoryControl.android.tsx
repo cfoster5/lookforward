@@ -30,15 +30,15 @@ function CategoryControl({ buttons, categoryIndex, handleCategoryChange }: Props
       {buttons.map((button, i) => (
         <Pressable
           style={{
-            width: '50%',
+            width: `${100 / buttons.length}%`,
             paddingVertical: 4,
             borderColor: "#1c1c1f",
             borderWidth: 2,
             backgroundColor: categoryIndex === i ? "#5b5b60" : "#1c1c1f",
             borderTopLeftRadius: i === 0 ? 8 : 0,
             borderBottomLeftRadius: i === 0 ? 8 : 0,
-            borderTopRightRadius: i === 1 ? 8 : 0,
-            borderBottomRightRadius: i === 1 ? 8 : 0,
+            borderTopRightRadius: i === buttons.length - 1 ? 8 : 0,
+            borderBottomRightRadius: i === buttons.length - 1 ? 8 : 0,
           }}
           key={i}
           onPress={() => handleCategoryChange(i)}

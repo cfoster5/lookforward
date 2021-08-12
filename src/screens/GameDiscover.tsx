@@ -70,7 +70,7 @@ function GameDiscover({ route, navigation }: any) {
       ?
       <GameContext.Provider value={{ game, setGame }}>
         <FlatList
-          contentContainerStyle={{ paddingTop: Platform.OS === "ios" ? initHeaderHeight + 16 : undefined, paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined, marginHorizontal: 16 }}
+          contentContainerStyle={{ paddingTop: Platform.OS === "ios" ? initHeaderHeight + 16 : 16, paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined, marginHorizontal: 16 }}
           scrollIndicatorInsets={Platform.OS === "ios" ? { top: initHeaderHeight - insets.top + 16, bottom: tabBarheight - 16 } : undefined}
           indicatorStyle="white"
           data={games}

@@ -23,23 +23,25 @@ export async function searchGames(searchVal: string): Promise<IGDB.Game.Game[]> 
   return response.json();
 }
 
-export async function getUpcomingMovies(): Promise<TMDB.Movie.Movie[]> {
-  const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=1`);
+export async function getUpcomingMovies(pageIndex?: number) {
+  const response = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=${pageIndex ? pageIndex : 1}`);
   const json: TMDB.Movie.Response = await response.json();
   // return json.results.sort((a, b) => {
   //   return b.popularity - a.popularity;
   // });
-  return json.results
+  console.log(`json`, json)
+  return json;
 }
 
 // export async function searchMovies(searchVal: string) {
 // const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=1&query=${searchVal}`);
-export async function searchMovies(searchVal: string, year: number) {
-  const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=1&query=${searchVal}&primary_release_year=${year}`);
+export async function searchMovies(searchVal: string, pageIndex?: number) {
+  const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=${pageIndex ? pageIndex : 1}&query=${searchVal}`);
   const json: TMDB.Movie.Response = await response.json();
-  return json.results.sort((a, b) => {
-    return b.popularity - a.popularity;
-  });
+  // return json.results.sort((a, b) => {
+  //   return b.popularity - a.popularity;
+  // });
+  return json;
 }
 
 export async function getMovieDetails(movieId: number): Promise<TMDB.Movie.Details> {
@@ -73,15 +75,16 @@ export async function getHypedGames(): Promise<IGDB.Game.Game[]> {
   return response.json();
 }
 
-export async function getDiscoverMovies({ genreId, companyId, keywordId }: { genreId?: number, companyId?: number, keywordId?: number }): Promise<TMDB.Movie.Movie[]> {
+export async function getDiscoverMovies({ genreId, companyId, keywordId, pageIndex }: { genreId?: number, companyId?: number, keywordId?: number, pageIndex: number }) {
   let filter = "";
   filter += genreId ? `&with_genres=${genreId}` : ``;
   filter += companyId ? `&with_companies=${companyId}` : ``;
   filter += keywordId ? `&with_keywords=${keywordId}` : ``;
 
-  const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1${filter}&region=US&primary_release_date.gte=${moment()}&sort_by=primary_release_date.asc`);
+  const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1${filter}&region=US&sort_by=primary_release_date.desc&page=${pageIndex ? pageIndex : 1}`);
   const json: TMDB.Movie.Response = await response.json();
-  return json.results;
+  // return json.results;
+  return json;
 }
 
 // export async function discoverGames({ genreId }): Promise<IGDB.Game.Game[]> {

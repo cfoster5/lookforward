@@ -13,6 +13,7 @@ import UserContext from '../contexts/UserContext';
 import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import GameReleaseModal from '../components/GamePlatformPicker';
+import moment from 'moment';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
@@ -45,9 +46,19 @@ function Details({ route, navigation }: Props) {
     <HeaderButton IconComponent={Ionicons} iconSize={30} color={iOSColors.blue} {...props} />
   );
 
+  function upcomingRelease() {
+    if (route.params.type === "movie" && moment((route.params.data as TMDB.Movie.Movie).release_date) >= moment()) {
+      return true;
+    }
+    else if (route.params.type === "game" && (route.params.data as IGDB.Game.Game).release_dates.filter(releaseDate => moment(releaseDate.date) >= moment()).length === 0) {
+      return true;
+    }
+  }
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
+        upcomingRelease() &&
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           <Item
             title="search"

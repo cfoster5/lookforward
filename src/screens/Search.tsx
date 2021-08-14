@@ -36,12 +36,26 @@ function Search({ navigation, route }: Props) {
 
   useEffect(() => {
     let isMounted = true;
-    getUpcomingMovies().then(movies => {
-      if (isMounted) {
-        setInitMovies(movies);
-        setMovies(movies);
-      };
-    })
+    // getUpcomingMovies().then(movies => {
+    //   if (isMounted) {
+    //     setInitMovies(movies);
+    //     setMovies(movies);
+    //   };
+    // })
+    let tempMovies: TMDB.Movie.Movie[] = [];
+    getUpcomingMovies().then(json => {
+      tempMovies = [...tempMovies, ...json.results];
+      for (let pageIndex = 2; pageIndex <= json.total_pages; pageIndex++) {
+        getUpcomingMovies(pageIndex).then(json => {
+          tempMovies = [...tempMovies, ...json.results];
+          if (isMounted) {
+            console.log(`tempMovies.length`, tempMovies.length)
+            setInitMovies(tempMovies);
+            setMovies(tempMovies);
+          };
+        })
+      }
+    });
     getUpcomingGameReleases().then(async releaseDates => {
       await convertReleasesToGames(releaseDates).then(games => {
         if (isMounted) {
@@ -81,16 +95,17 @@ function Search({ navigation, route }: Props) {
     modalizeRef.current?.open()
   }, [game])
 
-  function getMovies() {
-    const date = new Date();
-    const years = [date.getFullYear(), date.getFullYear() + 1, date.getFullYear() + 2, date.getFullYear() + 3];
+  async function getMovies() {
     let tempMovies: TMDB.Movie.Movie[] = [];
-    years.forEach(async year => {
-      const searchData = await searchMovies(searchValue, year)
-      tempMovies = [...tempMovies, ...searchData]
-      // Updating state for each year, need to only update once 
-      setMovies(tempMovies)
-    });
+    let json = await searchMovies(searchValue);
+    tempMovies = [...tempMovies, ...json.results];
+    for (let pageIndex = 2; pageIndex <= json.total_pages; pageIndex++) {
+      let json = await searchMovies(searchValue, pageIndex);
+      tempMovies = [...tempMovies, ...json.results];
+    }
+    setMovies(tempMovies.sort((a, b) => {
+      return b.popularity - a.popularity;
+    }));
   }
 
   function reinitialize() {

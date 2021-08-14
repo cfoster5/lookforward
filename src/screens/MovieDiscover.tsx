@@ -47,7 +47,17 @@ function MovieDiscover({ route, navigation }: any) {
       discoverBy = { keywordId: keyword.id }
     }
     navigation.setOptions({ title: title });
-    getDiscoverMovies(discoverBy).then(results => setMovies(results));
+    let tempMovies: TMDB.Movie.Movie[] = [];
+    getDiscoverMovies(discoverBy).then(json => {
+      tempMovies = [...tempMovies, ...json.results];
+      for (let pageIndex = 2; pageIndex <= json.total_pages; pageIndex++) {
+        discoverBy.pageIndex = pageIndex;
+        getDiscoverMovies(discoverBy).then(json => {
+          tempMovies = [...tempMovies, ...json.results];
+          setMovies(tempMovies);
+        })
+      }
+    });
   }, [route.params])
 
   return (

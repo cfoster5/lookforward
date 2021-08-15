@@ -75,13 +75,13 @@ export async function getHypedGames(): Promise<IGDB.Game.Game[]> {
   return response.json();
 }
 
-export async function getDiscoverMovies({ genreId, companyId, keywordId, pageIndex }: { genreId?: number, companyId?: number, keywordId?: number, pageIndex: number }) {
+export async function getDiscoverMovies({ genreId, companyId, keywordId, pageIndex }: { genreId?: number, companyId?: number, keywordId?: number, pageIndex?: number }) {
   let filter = "";
   filter += genreId ? `&with_genres=${genreId}` : ``;
   filter += companyId ? `&with_companies=${companyId}` : ``;
   filter += keywordId ? `&with_keywords=${keywordId}` : ``;
 
-  const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1${filter}&region=US&sort_by=primary_release_date.desc&page=${pageIndex ? pageIndex : 1}`);
+  const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1${filter}&region=US&sort_by=popularity.desc&page=${pageIndex ? pageIndex : 1}`);
   const json: TMDB.Movie.Response = await response.json();
   // return json.results;
   return json;

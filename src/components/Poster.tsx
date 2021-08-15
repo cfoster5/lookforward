@@ -21,7 +21,7 @@ function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
       }
       {item.poster_path
         ? <FastImage
-          style={{ ...reusableStyles.itemRight, opacity: moment(item.release_date) >= moment() ? 1 : .5 }}
+          style={{ ...reusableStyles.itemRight }}
           source={{ uri: `https://image.tmdb.org/t/p/w300${item.poster_path}` }}
         />
         : <TextPoster text={item.title} upcomingRelease={moment(item.release_date) >= moment()} />
@@ -62,8 +62,7 @@ function TextPoster({ text, upcomingRelease }: { text: string, upcomingRelease: 
         borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0",
         flexDirection: 'row',
         alignItems: "center",
-        justifyContent: 'center',
-        opacity: upcomingRelease ? 1 : .5
+        justifyContent: 'center'
       }}
     >
       <Text style={colorScheme === "dark" ? { ...iOSUIKit.title3EmphasizedWhiteObject, textAlign: "center" } : { ...iOSUIKit.title3EmphasizedObject, color: iOSColors.gray, textAlign: "center" }}>

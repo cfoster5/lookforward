@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { View, Platform, FlatList, ActivityIndicator } from 'react-native';
+import { View, Platform, FlatList, ActivityIndicator, Text } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames } from '../helpers/requests';
+import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getPopularPeople } from '../helpers/requests';
 import { IGDB, Navigation, TMDB } from '../../types';
 import Poster from '../components/Poster';
 import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
@@ -13,6 +13,8 @@ import GameContext from '../contexts/GamePlatformPickerContexts';
 import GameReleaseModal from '../components/GamePlatformPicker';
 import { Modalize } from 'react-native-modalize';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { iOSColors, iOSUIKit } from 'react-native-typography';
+import SearchPerson from '../components/SearchPerson';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
@@ -33,6 +35,7 @@ function Search({ navigation, route }: Props) {
   const modalizeRef = useRef<Modalize>(null)
   const [game, setGame] = useState();
   const tabBarheight = useBottomTabBarHeight();
+  const [popularPeople, setPopularPeople] = useState();
 
   useEffect(() => {
     let isMounted = true;
@@ -56,6 +59,12 @@ function Search({ navigation, route }: Props) {
         })
       }
     });
+
+    getPopularPeople().then(json => {
+      console.log(`trending`, json)
+      setPopularPeople(json);
+    })
+
     getUpcomingGameReleases().then(async releaseDates => {
       await convertReleasesToGames(releaseDates).then(games => {
         if (isMounted) {
@@ -126,7 +135,6 @@ function Search({ navigation, route }: Props) {
         <SearchBar
           cancelIcon={{ color: "white" }}
           clearIcon={Platform.OS === "android" ? { color: "white" } : undefined}
-          placeholder="Search"
           containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: Platform.OS === "ios" ? 8 : 16, paddingVertical: 16 } : { marginHorizontal: 8 }}
           inputContainerStyle={colorScheme === "dark" ? { backgroundColor: "rgb(28, 28, 31)", height: 36 } : {}}
           // placeholderTextColor={colorScheme === "dark" ? "#999999" : undefined}
@@ -137,6 +145,7 @@ function Search({ navigation, route }: Props) {
           leftIconContainerStyle={{ marginLeft: 6 }}
           inputStyle={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, marginLeft: 0 } : {}}
           cancelButtonProps={colorScheme === "dark" ? { buttonTextStyle: { color: iOSColors.blue } } : {}}
+          placeholder={categoryIndex === 0 ? "Movies & People" : "Search"}
           onChangeText={value => setSearchValue(value)}
           value={searchValue}
           platform={Platform.OS === "ios" ? "ios" : "android"}
@@ -161,7 +170,7 @@ function Search({ navigation, route }: Props) {
           movies.length > 0
             ?
             <FlatList
-              data={movies}
+              data={movies.filter(movie => movie.media_type === "movie").length ? movies.filter(movie => movie.media_type === "movie") : initMovies}
               renderItem={({ item }: { item: TMDB.Movie.Movie }) => (
                 <Poster
                   navigation={navigation}
@@ -176,6 +185,19 @@ function Search({ navigation, route }: Props) {
               keyExtractor={(item, index) => item.id.toString()}
               initialNumToRender={6}
               scrollIndicatorInsets={Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined}
+              ListHeaderComponent={
+                <>
+                  <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>{movies.filter(movie => movie.media_type === "person").length ? "People" : "Popular People"}</Text>
+                  <FlatList
+                    data={movies.filter(movie => movie.media_type === "person").length ? movies.filter(movie => movie.media_type === "person") : popularPeople}
+                    renderItem={person => <SearchPerson navigation={navigation} person={person.item} />}
+                    horizontal={true}
+                    contentContainerStyle={{ marginBottom: 16 }}
+                  // style={{ marginHorizontal: 16, marginBottom: 16 }}
+                  />
+                  <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>{movies.filter(movie => movie.media_type === "movie").length ? "Movies" : "Upcoming Movies"}</Text>
+                </>
+              }
             />
             :
             <View style={{ flex: 1, justifyContent: "center" }}>

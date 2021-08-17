@@ -60,4 +60,12 @@ export const reusableStyles = StyleSheet.create({
     borderRadius: 8,
     resizeMode: "stretch"
   },
+  searchCredit: {
+    // width: (Dimensions.get("window").width / 3) - 32, // is 50% of container width
+    width: (Dimensions.get("window").width / 3.5) - 32, // is 50% of container width
+    // height: (4 / 3) * ((Dimensions.get("window").width / 3) - 32),
+    height: (625 / 417) * ((Dimensions.get("window").width / 3.5) - 32),
+    borderRadius: 8,
+    marginBottom: 8
+  },
 })

@@ -126,13 +126,17 @@ function Search({ navigation, route }: Props) {
         <SearchBar
           cancelIcon={{ color: "white" }}
           clearIcon={Platform.OS === "android" ? { color: "white" } : undefined}
-          containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: Platform.OS === "ios" ? 8 : 16 } : { marginHorizontal: 8 }}
-          inputContainerStyle={colorScheme === "dark" ? { backgroundColor: "#1f1f1f" } : {}}
-          placeholderTextColor={colorScheme === "dark" ? "#999999" : undefined}
-          searchIcon={colorScheme === "dark" ? { color: "#999999" } : {}}
-          inputStyle={colorScheme === "dark" ? { color: "white" } : {}}
-          cancelButtonProps={colorScheme === "dark" ? { buttonTextStyle: { color: "#428cff" } } : {}}
           placeholder="Search"
+          containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: Platform.OS === "ios" ? 8 : 16, paddingVertical: 16 } : { marginHorizontal: 8 }}
+          inputContainerStyle={colorScheme === "dark" ? { backgroundColor: "rgb(28, 28, 31)", height: 36 } : {}}
+          // placeholderTextColor={colorScheme === "dark" ? "#999999" : undefined}
+          placeholderTextColor={colorScheme === "dark" ? "rgb(141, 142, 146)" : undefined}
+          // searchIcon={colorScheme === "dark" ? { color: "#999999" } : {}}
+          searchIcon={colorScheme === "dark" ? { color: "rgb(149, 153, 162)" } : {}}
+          // inputStyle={colorScheme === "dark" ? { color: "white" } : {}}
+          leftIconContainerStyle={{ marginLeft: 6 }}
+          inputStyle={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, marginLeft: 0 } : {}}
+          cancelButtonProps={colorScheme === "dark" ? { buttonTextStyle: { color: iOSColors.blue } } : {}}
           onChangeText={value => setSearchValue(value)}
           value={searchValue}
           platform={Platform.OS === "ios" ? "ios" : "android"}

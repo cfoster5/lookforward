@@ -13,6 +13,7 @@ import GameContext from '../contexts/GamePlatformPickerContexts';
 import GameReleaseModal from '../components/GamePlatformPicker';
 import { Modalize } from 'react-native-modalize';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
+import { iOSColors, iOSUIKit } from 'react-native-typography';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,

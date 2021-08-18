@@ -6,12 +6,13 @@ import {
   Text,
   Platform,
   Dimensions,
-  ActivityIndicator
+  ActivityIndicator,
+  StyleSheet
 } from 'react-native';
 import { Navigation, TMDB } from '../../types';
 import { getPerson } from '../helpers/requests';
 import { reusableStyles } from '../helpers/styles';
-import { iOSUIKit } from 'react-native-typography';
+import { iOSColors, iOSUIKit } from 'react-native-typography';
 import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import ThemeContext from '../contexts/ThemeContext';
@@ -81,7 +82,9 @@ function Actor({ route, navigation }: Props) {
         onPress={() => setSelectedJob(job)}
         style={{
           backgroundColor: selectedJob === job ? "rgb(91, 91, 96)" : undefined,
+          // backgroundColor: selectedJob === job ? iOSColors.blue : undefined,
           borderColor: selectedJob !== job ? "rgb(91, 91, 96)" : undefined,
+          // borderColor: selectedJob === job ? iOSColors.blue : "rgb(91, 91, 96)",
           borderWidth: 1,
           borderRadius: 16,
           paddingHorizontal: 24,
@@ -92,6 +95,8 @@ function Actor({ route, navigation }: Props) {
         }}
       >
         <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{job}</Text>
+        {/* <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: selectedJob === job ? "white" : iOSColors.blue } : { ...iOSUIKit.bodyObject }}>{job}</Text> */}
+
       </Pressable>
     )
   }

@@ -136,7 +136,7 @@ function Search({ navigation, route }: Props) {
           cancelIcon={{ color: "white" }}
           clearIcon={Platform.OS === "android" ? { color: "white" } : undefined}
           containerStyle={colorScheme === "dark" ? { backgroundColor: "black", marginHorizontal: Platform.OS === "ios" ? 8 : 16, paddingVertical: 16 } : { marginHorizontal: 8 }}
-          inputContainerStyle={colorScheme === "dark" ? { backgroundColor: "rgb(28, 28, 31)", height: 36 } : {}}
+          inputContainerStyle={colorScheme === "dark" ? (Platform.OS === "android" ? { backgroundColor: "rgb(28, 28, 31)", height: 36, borderRadius: 8 } : { backgroundColor: "rgb(28, 28, 31)", height: 36 }) : {}}
           // placeholderTextColor={colorScheme === "dark" ? "#999999" : undefined}
           placeholderTextColor={colorScheme === "dark" ? "rgb(141, 142, 146)" : undefined}
           // searchIcon={colorScheme === "dark" ? { color: "#999999" } : {}}

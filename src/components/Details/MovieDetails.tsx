@@ -53,6 +53,42 @@ function MovieDetails({ navigation, movie }: Props) {
     return `${months[monthIndex].toUpperCase()} ${new Date(movie.release_date).getUTCDate()}, ${new Date(movie.release_date).getUTCFullYear()}`;
   }
 
+  function DiscoverButton({ genre, company, keyword }: { genre?: TMDB.Genre, company?: TMDB.ProductionCompany, keyword?: any }) {
+    let obj = {};
+    let key = "";
+    if (genre) {
+      obj = genre;
+      key = "genre";
+    }
+    else if (company) {
+      obj = company;
+      key = "company";
+    }
+    else if (keyword) {
+      obj = keyword;
+      key = "keyword";
+    }
+
+    return (
+      <Pressable
+        onPress={() => navigation.push("MovieDiscover", { [key]: obj })}
+        style={{
+          backgroundColor: "rgb(91, 91, 96)",
+          borderRadius: 16,
+          borderWidth: 1,
+          borderColor: "rgb(91, 91, 96)",
+          paddingHorizontal: 24,
+          paddingVertical: 8,
+          marginRight: 8,
+          marginBottom: 16,
+          justifyContent: "center"
+        }}
+      >
+        <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{obj.name}</Text>
+      </Pressable>
+    )
+  }
+
   return (
     <>
       {movieDetails
@@ -73,21 +109,7 @@ function MovieDetails({ navigation, movie }: Props) {
             <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</Text>
             <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
               {movieDetails?.genres?.map((genre, i) =>
-                <Pressable
-                  onPress={() => navigation.push("MovieDiscover", { genre: genre })}
-                  key={i}
-                  style={{
-                    backgroundColor: "rgb(91, 91, 96)",
-                    borderRadius: 16,
-                    paddingHorizontal: 24,
-                    paddingVertical: 8,
-                    marginRight: 8,
-                    marginBottom: 16,
-                    justifyContent: "center"
-                  }}
-                >
-                  <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>
-                </Pressable>
+                <DiscoverButton key={i} genre={genre} />
               )}
             </View>
             <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Status: {movieDetails?.status}</Text>
@@ -129,41 +151,13 @@ function MovieDetails({ navigation, movie }: Props) {
                 <Text style={colorScheme === "dark" ? { ...iOSUIKit.subheadEmphasizedWhiteObject, color: iOSColors.gray, textAlign: "center", marginTop: 16 } : { ...iOSUIKit.bodyObject }}>Production</Text>
                 <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
                   {movieDetails?.production_companies?.map((company, i) => (
-                    <Pressable
-                      onPress={() => navigation.push("MovieDiscover", { company: company })}
-                      key={i}
-                      style={{
-                        backgroundColor: "rgb(91, 91, 96)",
-                        borderRadius: 16,
-                        paddingHorizontal: 24,
-                        paddingVertical: 8,
-                        marginRight: 8,
-                        marginBottom: 16,
-                        justifyContent: "center"
-                      }}
-                    >
-                      <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{company.name}</Text>
-                    </Pressable>
+                    <DiscoverButton key={i} company={company} />
                   ))}
                 </View>
                 <Text style={colorScheme === "dark" ? { ...iOSUIKit.subheadEmphasizedWhiteObject, color: iOSColors.gray, textAlign: "center" } : { ...iOSUIKit.bodyObject }}>Keywords</Text>
                 <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
                   {movieDetails?.keywords?.keywords?.map((keyword, i) => (
-                    <Pressable
-                      onPress={() => navigation.push("MovieDiscover", { keyword: keyword })}
-                      key={i}
-                      style={{
-                        backgroundColor: "rgb(91, 91, 96)",
-                        borderRadius: 16,
-                        paddingHorizontal: 24,
-                        paddingVertical: 8,
-                        marginRight: 8,
-                        marginBottom: 16,
-                        justifyContent: "center"
-                      }}
-                    >
-                      <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{keyword.name}</Text>
-                    </Pressable>
+                    <DiscoverButton key={i} keyword={keyword} />
                   ))}
                 </View>
               </>

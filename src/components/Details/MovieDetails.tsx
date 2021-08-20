@@ -80,7 +80,7 @@ function MovieDetails({ navigation, movie }: Props) {
           paddingHorizontal: 24,
           paddingVertical: 8,
           marginRight: 8,
-          marginBottom: 16,
+          marginTop: 16,
           justifyContent: "center"
         }}
       >
@@ -107,12 +107,12 @@ function MovieDetails({ navigation, movie }: Props) {
             <Text style={colorScheme === "dark" ? iOSUIKit.largeTitleEmphasizedWhite : iOSUIKit.largeTitleEmphasized}>{movie.title}</Text>
             <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
             <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</Text>
-            <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
               {movieDetails?.genres?.map((genre, i) =>
                 <DiscoverButton key={i} genre={genre} />
               )}
             </View>
-            <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject } : { ...iOSUIKit.bodyObject }}>Status: {movieDetails?.status}</Text>
+            <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, marginTop: 16 } : { ...iOSUIKit.bodyObject }}>Status: {movieDetails?.status}</Text>
           </View>
           <CategoryControl
             buttons={["Cast & Crew", "Trailers", "Discover"]}
@@ -149,13 +149,13 @@ function MovieDetails({ navigation, movie }: Props) {
             {detailIndex === 2 &&
               <>
                 <Text style={colorScheme === "dark" ? { ...iOSUIKit.subheadEmphasizedWhiteObject, color: iOSColors.gray, textAlign: "center", marginTop: 16 } : { ...iOSUIKit.bodyObject }}>Production</Text>
-                <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                   {movieDetails?.production_companies?.map((company, i) => (
                     <DiscoverButton key={i} company={company} />
                   ))}
                 </View>
-                <Text style={colorScheme === "dark" ? { ...iOSUIKit.subheadEmphasizedWhiteObject, color: iOSColors.gray, textAlign: "center" } : { ...iOSUIKit.bodyObject }}>Keywords</Text>
-                <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+                <Text style={colorScheme === "dark" ? { ...iOSUIKit.subheadEmphasizedWhiteObject, color: iOSColors.gray, textAlign: "center", marginTop: 16 } : { ...iOSUIKit.bodyObject }}>Keywords</Text>
+                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                   {movieDetails?.keywords?.keywords?.map((keyword, i) => (
                     <DiscoverButton key={i} keyword={keyword} />
                   ))}

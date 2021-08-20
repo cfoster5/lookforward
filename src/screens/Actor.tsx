@@ -106,7 +106,7 @@ function Actor({ route, navigation }: Props) {
       {details
         ?
         <ScrollView
-          contentContainerStyle={Platform.OS === "ios" ? { paddingTop: initHeaderHeight, paddingBottom: tabBarheight } : undefined}
+          contentContainerStyle={Platform.OS === "ios" ? { paddingTop: initHeaderHeight, paddingBottom: tabBarheight - 16 } : undefined}
           scrollIndicatorInsets={Platform.OS === "ios" ? { top: initHeaderHeight - insets.top, bottom: tabBarheight - 16 } : undefined}
         >
           {details?.images?.profiles &&

@@ -35,7 +35,8 @@ function Search({ navigation, route }: Props) {
   const modalizeRef = useRef<Modalize>(null)
   const [game, setGame] = useState();
   const tabBarheight = useBottomTabBarHeight();
-  const [popularPeople, setPopularPeople] = useState();
+  const [triggeredSearch, setTriggeredSearch] = useState(false);
+  const [pageIndex, setPageIndex] = useState(1);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,18 +53,12 @@ function Search({ navigation, route }: Props) {
         getUpcomingMovies(pageIndex).then(json => {
           tempMovies = [...tempMovies, ...json.results];
           if (isMounted) {
-            console.log(`tempMovies.length`, tempMovies.length)
             setInitMovies(tempMovies);
             setMovies(tempMovies);
           };
         })
       }
     });
-
-    getPopularPeople().then(json => {
-      console.log(`trending`, json)
-      setPopularPeople(json);
-    })
 
     getUpcomingGameReleases().then(async releaseDates => {
       await convertReleasesToGames(releaseDates).then(games => {
@@ -97,6 +92,8 @@ function Search({ navigation, route }: Props) {
     //     animated: false
     //   })
     // }
+
+    setTriggeredSearch(false);
   }, [categoryIndex])
 
   useEffect(() => {
@@ -104,21 +101,27 @@ function Search({ navigation, route }: Props) {
     modalizeRef.current?.open()
   }, [game])
 
+  useEffect(() => {
+    setPageIndex(1);
+  }, [triggeredSearch])
+
   async function getMovies() {
-    let tempMovies: TMDB.Movie.Movie[] = [];
     let json = await searchMovies(searchValue);
-    tempMovies = [...tempMovies, ...json.results];
-    for (let pageIndex = 2; pageIndex <= json.total_pages; pageIndex++) {
-      let json = await searchMovies(searchValue, pageIndex);
-      tempMovies = [...tempMovies, ...json.results];
-    }
-    setMovies(tempMovies.sort((a, b) => {
+    setMovies(json.results.sort((a, b) => {
       return b.popularity - a.popularity;
     }));
   }
 
+  useEffect(() => {
+    if (pageIndex > 1 && triggeredSearch) {
+      searchMovies(searchValue, pageIndex).then(json => {
+        setMovies([...movies, ...json.results]);
+      })
+    }
+  }, [pageIndex])
+
   function reinitialize() {
-    if (categoryIndex === 0) { setMovies(initMovies) }
+    if (categoryIndex === 0) { setMovies(initMovies); setTriggeredSearch(false); }
     if (categoryIndex === 1) { setGames(initGames) }
   }
 
@@ -151,8 +154,9 @@ function Search({ navigation, route }: Props) {
           platform={Platform.OS === "ios" ? "ios" : "android"}
           onSubmitEditing={searchValue ? async () => {
             if (categoryIndex === 0) {
+              setTriggeredSearch(true);
               setMovies([]);
-              getMovies()
+              getMovies();
             }
             if (categoryIndex === 1) {
               setGames([]);
@@ -170,7 +174,7 @@ function Search({ navigation, route }: Props) {
           movies.length > 0
             ?
             <FlatList
-              data={movies.filter(movie => movie.media_type === "movie").length ? movies.filter(movie => movie.media_type === "movie") : initMovies}
+              data={triggeredSearch ? movies.filter(movie => movie.media_type === "movie") : initMovies}
               renderItem={({ item }: { item: TMDB.Movie.Movie }) => (
                 <Poster
                   navigation={navigation}
@@ -185,17 +189,34 @@ function Search({ navigation, route }: Props) {
               keyExtractor={(item, index) => item.id.toString()}
               initialNumToRender={6}
               scrollIndicatorInsets={Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined}
+              onEndReached={({ distanceFromEnd }) => setPageIndex(pageIndex + 1)}
+              onEndReachedThreshold={4}
               ListHeaderComponent={
                 <>
-                  <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>{movies.filter(movie => movie.media_type === "person").length ? "People" : "Popular People"}</Text>
-                  <FlatList
-                    data={movies.filter(movie => movie.media_type === "person").length ? movies.filter(movie => movie.media_type === "person") : popularPeople}
-                    renderItem={person => <SearchPerson navigation={navigation} person={person.item} />}
-                    horizontal={true}
-                    contentContainerStyle={{ marginBottom: 16 }}
-                  // style={{ marginHorizontal: 16, marginBottom: 16 }}
-                  />
-                  <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>{movies.filter(movie => movie.media_type === "movie").length ? "Movies" : "Upcoming Movies"}</Text>
+                  {triggeredSearch &&
+                    <>
+                      {movies.filter(movie => movie.media_type === "person").length > 0 &&
+                        <>
+                          <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>People</Text>
+                          <FlatList
+                            keyExtractor={item => item.id.toString()}
+                            data={triggeredSearch ? movies.filter(movie => movie.media_type === "person") : popularPeople}
+                            renderItem={person => <SearchPerson navigation={navigation} person={person.item} />}
+                            horizontal={true}
+                            contentContainerStyle={{ marginBottom: 16 }}
+                            style={{ marginLeft: -16, paddingHorizontal: 16 }}
+                            showsHorizontalScrollIndicator={false}
+                          />
+                        </>
+                      }
+                      {movies.filter(movie => movie.media_type === "movie").length > 0 &&
+                        <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>Movies</Text>
+                      }
+                    </>
+                  }
+                  {!triggeredSearch &&
+                    <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>Coming Soon</Text>
+                  }
                 </>
               }
             />
@@ -226,6 +247,7 @@ function Search({ navigation, route }: Props) {
                 keyExtractor={(item, index) => item.id.toString()}
                 initialNumToRender={6}
                 scrollIndicatorInsets={Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined}
+                ListHeaderComponent={<Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>Coming Soon</Text>}
               />
               <GameReleaseModal modalizeRef={modalizeRef} game={game} />
             </GameContext.Provider>

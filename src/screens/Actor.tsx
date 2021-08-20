@@ -122,7 +122,7 @@ function Actor({ route, navigation }: Props) {
               containerCustomStyle={{ marginTop: 16 }}
             />
           }
-          <View style={{ margin: 16 }}>
+          <View style={Platform.OS === "ios" ? { margin: 16 } : { marginTop: 16, marginHorizontal: 16 }}>
             <Text style={colorScheme === "dark" ? iOSUIKit.largeTitleEmphasizedWhite : iOSUIKit.largeTitleEmphasized}>{details?.name}</Text>
             {details?.birthday &&
               <Text style={reusableStyles.date}>{getBirthday()}</Text>

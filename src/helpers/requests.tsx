@@ -80,16 +80,28 @@ export async function getHypedGames(): Promise<IGDB.Game.Game[]> {
   return response.json();
 }
 
-export async function getDiscoverMovies({ genreId, companyId, keywordId, pageIndex }: { genreId?: number, companyId?: number, keywordId?: number, pageIndex?: number }) {
+export async function getDiscoverMovies({ genreId, companyId, keywordId, sortMethod, watchProvider, pageIndex }: { genreId?: number, companyId?: number, keywordId?: number, sortMethod: string, watchProvider: number, pageIndex?: number }) {
   let filter = "";
   filter += genreId ? `&with_genres=${genreId}` : ``;
   filter += companyId ? `&with_companies=${companyId}` : ``;
   filter += keywordId ? `&with_keywords=${keywordId}` : ``;
+  if (watchProvider === 119) {
+    // Using updated Amazon Prime id
+    watchProvider = 9;
+  }
+  filter += watchProvider !== 0 ? `&with_watch_providers=${watchProvider}` : ``;
 
-  const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1${filter}&region=US&sort_by=popularity.desc&page=${pageIndex ? pageIndex : 1}`);
+  console.log(`filter`, filter)
+
+  const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1${filter}&region=US&watch_region=US&sort_by=${sortMethod}&page=${pageIndex ? pageIndex : 1}`);
   const json: TMDB.Movie.Response = await response.json();
   // return json.results;
   return json;
+}
+
+export async function getMovieWatchProviders() {
+  const response = await fetch(`https://api.themoviedb.org/3/watch/providers/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&watch_region=US`)
+  return await response.json();
 }
 
 // export async function discoverGames({ genreId }): Promise<IGDB.Game.Game[]> {

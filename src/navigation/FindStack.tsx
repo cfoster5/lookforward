@@ -28,7 +28,7 @@ const Stack = createStackNavigator<Navigation.FindStackParamList>();
 export function FindStack({ navigation, route }: Props) {
   return (
     <Stack.Navigator headerMode="screen">
-      <Stack.Screen name="Find" component={Search} />
+      <Stack.Screen name="Find" component={Search} options={{ headerShown: false }} />
       <Stack.Screen
         name="Details"
         component={Details}

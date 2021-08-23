@@ -10,7 +10,7 @@ interface Props {
 function CategoryControl({ buttons, categoryIndex, handleCategoryChange }: Props) {
   return (
     <SegmentedControl
-      style={{ marginHorizontal: 16, paddingVertical: 16 }}
+      style={{ marginHorizontal: 16, paddingVertical: 16, marginTop: 8 }}
       values={buttons}
       selectedIndex={categoryIndex}
       onChange={(event) => {

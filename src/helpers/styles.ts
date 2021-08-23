@@ -61,10 +61,9 @@ export const reusableStyles = StyleSheet.create({
     resizeMode: "stretch"
   },
   searchCredit: {
-    // width: (Dimensions.get("window").width / 3) - 32, // is 50% of container width
-    width: (Dimensions.get("window").width / 3.5) - 32, // is 50% of container width
-    // height: (4 / 3) * ((Dimensions.get("window").width / 3) - 32),
-    height: (625 / 417) * ((Dimensions.get("window").width / 3.5) - 32),
+    // I don't know why 18 works here to center the right-most image but it works on every iOS device tested
+    width: (Dimensions.get("window").width / 3.5) - 18,
+    height: ((Dimensions.get("window").width / 3.5) - 18) * 1.5,
     borderRadius: 8,
     marginBottom: 8
   },

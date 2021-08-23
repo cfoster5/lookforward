@@ -203,8 +203,8 @@ function Search({ navigation, route }: Props) {
                             data={triggeredSearch ? movies.filter(movie => movie.media_type === "person") : popularPeople}
                             renderItem={person => <SearchPerson navigation={navigation} person={person.item} />}
                             horizontal={true}
-                            contentContainerStyle={{ marginBottom: 16 }}
-                            style={{ marginLeft: -16, paddingHorizontal: 16 }}
+                            contentContainerStyle={{ marginBottom: 16, paddingRight: 16 }}
+                            style={{ marginHorizontal: -16, paddingHorizontal: 16 }}
                             showsHorizontalScrollIndicator={false}
                           />
                         </>

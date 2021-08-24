@@ -42,7 +42,7 @@ function GamePoster({ item }: { item: IGDB.Game.Game }) {
       }
       {item.cover?.url
         ? <FastImage
-          style={reusableStyles.itemRight}
+          style={{...reusableStyles.gamePoster, height: (item.cover.height / item.cover.width) * reusableStyles.gamePoster.width}}
           // source={{ uri: `https:${(data as IGDB.ReleaseDate.ReleaseDate)?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}
           source={{ uri: `https:${item.cover?.url.replace("thumb", "cover_big_2x")}` }}
         />

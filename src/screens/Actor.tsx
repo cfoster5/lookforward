@@ -83,7 +83,7 @@ function Actor({ route, navigation }: Props) {
         style={{
           backgroundColor: selectedJob === job ? "rgb(91, 91, 96)" : undefined,
           // backgroundColor: selectedJob === job ? iOSColors.blue : undefined,
-          borderColor: selectedJob !== job ? "rgb(91, 91, 96)" : undefined,
+          borderColor: "rgb(91, 91, 96)",
           // borderColor: selectedJob === job ? iOSColors.blue : "rgb(91, 91, 96)",
           borderWidth: 1,
           borderRadius: 16,

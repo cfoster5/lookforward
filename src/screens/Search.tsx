@@ -15,7 +15,6 @@ import { Modalize } from 'react-native-modalize';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import SearchPerson from '../components/SearchPerson';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
@@ -38,11 +37,6 @@ function Search({ navigation, route }: Props) {
   const tabBarheight = useBottomTabBarHeight();
   const [triggeredSearch, setTriggeredSearch] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
-  const insets = useSafeAreaInsets();
-
-  useEffect(() => {
-    console.log(`insets`, insets)
-  }, [insets])
 
   useEffect(() => {
     let isMounted = true;
@@ -133,7 +127,7 @@ function Search({ navigation, route }: Props) {
 
   return (
     <>
-      <SafeAreaView style={{backgroundColor: colorScheme === "dark" ? "black" : "white" }}>
+      <SafeAreaView style={{ backgroundColor: colorScheme === "dark" ? "black" : "white" }}>
         <CategoryControl
           buttons={['Movies', 'Games']}
           categoryIndex={categoryIndex}

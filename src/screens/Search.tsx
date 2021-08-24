@@ -206,7 +206,7 @@ function Search({ navigation, route }: Props) {
                           <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>People</Text>
                           <FlatList
                             keyExtractor={item => item.id.toString()}
-                            data={triggeredSearch ? movies.filter(movie => movie.media_type === "person") : popularPeople}
+                            data={movies.filter(movie => movie.media_type === "person")}
                             renderItem={person => <SearchPerson navigation={navigation} person={person.item} />}
                             horizontal={true}
                             contentContainerStyle={{ marginBottom: 16, paddingRight: 16 }}

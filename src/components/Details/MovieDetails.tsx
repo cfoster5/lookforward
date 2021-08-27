@@ -4,7 +4,6 @@ import {
   View,
   Dimensions,
   Text,
-  Pressable,
   Platform,
   ActivityIndicator
 } from 'react-native';
@@ -21,6 +20,7 @@ import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
 import ThemeContext from '../../contexts/ThemeContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ButtonSingleState from '../ButtonSingleState';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
@@ -70,22 +70,10 @@ function MovieDetails({ navigation, movie }: Props) {
     }
 
     return (
-      <Pressable
+      <ButtonSingleState
+        text={obj.name}
         onPress={() => navigation.push("MovieDiscover", { [key]: obj })}
-        style={{
-          backgroundColor: "rgb(91, 91, 96)",
-          borderRadius: 16,
-          borderWidth: 1,
-          borderColor: "rgb(91, 91, 96)",
-          paddingHorizontal: 24,
-          paddingVertical: 8,
-          marginRight: 8,
-          marginTop: 16,
-          justifyContent: "center"
-        }}
-      >
-        <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{obj.name}</Text>
-      </Pressable>
+      />
     )
   }
 

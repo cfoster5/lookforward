@@ -5,19 +5,20 @@ import {
   ActivityIndicator,
   FlatList,
   Platform,
-  Pressable,
-  ScrollView,
   Text,
   View
 } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { Modalize } from 'react-native-modalize';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { HeaderButton, HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { TMDB } from '../../types';
+import ButtonMultiState from '../components/ButtonMultiState';
 import Poster from '../components/Poster';
 import ThemeContext from '../contexts/ThemeContext';
+import { targetedProviders } from '../helpers/helpers';
 import { getDiscoverMovies, getMovieWatchProviders } from '../helpers/requests';
 
 interface MovieWatchProvider {
@@ -28,6 +29,7 @@ interface MovieWatchProvider {
 }
 
 function MovieDiscover({ route, navigation }: any) {
+  const { genre, company, keyword, provider } = route.params;
   const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([]);
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
@@ -48,6 +50,12 @@ function MovieDiscover({ route, navigation }: any) {
   ]);
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] = useState<number>(0);
 
+  useEffect(() => {
+    if (provider) {
+      setSelectedMovieWatchProvider(provider.provider_id)
+    }
+  }, [provider])
+
   const sortOptions = [
     { actual: "popularity.desc", friendly: "Popularity", direction: "Down" },
     { actual: "release_date.desc", friendly: "Release Date", direction: "Down" },
@@ -66,24 +74,6 @@ function MovieDiscover({ route, navigation }: any) {
     // "vote_count.desc"
   ]
 
-  const targetedProviders = [
-    "Any",
-    "Netflix",
-    "Apple iTunes",
-    "Apple TV Plus",
-    "Amazon Prime Video",
-    "Amazon Video",
-    "Disney Plus",
-    // "Starz",
-    "Hulu",
-    "HBO Max",
-    // "Showtime",
-    "Google Play Movies",
-    "YouTube",
-    "Microsoft Store",
-    // "Paramount Plus"
-  ]
-
   useEffect(() => {
     getMovieWatchProviders().then((json: { results: MovieWatchProvider[] }) => setMovieWatchProviders([...movieWatchProviders, ...json.results]))
   }, [])
@@ -94,7 +84,7 @@ function MovieDiscover({ route, navigation }: any) {
     }
   }, [headerHeight])
 
-  const IoniconsHeaderButton = (props: JSX.IntrinsicAttributes & JSX.IntrinsicClassAttributes<HeaderButton> & Readonly<HeaderButtonProps> & Readonly<any>) => (
+  const IoniconsHeaderButton = (props) => (
     // the `props` here come from <Item ... />
     // you may access them and pass something else to `HeaderButton` if you like
     // <HeaderButton IconComponent={Ionicons} iconSize={30} color={route.params.inCountdown ? iOSColors.red : iOSColors.blue} {...props} />
@@ -116,13 +106,15 @@ function MovieDiscover({ route, navigation }: any) {
   }, [navigation]);
 
   useEffect(() => {
-    const { genre, company, keyword } = route.params;
-    // console.log(`genre`, genre)
-    // console.log(`company`, company)
-    // console.log(`keyword`, keyword)
     setMovies([]);
     let title = "";
-    let discoverBy = { sortMethod: sortMethod, watchProvider: selectedMovieWatchProvider };
+    let discoverBy = {
+      genreId: undefined,
+      companyId: undefined,
+      keywordId: undefined,
+      watchProvider: selectedMovieWatchProvider,
+      sortMethod: sortMethod
+    };
     if (genre) {
       title = genre.name
       discoverBy.genreId = genre.id;
@@ -135,6 +127,17 @@ function MovieDiscover({ route, navigation }: any) {
       title = keyword.name
       discoverBy.keywordId = keyword.id;
     }
+    else if (provider) {
+      if (provider.provider_id !== selectedMovieWatchProvider) {
+        title = movieWatchProviders.find((provider, i) => provider.provider_id === selectedMovieWatchProvider)?.provider_name;
+        discoverBy.watchProvider = selectedMovieWatchProvider;
+      }
+      else {
+        title = provider.provider_name;
+        discoverBy.watchProvider = provider.provider_id;
+      }
+    }
+
     navigation.setOptions({ title: title });
     getDiscoverMovies(discoverBy).then(json => {
       setMovies(json.results);
@@ -143,12 +146,18 @@ function MovieDiscover({ route, navigation }: any) {
         animated: false
       })
     })
-  }, [route.params, sortMethod, selectedMovieWatchProvider])
+  }, [genre, company, keyword, sortMethod, selectedMovieWatchProvider])
 
   useEffect(() => {
     if (pageIndex > 1) {
-      const { genre, company, keyword } = route.params;
-      let discoverBy = { sortMethod: sortMethod, watchProvider: selectedMovieWatchProvider };
+      let discoverBy = {
+        genreId: undefined,
+        companyId: undefined,
+        keywordId: undefined,
+        watchProvider: selectedMovieWatchProvider,
+        sortMethod: sortMethod,
+        pageIndex: 1
+      };
       if (genre) {
         discoverBy.genreId = genre.id;
       }
@@ -158,61 +167,20 @@ function MovieDiscover({ route, navigation }: any) {
       else if (keyword) {
         discoverBy.keywordId = keyword.id;
       }
+      else if (provider) {
+        if (provider.provider_id !== selectedMovieWatchProvider) {
+          discoverBy.watchProvider = selectedMovieWatchProvider;
+        }
+        else {
+          discoverBy.watchProvider = provider.provider_id;
+        }
+      }
       discoverBy.pageIndex = pageIndex;
       getDiscoverMovies(discoverBy).then(json => {
         setMovies([...movies, ...json.results]);
       })
     }
   }, [pageIndex])
-
-  function SortMethod({ method, isLast }: { method: { actual: string, friendly: string, direction: "Up" | "Down" }, isLast?: boolean }) {
-    return (
-      <Pressable
-        onPress={() => setSortMethod(method.actual)}
-        style={{
-          backgroundColor: sortMethod === method.actual ? "rgb(91, 91, 96)" : undefined,
-          borderColor: sortMethod !== method.actual ? "rgb(91, 91, 96)" : undefined,
-          borderWidth: 1,
-          borderRadius: 16,
-          paddingHorizontal: 24,
-          paddingVertical: 8,
-          marginRight: !isLast ? 8 : 0,
-          marginTop: 16,
-          justifyContent: "center"
-        }}
-      >
-        <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>
-          {method.friendly}
-          <Ionicons name={method.direction === "Up" ? "arrow-up" : "arrow-down"} color="white" />
-        </Text>
-
-      </Pressable>
-    )
-  }
-
-  function WatchProvider({ provider }: { provider: MovieWatchProvider }) {
-    return (
-      <Pressable
-        onPress={() => setSelectedMovieWatchProvider(provider.provider_id)}
-        style={{
-          backgroundColor: selectedMovieWatchProvider === provider.provider_id ? "rgb(91, 91, 96)" : undefined,
-          borderColor: selectedMovieWatchProvider !== provider.provider_id ? "rgb(91, 91, 96)" : undefined,
-          borderWidth: 1,
-          borderRadius: 16,
-          paddingHorizontal: 24,
-          paddingVertical: 8,
-          marginRight: 8,
-          marginTop: 16,
-          justifyContent: "center"
-        }}
-      >
-        <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>
-          {provider.provider_name}
-        </Text>
-
-      </Pressable>
-    )
-  }
 
   return (
     <>
@@ -263,31 +231,57 @@ function MovieDiscover({ route, navigation }: any) {
         modalStyle={colorScheme === "dark" ? { backgroundColor: "#121212" } : {}}
       >
         <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginTop: 16, marginHorizontal: 16 }}>Sort by</Text>
-        <FlatList
-          contentContainerStyle={{ alignSelf: 'flex-start', paddingHorizontal: 16 }}
-          numColumns={sortOptions.length / 2}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          data={sortOptions}
-          renderItem={({ item }) => <SortMethod method={item} />}
-          directionalLockEnabled={true}
-        />
+        {/* Wrap FlatList in ScrollView with horizontal prop so that scrollEnabled within FlatList can be disabled  */}
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <FlatList
+            scrollEnabled={false}
+            contentContainerStyle={{ alignSelf: 'flex-start', paddingLeft: 16, paddingRight: 8 }}
+            numColumns={Math.ceil(sortOptions.length / 2)}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={sortOptions}
+            renderItem={({ item }) =>
+              <ButtonMultiState
+                text={item.friendly}
+                selectedVal={sortMethod}
+                onPress={() => setSortMethod(item.actual)}
+                test={item.actual}
+                children={
+                  <Ionicons
+                    name={item.direction === "Up" ? "arrow-up" : "arrow-down"}
+                    color="white"
+                  />
+                }
+              />
+            }
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </ScrollView>
         <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginTop: 16, marginHorizontal: 16 }}>Provider</Text>
-        <FlatList
-          contentContainerStyle={{ alignSelf: 'flex-start', paddingHorizontal: 16 }}
-          numColumns={targetedProviders.length / 3}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          data={movieWatchProviders
-            .filter(provider => targetedProviders.indexOf(provider.provider_name) > -1)
-            .filter((v, i, a) => a.findIndex(t => (t.provider_name === v.provider_name)) === i)
-            .sort((a, b) => {
-              return b.provider_name < a.provider_name;
-            })}
-          renderItem={({ item }) => <WatchProvider provider={item} />}
-          keyExtractor={item => item.provider_id.toString()}
-          directionalLockEnabled={true}
-        />
+        {/* Wrap FlatList in ScrollView with horizontal prop so that scrollEnabled within FlatList can be disabled  */}
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <FlatList
+            scrollEnabled={false}
+            contentContainerStyle={{ alignSelf: 'flex-start', paddingLeft: 16, paddingRight: 8 }}
+            numColumns={Math.ceil(targetedProviders.length / 3)}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={movieWatchProviders
+              .filter(provider => targetedProviders.indexOf(provider.provider_name) > -1)
+              .filter((v, i, a) => a.findIndex(t => (t.provider_name === v.provider_name)) === i)
+              .sort((a, b) => b.provider_name < a.provider_name)
+            }
+            renderItem={({ item }) =>
+              <ButtonMultiState
+                text={item.provider_name}
+                selectedVal={selectedMovieWatchProvider}
+                onPress={() => setSelectedMovieWatchProvider(item.provider_id)}
+                test={item.provider_id}
+              />
+            }
+            keyExtractor={item => item.provider_id.toString()}
+          />
+        </ScrollView>
       </Modalize>
     </>
   );

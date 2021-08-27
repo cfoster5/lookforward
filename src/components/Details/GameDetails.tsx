@@ -4,8 +4,7 @@ import {
   View,
   Dimensions,
   Text,
-  Platform,
-  Pressable
+  Platform
 } from 'react-native';
 
 import { IGDB, Navigation } from '../../../types';
@@ -19,6 +18,7 @@ import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
 import ThemeContext from '../../contexts/ThemeContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import ButtonSingleState from '../ButtonSingleState';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,
@@ -72,23 +72,13 @@ function GameDetails({ navigation, game }: Props) {
           <Text style={colorScheme === "dark" ? iOSUIKit.largeTitleEmphasizedWhite : iOSUIKit.largeTitleEmphasized}>{game.name}</Text>
           <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
           <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{game.summary}</Text>
-          <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
+          <View style={{ flexDirection: "row", paddingBottom: 16, flexWrap: "wrap" }}>
             {game?.genres?.map((genre, i) =>
-              <Pressable
-                onPress={() => navigation.push("GameDiscover", { genre: genre })}
+              <ButtonSingleState
                 key={i}
-                style={{
-                  backgroundColor: "rgb(91, 91, 96)",
-                  borderRadius: 16,
-                  paddingHorizontal: 24,
-                  paddingVertical: 8,
-                  marginRight: 8,
-                  marginBottom: 16,
-                  justifyContent: "center"
-                }}
-              >
-                <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{genre.name}</Text>
-              </Pressable>
+                text={genre.name}
+                onPress={() => navigation.push("GameDiscover", { genre: genre })}
+              />
             )}
           </View>
         </View>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { View, Platform, FlatList, ActivityIndicator, Text, SafeAreaView } from 'react-native';
+import { View, Platform, FlatList, ActivityIndicator, Text, SafeAreaView, Pressable } from 'react-native';
 import { SearchBar } from 'react-native-elements';
-import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getPopularPeople } from '../helpers/requests';
+import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getPopularPeople, getTrendingMovies, getPopularMovies, getNowPlayingMovies } from '../helpers/requests';
 import { IGDB, Navigation, TMDB } from '../../types';
 import Poster from '../components/Poster';
 import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
@@ -15,6 +15,8 @@ import { Modalize } from 'react-native-modalize';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import SearchPerson from '../components/SearchPerson';
+import MovieSearchModal from '../components/MovieSearchModal';
+import MovieSearchFilterContext from '../contexts/MovieSearchFilterContexts';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,
@@ -37,6 +39,8 @@ function Search({ navigation, route }: Props) {
   const tabBarheight = useBottomTabBarHeight();
   const [triggeredSearch, setTriggeredSearch] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
+  const filterModalRef = useRef<Modalize>(null);
+  const [selectedOption, setSelectedOption] = useState("Coming Soon");
 
   useEffect(() => {
     let isMounted = true;
@@ -46,19 +50,19 @@ function Search({ navigation, route }: Props) {
     //     setMovies(movies);
     //   };
     // })
-    let tempMovies: TMDB.Movie.Movie[] = [];
-    getUpcomingMovies().then(json => {
-      tempMovies = [...tempMovies, ...json.results];
-      for (let pageIndex = 2; pageIndex <= json.total_pages; pageIndex++) {
-        getUpcomingMovies(pageIndex).then(json => {
-          tempMovies = [...tempMovies, ...json.results];
-          if (isMounted) {
-            setInitMovies(tempMovies);
-            setMovies(tempMovies);
-          };
-        })
-      }
-    });
+    // let tempMovies: TMDB.Movie.Movie[] = [];
+    // getUpcomingMovies().then(json => {
+    //   tempMovies = [...tempMovies, ...json.results];
+    //   for (let pageIndex = 2; pageIndex <= json.total_pages; pageIndex++) {
+    //     getUpcomingMovies(pageIndex).then(json => {
+    //       tempMovies = [...tempMovies, ...json.results];
+    //       if (isMounted) {
+    //         setInitMovies(tempMovies);
+    //         setMovies(tempMovies);
+    //       };
+    //     })
+    //   }
+    // });
 
     getUpcomingGameReleases().then(async releaseDates => {
       await convertReleasesToGames(releaseDates).then(games => {
@@ -118,12 +122,58 @@ function Search({ navigation, route }: Props) {
         setMovies([...movies, ...json.results]);
       })
     }
+    if (pageIndex > 1 && !triggeredSearch && selectedOption === "Coming Soon") {
+      getUpcomingMovies(pageIndex).then(json => {
+        setInitMovies([...initMovies, ...json.results]);
+        setMovies([...movies, ...json.results]);
+      })
+    }
+    if (pageIndex > 1 && !triggeredSearch && selectedOption === "Now Playing") {
+      getNowPlayingMovies(pageIndex).then(json => {
+        setInitMovies([...initMovies, ...json.results]);
+        setMovies([...movies, ...json.results]);
+      })
+    }
+    if (pageIndex > 1 && !triggeredSearch && selectedOption === "Popular") {
+      getPopularMovies(pageIndex).then(json => {
+        setInitMovies([...initMovies, ...json.results]);
+        setMovies([...movies, ...json.results]);
+      })
+    }
+    if (pageIndex > 1 && !triggeredSearch && selectedOption === "Trending") {
+      getTrendingMovies(pageIndex).then(json => {
+        setInitMovies([...initMovies, ...json.results]);
+        setMovies([...movies, ...json.results]);
+      })
+    }
   }, [pageIndex])
 
   function reinitialize() {
     if (categoryIndex === 0) { setMovies(initMovies); setTriggeredSearch(false); }
     if (categoryIndex === 1) { setGames(initGames) }
   }
+
+  useEffect(() => {
+    setPageIndex(1);
+    setInitMovies([]);
+    setMovies([]);
+    filterModalRef.current?.close();
+    if (selectedOption === "Coming Soon") {
+      getUpcomingMovies().then(json => { setInitMovies(json.results); setMovies(json.results); });
+    }
+    if (selectedOption === "Now Playing") {
+      getNowPlayingMovies().then(json => { setInitMovies(json.results); setMovies(json.results); });
+    }
+    if (selectedOption === "Popular") {
+      getPopularMovies().then(json => { setInitMovies(json.results); setMovies(json.results); });
+    }
+    // if (selectedOption === "Top Rated") {
+    //   getTopRatedMovies().then(json => { setInitMovies(json); setMovies(json) });
+    // }
+    if (selectedOption === "Trending") {
+      getTrendingMovies().then(json => { setInitMovies(json.results); setMovies(json.results); });
+    }
+  }, [selectedOption])
 
   return (
     <>
@@ -147,7 +197,7 @@ function Search({ navigation, route }: Props) {
           // inputStyle={colorScheme === "dark" ? { color: "white" } : {}}
           leftIconContainerStyle={{ marginLeft: 6 }}
           inputStyle={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, marginLeft: 0 } : {}}
-          cancelButtonProps={colorScheme === "dark" ? { buttonTextStyle: { color: iOSColors.blue } } : {}}
+          cancelButtonProps={colorScheme === "dark" ? { buttonTextStyle: { color: iOSColors.blue, fontSize: iOSUIKit.bodyObject.fontSize } } : {}}
           placeholder={categoryIndex === 0 ? "Movies & People" : "Search"}
           onChangeText={value => setSearchValue(value)}
           value={searchValue}
@@ -170,8 +220,8 @@ function Search({ navigation, route }: Props) {
 
       {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}
       {categoryIndex === 0 &&
-        (
-          movies.length > 0
+        <MovieSearchFilterContext.Provider value={{ selectedOption, setSelectedOption }}>
+          {movies.length > 0
             ?
             <FlatList
               data={triggeredSearch ? movies.filter(movie => movie.media_type === "movie") : initMovies}
@@ -215,7 +265,20 @@ function Search({ navigation, route }: Props) {
                     </>
                   }
                   {!triggeredSearch &&
-                    <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>Coming Soon</Text>
+                    <View
+                      style={{
+                        flex: 1,
+                        marginBottom: 16,
+                        flexDirection: "row",
+                        flexWrap: "nowrap",
+                        justifyContent: "space-between"
+                      }}
+                    >
+                      <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject }}>{selectedOption}</Text>
+                      <Pressable onPress={() => filterModalRef.current?.open()}>
+                        <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.blue }}>More</Text>
+                      </Pressable>
+                    </View>
                   }
                 </>
               }
@@ -224,7 +287,9 @@ function Search({ navigation, route }: Props) {
             <View style={{ flex: 1, justifyContent: "center" }}>
               <ActivityIndicator size="large" />
             </View>
-        )
+          }
+          <MovieSearchModal navigation={navigation} filterModalRef={filterModalRef} selectedOption={selectedOption} />
+        </MovieSearchFilterContext.Provider>
       }
       {categoryIndex === 1 &&
         (
@@ -247,7 +312,7 @@ function Search({ navigation, route }: Props) {
                 keyExtractor={(item, index) => item.id.toString()}
                 initialNumToRender={6}
                 scrollIndicatorInsets={Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined}
-                ListHeaderComponent={<Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 8 }}>Coming Soon</Text>}
+                ListHeaderComponent={<Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject, marginBottom: 16 }}>Coming Soon</Text>}
               />
               <GameReleaseModal modalizeRef={modalizeRef} game={game} />
             </GameContext.Provider>

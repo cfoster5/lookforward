@@ -17,6 +17,24 @@ export const months = [
   'December'
 ]
 
+export const targetedProviders = [
+  "Any",
+  "Netflix",
+  "Apple iTunes",
+  "Apple TV Plus",
+  "Amazon Prime Video",
+  "Amazon Video",
+  "Disney Plus",
+  // "Starz",
+  "Hulu",
+  "HBO Max",
+  // "Showtime",
+  "Google Play Movies",
+  "YouTube",
+  "Microsoft Store",
+  // "Paramount Plus"
+]
+
 export async function convertReleasesToGames(releaseDates: IGDB.ReleaseDate.ReleaseDate[]): Promise<IGDB.Game.Game[]> {
   // Converts releases into one game with many releases
   // console.log(releaseDates)

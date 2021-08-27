@@ -17,9 +17,9 @@ function Welcome() {
 
   useEffect(() => {
     let isMounted = true;
-    getTrendingMovies().then(movies => {
+    getTrendingMovies().then(json => {
       if (isMounted) {
-        setTrendingMovies(movies);
+        setTrendingMovies(json.results);
       }
     })
     getHypedGames().then(games => {

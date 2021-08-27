@@ -6,13 +6,12 @@ import {
   Text,
   Platform,
   Dimensions,
-  ActivityIndicator,
-  StyleSheet
+  ActivityIndicator
 } from 'react-native';
 import { Navigation, TMDB } from '../../types';
 import { getPerson } from '../helpers/requests';
 import { reusableStyles } from '../helpers/styles';
-import { iOSColors, iOSUIKit } from 'react-native-typography';
+import { iOSUIKit } from 'react-native-typography';
 import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
 import { RouteProp } from '@react-navigation/native';
 import ThemeContext from '../contexts/ThemeContext';
@@ -22,6 +21,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { months } from '../helpers/helpers';
 import Carousel from 'react-native-snap-carousel';
 import Poster from '../components/Poster';
+import ButtonMultiState from '../components/ButtonMultiState';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Actor'>,
@@ -76,31 +76,6 @@ function Actor({ route, navigation }: Props) {
     )
   }
 
-  function Job({ job, isLast }: { job: string, isLast?: boolean }) {
-    return (
-      <Pressable
-        onPress={() => setSelectedJob(job)}
-        style={{
-          backgroundColor: selectedJob === job ? "rgb(91, 91, 96)" : undefined,
-          // backgroundColor: selectedJob === job ? iOSColors.blue : undefined,
-          borderColor: "rgb(91, 91, 96)",
-          // borderColor: selectedJob === job ? iOSColors.blue : "rgb(91, 91, 96)",
-          borderWidth: 1,
-          borderRadius: 16,
-          paddingHorizontal: 24,
-          paddingVertical: 8,
-          marginRight: !isLast ? 8 : 0,
-          marginBottom: 16,
-          justifyContent: "center"
-        }}
-      >
-        <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" } : { ...iOSUIKit.bodyObject }}>{job}</Text>
-        {/* <Text style={colorScheme === "dark" ? { ...iOSUIKit.footnoteEmphasizedObject, color: selectedJob === job ? "white" : iOSColors.blue } : { ...iOSUIKit.bodyObject }}>{job}</Text> */}
-
-      </Pressable>
-    )
-  }
-
   return (
     <>
       {details
@@ -135,22 +110,12 @@ function Actor({ route, navigation }: Props) {
                 {details?.biography ? details?.biography : "No biography yet! Come back later!"}
               </Text>
             </Pressable>
-            <View style={{ flexDirection: "row", paddingTop: 16, flexWrap: "wrap" }}>
-              <Job job="Actor" />
-              {/* {details?.movie_credits.crew.sort((a, b) => b.job < a.job).map((credit, i) => (
-                i > 0 && credit.job !== details?.movie_credits.crew.sort((a, b) => b.job < a.job)[i - 1].job && */}
+            <View style={{ flexDirection: "row", paddingBottom: 16, flexWrap: "wrap" }}>
+              <ButtonMultiState text="Actor" selectedVal={selectedJob} onPress={() => setSelectedJob("Actor")} />
               {details?.movie_credits.crew.filter((v, i, a) => a.findIndex(t => (t.job === v.job)) === i).sort((a, b) => b.job < a.job).map((credit, i) => (
-                <Job key={i} job={credit.job} />
+                <ButtonMultiState key={i} text={credit.job} selectedVal={selectedJob} onPress={() => setSelectedJob(credit.job)} />
               ))}
             </View>
-
-            {/* <ScrollView horizontal={true} style={{ marginTop: 16 }}>
-              <Job job="Actor" />
-              {details?.movie_credits.crew.filter((v, i, a) => a.findIndex(t => (t.job === v.job)) === i).sort((a, b) => b.job < a.job).map((credit, i) => (
-                <Job key={i} job={credit.job} isLast={i === details?.movie_credits.crew.filter((v, i, a) => a.findIndex(t => (t.job === v.job)) === i).sort((a, b) => b.job < a.job).length - 1} />
-              ))}
-            </ScrollView> */}
-
             <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: 'space-between' }}>
               {selectedJob === "Actor"
                 ?

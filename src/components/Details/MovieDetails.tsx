@@ -29,7 +29,7 @@ interface Props {
 }
 
 function MovieDetails({ navigation, movie }: Props) {
-  const [movieDetails, setMovieDetails] = useState<TMDB.Movie.Details>();
+  const [movieDetails, setMovieDetails] = useState<TMDB.Movie.DetailsExtended>();
   const [detailIndex, setDetailIndex] = useState(0)
   const colorScheme = useContext(ThemeContext)
   const tabBarheight = useBottomTabBarHeight();

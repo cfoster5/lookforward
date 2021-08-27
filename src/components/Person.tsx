@@ -3,9 +3,10 @@ import React, { useContext, useEffect } from "react";
 import { Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
-import { Navigation, TMDB } from "../../types";
 import ThemeContext from "../contexts/ThemeContext";
 import FastImage from "react-native-fast-image";
+import { Navigation } from "../interfaces/navigation";
+import { TMDB } from "../interfaces/tmdb";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">,

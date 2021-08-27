@@ -1,5 +1,5 @@
-import moment from 'moment';
-import { IGDB, TMDB } from '../../types';
+import { IGDB } from '../interfaces/igdb';
+import { TMDB } from '../interfaces/tmdb';
 
 export async function getUpcomingGameReleases(): Promise<IGDB.ReleaseDate.ReleaseDate[]> {
   const response = await fetch("https://gou4rcsh6i.execute-api.us-east-1.amazonaws.com/prod/release_dates", {

@@ -8,7 +8,7 @@ import {
   View
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { IGDB } from '../../types';
+import { IGDB } from '../interfaces/igdb';
 import Poster from '../components/Poster';
 import GameContext from '../contexts/GamePlatformPickerContexts';
 import { discoverGames } from '../helpers/requests';

@@ -3,16 +3,13 @@ import { createStackNavigator, StackNavigationProp } from "@react-navigation/sta
 import Actor from '../screens/Actor';
 import Details from "../screens/Details";
 import Search from "../screens/Search";
-import { Navigation } from "../../types";
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { BlurHeader } from '../components/BlurHeader';
-import MovieGenre from '../screens/MovieGenre';
 import { Platform } from 'react-native';
-import ProductionCompany from '../screens/ProductionCompany';
-import MovieKeyword from '../screens/MovieKeyword';
 import MovieDiscover from '../screens/MovieDiscover';
 import GameDiscover from '../screens/GameDiscover';
+import { Navigation } from '../interfaces/navigation';
 
 type FindStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.FindStackParamList, "Find">,

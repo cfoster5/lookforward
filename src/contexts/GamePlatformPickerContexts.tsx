@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { IGDB } from "../../types";
+import { IGDB } from "../interfaces/igdb";
 
 const GameContext = createContext({
   game: null,

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from 'react';
 import { View, Platform, FlatList, ActivityIndicator, Text, SafeAreaView, Pressable } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import { getUpcomingMovies, searchMovies, getUpcomingGameReleases, searchGames, getPopularPeople, getTrendingMovies, getPopularMovies, getNowPlayingMovies } from '../helpers/requests';
-import { IGDB, Navigation, TMDB } from '../../types';
+import { IGDB } from '../interfaces/igdb';
 import Poster from '../components/Poster';
 import usePrevious, { convertReleasesToGames } from '../helpers/helpers';
 import { RouteProp, useScrollToTop } from '@react-navigation/native';
@@ -17,6 +17,8 @@ import { iOSColors, iOSUIKit } from 'react-native-typography';
 import SearchPerson from '../components/SearchPerson';
 import MovieSearchModal from '../components/MovieSearchModal';
 import MovieSearchFilterContext from '../contexts/MovieSearchFilterContexts';
+import { Navigation } from '../interfaces/navigation';
+import { TMDB } from '../interfaces/tmdb';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Find'>,

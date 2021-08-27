@@ -8,7 +8,6 @@ import {
   Dimensions,
   ActivityIndicator
 } from 'react-native';
-import { Navigation, TMDB } from '../../types';
 import { getPerson } from '../helpers/requests';
 import { reusableStyles } from '../helpers/styles';
 import { iOSUIKit } from 'react-native-typography';
@@ -22,6 +21,8 @@ import { months } from '../helpers/helpers';
 import Carousel from 'react-native-snap-carousel';
 import Poster from '../components/Poster';
 import ButtonMultiState from '../components/ButtonMultiState';
+import { Navigation } from '../interfaces/navigation';
+import { TMDB } from '../interfaces/tmdb';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Actor'>,

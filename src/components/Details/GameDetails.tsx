@@ -7,7 +7,7 @@ import {
   Platform
 } from 'react-native';
 
-import { IGDB, Navigation } from '../../../types';
+import { IGDB } from '../../interfaces/igdb';
 import { Image } from 'react-native-elements';
 import { reusableStyles } from '../../helpers/styles';
 import { iOSColors, iOSUIKit } from 'react-native-typography'
@@ -19,6 +19,7 @@ import ThemeContext from '../../contexts/ThemeContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ButtonSingleState from '../ButtonSingleState';
+import { Navigation } from '../../interfaces/navigation';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,

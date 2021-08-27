@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useContext, useLayoutEffect } from 'react';
-import { IGDB, Navigation, TMDB } from '../../types';
+import { IGDB } from '../interfaces/igdb';
 import { iOSColors } from 'react-native-typography'
 import { Modalize } from 'react-native-modalize';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -14,6 +14,8 @@ import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import GameReleaseModal from '../components/GamePlatformPicker';
 import moment from 'moment';
+import { Navigation } from '../interfaces/navigation';
+import { TMDB } from '../interfaces/tmdb';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,

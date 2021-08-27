@@ -7,7 +7,6 @@ import {
   Platform,
   ActivityIndicator
 } from 'react-native';
-import { Navigation, TMDB } from '../../../types';
 import { Image } from 'react-native-elements';
 import { getMovieDetails } from '../../helpers/requests';
 import { reusableStyles } from '../../helpers/styles';
@@ -21,6 +20,8 @@ import ThemeContext from '../../contexts/ThemeContext';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ButtonSingleState from '../ButtonSingleState';
+import { Navigation } from '../../interfaces/navigation';
+import { TMDB } from '../../interfaces/tmdb';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,

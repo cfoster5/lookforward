@@ -1,14 +1,16 @@
 import React, { useContext } from "react";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { Image, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { reusableStyles } from "../helpers/styles";
-import { IGDB, Navigation, TMDB, Trakt } from "../../types";
+import { IGDB } from "../interfaces/igdb";
 import PosterButton from "./PosterButton";
 import ThemeContext from "../contexts/ThemeContext";
 import { GameSubContext, MovieSubContext } from "../contexts/SubContexts";
 import FastImage from "react-native-fast-image";
 import moment from "moment";
+import { TMDB } from "../interfaces/tmdb";
+import { Navigation } from "../interfaces/navigation";
 
 function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
   const movieSubs = useContext(MovieSubContext);

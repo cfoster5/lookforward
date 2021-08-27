@@ -2,16 +2,13 @@ import React from 'react';
 import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
 import Countdown from '../screens/Countdown';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
-import { Navigation } from '../../types';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import Details from '../screens/Details';
 import { BlurHeader } from '../components/BlurHeader';
-import MovieGenre from '../screens/MovieGenre';
 import { Platform } from 'react-native';
-import ProductionCompany from '../screens/ProductionCompany';
-import MovieKeyword from '../screens/MovieKeyword';
 import MovieDiscover from '../screens/MovieDiscover';
 import Actor from '../screens/Actor';
+import { Navigation } from '../interfaces/navigation';
 
 type CountdownStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,

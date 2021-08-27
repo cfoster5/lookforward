@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { Animated, Pressable, View, Easing } from "react-native";
 import { iOSColors } from "react-native-typography";
-import { IGDB, TMDB } from "../../types";
+import { IGDB } from "../interfaces/igdb";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from '@react-native-firebase/firestore';
 import UserContext from "../contexts/UserContext";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import GameContext from "../contexts/GamePlatformPickerContexts";
 import { GameSubContext } from "../contexts/SubContexts";
+import { TMDB } from "../interfaces/tmdb";
 
 interface Props {
   data: TMDB.Movie.Movie | IGDB.Game.Game;

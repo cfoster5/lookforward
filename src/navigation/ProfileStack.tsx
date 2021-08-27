@@ -1,9 +1,9 @@
 import React from 'react';
 import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
-import { Navigation } from "../../types";
 import Profile from '../screens/Profile';
 import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { Navigation } from '../interfaces/navigation';
 
 type ProfileStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.ProfileStackParamList, "Profile">,

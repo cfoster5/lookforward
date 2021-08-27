@@ -1,8 +1,9 @@
 import React, { useContext } from "react";
 import { Dimensions, Image, Linking, Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import { IGDB, TMDB } from "../../types";
+import { IGDB } from "../interfaces/igdb";
 import ThemeContext from "../contexts/ThemeContext";
+import { TMDB } from "../interfaces/tmdb";
 
 function Trailer({ video, index }: { video: TMDB.Movie.VideoResult | IGDB.Game.Video, index: number}) {
   const colorScheme = useContext(ThemeContext)

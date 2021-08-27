@@ -8,10 +8,10 @@ import firestore from '@react-native-firebase/firestore';
 import { RouteProp, useScrollToTop } from '@react-navigation/native';
 import UserContext from '../contexts/UserContext';
 import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
-import { Navigation, Trakt } from '../../types';
 import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Navigation } from '../interfaces/navigation';
 
 interface Props {
   route: RouteProp<Navigation.CountdownStackParamList, 'Countdown'>

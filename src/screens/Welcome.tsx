@@ -4,7 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import Carousel from 'react-native-snap-carousel';
 import { getHypedGames, getTrendingMovies } from '../helpers/requests';
-import { IGDB, TMDB } from '../../types';
+import { IGDB } from '../interfaces/igdb';
+import { TMDB } from '../interfaces/tmdb';
 
 function Welcome() {
   const navigation = useNavigation();

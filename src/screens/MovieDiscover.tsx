@@ -14,12 +14,12 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { HeaderButton, HeaderButtons, Item } from 'react-navigation-header-buttons';
-import { TMDB } from '../../types';
 import ButtonMultiState from '../components/ButtonMultiState';
 import Poster from '../components/Poster';
 import ThemeContext from '../contexts/ThemeContext';
 import { targetedProviders } from '../helpers/helpers';
 import { getDiscoverMovies, getMovieWatchProviders } from '../helpers/requests';
+import { TMDB } from '../interfaces/tmdb';
 
 interface MovieWatchProvider {
   display_priority: number;

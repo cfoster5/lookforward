@@ -6,7 +6,7 @@ import {
   StyleSheet,
   Platform
 } from 'react-native';
-import { IGDB } from '../../types';
+import { IGDB } from '../interfaces/igdb';
 import { reusableStyles } from '../helpers/styles';
 import { iOSUIKit } from 'react-native-typography'
 import { Modalize } from 'react-native-modalize';

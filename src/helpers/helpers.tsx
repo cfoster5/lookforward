@@ -1,6 +1,6 @@
 import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { useEffect, useRef } from "react";
-import { IGDB } from "../../types";
+import { IGDB } from "../interfaces/igdb";
 
 export const months = [
   'January',

@@ -17,12 +17,12 @@ import { reusableStyles } from '../helpers/styles';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import UserContext from '../contexts/UserContext';
-import { Navigation } from '../../types';
 import { Modalize } from 'react-native-modalize';
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import ThemeContext from '../contexts/ThemeContext';
 import { connectAsync, getProductsAsync, IAPItemDetails, IAPResponseCode, purchaseItemAsync } from 'expo-in-app-purchases';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Navigation } from '../interfaces/navigation';
 
 type ProfileScreenRouteProp = RouteProp<Navigation.ProfileStackParamList, 'Profile'>;
 type ProfileScreenNavigationProp = StackNavigationProp<Navigation.ProfileStackParamList, 'Profile'>;

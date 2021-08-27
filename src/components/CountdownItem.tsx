@@ -3,7 +3,8 @@ import { Animated, Image, Pressable, StyleSheet, Text, View } from "react-native
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { reusableStyles } from "../helpers/styles";
-import { IGDB, TMDB } from "../../types";
+import { IGDB } from "../interfaces/igdb";
+import { TMDB } from "../interfaces/tmdb";
 
 interface Props {
   navigation: any

@@ -4,13 +4,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { FindStack } from './FindStack';
 import { CountdownStack } from './CountdownStack';
 import { ProfileStack } from './ProfileStack';
-import { Navigation, Trakt } from '../../types';
 import firestore from '@react-native-firebase/firestore';
 import { onResult } from '../helpers/helpers';
 import UserContext from '../contexts/UserContext';
 import { GameSubContext, MovieSubContext } from '../contexts/SubContexts';
 import { BlurView } from '@react-native-community/blur';
 import { Platform } from 'react-native';
+import { Navigation } from '../interfaces/navigation';
 
 const CustomTabs = (props) => (
   Platform.OS === "ios"

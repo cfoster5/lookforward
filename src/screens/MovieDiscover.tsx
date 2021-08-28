@@ -18,7 +18,7 @@ import ButtonMultiState from '../components/ButtonMultiState';
 import Poster from '../components/Poster';
 import ThemeContext from '../contexts/ThemeContext';
 import { targetedProviders } from '../helpers/helpers';
-import { getDiscoverMovies, getMovieWatchProviders } from '../helpers/requests';
+import { getDiscoverMovies, getMovieWatchProviders } from '../helpers/tmdbRequests';
 import { TMDB } from '../interfaces/tmdb';
 
 interface MovieWatchProvider {

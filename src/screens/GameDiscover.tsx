@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { IGDB } from '../interfaces/igdb';
 import Poster from '../components/Poster';
 import GameContext from '../contexts/GamePlatformPickerContexts';
-import { discoverGames } from '../helpers/requests';
+import { discoverGames } from '../helpers/igdbRequests';
 import GameReleaseModal from '../components/GamePlatformPicker';
 import { Modalize } from 'react-native-modalize';
 import { convertReleasesToGames } from '../helpers/helpers';

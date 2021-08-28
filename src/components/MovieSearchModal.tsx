@@ -6,7 +6,7 @@ import { Modalize } from 'react-native-modalize';
 import { iOSUIKit } from 'react-native-typography';
 import MovieSearchFilterContext from '../contexts/MovieSearchFilterContexts';
 import ThemeContext from '../contexts/ThemeContext';
-import { getMovieWatchProviders } from '../helpers/requests';
+import { getMovieWatchProviders } from '../helpers/tmdbRequests';
 import ButtonMultiState from './ButtonMultiState';
 import ButtonSingleState from './ButtonSingleState';
 

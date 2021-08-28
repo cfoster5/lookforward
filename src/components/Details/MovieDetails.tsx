@@ -8,7 +8,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { Image } from 'react-native-elements';
-import { getMovieDetails } from '../../helpers/requests';
 import { reusableStyles } from '../../helpers/styles';
 import { iOSColors, iOSUIKit } from 'react-native-typography'
 import Trailer from '../Trailer';
@@ -22,6 +21,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ButtonSingleState from '../ButtonSingleState';
 import { Navigation } from '../../interfaces/navigation';
 import { TMDB } from '../../interfaces/tmdb';
+import { getMovieDetails } from '../../helpers/tmdbRequests';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList | Navigation.CountdownStackParamList, 'Details'>,

@@ -8,7 +8,6 @@ import {
   Dimensions,
   ActivityIndicator
 } from 'react-native';
-import { getPerson } from '../helpers/requests';
 import { reusableStyles } from '../helpers/styles';
 import { iOSUIKit } from 'react-native-typography';
 import { StackNavigationProp, useHeaderHeight } from '@react-navigation/stack';
@@ -23,6 +22,7 @@ import Poster from '../components/Poster';
 import ButtonMultiState from '../components/ButtonMultiState';
 import { Navigation } from '../interfaces/navigation';
 import { TMDB } from '../interfaces/tmdb';
+import { getPerson } from '../helpers/tmdbRequests';
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, 'Actor'>,

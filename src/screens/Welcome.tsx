@@ -3,9 +3,10 @@ import { View, Text, Pressable, Image, Dimensions, SafeAreaView } from 'react-na
 import { useNavigation } from '@react-navigation/native';
 import { iOSColors, iOSUIKit } from 'react-native-typography';
 import Carousel from 'react-native-snap-carousel';
-import { getHypedGames, getTrendingMovies } from '../helpers/requests';
+import { getHypedGames } from '../helpers/igdbRequests';
 import { IGDB } from '../interfaces/igdb';
 import { TMDB } from '../interfaces/tmdb';
+import { getTrendingMovies } from '../helpers/tmdbRequests';
 
 function Welcome() {
   const navigation = useNavigation();

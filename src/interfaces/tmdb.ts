@@ -69,6 +69,17 @@ export namespace TMDB {
       crew: Crew[];
     }
 
+    interface ReleaseDate {
+      iso_3166_1: string;
+      release_dates: {
+        certification: string;
+        iso_639_1: string;
+        release_date: string;
+        type: number;
+        note: string;
+      }[];
+    }
+
     export interface Movie {
       id: number;
       video: boolean;
@@ -123,7 +134,7 @@ export namespace TMDB {
       credits: Credits;
       similar: Response;
       videos: { results: VideoResult[] };
-      release_dates: { results: any[] };
+      release_dates: { results: ReleaseDate[] };
     }
   }
 

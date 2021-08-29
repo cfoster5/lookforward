@@ -21,7 +21,7 @@ export async function searchMovies(searchVal: string, pageIndex?: number) {
 }
 
 export async function getMovieDetails(movieId: number): Promise<TMDB.Movie.DetailsExtended> {
-  const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=credits,similar,videos,release_dates,keywords`);
+  const response = await fetch(`https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=credits,similar,videos,release_dates,keywords,recommendations`);
   return response.json();
 }
 

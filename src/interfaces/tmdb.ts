@@ -31,14 +31,36 @@ export namespace TMDB {
   }
 
   interface VideoResult {
-    id: string;
     iso_639_1: string;
     iso_3166_1: string;
-    key: string;
     name: string;
+    key: string;
     site: string;
     size: number;
     type: string;
+    official: boolean;
+    published_at: string;
+    id: string;
+  }
+
+  export interface Keyword {
+    id: number;
+    name: string;
+  }
+
+  interface Image {
+    aspect_ratio: number;
+    file_path: string;
+    height: number;
+    iso_639_1: string | null;
+    vote_average: number;
+    vote_count: number;
+    width: number;
+  }
+
+  interface Images {
+    backdrops: Image[];
+    posters: Image[];
   }
 
   export namespace Movie {
@@ -97,10 +119,6 @@ export namespace TMDB {
       popularity: number;
     }
 
-    export interface Keywords {
-      keywords: { id: number, name: string }[]
-    }
-
     interface Details {
       adult: boolean;
       backdrop_path: string | null;
@@ -130,11 +148,13 @@ export namespace TMDB {
     }
 
     export interface DetailsExtended extends Details {
-      keywords: Keywords;
+      keywords: { keywords: Keyword[] };
       credits: Credits;
       similar: Response;
+      recommendations: Response;
       videos: { results: VideoResult[] };
       release_dates: { results: ReleaseDate[] };
+      images: Images;
     }
   }
 

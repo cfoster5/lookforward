@@ -54,7 +54,7 @@ function GamePoster({ item }: { item: IGDB.Game.Game }) {
   )
 }
 
-function TextPoster({ text, upcomingRelease }: { text: string, upcomingRelease: boolean }) {
+export function TextPoster({ text, upcomingRelease }: { text: string, upcomingRelease: boolean }) {
   const colorScheme = useContext(ThemeContext);
   return (
     <View

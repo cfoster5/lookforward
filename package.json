@@ -21,7 +21,7 @@
     "@react-navigation/native": "5.9.8",
     "@react-navigation/stack": "5.14.9",
     "@types/react-native-snap-carousel": "^3.8.4",
-    "expo-in-app-purchases": "^10.2.0",
+    "expo-in-app-purchases": "^11.0.1",
     "moment": "^2.27.0",
     "react": "^17.0.2",
     "react-native": "0.64.2",

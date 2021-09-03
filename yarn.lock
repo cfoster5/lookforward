@@ -3538,10 +3538,10 @@ expo-image-loader@~2.2.0:
   resolved "https://registry.yarnpkg.com/expo-image-loader/-/expo-image-loader-2.2.0.tgz#b5d49ec65e576c033823050b223ef462c5ec5711"
   integrity sha512-kTs/lW8LUXYFQ5t8wkdJs0A41zd7dIB8uRRC0a9L0EurSGUvQWiVTbHQoLo/GYWL7nM85OaPAe2qkHfcz5KeyA==
 
-expo-in-app-purchases@^10.2.0:
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/expo-in-app-purchases/-/expo-in-app-purchases-10.2.0.tgz#3236c78ba452db3c13f6c0cf845b6f7ba922fd02"
-  integrity sha512-KDEVAfxC+yxqvJSpnTG7yBMxb2nIXE3y4TkdeeHkOcFU+RsOGt7c6Ocu1Jd6fLOjbcS2ftA+9vvBCF3/2bLXDg==
+expo-in-app-purchases@^11.0.1:
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/expo-in-app-purchases/-/expo-in-app-purchases-11.0.1.tgz#ed3e7e7778f072a65d53f6de371daf625cb343b6"
+  integrity sha512-JTD22IB0sEom/QslD5jxHxOldW2ic1RNfZdUah/pFxpsk79VavME3wEI3R1vQbnznhtstwVMaOCw/ZCUDDwykA==
 
 expo-modules-autolinking@^0.0.3:
   version "0.0.3"

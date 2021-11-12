@@ -1,10 +1,10 @@
 // This file exists for two purposes:
 // 1. Ensure that both ios and android files present identical types to importers.
 // 2. Allow consumers to import the module as if typescript understood react-native suffixes.
-import CategoryControl from './CategoryControl.ios';
-import * as ios from './CategoryControl.ios';
 import CategoryControlAndroid from './CategoryControl.android';
 import * as android from './CategoryControl.android';
+import CategoryControl from './CategoryControl.ios';
+import * as ios from './CategoryControl.ios';
 
 declare var _test: typeof ios;
 declare var _test: typeof android;

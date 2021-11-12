@@ -1,21 +1,22 @@
-import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 import { useEffect, useRef } from "react";
+import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+
 import { IGDB } from "../interfaces/igdb";
 
 export const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December'
-]
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export const targetedProviders = [
   "Any",
@@ -33,15 +34,17 @@ export const targetedProviders = [
   "YouTube",
   "Microsoft Store",
   // "Paramount Plus"
-]
+];
 
-export async function convertReleasesToGames(releaseDates: IGDB.ReleaseDate.ReleaseDate[]): Promise<IGDB.Game.Game[]> {
+export async function convertReleasesToGames(
+  releaseDates: IGDB.ReleaseDate.ReleaseDate[]
+): Promise<IGDB.Game.Game[]> {
   // Converts releases into one game with many releases
   // console.log(releaseDates)
   let games: IGDB.Game.Game[] = [];
-  releaseDates.forEach(releaseDate => {
+  releaseDates.forEach((releaseDate) => {
     if (releaseDate.game) {
-      let foundGame = games.find(game => game.name === releaseDate.game.name);
+      let foundGame = games.find((game) => game.name === releaseDate.game.name);
       // console.log(foundGame);
       let tempReleaseDate = {
         id: releaseDate.id,
@@ -55,8 +58,8 @@ export async function convertReleasesToGames(releaseDates: IGDB.ReleaseDate.Rele
         region: releaseDate.region,
         updated_at: releaseDate.updated_at,
         y: releaseDate.y,
-        checksum: releaseDate.checksum
-      }
+        checksum: releaseDate.checksum,
+      };
       let game: IGDB.Game.Game = {
         id: releaseDate.game.id,
         cover: releaseDate.game.cover,
@@ -65,9 +68,11 @@ export async function convertReleasesToGames(releaseDates: IGDB.ReleaseDate.Rele
         release_dates: [tempReleaseDate],
         summary: releaseDate.game.summary,
         videos: releaseDate.game.videos,
-        involved_companies: releaseDate.game.involved_companies
+        involved_companies: releaseDate.game.involved_companies,
       };
-      foundGame ? foundGame.release_dates.push(tempReleaseDate) : games.push(game);
+      foundGame
+        ? foundGame.release_dates.push(tempReleaseDate)
+        : games.push(game);
     }
   });
   return games;
@@ -75,8 +80,8 @@ export async function convertReleasesToGames(releaseDates: IGDB.ReleaseDate.Rele
 
 export function onResult(querySnapshot: FirebaseFirestoreTypes.QuerySnapshot) {
   // console.log(querySnapshot.docs);
-  let tempMedia: any = []
-  querySnapshot.docs.forEach(doc => {
+  let tempMedia: any = [];
+  querySnapshot.docs.forEach((doc) => {
     // console.log(doc.data())
     let data = doc.data();
     data.documentID = doc.id;

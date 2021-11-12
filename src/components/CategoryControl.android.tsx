@@ -3,12 +3,16 @@ import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 interface Props {
-  buttons: string[],
-  categoryIndex: number,
-  handleCategoryChange: (index: number) => void
+  buttons: string[];
+  categoryIndex: number;
+  handleCategoryChange: (index: number) => void;
 }
 
-function CategoryControl({ buttons, categoryIndex, handleCategoryChange }: Props) {
+function CategoryControl({
+  buttons,
+  categoryIndex,
+  handleCategoryChange,
+}: Props) {
   return (
     // <SegmentedControl
     //   style={{ marginHorizontal: 16, marginTop: 8, paddingVertical: 16 }}
@@ -19,14 +23,16 @@ function CategoryControl({ buttons, categoryIndex, handleCategoryChange }: Props
     //   }}
     //   appearance="dark"
     // />
-    <View style={{
-      // flex: 1,
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'flex-start',
-      paddingHorizontal: 16,
-      marginTop: 8
-    }}>
+    <View
+      style={{
+        // flex: 1,
+        flexDirection: "row",
+        flexWrap: "wrap",
+        alignItems: "flex-start",
+        paddingHorizontal: 16,
+        marginTop: 8,
+      }}
+    >
       {buttons.map((button, i) => (
         <Pressable
           style={{
@@ -43,11 +49,13 @@ function CategoryControl({ buttons, categoryIndex, handleCategoryChange }: Props
           key={i}
           onPress={() => handleCategoryChange(i)}
         >
-          <Text style={{ ...iOSUIKit.bodyWhiteObject, textAlign: "center" }}>{button}</Text>
+          <Text style={{ ...iOSUIKit.bodyWhiteObject, textAlign: "center" }}>
+            {button}
+          </Text>
         </Pressable>
       ))}
     </View>
-  )
+  );
 }
 
 export default CategoryControl;

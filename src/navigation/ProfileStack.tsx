@@ -1,9 +1,13 @@
-import React from 'react';
-import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack";
-import Profile from '../screens/Profile';
-import { CompositeNavigationProp, RouteProp } from '@react-navigation/native';
-import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import { Navigation } from '../interfaces/navigation';
+import React from "react";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from "@react-navigation/stack";
+
+import { Navigation } from "../interfaces/navigation";
+import Profile from "../screens/Profile";
 
 type ProfileStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.ProfileStackParamList, "Profile">,
@@ -11,8 +15,8 @@ type ProfileStackNavProp = CompositeNavigationProp<
 >;
 
 interface Props {
-  navigation: ProfileStackNavProp,
-  route: RouteProp<Navigation.TabNavigationParamList, "Countdown">
+  navigation: ProfileStackNavProp;
+  route: RouteProp<Navigation.TabNavigationParamList, "Countdown">;
 }
 
 const Stack = createStackNavigator<Navigation.ProfileStackParamList>();
@@ -21,5 +25,5 @@ export function ProfileStack({ navigation, route }: Props) {
     <Stack.Navigator>
       <Stack.Screen name="Profile" component={Profile} />
     </Stack.Navigator>
-  )
+  );
 }

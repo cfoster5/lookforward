@@ -690,6 +690,7 @@
 				DEVELOPMENT_TEAM = 8F5TGKNLXU;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = lookforward/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 4.2.0;
 				OTHER_LDFLAGS = (
@@ -716,6 +717,7 @@
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 8F5TGKNLXU;
 				INFOPLIST_FILE = lookforward/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 4.2.0;
 				OTHER_LDFLAGS = (

@@ -23,8 +23,8 @@ import moment from "moment";
 import GameDetails from "../components/Details/GameDetails";
 import MovieDetails from "../components/Details/MovieDetails";
 import GameReleaseModal from "../components/GamePlatformPicker";
-import { GameSubContext, MovieSubContext } from "../contexts/SubContexts";
-import UserContext from "../contexts/UserContext";
+import SubContext from "../contexts/SubContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
 import { TMDB } from "../interfaces/tmdb";
@@ -40,9 +40,8 @@ interface Props {
 function Details({ route, navigation }: Props) {
   const modalizeRef = useRef<Modalize>(null);
   const [countdownId, setCountdownId] = useState();
-  const uid = useContext(UserContext);
-  const movieSubs = useContext(MovieSubContext);
-  const gameSubs = useContext(GameSubContext);
+  const { user } = useContext(TabStackContext);
+  const { movies, games } = useContext(SubContext);
 
   useEffect(() => {
     console.log(`route.params.data`, route.params.data);
@@ -112,24 +111,24 @@ function Details({ route, navigation }: Props) {
   }, [navigation, countdownId]);
 
   useEffect(() => {
-    // console.log("Details Changes", movieSubs, gameSubs)
-    // let documentID = route.params.type === "movie" ? movieSubs?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID : gameSubs.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
+    // console.log("Details Changes", movies, games)
+    // let documentID = route.params.type === "movie" ? movies?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID : games.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
     let documentID;
     if (route.params.type === "movie") {
-      documentID = movieSubs?.find(
+      documentID = movies?.find(
         (movie: TMDB.Movie.Movie) =>
           movie.id === (route.params.data as TMDB.Movie.Movie).id
       )?.documentID;
     }
     if (route.params.type === "game") {
-      documentID = gameSubs.find(
+      documentID = games.find(
         (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
           releaseDate.game.id === (route.params.data as IGDB.Game.Game).id
       )?.documentID;
     }
     setCountdownId(documentID);
-    // setInCountdown(movieSubs.some((movie: TMDB.Movie.Movie) => movie.id === route.params.data.id))
-  }, [movieSubs, gameSubs]);
+    // setInCountdown(movies.some((movie: TMDB.Movie.Movie) => movie.id === route.params.data.id))
+  }, [movies, games]);
 
   let docId = "";
   if (route.params.type === "movie") {
@@ -146,7 +145,7 @@ function Details({ route, navigation }: Props) {
         .collection("movies")
         .doc(docId)
         .update({
-          subscribers: firestore.FieldValue.arrayUnion(uid),
+          subscribers: firestore.FieldValue.arrayUnion(user),
         });
       ReactNativeHapticFeedback.trigger("impactLight", {
         enableVibrateFallback: true,
@@ -172,7 +171,7 @@ function Details({ route, navigation }: Props) {
         .collection(collection)
         .doc(countdownId)
         .update({
-          subscribers: firestore.FieldValue.arrayRemove(uid),
+          subscribers: firestore.FieldValue.arrayRemove(user),
         });
     } catch (error) {
       console.error("Error writing document: ", error);

@@ -27,7 +27,7 @@ import { useHeaderHeight } from "@react-navigation/stack";
 
 import ButtonMultiState from "../components/ButtonMultiState";
 import Poster from "../components/Poster";
-import ThemeContext from "../contexts/ThemeContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { targetedProviders } from "../helpers/helpers";
 import {
   getDiscoverMovies,
@@ -51,7 +51,7 @@ function MovieDiscover({ route, navigation }: any) {
   const [initHeaderHeight, setInitHeaderHeight] = useState(0);
   const insets = useSafeAreaInsets();
   const [pageIndex, setPageIndex] = useState(1);
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   const [sortMethod, setSortMethod] = useState("popularity.desc");
   const modalRef = useRef<Modalize>(null);
   const [movieWatchProviders, setMovieWatchProviders] = useState<
@@ -265,9 +265,7 @@ function MovieDiscover({ route, navigation }: any) {
         childrenStyle={{
           marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
         }}
-        modalStyle={
-          colorScheme === "dark" ? { backgroundColor: "#121212" } : {}
-        }
+        modalStyle={theme === "dark" ? { backgroundColor: "#121212" } : {}}
       >
         <Text
           style={{

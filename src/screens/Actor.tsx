@@ -18,7 +18,7 @@ import { StackNavigationProp, useHeaderHeight } from "@react-navigation/stack";
 
 import ButtonMultiState from "../components/ButtonMultiState";
 import Poster from "../components/Poster";
-import ThemeContext from "../contexts/ThemeContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { months } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { getPerson } from "../helpers/tmdbRequests";
@@ -32,7 +32,7 @@ interface Props {
 
 function Actor({ route, navigation }: Props) {
   const [details, setDetails] = useState<TMDB.Person>();
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const [initHeaderHeight, setInitHeaderHeight] = useState(0);
@@ -125,7 +125,7 @@ function Actor({ route, navigation }: Props) {
           >
             <Text
               style={
-                colorScheme === "dark"
+                theme === "dark"
                   ? iOSUIKit.largeTitleEmphasizedWhite
                   : iOSUIKit.largeTitleEmphasized
               }
@@ -138,7 +138,7 @@ function Actor({ route, navigation }: Props) {
             <Pressable onPress={() => setShowBio(!showBio)}>
               <Text
                 style={
-                  colorScheme === "dark"
+                  theme === "dark"
                     ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
                     : { ...iOSUIKit.bodyObject, paddingTop: 16 }
                 }

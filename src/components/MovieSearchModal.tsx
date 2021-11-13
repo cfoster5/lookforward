@@ -6,7 +6,7 @@ import { iOSUIKit } from "react-native-typography";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 import MovieSearchFilterContext from "../contexts/MovieSearchFilterContexts";
-import ThemeContext from "../contexts/ThemeContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { getMovieWatchProviders } from "../helpers/tmdbRequests";
 import ButtonMultiState from "./ButtonMultiState";
 import ButtonSingleState from "./ButtonSingleState";
@@ -27,7 +27,7 @@ export default function MovieSearchModal({
   filterModalRef: Modalize;
   selectedOption: string;
 }) {
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const { setSelectedOption } = useContext(MovieSearchFilterContext);
   const [movieWatchProviders, setMovieWatchProviders] = useState<
@@ -79,7 +79,7 @@ export default function MovieSearchModal({
       childrenStyle={{
         marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
       }}
-      modalStyle={colorScheme === "dark" ? { backgroundColor: "#121212" } : {}}
+      modalStyle={theme === "dark" ? { backgroundColor: "#121212" } : {}}
     >
       <FlatList
         horizontal={true}

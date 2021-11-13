@@ -4,7 +4,7 @@ import FastImage from "react-native-fast-image";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import ThemeContext from "../contexts/ThemeContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
 import { TMDB } from "../interfaces/tmdb";
@@ -15,7 +15,7 @@ interface Props {
 }
 
 function SearchPerson({ navigation, person }: Props) {
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   return (
     <Pressable
       style={{ marginRight: 16 }}
@@ -34,7 +34,7 @@ function SearchPerson({ navigation, person }: Props) {
           style={{
             ...styles.searchCredit,
             borderWidth: 1,
-            borderColor: colorScheme === "dark" ? "#1f1f1f" : "white",
+            borderColor: theme === "dark" ? "#1f1f1f" : "white",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
@@ -42,7 +42,7 @@ function SearchPerson({ navigation, person }: Props) {
         >
           <Text
             style={
-              colorScheme === "dark"
+              theme === "dark"
                 ? { ...iOSUIKit.title3EmphasizedWhiteObject }
                 : { ...iOSUIKit.title3EmphasizedObject, color: iOSColors.gray }
             }
@@ -53,7 +53,7 @@ function SearchPerson({ navigation, person }: Props) {
       )}
       <Text
         style={
-          colorScheme === "dark"
+          theme === "dark"
             ? {
                 ...reusableStyles.date,
                 maxWidth: styles.searchCredit.width,

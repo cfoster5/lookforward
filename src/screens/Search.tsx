@@ -22,7 +22,7 @@ import Poster from "../components/Poster";
 import SearchPerson from "../components/SearchPerson";
 import GameContext from "../contexts/GamePlatformPickerContexts";
 import MovieSearchFilterContext from "../contexts/MovieSearchFilterContexts";
-import ThemeContext from "../contexts/ThemeContext";
+import TabStackContext from "../contexts/TabStackContext";
 import usePrevious, { convertReleasesToGames } from "../helpers/helpers";
 import { getUpcomingGameReleases, searchGames } from "../helpers/igdbRequests";
 import {
@@ -51,7 +51,7 @@ function Search({ navigation, route }: Props) {
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
   const prevCategoryIndex = usePrevious(categoryIndex);
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   const modalizeRef = useRef<Modalize>(null);
   const [game, setGame] = useState();
   const tabBarheight = useBottomTabBarHeight();
@@ -223,7 +223,7 @@ function Search({ navigation, route }: Props) {
   return (
     <>
       <SafeAreaView
-        style={{ backgroundColor: colorScheme === "dark" ? "black" : "white" }}
+        style={{ backgroundColor: theme === "dark" ? "black" : "white" }}
       >
         <CategoryControl
           buttons={["Movies", "Games"]}
@@ -231,14 +231,12 @@ function Search({ navigation, route }: Props) {
           handleCategoryChange={(index) => setCategoryIndex(index)}
         />
       </SafeAreaView>
-      <View
-        style={{ backgroundColor: colorScheme === "dark" ? "black" : "white" }}
-      >
+      <View style={{ backgroundColor: theme === "dark" ? "black" : "white" }}>
         <SearchBar
           cancelIcon={{ color: "white" }}
           clearIcon={Platform.OS === "android" ? { color: "white" } : undefined}
           containerStyle={
-            colorScheme === "dark"
+            theme === "dark"
               ? {
                   backgroundColor: "black",
                   marginHorizontal: Platform.OS === "ios" ? 8 : 16,
@@ -247,7 +245,7 @@ function Search({ navigation, route }: Props) {
               : { marginHorizontal: 8 }
           }
           inputContainerStyle={
-            colorScheme === "dark"
+            theme === "dark"
               ? Platform.OS === "android"
                 ? {
                     backgroundColor: "rgb(28, 28, 31)",
@@ -257,23 +255,21 @@ function Search({ navigation, route }: Props) {
                 : { backgroundColor: "rgb(28, 28, 31)", height: 36 }
               : {}
           }
-          // placeholderTextColor={colorScheme === "dark" ? "#999999" : undefined}
+          // placeholderTextColor={theme === "dark" ? "#999999" : undefined}
           placeholderTextColor={
-            colorScheme === "dark" ? "rgb(141, 142, 146)" : undefined
+            theme === "dark" ? "rgb(141, 142, 146)" : undefined
           }
-          // searchIcon={colorScheme === "dark" ? { color: "#999999" } : {}}
-          searchIcon={
-            colorScheme === "dark" ? { color: "rgb(149, 153, 162)" } : {}
-          }
-          // inputStyle={colorScheme === "dark" ? { color: "white" } : {}}
+          // searchIcon={theme === "dark" ? { color: "#999999" } : {}}
+          searchIcon={theme === "dark" ? { color: "rgb(149, 153, 162)" } : {}}
+          // inputStyle={theme === "dark" ? { color: "white" } : {}}
           leftIconContainerStyle={{ marginLeft: 6 }}
           inputStyle={
-            colorScheme === "dark"
+            theme === "dark"
               ? { ...iOSUIKit.bodyWhiteObject, marginLeft: 0 }
               : {}
           }
           cancelButtonProps={
-            colorScheme === "dark"
+            theme === "dark"
               ? {
                   buttonTextStyle: {
                     color: iOSColors.blue,

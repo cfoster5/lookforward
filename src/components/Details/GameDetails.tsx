@@ -6,7 +6,7 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { StackNavigationProp, useHeaderHeight } from "@react-navigation/stack";
 
-import ThemeContext from "../../contexts/ThemeContext";
+import TabStackContext from "../../contexts/TabStackContext";
 import { months } from "../../helpers/helpers";
 import { reusableStyles } from "../../helpers/styles";
 import { IGDB } from "../../interfaces/igdb";
@@ -25,7 +25,7 @@ interface Props {
 
 function GameDetails({ navigation, game }: Props) {
   const [detailIndex, setDetailIndex] = useState(0);
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const [initHeaderHeight, setInitHeaderHeight] = useState(0);
@@ -88,7 +88,7 @@ function GameDetails({ navigation, game }: Props) {
         <View style={{ margin: 16, marginBottom: 0 }}>
           <Text
             style={
-              colorScheme === "dark"
+              theme === "dark"
                 ? iOSUIKit.largeTitleEmphasizedWhite
                 : iOSUIKit.largeTitleEmphasized
             }
@@ -98,7 +98,7 @@ function GameDetails({ navigation, game }: Props) {
           <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
           <Text
             style={
-              colorScheme === "dark"
+              theme === "dark"
                 ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
                 : { ...iOSUIKit.bodyObject, paddingTop: 16 }
             }
@@ -136,7 +136,7 @@ function GameDetails({ navigation, game }: Props) {
               ) && (
                 <Text
                   style={
-                    colorScheme === "dark"
+                    theme === "dark"
                       ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
                       : { ...iOSUIKit.bodyObject, paddingTop: 16 }
                   }
@@ -158,7 +158,7 @@ function GameDetails({ navigation, game }: Props) {
               ) && (
                 <Text
                   style={
-                    colorScheme === "dark"
+                    theme === "dark"
                       ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
                       : { ...iOSUIKit.bodyObject, paddingTop: 16 }
                   }
@@ -187,7 +187,7 @@ function GameDetails({ navigation, game }: Props) {
                 >
                   <Text
                     style={
-                      colorScheme === "dark"
+                      theme === "dark"
                         ? { ...iOSUIKit.bodyWhiteObject }
                         : { ...iOSUIKit.bodyObject }
                     }
@@ -213,7 +213,7 @@ function GameDetails({ navigation, game }: Props) {
                         {i > 0 ? (
                           <Text
                             style={
-                              colorScheme === "dark"
+                              theme === "dark"
                                 ? { ...iOSUIKit.bodyWhiteObject }
                                 : { ...iOSUIKit.bodyObject }
                             }
@@ -223,7 +223,7 @@ function GameDetails({ navigation, game }: Props) {
                         ) : (
                           <Text
                             style={
-                              colorScheme === "dark"
+                              theme === "dark"
                                 ? { ...iOSUIKit.bodyWhiteObject }
                                 : { ...iOSUIKit.bodyObject }
                             }
@@ -245,7 +245,7 @@ function GameDetails({ navigation, game }: Props) {
               {game.videos === undefined && (
                 <Text
                   style={
-                    colorScheme === "dark"
+                    theme === "dark"
                       ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
                       : { ...iOSUIKit.bodyObject, paddingTop: 16 }
                   }

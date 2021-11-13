@@ -4,7 +4,7 @@ import FastImage from "react-native-fast-image";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import ThemeContext from "../contexts/ThemeContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
 import { TMDB } from "../interfaces/tmdb";
@@ -15,7 +15,7 @@ interface Props {
 }
 
 function Person({ navigation, person }: Props) {
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   return (
     <Pressable
       style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
@@ -34,7 +34,7 @@ function Person({ navigation, person }: Props) {
           style={{
             ...reusableStyles.credit,
             borderWidth: 1,
-            borderColor: colorScheme === "dark" ? "#1f1f1f" : "white",
+            borderColor: theme === "dark" ? "#1f1f1f" : "white",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
@@ -42,7 +42,7 @@ function Person({ navigation, person }: Props) {
         >
           <Text
             style={
-              colorScheme === "dark"
+              theme === "dark"
                 ? { ...iOSUIKit.title3EmphasizedWhiteObject }
                 : { ...iOSUIKit.title3EmphasizedObject, color: iOSColors.gray }
             }
@@ -52,14 +52,12 @@ function Person({ navigation, person }: Props) {
         </View>
       )}
       <View style={{ marginLeft: 16 }}>
-        <Text
-          style={colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}
-        >
+        <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>
           {person.name}
         </Text>
         <Text
           style={
-            colorScheme === "dark"
+            theme === "dark"
               ? {
                   ...iOSUIKit.subheadEmphasizedWhiteObject,
                   color: iOSColors.gray,

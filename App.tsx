@@ -16,8 +16,7 @@ import {
   setPurchaseListener,
 } from "expo-in-app-purchases";
 
-import ThemeContext from "./src/contexts/ThemeContext";
-import UserContext from "./src/contexts/UserContext";
+import TabStackContext from "./src/contexts/TabStackContext";
 import { AuthStack } from "./src/navigation/AuthStack";
 import { TabStack } from "./src/navigation/TabStack";
 
@@ -129,11 +128,11 @@ export default function App() {
       />
       <OverflowMenuProvider>
         {user ? (
-          <ThemeContext.Provider value={colorScheme}>
-            <UserContext.Provider value={user.uid}>
-              <TabStack />
-            </UserContext.Provider>
-          </ThemeContext.Provider>
+          <TabStackContext.Provider
+            value={{ user: user.uid, theme: colorScheme }}
+          >
+            <TabStack />
+          </TabStackContext.Provider>
         ) : (
           <AuthStack />
         )}

@@ -5,8 +5,8 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 import { StackNavigationProp } from "@react-navigation/stack";
 import moment from "moment";
 
-import { GameSubContext, MovieSubContext } from "../contexts/SubContexts";
-import ThemeContext from "../contexts/ThemeContext";
+import SubContext from "../contexts/SubContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
@@ -14,11 +14,9 @@ import { TMDB } from "../interfaces/tmdb";
 import PosterButton from "./PosterButton";
 
 function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
-  const movieSubs = useContext(MovieSubContext);
+  const { movies } = useContext(SubContext);
   let inCountdown = false;
-  inCountdown = movieSubs.some(
-    (movie: TMDB.Movie.Movie) => movie.id === item.id
-  );
+  inCountdown = movies.some((movie: TMDB.Movie.Movie) => movie.id === item.id);
   return (
     <>
       {moment(item.release_date) >= moment() && (
@@ -44,9 +42,9 @@ function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
 }
 
 function GamePoster({ item }: { item: IGDB.Game.Game }) {
-  const gameSubs = useContext(GameSubContext);
+  const { games } = useContext(SubContext);
   let inCountdown = false;
-  inCountdown = gameSubs.find(
+  inCountdown = games.find(
     (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
       releaseDate.game.id === item.id
   )?.documentID;
@@ -90,13 +88,13 @@ export function TextPoster({
   text: string;
   upcomingRelease: boolean;
 }) {
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   return (
     <View
       style={{
         ...reusableStyles.itemRight,
         // borderWidth: 1,
-        borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0",
+        borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
@@ -104,7 +102,7 @@ export function TextPoster({
     >
       <Text
         style={
-          colorScheme === "dark"
+          theme === "dark"
             ? { ...iOSUIKit.title3EmphasizedWhiteObject, textAlign: "center" }
             : {
                 ...iOSUIKit.title3EmphasizedObject,

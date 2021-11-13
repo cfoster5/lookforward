@@ -16,7 +16,7 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { StackNavigationProp, useHeaderHeight } from "@react-navigation/stack";
 
-import ThemeContext from "../../contexts/ThemeContext";
+import TabStackContext from "../../contexts/TabStackContext";
 import { months } from "../../helpers/helpers";
 import { reusableStyles } from "../../helpers/styles";
 import { getMovieDetails } from "../../helpers/tmdbRequests";
@@ -108,7 +108,7 @@ function MovieDetails({ navigation, movie }: Props) {
   const [movieDetails, setMovieDetails] =
     useState<TMDB.Movie.DetailsExtended>();
   const [detailIndex, setDetailIndex] = useState(0);
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const [initHeaderHeight, setInitHeaderHeight] = useState(0);
@@ -192,7 +192,7 @@ function MovieDetails({ navigation, movie }: Props) {
           <View style={{ margin: 16 }}>
             <Text
               style={
-                colorScheme === "dark"
+                theme === "dark"
                   ? iOSUIKit.largeTitleEmphasizedWhite
                   : iOSUIKit.largeTitleEmphasized
               }
@@ -224,7 +224,7 @@ function MovieDetails({ navigation, movie }: Props) {
             <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
               <Text
                 style={
-                  colorScheme === "dark"
+                  theme === "dark"
                     ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
                     : { ...iOSUIKit.bodyObject, paddingTop: 16 }
                 }
@@ -234,7 +234,7 @@ function MovieDetails({ navigation, movie }: Props) {
               </Text>
             </Pressable>
 
-            {/* <Text style={colorScheme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</Text> */}
+            {/* <Text style={theme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</Text> */}
             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
               {movieDetails?.genres?.map((genre, i) => (
                 <DiscoverButton key={i} navigation={navigation} genre={genre} />
@@ -242,7 +242,7 @@ function MovieDetails({ navigation, movie }: Props) {
             </View>
             <Text
               style={
-                colorScheme === "dark"
+                theme === "dark"
                   ? { ...iOSUIKit.bodyWhiteObject, marginTop: 16 }
                   : { ...iOSUIKit.bodyObject }
               }
@@ -276,7 +276,7 @@ function MovieDetails({ navigation, movie }: Props) {
                 {movieDetails?.videos?.results?.length === 0 && (
                   <Text
                     style={
-                      colorScheme === "dark"
+                      theme === "dark"
                         ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
                         : { ...iOSUIKit.bodyObject, paddingTop: 16 }
                     }
@@ -292,7 +292,7 @@ function MovieDetails({ navigation, movie }: Props) {
                   <>
                     <Text
                       style={
-                        colorScheme === "dark"
+                        theme === "dark"
                           ? {
                               ...iOSUIKit.subheadEmphasizedWhiteObject,
                               color: iOSColors.gray,
@@ -342,7 +342,7 @@ function MovieDetails({ navigation, movie }: Props) {
                   <>
                     <Text
                       style={
-                        colorScheme === "dark"
+                        theme === "dark"
                           ? {
                               ...iOSUIKit.subheadEmphasizedWhiteObject,
                               color: iOSColors.gray,
@@ -388,7 +388,7 @@ function MovieDetails({ navigation, movie }: Props) {
                   <>
                     <Text
                       style={
-                        colorScheme === "dark"
+                        theme === "dark"
                           ? {
                               ...iOSUIKit.subheadEmphasizedWhiteObject,
                               color: iOSColors.gray,

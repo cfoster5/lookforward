@@ -25,8 +25,7 @@ import {
   purchaseItemAsync,
 } from "expo-in-app-purchases";
 
-import ThemeContext from "../contexts/ThemeContext";
-import UserContext from "../contexts/UserContext";
+import TabStackContext from "../contexts/TabStackContext";
 import usePrevious from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
@@ -47,7 +46,7 @@ type ProfileScreenProps = {
 };
 
 function Profile({ route, navigation }: ProfileScreenProps) {
-  const uid = useContext(UserContext);
+  const { user } = useContext(TabStackContext);
   const [hasPermissions, setHasPermissions] = useState(true);
   const [dayNotifications, setDayNotifications] = useState(false);
   const [weekNotifications, setWeekNotifications] = useState(false);
@@ -59,7 +58,7 @@ function Profile({ route, navigation }: ProfileScreenProps) {
   const prevWeekNotifications = usePrevious(weekNotifications);
   const modalizeRef = useRef<Modalize>(null);
   const tabBarheight = useBottomTabBarHeight();
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   const [connected, setConnected] = useState(false);
   const [iapItems, setIapItems] = useState<IAPItemDetails[]>();
 
@@ -88,11 +87,11 @@ function Profile({ route, navigation }: ProfileScreenProps) {
   }, [connected]);
 
   useEffect(() => {
-    if (uid) {
+    if (user) {
       getNotificationPermissions();
       const preferenceSubscription = firestore()
         .collection("users")
-        .doc(uid)
+        .doc(user)
         .collection("contentPreferences")
         .doc("preferences")
         .onSnapshot(
@@ -114,7 +113,7 @@ function Profile({ route, navigation }: ProfileScreenProps) {
         preferenceSubscription();
       };
     }
-  }, [uid]);
+  }, [user]);
 
   useEffect(() => {
     getNotificationPermissions();
@@ -124,7 +123,7 @@ function Profile({ route, navigation }: ProfileScreenProps) {
     ) {
       firestore()
         .collection("users")
-        .doc(uid)
+        .doc(user)
         .collection("contentPreferences")
         .doc("preferences")
         .set(
@@ -150,7 +149,7 @@ function Profile({ route, navigation }: ProfileScreenProps) {
     ) {
       firestore()
         .collection("users")
-        .doc(uid)
+        .doc(user)
         .collection("contentPreferences")
         .doc("preferences")
         .set(
@@ -231,14 +230,12 @@ function Profile({ route, navigation }: ProfileScreenProps) {
         childrenStyle={{
           marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
         }}
-        modalStyle={
-          colorScheme === "dark" ? { backgroundColor: "#121212" } : {}
-        }
+        modalStyle={theme === "dark" ? { backgroundColor: "#121212" } : {}}
         onClosed={() => null}
       >
         <Text
           style={
-            colorScheme === "dark"
+            theme === "dark"
               ? {
                   ...iOSUIKit.bodyWhiteObject,
                   marginHorizontal: 16,
@@ -272,12 +269,12 @@ function Profile({ route, navigation }: ProfileScreenProps) {
                     justifyContent: "space-between",
                   }}
                 >
-                  {/* <Text style={colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>{JSON.stringify(details)}</Text> */}
+                  {/* <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>{JSON.stringify(details)}</Text> */}
                   <View style={{ flex: 1, flexDirection: "row" }}>
                     <Icon details={details} />
                     <Text
                       style={
-                        colorScheme === "dark"
+                        theme === "dark"
                           ? {
                               ...iOSUIKit.bodyWhiteObject,
                               marginHorizontal: 16,

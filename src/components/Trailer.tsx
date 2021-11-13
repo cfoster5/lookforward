@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import ThemeContext from "../contexts/ThemeContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
 import { TMDB } from "../interfaces/tmdb";
 
@@ -20,7 +20,7 @@ function Trailer({
   video: TMDB.Movie.VideoResult | IGDB.Game.Video;
   index: number;
 }) {
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   return (
     // <Pressable key={index} onPress={() => Linking.openURL(`https://www.youtube.com/watch?v=${video.key}`)}>
     <Pressable
@@ -53,7 +53,7 @@ function Trailer({
             borderRadius: 8,
             marginRight: 8,
             borderWidth: 1,
-            borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0",
+            borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
           }}
           source={{
             uri: (video as TMDB.Movie.VideoResult).key
@@ -67,7 +67,7 @@ function Trailer({
         />
         <Text
           style={
-            colorScheme === "dark"
+            theme === "dark"
               ? {
                   ...iOSUIKit.bodyWhiteObject,
                   width: Dimensions.get("window").width / 2 - 40,

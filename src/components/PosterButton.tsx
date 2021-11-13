@@ -6,8 +6,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import firestore from "@react-native-firebase/firestore";
 
 import GameContext from "../contexts/GamePlatformPickerContexts";
-import { GameSubContext } from "../contexts/SubContexts";
-import UserContext from "../contexts/UserContext";
+import SubContext from "../contexts/SubContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
 import { TMDB } from "../interfaces/tmdb";
 
@@ -18,16 +18,16 @@ interface Props {
 }
 
 function PosterButton({ data, inCountdown, mediaType }: Props) {
-  const uid = useContext(UserContext);
+  const { user } = useContext(TabStackContext);
   const { setGame } = useContext(GameContext);
-  const gameSubs = useContext(GameSubContext);
+  const { games } = useContext(SubContext);
 
   let docId = "";
   if (mediaType === "movie") {
     docId = data.id.toString();
   }
   if (mediaType === "game") {
-    docId = gameSubs.find(
+    docId = games.find(
       (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
         releaseDate.game.id === data.id
     )?.documentID;
@@ -51,7 +51,7 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
           .collection("movies")
           .doc(docId)
           .update({
-            subscribers: firestore.FieldValue.arrayUnion(uid),
+            subscribers: firestore.FieldValue.arrayUnion(user),
           });
         Animated.timing(transformAnim, {
           toValue: 1,
@@ -83,7 +83,7 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
           .collection(collection)
           .doc(docId)
           .update({
-            subscribers: firestore.FieldValue.arrayRemove(uid),
+            subscribers: firestore.FieldValue.arrayRemove(user),
           });
         Animated.timing(transformAnim, {
           toValue: 1,

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import ThemeContext from "../contexts/ThemeContext";
+import TabStackContext from "../contexts/TabStackContext";
 
 export default function ButtonSingleState({
   text,
@@ -11,7 +11,7 @@ export default function ButtonSingleState({
   text: string;
   onPress: any;
 }) {
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   return (
     <Pressable
       onPress={onPress}
@@ -29,7 +29,7 @@ export default function ButtonSingleState({
     >
       <Text
         style={
-          colorScheme === "dark"
+          theme === "dark"
             ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" }
             : { ...iOSUIKit.bodyObject }
         }

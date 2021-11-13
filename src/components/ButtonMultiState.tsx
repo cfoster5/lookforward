@@ -3,7 +3,7 @@ import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import ThemeContext from "../contexts/ThemeContext";
+import TabStackContext from "../contexts/TabStackContext";
 
 export default function ButtonMultiState({
   text,
@@ -18,7 +18,7 @@ export default function ButtonMultiState({
   test?: any;
   children?: any;
 }) {
-  const colorScheme = useContext(ThemeContext);
+  const { theme } = useContext(TabStackContext);
   return (
     <Pressable
       onPress={onPress}
@@ -39,7 +39,7 @@ export default function ButtonMultiState({
     >
       <Text
         style={
-          colorScheme === "dark"
+          theme === "dark"
             ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" }
             : { ...iOSUIKit.bodyObject }
         }

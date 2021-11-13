@@ -20,8 +20,8 @@ import { RouteProp, useScrollToTop } from "@react-navigation/native";
 import { StackNavigationProp, useHeaderHeight } from "@react-navigation/stack";
 
 import CountdownItem from "../components/CountdownItem";
-import { GameSubContext, MovieSubContext } from "../contexts/SubContexts";
-import UserContext from "../contexts/UserContext";
+import SubContext from "../contexts/SubContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { Navigation } from "../interfaces/navigation";
 
 interface Props {
@@ -43,14 +43,13 @@ function Countdown({ route, navigation }: Props) {
     new Animated.Value(!showButtons ? -16 : 16)
   ).current;
   const opacityAnim = useRef(new Animated.Value(!showButtons ? 0 : 1)).current;
-  const uid = useContext(UserContext);
-  const movieSubs = useContext(MovieSubContext);
-  const gameSubs = useContext(GameSubContext);
+  const { user } = useContext(TabStackContext);
+  const { movies, games } = useContext(SubContext);
   const [listData, setListData] = useState([
     // { data: route.params.movies, title: "Movies" },
     // { data: route.params.games, title: "Games" }
-    { data: movieSubs, title: "Movies" },
-    { data: gameSubs, title: "Games" },
+    { data: movies, title: "Movies" },
+    { data: games, title: "Games" },
   ]);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
@@ -65,10 +64,10 @@ function Countdown({ route, navigation }: Props) {
 
   useEffect(() => {
     setListData([
-      { data: movieSubs, title: "Movies" },
-      { data: gameSubs, title: "Games" },
+      { data: movies, title: "Movies" },
+      { data: games, title: "Games" },
     ]);
-  }, [gameSubs, movieSubs]);
+  }, [games, movies]);
 
   const IoniconsHeaderButton = (props) => (
     // the `props` here come from <Item ... />
@@ -234,7 +233,7 @@ function Countdown({ route, navigation }: Props) {
           .collection(collection)
           .doc(selection.documentID)
           .update({
-            subscribers: firestore.FieldValue.arrayRemove(uid),
+            subscribers: firestore.FieldValue.arrayRemove(user),
           });
       } catch (error) {
         console.error("Error writing document: ", error);
@@ -265,8 +264,8 @@ function Countdown({ route, navigation }: Props) {
       }
       // sections={listData}
       sections={[
-        { data: movieSubs, title: "Movies" },
-        { data: gameSubs, title: "Games" },
+        { data: movies, title: "Movies" },
+        { data: games, title: "Games" },
       ]}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}
@@ -278,8 +277,8 @@ function Countdown({ route, navigation }: Props) {
           // isLastInSection={data.section.title === "Movies" ? data.index + 1 === route.params.movies.length : data.index + 1 === route.params.games.length}
           isLastInSection={
             data.section.title === "Movies"
-              ? data.index + 1 === movieSubs.length
-              : data.index + 1 === gameSubs.length
+              ? data.index + 1 === movies.length
+              : data.index + 1 === games.length
           }
           showButtons={showButtons}
           selected={

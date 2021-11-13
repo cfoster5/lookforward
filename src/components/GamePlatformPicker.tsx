@@ -8,8 +8,7 @@ import firestore from "@react-native-firebase/firestore";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
 import GameContext from "../contexts/GamePlatformPickerContexts";
-import ThemeContext from "../contexts/ThemeContext";
-import UserContext from "../contexts/UserContext";
+import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB } from "../interfaces/igdb";
 
@@ -20,8 +19,7 @@ function GamePlatformPicker({
   modalizeRef: RefObject<IHandles>;
   game: IGDB.Game.Game;
 }) {
-  const colorScheme = useContext(ThemeContext);
-  const uid = useContext(UserContext);
+  const { user, theme } = useContext(TabStackContext);
   const { setGame } = useContext(GameContext);
   const tabBarheight = useBottomTabBarHeight();
 
@@ -55,7 +53,7 @@ function GamePlatformPicker({
         .collection("gameReleases")
         .doc(releaseDate.id.toString())
         .update({
-          subscribers: firestore.FieldValue.arrayUnion(uid),
+          subscribers: firestore.FieldValue.arrayUnion(user),
         });
       ReactNativeHapticFeedback.trigger("impactLight", {
         enableVibrateFallback: true,
@@ -74,7 +72,7 @@ function GamePlatformPicker({
       childrenStyle={{
         marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
       }}
-      modalStyle={colorScheme === "dark" ? { backgroundColor: "#121212" } : {}}
+      modalStyle={theme === "dark" ? { backgroundColor: "#121212" } : {}}
       onClosed={() => setGame(null)}
     >
       {game?.release_dates.map(
@@ -123,9 +121,7 @@ function GamePlatformPicker({
                 }}
               >
                 <Text
-                  style={
-                    colorScheme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body
-                  }
+                  style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}
                 >
                   {releaseDate.platform.name}
                 </Text>

@@ -4,10 +4,7 @@ import { iOSColors } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { BlurView } from "@react-native-community/blur";
 import firestore from "@react-native-firebase/firestore";
-import {
-  BottomTabBar,
-  createBottomTabNavigator,
-} from "@react-navigation/bottom-tabs";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
@@ -15,22 +12,6 @@ import { Navigation } from "../interfaces/navigation";
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
 import { ProfileStack } from "./ProfileStack";
-
-const CustomTabs = (props) =>
-  Platform.OS === "ios" ? (
-    <BlurView
-      style={{
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
-      }}
-    >
-      <BottomTabBar {...props} />
-    </BlurView>
-  ) : (
-    <BottomTabBar {...props} />
-  );
 
 const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
 export function TabStack() {
@@ -91,12 +72,14 @@ export function TabStack() {
           tabBarStyle:
             Platform.OS === "ios"
               ? {
-                  borderTopColor: "rgb(39, 39, 41)",
-                  backgroundColor: "transparent",
+                  position: "absolute",
                 }
               : undefined,
+          tabBarBackground: () =>
+            Platform.OS === "ios" ? (
+              <BlurView style={{ flex: 1 }} />
+            ) : undefined,
         })}
-        tabBar={(props) => <CustomTabs {...props} />}
       >
         {/* Is setting headerShown to false the best method? */}
         <Tab.Screen

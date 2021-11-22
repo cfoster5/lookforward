@@ -3,12 +3,8 @@ import { Platform } from "react-native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {
-  createStackNavigator,
-  StackNavigationProp,
-} from "@react-navigation/stack";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-import { BlurHeader } from "../components/BlurHeader";
 import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor";
 import Countdown from "../screens/Countdown";
@@ -25,7 +21,7 @@ interface Props {
   route: RouteProp<Navigation.TabNavigationParamList, "CountdownTab">;
 }
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 export function CountdownStack({ navigation, route }: Props) {
   return (
     <Stack.Navigator>
@@ -33,16 +29,16 @@ export function CountdownStack({ navigation, route }: Props) {
         name="Countdown"
         component={Countdown}
         options={{
-          header: (props) => <BlurHeader {...props} />,
           headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "regular",
         }}
       />
       <Stack.Screen
         name="Details"
         component={Details}
         options={{
-          header: (props) => <BlurHeader {...props} />,
           headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "regular",
           title: "",
         }}
       />
@@ -50,8 +46,8 @@ export function CountdownStack({ navigation, route }: Props) {
         name="MovieDiscover"
         component={MovieDiscover}
         options={{
-          header: (props) => <BlurHeader {...props} />,
           headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "regular",
           title: "",
         }}
       />
@@ -59,8 +55,8 @@ export function CountdownStack({ navigation, route }: Props) {
         name="Actor"
         component={Actor}
         options={{
-          header: (props) => <BlurHeader {...props} />,
           headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "regular",
           title: "",
         }}
       />

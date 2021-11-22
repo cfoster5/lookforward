@@ -1,12 +1,9 @@
 import React from "react";
 import { Platform } from "react-native";
-import { BlurView } from "@react-native-community/blur";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
+import { RouteProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createStackNavigator } from "@react-navigation/stack";
 
-import { BlurHeader } from "../components/BlurHeader";
 import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor";
 import Details from "../screens/Details";
@@ -28,7 +25,7 @@ interface Props {
   route: RouteProp<Navigation.TabNavigationParamList, "FindTab">;
 }
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 export function FindStack({ navigation, route }: Props) {
   return (
     <Stack.Navigator>
@@ -41,8 +38,8 @@ export function FindStack({ navigation, route }: Props) {
         name="Details"
         component={Details}
         options={{
-          header: (props) => <BlurHeader {...props} />,
           headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "regular",
           title: "",
         }}
       />
@@ -50,8 +47,8 @@ export function FindStack({ navigation, route }: Props) {
         name="MovieDiscover"
         component={MovieDiscover}
         options={{
-          header: (props) => <BlurHeader {...props} />,
           headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "regular",
           title: "",
         }}
       />
@@ -59,8 +56,8 @@ export function FindStack({ navigation, route }: Props) {
         name="GameDiscover"
         component={GameDiscover}
         options={{
-          header: (props) => <BlurHeader {...props} />,
           headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "regular",
           title: "",
         }}
       />
@@ -68,8 +65,8 @@ export function FindStack({ navigation, route }: Props) {
         name="Actor"
         component={Actor}
         options={{
-          header: (props) => <BlurHeader {...props} />,
           headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "regular",
           title: "",
         }}
       />

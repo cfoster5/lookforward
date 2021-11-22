@@ -9,13 +9,20 @@ import {
 } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import { reusableStyles } from "../helpers/styles";
 import { IGDB } from "../interfaces/igdb";
-import { TMDB } from "../interfaces/tmdb";
+import { Navigation } from "../interfaces/navigation";
+import { Movie } from "../interfaces/tmdb";
 
 interface Props {
-  navigation: any;
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
+    BottomTabNavigationProp<Navigation.TabNavigationParamList, "CountdownTab">
+  >;
   item: any;
   sectionName: "Movies" | "Games";
   isLastInSection: boolean;
@@ -39,21 +46,16 @@ function CountdownItem({
 }: Props) {
   function getReleaseDate(): string {
     if (sectionName === "Movies") {
-      let monthIndex = new Date(
-        (item as TMDB.Movie.Movie).release_date
-      ).getUTCMonth();
+      let monthIndex = new Date((item as Movie).release_date).getUTCMonth();
       return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${
         monthIndex + 1
       }/${
-        new Date((item as TMDB.Movie.Movie).release_date)
-          .getUTCDate()
-          .toString().length < 2
+        new Date((item as Movie).release_date).getUTCDate().toString().length <
+        2
           ? "0"
           : ""
-      }${new Date(
-        (item as TMDB.Movie.Movie).release_date
-      ).getUTCDate()}/${new Date(
-        (item as TMDB.Movie.Movie).release_date
+      }${new Date((item as Movie).release_date).getUTCDate()}/${new Date(
+        (item as Movie).release_date
       ).getUTCFullYear()}`;
     }
     if (sectionName === "Games") {
@@ -72,9 +74,9 @@ function CountdownItem({
     let month: number = 0;
     let day: number = 0;
     if (sectionName === "Movies") {
-      year = new Date((item as TMDB.Movie.Movie).release_date).getUTCFullYear();
-      month = new Date((item as TMDB.Movie.Movie).release_date).getUTCMonth();
-      day = new Date((item as TMDB.Movie.Movie).release_date).getUTCDate();
+      year = new Date((item as Movie).release_date).getUTCFullYear();
+      month = new Date((item as Movie).release_date).getUTCMonth();
+      day = new Date((item as Movie).release_date).getUTCDate();
     }
     if (sectionName === "Games") {
       let date = new Date((item as IGDB.ReleaseDate.ReleaseDate).date * 1000);
@@ -232,7 +234,7 @@ function CountdownItem({
           ? updateSelections(item.documentID)
           : sectionName === "Movies"
           ? navigation.navigate("Details", {
-              type: sectionName === "Movies" ? "movie" : "game",
+              type: "movie",
               data: item,
             })
           : undefined

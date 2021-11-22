@@ -1,36 +1,38 @@
-import { TMDB } from "../interfaces/tmdb";
+import {
+  Movie,
+  MovieDetail,
+  MovieWatchProvider,
+  MultiSearchResult,
+  Person,
+  Response,
+  TrendingMovie,
+  UpcomingResponse,
+} from "../interfaces/tmdb";
 
-export async function getUpcomingMovies(pageIndex?: number) {
+export async function getUpcomingMovies(
+  pageIndex?: number
+): Promise<UpcomingResponse> {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/upcoming?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=${
       pageIndex ? pageIndex : 1
     }`
   );
-  const json: TMDB.Response = await response.json();
-  // return json.results.sort((a, b) => {
-  //   return b.popularity - a.popularity;
-  // });
-  return json;
+  return await response.json();
 }
 
-// export async function searchMovies(searchVal: string) {
-// const response = await fetch(`https://api.themoviedb.org/3/search/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=1&query=${searchVal}`);
-export async function searchMovies(searchVal: string, pageIndex?: number) {
+export async function searchMovies(
+  searchVal: string,
+  pageIndex?: number
+): Promise<Response<MultiSearchResult>> {
   const response = await fetch(
     `https://api.themoviedb.org/3/search/multi?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=${
       pageIndex ? pageIndex : 1
     }&query=${searchVal}`
   );
-  const json: TMDB.Response = await response.json();
-  // return json.results.sort((a, b) => {
-  //   return b.popularity - a.popularity;
-  // });
-  return json;
+  return await response.json();
 }
 
-export async function getMovieDetails(
-  movieId: number
-): Promise<TMDB.Movie.DetailsExtended> {
+export async function getMovieDetails(movieId: number): Promise<MovieDetail> {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=credits,similar,videos,release_dates,keywords,recommendations`
   );
@@ -41,41 +43,44 @@ export async function getMovieDetails(
 //   const response = await fetch(`https://api.themoviedb.org/3/person/${person}/movie_credits?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US`);
 //   return response.json();
 // }
-export async function getPerson(personId: number): Promise<TMDB.Person> {
+export async function getPerson(personId: number): Promise<Person> {
   const response = await fetch(
     `https://api.themoviedb.org/3/person/${personId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=movie_credits,images`
   );
   return response.json();
 }
 
-export async function getTrendingMovies(pageIndex?: number) {
+export async function getTrendingMovies(
+  pageIndex?: number
+): Promise<Response<TrendingMovie>> {
   const response = await fetch(
     `https://api.themoviedb.org/3/trending/movie/day?api_key=68991fbb0b75dba5ae0ecd8182e967b1&page=${
       pageIndex ? pageIndex : 1
     }`
   );
-  const json: TMDB.Response = await response.json();
-  return json;
+  return await response.json();
 }
 
-export async function getNowPlayingMovies(pageIndex?: number) {
+export async function getNowPlayingMovies(
+  pageIndex?: number
+): Promise<UpcomingResponse> {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/now_playing?api_key=68991fbb0b75dba5ae0ecd8182e967b1&region=US&page=${
       pageIndex ? pageIndex : 1
     }`
   );
-  const json: TMDB.Response = await response.json();
-  return json;
+  return await response.json();
 }
 
-export async function getPopularMovies(pageIndex?: number) {
+export async function getPopularMovies(
+  pageIndex?: number
+): Promise<Response<Movie>> {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/popular?api_key=68991fbb0b75dba5ae0ecd8182e967b1&region=US&page=${
       pageIndex ? pageIndex : 1
     }`
   );
-  const json: TMDB.Response = await response.json();
-  return json;
+  return await response.json();
 }
 
 // export async function getTopRatedMovies(): Promise<TMDB.Movie.Movie[]> {
@@ -88,8 +93,7 @@ export async function getPopularPeople(): Promise<any[]> {
   const response = await fetch(
     `https://api.themoviedb.org/3/person/popular?api_key=68991fbb0b75dba5ae0ecd8182e967b1`
   );
-  const json: TMDB.Response = await response.json();
-  return json.results;
+  return await response.json();
 }
 
 export async function getDiscoverMovies({
@@ -124,12 +128,12 @@ export async function getDiscoverMovies({
       pageIndex ? pageIndex : 1
     }`
   );
-  const json: TMDB.Response = await response.json();
-  // return json.results;
-  return json;
+  return await response.json();
 }
 
-export async function getMovieWatchProviders() {
+export async function getMovieWatchProviders(): Promise<{
+  results: MovieWatchProvider[];
+}> {
   const response = await fetch(
     `https://api.themoviedb.org/3/watch/providers/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&watch_region=US`
   );

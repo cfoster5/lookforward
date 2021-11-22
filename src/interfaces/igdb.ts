@@ -1,5 +1,4 @@
 export namespace IGDB {
-
   export namespace Game {
     export interface Cover {
       id: number;
@@ -46,17 +45,17 @@ export namespace IGDB {
     }
 
     export interface Company {
-      id: number,
-      name: string
+      id: number;
+      name: string;
     }
 
     export interface InvolvedCompany {
-      id: number,
-      company: Company,
-      developer: true,
-      porting: false,
-      publisher: false,
-      supporting: false
+      id: number;
+      company: Company;
+      developer: true;
+      porting: false;
+      publisher: false;
+      supporting: false;
     }
 
     export interface Game {

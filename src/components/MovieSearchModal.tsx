@@ -3,11 +3,17 @@ import { FlatList, Platform, Pressable, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { iOSUIKit } from "react-native-typography";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import {
+  BottomTabNavigationProp,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import MovieSearchFilterContext from "../contexts/MovieSearchFilterContexts";
 import TabStackContext from "../contexts/TabStackContext";
 import { getMovieWatchProviders } from "../helpers/tmdbRequests";
+import { Navigation } from "../interfaces/navigation";
 import ButtonMultiState from "./ButtonMultiState";
 import ButtonSingleState from "./ButtonSingleState";
 
@@ -23,7 +29,10 @@ export default function MovieSearchModal({
   filterModalRef,
   selectedOption,
 }: {
-  navigation: any;
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<Navigation.FindStackParamList, "Find">,
+    BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+  >;
   filterModalRef: Modalize;
   selectedOption: string;
 }) {
@@ -67,7 +76,7 @@ export default function MovieSearchModal({
   ];
 
   useEffect(() => {
-    getMovieWatchProviders().then((json: { results: MovieWatchProvider[] }) =>
+    getMovieWatchProviders().then((json) =>
       setMovieWatchProviders([...movieWatchProviders, ...json.results])
     );
   }, []);

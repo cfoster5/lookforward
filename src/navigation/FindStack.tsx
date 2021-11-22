@@ -1,11 +1,10 @@
 import React from "react";
 import { Platform } from "react-native";
+import { BlurView } from "@react-native-community/blur";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
-import {
-  createStackNavigator,
-  StackNavigationProp,
-} from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 
 import { BlurHeader } from "../components/BlurHeader";
 import { Navigation } from "../interfaces/navigation";
@@ -15,20 +14,24 @@ import GameDiscover from "../screens/GameDiscover";
 import MovieDiscover from "../screens/MovieDiscover";
 import Search from "../screens/Search";
 
-type FindStackNavProp = CompositeNavigationProp<
-  StackNavigationProp<Navigation.FindStackParamList, "Find">,
-  BottomTabNavigationProp<Navigation.TabNavigationParamList>
+// type FindStackNavProp = CompositeNavigationProp<
+//   StackNavigationProp<Navigation.FindStackParamList, "Find">,
+//   BottomTabNavigationProp<Navigation.TabNavigationParamList>
+// >;
+type FindStackNavProp = BottomTabNavigationProp<
+  Navigation.TabNavigationParamList,
+  "FindTab"
 >;
 
 interface Props {
   navigation: FindStackNavProp;
-  route: RouteProp<Navigation.TabNavigationParamList, "Find">;
+  route: RouteProp<Navigation.TabNavigationParamList, "FindTab">;
 }
 
-const Stack = createStackNavigator<Navigation.FindStackParamList>();
+const Stack = createStackNavigator();
 export function FindStack({ navigation, route }: Props) {
   return (
-    <Stack.Navigator headerMode="screen">
+    <Stack.Navigator>
       <Stack.Screen
         name="Find"
         component={Search}

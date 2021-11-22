@@ -3,28 +3,24 @@ import { Pressable, Text, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { StackNavigationProp } from "@react-navigation/stack";
-import moment from "moment";
+import { DateTime } from "luxon";
 
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
-import { TMDB } from "../interfaces/tmdb";
+import { Movie } from "../interfaces/tmdb";
 import PosterButton from "./PosterButton";
 
-function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
+function MoviePoster({ item }: { item: Movie }) {
   const { movies } = useContext(SubContext);
   let inCountdown = false;
-  inCountdown = movies.some((movie: TMDB.Movie.Movie) => movie.id === item.id);
+  inCountdown = movies.some((movie: Movie) => movie.id === item.id);
   return (
     <>
-      {moment(item.release_date) >= moment() && (
-        <PosterButton
-          data={item}
-          inCountdown={inCountdown}
-          mediaType={"movie"}
-        />
+      {DateTime.fromISO(item.release_date) >= DateTime.now() && (
+        <PosterButton movie={item} inCountdown={inCountdown} />
       )}
       {item.poster_path ? (
         <FastImage
@@ -32,10 +28,7 @@ function MoviePoster({ item }: { item: TMDB.Movie.Movie }) {
           source={{ uri: `https://image.tmdb.org/t/p/w300${item.poster_path}` }}
         />
       ) : (
-        <TextPoster
-          text={item.title}
-          upcomingRelease={moment(item.release_date) >= moment()}
-        />
+        <TextPoster text={item.title} />
       )}
     </>
   );
@@ -50,16 +43,12 @@ function GamePoster({ item }: { item: IGDB.Game.Game }) {
   )?.documentID;
   let hasUpcomingRelease =
     item.release_dates.filter(
-      (releaseDate) => moment(releaseDate.date) >= moment()
+      (releaseDate) => DateTime.fromISO(releaseDate.date) >= DateTime.now()
     ).length === 0;
   return (
     <>
       {hasUpcomingRelease && (
-        <PosterButton
-          data={item}
-          inCountdown={inCountdown}
-          mediaType={"game"}
-        />
+        <PosterButton game={item} inCountdown={inCountdown} />
       )}
       {item.cover?.url ? (
         <FastImage
@@ -75,19 +64,13 @@ function GamePoster({ item }: { item: IGDB.Game.Game }) {
           }}
         />
       ) : (
-        <TextPoster text={item.name} upcomingRelease={hasUpcomingRelease} />
+        <TextPoster text={item.name} />
       )}
     </>
   );
 }
 
-export function TextPoster({
-  text,
-  upcomingRelease,
-}: {
-  text: string;
-  upcomingRelease: boolean;
-}) {
+export function TextPoster({ text }: { text: string }) {
   const { theme } = useContext(TabStackContext);
   return (
     <View
@@ -121,27 +104,21 @@ interface Props {
   navigation:
     | StackNavigationProp<Navigation.FindStackParamList, "Find">
     | StackNavigationProp<Navigation.FindStackParamList, "Details">;
-  data: TMDB.Movie.Movie | IGDB.Game.Game;
-  categoryIndex: number;
+  movie?: Movie | TMDB.MovieCredits.Cast | TMDB.MovieCredits.Crew;
+  game?: IGDB.Game.Game;
 }
 
-function Poster({ navigation, data, categoryIndex }: Props) {
-  let mediaType: "movie" | "game" = "movie";
-  if (categoryIndex === 0) {
-    mediaType = "movie";
-  }
-  if (categoryIndex === 1) {
-    mediaType = "game";
-  }
-
+function Poster({ navigation, movie, game }: Props) {
   return (
     <Pressable
       onPress={() =>
-        navigation.push("Details", { type: mediaType, data: data })
+        navigation.push(
+          "Details",
+          movie ? { type: "movie", data: movie } : { type: "game", data: game }
+        )
       }
     >
-      {mediaType === "movie" && <MoviePoster item={data as TMDB.Movie.Movie} />}
-      {mediaType === "game" && <GamePoster item={data as IGDB.Game.Game} />}
+      {movie ? <MoviePoster item={movie} /> : <GamePoster item={game} />}
     </Pressable>
   );
 }

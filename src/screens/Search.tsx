@@ -11,8 +11,15 @@ import {
 import { SearchBar } from "react-native-elements";
 import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { RouteProp, useScrollToTop } from "@react-navigation/native";
+import {
+  BottomTabNavigationProp,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
+import {
+  CompositeNavigationProp,
+  RouteProp,
+  useScrollToTop,
+} from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import CategoryControl from "../components/CategoryControl";
@@ -34,17 +41,22 @@ import {
 } from "../helpers/tmdbRequests";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
-import { TMDB } from "../interfaces/tmdb";
+import { Movie, MultiSearchResult, TrendingMovie } from "../interfaces/tmdb";
 
 interface Props {
-  navigation: StackNavigationProp<Navigation.FindStackParamList, "Find">;
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<Navigation.FindStackParamList, "Find">,
+    BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+  >;
   route: RouteProp<Navigation.FindStackParamList, "Find">;
 }
 
 function Search({ navigation, route }: Props) {
   const [searchValue, setSearchValue] = useState("");
-  const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([]);
-  const [initMovies, setInitMovies] = useState<TMDB.Movie.Movie[]>([]);
+  const [movies, setMovies] = useState<
+    (Movie | MultiSearchResult | TrendingMovie)[]
+  >([]);
+  const [initMovies, setInitMovies] = useState<Movie[]>([]);
   const [games, setGames] = useState<IGDB.Game.Game[]>([]);
   const [initGames, setInitGames] = useState<IGDB.Game.Game[]>([]);
   const [categoryIndex, setCategoryIndex] = useState(0);
@@ -314,12 +326,8 @@ function Search({ navigation, route }: Props) {
                   ? movies.filter((movie) => movie.media_type === "movie")
                   : initMovies
               }
-              renderItem={({ item }: { item: TMDB.Movie.Movie }) => (
-                <Poster
-                  navigation={navigation}
-                  data={item}
-                  categoryIndex={categoryIndex}
-                />
+              renderItem={({ item }: { item: Movie }) => (
+                <Poster navigation={navigation} movie={item} />
               )}
               numColumns={2}
               contentContainerStyle={{
@@ -440,11 +448,7 @@ function Search({ navigation, route }: Props) {
             <FlatList
               data={games}
               renderItem={({ item }: { item: IGDB.Game.Game }) => (
-                <Poster
-                  navigation={navigation}
-                  data={item}
-                  categoryIndex={categoryIndex}
-                />
+                <Poster navigation={navigation} game={item} />
               )}
               numColumns={2}
               contentContainerStyle={{

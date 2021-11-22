@@ -2,6 +2,7 @@ import React from "react";
 import { Platform } from "react-native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {
   createStackNavigator,
   StackNavigationProp,
@@ -21,13 +22,13 @@ type CountdownStackNavProp = CompositeNavigationProp<
 
 interface Props {
   navigation: CountdownStackNavProp;
-  route: RouteProp<Navigation.TabNavigationParamList, "Countdown">;
+  route: RouteProp<Navigation.TabNavigationParamList, "CountdownTab">;
 }
 
 const Stack = createStackNavigator();
 export function CountdownStack({ navigation, route }: Props) {
   return (
-    <Stack.Navigator headerMode="screen">
+    <Stack.Navigator>
       <Stack.Screen
         name="Countdown"
         component={Countdown}

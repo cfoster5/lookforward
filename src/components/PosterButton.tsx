@@ -9,27 +9,27 @@ import GameContext from "../contexts/GamePlatformPickerContexts";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
-import { TMDB } from "../interfaces/tmdb";
+import { Movie } from "../interfaces/tmdb";
 
 interface Props {
-  data: TMDB.Movie.Movie | IGDB.Game.Game;
+  movie?: Movie;
+  game?: IGDB.Game.Game;
   inCountdown: boolean;
-  mediaType: "movie" | "game";
 }
 
-function PosterButton({ data, inCountdown, mediaType }: Props) {
+function PosterButton({ movie, game, inCountdown }: Props) {
   const { user } = useContext(TabStackContext);
   const { setGame } = useContext(GameContext);
   const { games } = useContext(SubContext);
 
   let docId = "";
-  if (mediaType === "movie") {
-    docId = data.id.toString();
+  if (movie) {
+    docId = movie.id.toString();
   }
-  if (mediaType === "game") {
+  if (game) {
     docId = games.find(
       (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
-        releaseDate.game.id === data.id
+        releaseDate.game.id === game.id
     )?.documentID;
   }
 
@@ -46,7 +46,7 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
         await firestore()
           .collection("movies")
           .doc(docId)
-          .set(data, { merge: true });
+          .set(movie, { merge: true });
         await firestore()
           .collection("movies")
           .doc(docId)
@@ -98,14 +98,12 @@ function PosterButton({ data, inCountdown, mediaType }: Props) {
   }
 
   function handlePress() {
-    if (mediaType === "movie") {
+    if (movie) {
       inCountdown ? deleteItem("movies") : addMovieToList();
     }
-    if (mediaType === "game") {
-      console.log(`data`, data);
-      inCountdown
-        ? deleteItem("gameReleases")
-        : setGame(data as IGDB.Game.Game);
+    if (game) {
+      console.log(`data`, game);
+      inCountdown ? deleteItem("gameReleases") : setGame(game);
     }
   }
 

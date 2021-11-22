@@ -2,16 +2,21 @@ import React, { useContext, useEffect } from "react";
 import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import { iOSColors, iOSUIKit } from "react-native-typography";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
-import { TMDB } from "../interfaces/tmdb";
+import { Cast, Crew } from "../interfaces/tmdb";
 
 interface Props {
-  navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">;
-  person: TMDB.Movie.Crew | TMDB.Movie.Cast;
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<Navigation.FindStackParamList, "Find">,
+    BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+  >;
+  person: Crew | Cast;
 }
 
 function SearchPerson({ navigation, person }: Props) {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Platform, StatusBar, View } from "react-native";
 import SplashScreen from "react-native-splash-screen";
-import { OverflowMenuProvider } from "react-navigation-header-buttons";
+// import { OverflowMenuProvider } from "react-navigation-header-buttons";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
@@ -19,6 +19,7 @@ import {
 import TabStackContext from "./src/contexts/TabStackContext";
 import { AuthStack } from "./src/navigation/AuthStack";
 import { TabStack } from "./src/navigation/TabStack";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
@@ -120,13 +121,14 @@ export default function App() {
     return <View />;
   }
   return (
-    <NavigationContainer
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-    >
-      <StatusBar
-        barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-      />
-      <OverflowMenuProvider>
+    <SafeAreaProvider>
+      <NavigationContainer
+        theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      >
+        <StatusBar
+          barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+        />
+        {/* <OverflowMenuProvider> */}
         {user ? (
           <TabStackContext.Provider
             value={{ user: user.uid, theme: colorScheme }}
@@ -136,7 +138,8 @@ export default function App() {
         ) : (
           <AuthStack />
         )}
-      </OverflowMenuProvider>
-    </NavigationContainer>
+        {/* </OverflowMenuProvider> */}
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }

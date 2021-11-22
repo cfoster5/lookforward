@@ -16,9 +16,10 @@ import {
   Item,
 } from "react-navigation-header-buttons";
 import firestore from "@react-native-firebase/firestore";
-import { RouteProp } from "@react-navigation/native";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import moment from "moment";
+import { DateTime } from "luxon";
 
 import GameDetails from "../components/Details/GameDetails";
 import MovieDetails from "../components/Details/MovieDetails";
@@ -27,17 +28,28 @@ import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
-import { TMDB } from "../interfaces/tmdb";
+import { Movie } from "../interfaces/tmdb";
 
 interface Props {
-  navigation: StackNavigationProp<
+  navigation:
+    | CompositeNavigationProp<
+        StackNavigationProp<Navigation.FindStackParamList, "Details">,
+        BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+      >
+    | CompositeNavigationProp<
+        StackNavigationProp<Navigation.CountdownStackParamList, "Details">,
+        BottomTabNavigationProp<
+          Navigation.TabNavigationParamList,
+          "CountdownTab"
+        >
+      >;
+  route: RouteProp<
     Navigation.FindStackParamList | Navigation.CountdownStackParamList,
     "Details"
   >;
-  route: RouteProp<Navigation.FindStackParamList, "Details">;
 }
 
-function Details({ route, navigation }: Props) {
+function Details({ navigation, route }: Props) {
   const modalizeRef = useRef<Modalize>(null);
   const [countdownId, setCountdownId] = useState();
   const { user } = useContext(TabStackContext);
@@ -47,7 +59,7 @@ function Details({ route, navigation }: Props) {
     console.log(`route.params.data`, route.params.data);
     let title = "";
     if (route.params.type === "movie") {
-      title = (route.params.data as TMDB.Movie.Movie).title;
+      title = (route.params.data as Movie).title;
     } else if (route.params.type === "game") {
       title = (route.params.data as IGDB.Game.Game).name;
     }
@@ -74,13 +86,14 @@ function Details({ route, navigation }: Props) {
   function upcomingRelease() {
     if (
       route.params.type === "movie" &&
-      moment((route.params.data as TMDB.Movie.Movie).release_date) >= moment()
+      DateTime.fromISO((route.params.data as Movie).release_date) >=
+        DateTime.now()
     ) {
       return true;
     } else if (
       route.params.type === "game" &&
       (route.params.data as IGDB.Game.Game).release_dates.filter(
-        (releaseDate) => moment(releaseDate.date) >= moment()
+        (releaseDate) => DateTime.fromISO(releaseDate.date) >= DateTime.now()
       ).length === 0
     ) {
       return true;
@@ -112,12 +125,11 @@ function Details({ route, navigation }: Props) {
 
   useEffect(() => {
     // console.log("Details Changes", movies, games)
-    // let documentID = route.params.type === "movie" ? movies?.find((movie: TMDB.Movie.Movie) => movie.id === (route.params.data as TMDB.Movie.Movie).id)?.documentID : games.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
+    // let documentID = route.params.type === "movie" ? movies?.find((movie: Movie) => movie.id === (route.params.data as Movie).id)?.documentID : games.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
     let documentID;
     if (route.params.type === "movie") {
       documentID = movies?.find(
-        (movie: TMDB.Movie.Movie) =>
-          movie.id === (route.params.data as TMDB.Movie.Movie).id
+        (movie: Movie) => movie.id === (route.params.data as Movie).id
       )?.documentID;
     }
     if (route.params.type === "game") {
@@ -127,12 +139,12 @@ function Details({ route, navigation }: Props) {
       )?.documentID;
     }
     setCountdownId(documentID);
-    // setInCountdown(movies.some((movie: TMDB.Movie.Movie) => movie.id === route.params.data.id))
+    // setInCountdown(movies.some((movie: Movie) => movie.id === route.params.data.id))
   }, [movies, games]);
 
   let docId = "";
   if (route.params.type === "movie") {
-    docId = (route.params.data as TMDB.Movie.Movie).id.toString();
+    docId = (route.params.data as Movie).id.toString();
   }
 
   async function addMovieToList() {
@@ -195,7 +207,7 @@ function Details({ route, navigation }: Props) {
       {route.params.type === "movie" && (
         <MovieDetails
           navigation={navigation}
-          movie={route.params.data as TMDB.Movie.Movie}
+          movie={route.params.data as Movie}
         />
       )}
     </>

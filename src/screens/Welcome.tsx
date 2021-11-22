@@ -9,19 +9,24 @@ import {
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import { getHypedGames } from "../helpers/igdbRequests";
 import { getTrendingMovies } from "../helpers/tmdbRequests";
 import { IGDB } from "../interfaces/igdb";
-import { TMDB } from "../interfaces/tmdb";
+import { TrendingMovie } from "../interfaces/tmdb";
+import { AuthStackParamList } from "../navigation/AuthStack";
 
-function Welcome() {
-  const navigation = useNavigation();
+interface Props {
+  navigation: StackNavigationProp<AuthStackParamList, "Welcome">;
+  route: any;
+}
+
+function Welcome({ navigation }: Props) {
   const [carouselData, setCarouselData] = useState<
-    TMDB.Movie.Movie[] | IGDB.Game.Game[]
+    TrendingMovie[] | IGDB.Game.Game[]
   >([]);
-  const [trendingMovies, setTrendingMovies] = useState<TMDB.Movie.Movie[]>();
+  const [trendingMovies, setTrendingMovies] = useState<TrendingMovie[]>();
   const [hypedGames, setHypedGames] = useState<IGDB.Game.Game[]>();
   const ref = useRef<Carousel<any>>(null);
   const width = 200;
@@ -65,7 +70,7 @@ function Welcome() {
     item,
     index,
   }: {
-    item: TMDB.Movie.Movie | IGDB.Game.Game;
+    item: TrendingMovie | IGDB.Game.Game;
     index: number;
   }) {
     return (
@@ -74,7 +79,7 @@ function Welcome() {
           uri:
             index % 2
               ? `https://image.tmdb.org/t/p/w500${
-                  (item as TMDB.Movie.Movie).poster_path
+                  (item as TrendingMovie).poster_path
                 }`
               : `https:${(item as IGDB.Game.Game).cover?.url.replace(
                   "thumb",

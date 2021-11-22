@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Platform } from "react-native";
+import { iOSColors } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { BlurView } from "@react-native-community/blur";
 import firestore from "@react-native-firebase/firestore";
@@ -10,7 +11,6 @@ import {
 
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
-import { onResult } from "../helpers/helpers";
 import { Navigation } from "../interfaces/navigation";
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
@@ -43,23 +43,25 @@ export function TabStack() {
       .collection("movies")
       .orderBy("release_date")
       .where("subscribers", "array-contains", user)
-      .onSnapshot(
-        (querySnapshot) => {
-          setMovieSubs(onResult(querySnapshot));
-        },
-        (error) => console.error("error", error)
-      );
+      .onSnapshot((documentSnapshot) => {
+        const movieSubsData = documentSnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          documentID: doc.id,
+        }));
+        setMovieSubs(movieSubsData);
+      });
 
     const gameSubscription = firestore()
       .collection("gameReleases")
       .orderBy("date")
       .where("subscribers", "array-contains", user)
-      .onSnapshot(
-        (querySnapshot) => {
-          setGameSubs(onResult(querySnapshot));
-        },
-        (error) => console.error("error", error)
-      );
+      .onSnapshot((documentSnapshot) => {
+        const gameSubsData = documentSnapshot.docs.map((doc) => ({
+          ...doc.data(),
+          documentID: doc.id,
+        }));
+        setGameSubs(gameSubsData);
+      });
 
     // Stop listening for updates when no longer required
     return () => {
@@ -75,41 +77,43 @@ export function TabStack() {
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName = "";
-            if (route.name === "Find") {
+            if (route.name === "FindTab") {
               iconName = "search";
-            } else if (route.name === "Countdown") {
+            } else if (route.name === "CountdownTab") {
               iconName = "timer-outline";
-            } else if (route.name === "Profile") {
+            } else if (route.name === "ProfileTab") {
               iconName = "person-circle-outline";
             }
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-        })}
-        // tabBarOptions={{
-        // activeTintColor: '#3880ff',
-        // inactiveTintColor: 'gray',
-        // }}
-        tabBar={(props) => <CustomTabs {...props} />}
-        tabBarOptions={
-          Platform.OS === "ios"
-            ? {
-                activeTintColor: "#3880ff",
-                inactiveTintColor: "gray",
-                style: {
-                  // borderTopColor: '#666666',
+          tabBarActiveTintColor: iOSColors.blue,
+          tabBarInactiveTintColor: "gray",
+          tabBarStyle:
+            Platform.OS === "ios"
+              ? {
                   borderTopColor: "rgb(39, 39, 41)",
                   backgroundColor: "transparent",
-                },
-              }
-            : {
-                activeTintColor: "#3880ff",
-                inactiveTintColor: "gray",
-              }
-        }
+                }
+              : undefined,
+        })}
+        tabBar={(props) => <CustomTabs {...props} />}
       >
-        <Tab.Screen name="Find" component={FindStack} />
-        <Tab.Screen name="Countdown" component={CountdownStack} />
-        <Tab.Screen name="Profile" component={ProfileStack} />
+        {/* Is setting headerShown to false the best method? */}
+        <Tab.Screen
+          name="FindTab"
+          component={FindStack}
+          options={{ headerShown: false, tabBarLabel: "Find" }}
+        />
+        <Tab.Screen
+          name="CountdownTab"
+          component={CountdownStack}
+          options={{ headerShown: false, tabBarLabel: "Countdown" }}
+        />
+        <Tab.Screen
+          name="ProfileTab"
+          component={ProfileStack}
+          options={{ headerShown: false, tabBarLabel: "Profile" }}
+        />
       </Tab.Navigator>
     </SubContext.Provider>
   );

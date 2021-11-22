@@ -15,9 +15,17 @@ import {
   Item,
 } from "react-navigation-header-buttons";
 import firestore from "@react-native-firebase/firestore";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { RouteProp, useScrollToTop } from "@react-navigation/native";
-import { StackNavigationProp, useHeaderHeight } from "@react-navigation/stack";
+import {
+  BottomTabNavigationProp,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
+import { useHeaderHeight } from "@react-navigation/elements";
+import {
+  CompositeNavigationProp,
+  RouteProp,
+  useScrollToTop,
+} from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import CountdownItem from "../components/CountdownItem";
 import SubContext from "../contexts/SubContext";
@@ -26,9 +34,13 @@ import { Navigation } from "../interfaces/navigation";
 
 interface Props {
   route: RouteProp<Navigation.CountdownStackParamList, "Countdown">;
-  navigation: StackNavigationProp<
-    Navigation.CountdownStackParamList,
-    "Countdown"
+  // navigation: StackNavigationProp<
+  //   Navigation.CountdownStackParamList,
+  //   "Countdown"
+  // >;
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
+    BottomTabNavigationProp<Navigation.TabNavigationParamList, "CountdownTab">
   >;
 }
 

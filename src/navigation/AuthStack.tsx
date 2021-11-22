@@ -1,19 +1,19 @@
 import React from "react";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import CreateAccount from "../screens/CreateAccount";
 import Login from "../screens/Login";
 import PasswordReset from "../screens/PasswordReset";
 import Welcome from "../screens/Welcome";
 
-type AuthStackParamList = {
+export type AuthStackParamList = {
   Welcome: undefined;
   "Create Account": undefined;
-  "Sign In": undefined;
+  "Sign In": { emailSent?: boolean; email?: string };
   "Password Reset": undefined;
 };
 
-const Stack = createStackNavigator<AuthStackParamList>();
+const Stack = createNativeStackNavigator<AuthStackParamList>();
 export function AuthStack() {
   return (
     <Stack.Navigator>

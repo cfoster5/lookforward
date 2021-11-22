@@ -23,7 +23,7 @@ import {
   Item,
 } from "react-navigation-header-buttons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/stack";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 import ButtonMultiState from "../components/ButtonMultiState";
 import Poster from "../components/Poster";
@@ -33,18 +33,11 @@ import {
   getDiscoverMovies,
   getMovieWatchProviders,
 } from "../helpers/tmdbRequests";
-import { TMDB } from "../interfaces/tmdb";
-
-interface MovieWatchProvider {
-  display_priority: number;
-  logo_path: string;
-  provider_id: number;
-  provider_name: string;
-}
+import { Movie, MovieWatchProvider } from "../interfaces/tmdb";
 
 function MovieDiscover({ route, navigation }: any) {
   const { genre, company, keyword, provider } = route.params;
-  const [movies, setMovies] = useState<TMDB.Movie.Movie[]>([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
@@ -226,8 +219,8 @@ function MovieDiscover({ route, navigation }: any) {
               : undefined
           }
           data={movies}
-          renderItem={({ item }: { item: TMDB.Movie.Movie }) => (
-            <Poster navigation={navigation} data={item} categoryIndex={0} />
+          renderItem={({ item }: { item: Movie }) => (
+            <Poster navigation={navigation} movie={item} />
           )}
           numColumns={2}
           columnWrapperStyle={{

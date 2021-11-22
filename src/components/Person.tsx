@@ -7,11 +7,11 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
-import { TMDB } from "../interfaces/tmdb";
+import { Cast, Crew } from "../interfaces/tmdb";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">;
-  person: TMDB.Movie.Crew | TMDB.Movie.Cast;
+  person: Crew | Cast;
 }
 
 function Person({ navigation, person }: Props) {
@@ -65,9 +65,9 @@ function Person({ navigation, person }: Props) {
               : { ...iOSUIKit.subheadEmphasizedObject, color: iOSColors.gray }
           }
         >
-          {person.character
-            ? (person as TMDB.Movie.Cast).character
-            : (person as TMDB.Movie.Crew).job}
+          {"character" in person
+            ? (person as Cast).character
+            : (person as Crew).job}
         </Text>
       </View>
     </Pressable>

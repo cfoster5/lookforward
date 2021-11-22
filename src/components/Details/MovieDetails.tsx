@@ -13,8 +13,13 @@ import { Image } from "react-native-elements";
 import FastImage from "react-native-fast-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { StackNavigationProp, useHeaderHeight } from "@react-navigation/stack";
+import {
+  BottomTabNavigationProp,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { CompositeNavigationProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import TabStackContext from "../../contexts/TabStackContext";
 import { months } from "../../helpers/helpers";
@@ -22,7 +27,13 @@ import { reusableStyles } from "../../helpers/styles";
 import { getMovieDetails } from "../../helpers/tmdbRequests";
 import { getMovieById, getRelated } from "../../helpers/traktRequests";
 import { Navigation } from "../../interfaces/navigation";
-import { TMDB } from "../../interfaces/tmdb";
+import {
+  Genre,
+  Keyword,
+  Movie,
+  MovieDetail,
+  ProductionCompany,
+} from "../../interfaces/tmdb";
 import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
 import Person from "../Person";
@@ -30,11 +41,19 @@ import { TextPoster } from "../Poster";
 import Trailer from "../Trailer";
 
 interface Props {
-  navigation: StackNavigationProp<
-    Navigation.FindStackParamList | Navigation.CountdownStackParamList,
-    "Details"
-  >;
-  movie: TMDB.Movie.Movie;
+  navigation:
+    | CompositeNavigationProp<
+        StackNavigationProp<Navigation.FindStackParamList, "Details">,
+        BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+      >
+    | CompositeNavigationProp<
+        StackNavigationProp<Navigation.CountdownStackParamList, "Details">,
+        BottomTabNavigationProp<
+          Navigation.TabNavigationParamList,
+          "CountdownTab"
+        >
+      >;
+  movie: Movie;
 }
 
 function DiscoverButton({
@@ -44,11 +63,11 @@ function DiscoverButton({
   keyword,
 }: {
   navigation: any;
-  genre?: TMDB.Genre;
-  company?: TMDB.ProductionCompany;
-  keyword?: TMDB.Keyword;
+  genre?: Genre;
+  company?: ProductionCompany;
+  keyword?: Keyword;
 }) {
-  let obj: TMDB.Genre | TMDB.ProductionCompany | TMDB.Keyword = {
+  let obj: Genre | ProductionCompany | Keyword = {
     id: 0,
     name: "",
   };
@@ -77,7 +96,7 @@ function SlidingMovie({
   movie,
 }: {
   navigation: any;
-  movie: TMDB.Movie.Movie;
+  movie: Movie;
 }) {
   return (
     <Pressable
@@ -105,8 +124,7 @@ function SlidingMovie({
 }
 
 function MovieDetails({ navigation, movie }: Props) {
-  const [movieDetails, setMovieDetails] =
-    useState<TMDB.Movie.DetailsExtended>();
+  const [movieDetails, setMovieDetails] = useState<MovieDetail>();
   const [detailIndex, setDetailIndex] = useState(0);
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();

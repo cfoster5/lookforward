@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, Platform, View } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/stack";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 import GameReleaseModal from "../components/GamePlatformPicker";
 import Poster from "../components/Poster";
@@ -78,7 +78,7 @@ function GameDiscover({ route, navigation }: any) {
         indicatorStyle="white"
         data={games}
         renderItem={({ item }: { item: IGDB.Game.Game }) => (
-          <Poster navigation={navigation} data={item} categoryIndex={1} />
+          <Poster navigation={navigation} game={item} />
         )}
         numColumns={2}
         columnWrapperStyle={{

@@ -78,19 +78,6 @@ export async function convertReleasesToGames(
   return games;
 }
 
-export function onResult(querySnapshot: FirebaseFirestoreTypes.QuerySnapshot) {
-  // console.log(querySnapshot.docs);
-  let tempMedia: any = [];
-  querySnapshot.docs.forEach((doc) => {
-    // console.log(doc.data())
-    let data = doc.data();
-    data.documentID = doc.id;
-    tempMedia.push(data);
-  });
-  // State change here is forcing user back to home page on addToList();
-  return tempMedia;
-}
-
 // Hook
 export default function usePrevious(value: any) {
   // The ref object is a generic container whose current property is mutable ...

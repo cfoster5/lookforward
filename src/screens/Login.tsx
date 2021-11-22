@@ -10,10 +10,16 @@ import {
 } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import auth from "@react-native-firebase/auth";
-import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
-function Login({ route }: any) {
-  const navigation = useNavigation();
+import { AuthStackParamList } from "../navigation/AuthStack";
+
+interface Props {
+  navigation: StackNavigationProp<AuthStackParamList, "Sign In">;
+  route: any;
+}
+
+function Login({ navigation, route }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

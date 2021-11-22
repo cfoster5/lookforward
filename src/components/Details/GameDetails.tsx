@@ -3,8 +3,13 @@ import { Dimensions, Platform, ScrollView, Text, View } from "react-native";
 import { Image } from "react-native-elements";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { StackNavigationProp, useHeaderHeight } from "@react-navigation/stack";
+import {
+  BottomTabNavigationProp,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { CompositeNavigationProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import TabStackContext from "../../contexts/TabStackContext";
 import { months } from "../../helpers/helpers";
@@ -16,9 +21,9 @@ import CategoryControl from "../CategoryControl";
 import Trailer from "../Trailer";
 
 interface Props {
-  navigation: StackNavigationProp<
-    Navigation.FindStackParamList | Navigation.CountdownStackParamList,
-    "Details"
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<Navigation.FindStackParamList, "Details">,
+    BottomTabNavigationProp<Navigation.TabNavigationParamList, "Find">
   >;
   game: IGDB.Game.Game;
 }

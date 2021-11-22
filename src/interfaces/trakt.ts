@@ -1,7 +1,6 @@
 import { TMDB } from "./tmdb";
 
 export namespace Trakt {
-
   interface EpisodeIds {
     trakt: number;
     tvdb?: number;
@@ -135,5 +134,4 @@ export namespace Trakt {
     cast: Cast[];
     crew: Crew;
   }
-
 }

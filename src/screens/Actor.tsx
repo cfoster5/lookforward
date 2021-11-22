@@ -12,9 +12,13 @@ import FastImage from "react-native-fast-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp, useHeaderHeight } from "@react-navigation/stack";
+import {
+  BottomTabNavigationProp,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import ButtonMultiState from "../components/ButtonMultiState";
 import Poster from "../components/Poster";
@@ -23,15 +27,31 @@ import { months } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { getPerson } from "../helpers/tmdbRequests";
 import { Navigation } from "../interfaces/navigation";
-import { TMDB } from "../interfaces/tmdb";
+import { Person } from "../interfaces/tmdb";
 
 interface Props {
-  navigation: StackNavigationProp<Navigation.FindStackParamList, "Actor">;
-  route: RouteProp<Navigation.FindStackParamList, "Actor">;
+  // navigation:
+  //   | StackNavigationProp<Navigation.FindStackParamList, "Actor">
+  //   | StackNavigationProp<Navigation.CountdownStackParamList, "Actor">;
+  navigation:
+    | CompositeNavigationProp<
+        StackNavigationProp<Navigation.FindStackParamList, "Find" | "Details">,
+        BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+      >
+    | CompositeNavigationProp<
+        StackNavigationProp<Navigation.CountdownStackParamList, "Details">,
+        BottomTabNavigationProp<
+          Navigation.TabNavigationParamList,
+          "CountdownTab"
+        >
+      >;
+  route:
+    | RouteProp<Navigation.FindStackParamList, "Actor">
+    | RouteProp<Navigation.CountdownStackParamList, "Actor">;
 }
 
 function Actor({ route, navigation }: Props) {
-  const [details, setDetails] = useState<TMDB.Person>();
+  const [details, setDetails] = useState<Person>();
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
@@ -188,11 +208,7 @@ function Actor({ route, navigation }: Props) {
                     )
                     .map((credit, i) => (
                       <View key={i} style={{ paddingBottom: 16 }}>
-                        <Poster
-                          navigation={navigation}
-                          data={credit}
-                          categoryIndex={0}
-                        />
+                        <Poster navigation={navigation} movie={credit} />
                       </View>
                     ))
                 : details?.movie_credits.crew
@@ -203,11 +219,7 @@ function Actor({ route, navigation }: Props) {
                     )
                     .map((credit, i) => (
                       <View key={i} style={{ paddingBottom: 16 }}>
-                        <Poster
-                          navigation={navigation}
-                          data={credit}
-                          categoryIndex={0}
-                        />
+                        <Poster navigation={navigation} movie={credit} />
                       </View>
                     ))}
             </View>

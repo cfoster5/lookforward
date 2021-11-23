@@ -25,12 +25,12 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import CategoryControl from "../components/CategoryControl";
 import GameReleaseModal from "../components/GamePlatformPicker";
 import MovieSearchModal from "../components/MovieSearchModal";
-import Poster from "../components/Poster";
+import { NewPoster } from "../components/NewPoster";
 import SearchPerson from "../components/SearchPerson";
 import GameContext from "../contexts/GamePlatformPickerContexts";
 import MovieSearchFilterContext from "../contexts/MovieSearchFilterContexts";
 import TabStackContext from "../contexts/TabStackContext";
-import usePrevious, { convertReleasesToGames } from "../helpers/helpers";
+import { convertReleasesToGames } from "../helpers/helpers";
 import { getUpcomingGameReleases, searchGames } from "../helpers/igdbRequests";
 import {
   getNowPlayingMovies,
@@ -41,7 +41,7 @@ import {
 } from "../helpers/tmdbRequests";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
-import { Movie, MultiSearchResult, TrendingMovie } from "../interfaces/tmdb";
+import { TMDB } from "../interfaces/tmdb";
 
 interface Props {
   navigation: CompositeNavigationProp<
@@ -54,15 +54,14 @@ interface Props {
 function Search({ navigation, route }: Props) {
   const [searchValue, setSearchValue] = useState("");
   const [movies, setMovies] = useState<
-    (Movie | MultiSearchResult | TrendingMovie)[]
+    (TMDB.BaseMovie | TMDB.Search.MultiSearchResult | TMDB.Trending.Movie)[]
   >([]);
-  const [initMovies, setInitMovies] = useState<Movie[]>([]);
+  const [initMovies, setInitMovies] = useState<TMDB.BaseMovie[]>([]);
   const [games, setGames] = useState<IGDB.Game.Game[]>([]);
   const [initGames, setInitGames] = useState<IGDB.Game.Game[]>([]);
   const [categoryIndex, setCategoryIndex] = useState(0);
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
-  const prevCategoryIndex = usePrevious(categoryIndex);
   const { theme } = useContext(TabStackContext);
   const modalizeRef = useRef<Modalize>(null);
   const [game, setGame] = useState();
@@ -118,22 +117,13 @@ function Search({ navigation, route }: Props) {
 
   useEffect(() => {
     // Condition eliminates flash when data is reset
-    if (prevCategoryIndex === 0) {
+    if (categoryIndex === 1) {
       setMovies(initMovies);
     }
-    if (prevCategoryIndex === 1) {
+    if (categoryIndex === 0) {
       setGames(initGames);
     }
     setSearchValue("");
-
-    // Scroll to top on category change; Only after setting initial value
-    // I don't think this is needed after splitting results into 3 separate flatlists
-    // if (prevCategoryIndex !== undefined && prevCategoryIndex !== categoryIndex) {
-    //   scrollRef?.current?.scrollToIndex({
-    //     index: 0,
-    //     animated: false
-    //   })
-    // }
 
     setTriggeredSearch(false);
   }, [categoryIndex]);
@@ -326,8 +316,14 @@ function Search({ navigation, route }: Props) {
                   ? movies.filter((movie) => movie.media_type === "movie")
                   : initMovies
               }
-              renderItem={({ item }: { item: Movie }) => (
-                <Poster navigation={navigation} movie={item} />
+              renderItem={({ item }) => (
+                <Pressable
+                  onPress={() =>
+                    navigation.push("Details", { type: "movie", data: item })
+                  }
+                >
+                  <NewPoster movie={item} />
+                </Pressable>
               )}
               numColumns={2}
               contentContainerStyle={{
@@ -351,83 +347,81 @@ function Search({ navigation, route }: Props) {
               }
               onEndReachedThreshold={4}
               ListHeaderComponent={
-                <>
-                  {triggeredSearch && (
-                    <>
-                      {movies.filter((movie) => movie.media_type === "person")
-                        .length > 0 && (
-                        <>
-                          <Text
-                            style={{
-                              ...iOSUIKit.bodyEmphasizedWhiteObject,
-                              marginBottom: 8,
-                            }}
-                          >
-                            People
-                          </Text>
-                          <FlatList
-                            keyExtractor={(item) => item.id.toString()}
-                            data={movies.filter(
-                              (movie) => movie.media_type === "person"
-                            )}
-                            renderItem={(person) => (
-                              <SearchPerson
-                                navigation={navigation}
-                                person={person.item}
-                              />
-                            )}
-                            horizontal={true}
-                            contentContainerStyle={{
-                              marginBottom: 16,
-                              paddingRight: 16,
-                            }}
-                            style={{
-                              marginHorizontal: -16,
-                              paddingHorizontal: 16,
-                            }}
-                            showsHorizontalScrollIndicator={false}
-                          />
-                        </>
-                      )}
-                      {movies.filter((movie) => movie.media_type === "movie")
-                        .length > 0 && (
+                triggeredSearch ? (
+                  <>
+                    {(movies as TMDB.Search.MultiSearchResult[]).filter(
+                      (movie) => movie.media_type === "person"
+                    ).length > 0 && (
+                      <>
                         <Text
                           style={{
                             ...iOSUIKit.bodyEmphasizedWhiteObject,
                             marginBottom: 8,
                           }}
                         >
-                          Movies
+                          People
                         </Text>
-                      )}
-                    </>
-                  )}
-                  {!triggeredSearch && (
-                    <View
-                      style={{
-                        flex: 1,
-                        marginBottom: 16,
-                        flexDirection: "row",
-                        flexWrap: "nowrap",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject }}>
-                        {selectedOption}
-                      </Text>
-                      <Pressable onPress={() => filterModalRef.current?.open()}>
-                        <Text
-                          style={{
-                            ...iOSUIKit.bodyObject,
-                            color: iOSColors.blue,
+                        <FlatList
+                          keyExtractor={(item) => item.id.toString()}
+                          data={movies.filter(
+                            (movie) => movie.media_type === "person"
+                          )}
+                          renderItem={(person) => (
+                            <SearchPerson
+                              navigation={navigation}
+                              person={person.item}
+                            />
+                          )}
+                          horizontal={true}
+                          contentContainerStyle={{
+                            marginBottom: 16,
+                            paddingRight: 16,
                           }}
-                        >
-                          More
-                        </Text>
-                      </Pressable>
-                    </View>
-                  )}
-                </>
+                          style={{
+                            marginHorizontal: -16,
+                            paddingHorizontal: 16,
+                          }}
+                          showsHorizontalScrollIndicator={false}
+                        />
+                      </>
+                    )}
+                    {movies.filter((movie) => movie.media_type === "movie")
+                      .length > 0 && (
+                      <Text
+                        style={{
+                          ...iOSUIKit.bodyEmphasizedWhiteObject,
+                          marginBottom: 8,
+                        }}
+                      >
+                        Movies
+                      </Text>
+                    )}
+                  </>
+                ) : (
+                  <View
+                    style={{
+                      flex: 1,
+                      marginBottom: 16,
+                      flexDirection: "row",
+                      flexWrap: "nowrap",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject }}>
+                      {selectedOption}
+                    </Text>
+                    <Pressable onPress={() => filterModalRef.current?.open()}>
+                      <Text
+                        style={{
+                          ...iOSUIKit.bodyObject,
+                          color: iOSColors.blue,
+                        }}
+                      >
+                        More
+                      </Text>
+                    </Pressable>
+                  </View>
+                )
               }
             />
           ) : (
@@ -448,7 +442,13 @@ function Search({ navigation, route }: Props) {
             <FlatList
               data={games}
               renderItem={({ item }: { item: IGDB.Game.Game }) => (
-                <Poster navigation={navigation} game={item} />
+                <Pressable
+                  onPress={() =>
+                    navigation.push("Details", { type: "game", data: item })
+                  }
+                >
+                  <NewPoster game={item} />
+                </Pressable>
               )}
               numColumns={2}
               contentContainerStyle={{

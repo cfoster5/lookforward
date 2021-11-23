@@ -57,21 +57,8 @@ function Countdown({ route, navigation }: Props) {
   const opacityAnim = useRef(new Animated.Value(!showButtons ? 0 : 1)).current;
   const { user } = useContext(TabStackContext);
   const { movies, games } = useContext(SubContext);
-  const [listData, setListData] = useState([
-    // { data: route.params.movies, title: "Movies" },
-    // { data: route.params.games, title: "Games" }
-    { data: movies, title: "Movies" },
-    { data: games, title: "Games" },
-  ]);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-
-  useEffect(() => {
-    setListData([
-      { data: movies, title: "Movies" },
-      { data: games, title: "Games" },
-    ]);
-  }, [games, movies]);
 
   const IoniconsHeaderButton = (props) => (
     // the `props` here come from <Item ... />

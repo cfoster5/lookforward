@@ -1,19 +1,7 @@
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useLayoutEffect, useRef, useState } from "react";
 import { Animated, Platform, SectionList, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import {
-  HeaderButton,
-  HeaderButtons,
-  Item,
-} from "react-navigation-header-buttons";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import firestore from "@react-native-firebase/firestore";
 import {
   BottomTabNavigationProp,
@@ -28,6 +16,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import CountdownItem from "../components/CountdownItem";
+import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
 import { Navigation } from "../interfaces/navigation";
@@ -59,17 +48,6 @@ function Countdown({ route, navigation }: Props) {
   const { movies, games } = useContext(SubContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-
-  const IoniconsHeaderButton = (props) => (
-    // the `props` here come from <Item ... />
-    // you may access them and pass something else to `HeaderButton` if you like
-    <HeaderButton
-      IconComponent={Ionicons}
-      iconSize={30}
-      color={iOSColors.blue}
-      {...props}
-    />
-  );
 
   useLayoutEffect(() => {
     navigation.setOptions({

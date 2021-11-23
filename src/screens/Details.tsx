@@ -7,14 +7,7 @@ import React, {
 } from "react";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { Modalize } from "react-native-modalize";
-import { iOSColors } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import {
-  HeaderButton,
-  HeaderButtonProps,
-  HeaderButtons,
-  Item,
-} from "react-navigation-header-buttons";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import firestore from "@react-native-firebase/firestore";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
@@ -24,6 +17,7 @@ import { DateTime } from "luxon";
 import GameDetails from "../components/Details/GameDetails";
 import MovieDetails from "../components/Details/MovieDetails";
 import GameReleaseModal from "../components/GamePlatformPicker";
+import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
@@ -65,23 +59,6 @@ function Details({ navigation, route }: Props) {
     }
     navigation.setOptions({ title: title });
   }, [route.params.data]);
-
-  const IoniconsHeaderButton = (
-    props: JSX.IntrinsicAttributes &
-      JSX.IntrinsicClassAttributes<HeaderButton> &
-      Readonly<HeaderButtonProps> &
-      Readonly<any>
-  ) => (
-    // the `props` here come from <Item ... />
-    // you may access them and pass something else to `HeaderButton` if you like
-    // <HeaderButton IconComponent={Ionicons} iconSize={30} color={route.params.inCountdown ? iOSColors.red : iOSColors.blue} {...props} />
-    <HeaderButton
-      IconComponent={Ionicons}
-      iconSize={30}
-      color={iOSColors.blue}
-      {...props}
-    />
-  );
 
   function upcomingRelease() {
     if (

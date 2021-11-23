@@ -14,17 +14,14 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import {
-  HeaderButton,
-  HeaderButtons,
-  Item,
-} from "react-navigation-header-buttons";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
 
 import ButtonMultiState from "../components/ButtonMultiState";
+import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import Poster from "../components/Poster";
 import TabStackContext from "../contexts/TabStackContext";
 import { targetedProviders } from "../helpers/helpers";
@@ -95,22 +92,14 @@ function MovieDiscover({ route, navigation }: any) {
     );
   }, []);
 
-  const IoniconsHeaderButton = (props) => (
-    // the `props` here come from <Item ... />
-    // you may access them and pass something else to `HeaderButton` if you like
-    // <HeaderButton IconComponent={Ionicons} iconSize={30} color={route.params.inCountdown ? iOSColors.red : iOSColors.blue} {...props} />
-    <HeaderButton
-      IconComponent={Ionicons}
-      iconSize={25}
-      color={iOSColors.blue}
-      {...props}
-    />
-  );
-
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+        <HeaderButtons
+          HeaderButtonComponent={(props) =>
+            IoniconsHeaderButton({ ...props, iconSize: 23 })
+          }
+        >
           <Item
             title="search"
             iconName={"funnel-outline"}

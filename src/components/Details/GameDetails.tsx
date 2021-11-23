@@ -1,7 +1,6 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Dimensions, Platform, ScrollView, Text, View } from "react-native";
 import { Image } from "react-native-elements";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import {
   BottomTabNavigationProp,
@@ -23,7 +22,7 @@ import Trailer from "../Trailer";
 interface Props {
   navigation: CompositeNavigationProp<
     StackNavigationProp<Navigation.FindStackParamList, "Details">,
-    BottomTabNavigationProp<Navigation.TabNavigationParamList, "Find">
+    BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
   >;
   game: IGDB.Game.Game;
 }
@@ -33,14 +32,6 @@ function GameDetails({ navigation, game }: Props) {
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [initHeaderHeight, setInitHeaderHeight] = useState(0);
-  const insets = useSafeAreaInsets();
-
-  useEffect(() => {
-    if (initHeaderHeight === 0) {
-      setInitHeaderHeight(headerHeight);
-    }
-  }, [headerHeight]);
 
   function getReleaseDate(): string {
     let dates: number[] = [];
@@ -70,13 +61,11 @@ function GameDetails({ navigation, game }: Props) {
       <ScrollView
         contentContainerStyle={
           Platform.OS === "ios"
-            ? { paddingTop: initHeaderHeight, paddingBottom: tabBarheight }
+            ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
             : undefined
         }
         scrollIndicatorInsets={
-          Platform.OS === "ios"
-            ? { top: initHeaderHeight - insets.top, bottom: tabBarheight - 16 }
-            : undefined
+          Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined
         }
       >
         {game?.cover?.url && (

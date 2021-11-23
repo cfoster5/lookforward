@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {
@@ -41,8 +40,6 @@ function MovieDiscover({ route, navigation }: any) {
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [initHeaderHeight, setInitHeaderHeight] = useState(0);
-  const insets = useSafeAreaInsets();
   const [pageIndex, setPageIndex] = useState(1);
   const { theme } = useContext(TabStackContext);
   const [sortMethod, setSortMethod] = useState("popularity.desc");
@@ -97,12 +94,6 @@ function MovieDiscover({ route, navigation }: any) {
       setMovieWatchProviders([...movieWatchProviders, ...json.results])
     );
   }, []);
-
-  useEffect(() => {
-    if (initHeaderHeight === 0) {
-      setInitHeaderHeight(headerHeight);
-    }
-  }, [headerHeight]);
 
   const IoniconsHeaderButton = (props) => (
     // the `props` here come from <Item ... />
@@ -206,14 +197,14 @@ function MovieDiscover({ route, navigation }: any) {
       {movies.length > 0 ? (
         <FlatList
           contentContainerStyle={{
-            paddingTop: Platform.OS === "ios" ? initHeaderHeight + 16 : 16,
+            paddingTop: Platform.OS === "ios" ? headerHeight + 16 : 16,
             paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
             marginHorizontal: 16,
           }}
           scrollIndicatorInsets={
             Platform.OS === "ios"
               ? {
-                  top: initHeaderHeight - insets.top + 16,
+                  top: 16,
                   bottom: tabBarheight - 16,
                 }
               : undefined

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, FlatList, Platform, View } from "react-native";
 import { Modalize } from "react-native-modalize";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
 
@@ -17,16 +16,8 @@ function GameDiscover({ route, navigation }: any) {
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [initHeaderHeight, setInitHeaderHeight] = useState(0);
-  const insets = useSafeAreaInsets();
   const modalizeRef = useRef<Modalize>(null);
   const [game, setGame] = useState();
-
-  useEffect(() => {
-    if (initHeaderHeight === 0) {
-      setInitHeaderHeight(headerHeight);
-    }
-  }, [headerHeight]);
 
   useEffect(() => {
     const { genre, company, keyword } = route.params;
@@ -63,14 +54,14 @@ function GameDiscover({ route, navigation }: any) {
     <GameContext.Provider value={{ game, setGame }}>
       <FlatList
         contentContainerStyle={{
-          paddingTop: Platform.OS === "ios" ? initHeaderHeight + 16 : 16,
+          paddingTop: Platform.OS === "ios" ? headerHeight + 16 : 16,
           paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
           marginHorizontal: 16,
         }}
         scrollIndicatorInsets={
           Platform.OS === "ios"
             ? {
-                top: initHeaderHeight - insets.top + 16,
+                top: 16,
                 bottom: tabBarheight - 16,
               }
             : undefined

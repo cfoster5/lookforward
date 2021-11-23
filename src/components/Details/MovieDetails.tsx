@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { Image } from "react-native-elements";
 import FastImage from "react-native-fast-image";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import {
   BottomTabNavigationProp,
@@ -129,16 +128,8 @@ function MovieDetails({ navigation, movie }: Props) {
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [initHeaderHeight, setInitHeaderHeight] = useState(0);
-  const insets = useSafeAreaInsets();
   const [showAllOverview, setShowAllOverview] = useState(false);
   const [traktDetails, setTraktDetails] = useState();
-
-  useEffect(() => {
-    if (initHeaderHeight === 0) {
-      setInitHeaderHeight(headerHeight);
-    }
-  }, [headerHeight]);
 
   useEffect(() => {
     setMovieDetails(undefined);
@@ -183,13 +174,12 @@ function MovieDetails({ navigation, movie }: Props) {
         <ScrollView
           contentContainerStyle={
             Platform.OS === "ios"
-              ? { paddingTop: initHeaderHeight, paddingBottom: tabBarheight }
+              ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
               : undefined
           }
           scrollIndicatorInsets={
             Platform.OS === "ios"
               ? {
-                  top: initHeaderHeight - insets.top,
                   bottom: tabBarheight - 16,
                 }
               : undefined

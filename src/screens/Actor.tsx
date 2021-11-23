@@ -9,7 +9,6 @@ import {
   View,
 } from "react-native";
 import FastImage from "react-native-fast-image";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
 import {
@@ -64,12 +63,6 @@ function Actor({ route, navigation }: Props) {
   const [selectedJob, setSelectedJob] = useState("Actor");
 
   useEffect(() => {
-    if (initHeaderHeight === 0) {
-      setInitHeaderHeight(headerHeight);
-    }
-  }, [headerHeight]);
-
-  useEffect(() => {
     setDetails(undefined);
     navigation.setOptions({ title: route.params.name });
     getPerson(route.params.id).then((details) => {
@@ -109,7 +102,7 @@ function Actor({ route, navigation }: Props) {
           contentContainerStyle={
             Platform.OS === "ios"
               ? {
-                  paddingTop: initHeaderHeight,
+                  paddingTop: headerHeight,
                   paddingBottom: tabBarheight - 16,
                 }
               : undefined
@@ -117,7 +110,6 @@ function Actor({ route, navigation }: Props) {
           scrollIndicatorInsets={
             Platform.OS === "ios"
               ? {
-                  top: initHeaderHeight - insets.top,
                   bottom: tabBarheight - 16,
                 }
               : undefined

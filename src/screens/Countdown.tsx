@@ -65,14 +65,6 @@ function Countdown({ route, navigation }: Props) {
   ]);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [initHeaderHeight, setInitHeaderHeight] = useState(0);
-  const insets = useSafeAreaInsets();
-
-  useEffect(() => {
-    if (initHeaderHeight === 0) {
-      setInitHeaderHeight(headerHeight);
-    }
-  }, [headerHeight]);
 
   useEffect(() => {
     setListData([
@@ -259,7 +251,7 @@ function Countdown({ route, navigation }: Props) {
       contentContainerStyle={
         Platform.OS == "ios"
           ? {
-              paddingTop: initHeaderHeight + 16,
+              paddingTop: headerHeight + 16,
               paddingBottom: tabBarheight + 16,
               marginHorizontal: 16,
             }
@@ -269,7 +261,7 @@ function Countdown({ route, navigation }: Props) {
       scrollIndicatorInsets={
         Platform.OS == "ios"
           ? {
-              top: initHeaderHeight - insets.top + 16,
+              top: 16,
               bottom: tabBarheight - 16,
             }
           : undefined

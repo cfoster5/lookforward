@@ -54,8 +54,6 @@ function Actor({ route, navigation }: Props) {
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [initHeaderHeight, setInitHeaderHeight] = useState(0);
-  const insets = useSafeAreaInsets();
   const ref = useRef<Carousel<any>>(null);
   const width = 200;
   const horizontalMargin = 4;

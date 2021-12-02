@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Platform, StatusBar, View } from "react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import SplashScreen from "react-native-splash-screen";
 // import { OverflowMenuProvider } from "react-navigation-header-buttons";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
@@ -19,7 +20,6 @@ import {
 import TabStackContext from "./src/contexts/TabStackContext";
 import { AuthStack } from "./src/navigation/AuthStack";
 import { TabStack } from "./src/navigation/TabStack";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function App() {
   // Set an initializing state whilst Firebase connects

@@ -15,7 +15,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
 import GameDetails from "../components/Details/GameDetails";
-import MovieDetails from "../components/Details/MovieDetails";
+import { MovieDetails } from "../components/Details/MovieDetails";
 import GameReleaseModal from "../components/GamePlatformPicker";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import SubContext from "../contexts/SubContext";

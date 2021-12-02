@@ -55,7 +55,7 @@ interface Props {
           "CountdownTab"
         >
       >;
-  movie: BaseMovie;
+  movie: TMDB.BaseMovie;
 }
 
 function DiscoverButton({
@@ -65,11 +65,11 @@ function DiscoverButton({
   keyword,
 }: {
   navigation: any;
-  genre?: Genre;
-  company?: ProductionCompany;
-  keyword?: Keyword;
+  genre?: TMDB.Genre;
+  company?: TMDB.ProductionCompany;
+  keyword?: TMDB.Keyword;
 }) {
-  let obj: Genre | ProductionCompany | Keyword = {
+  let obj: TMDB.Genre | TMDB.ProductionCompany | TMDB.Keyword = {
     id: 0,
     name: "",
   };
@@ -98,7 +98,7 @@ function SlidingMovie({
   movie,
 }: {
   navigation: any;
-  movie: BaseMovie;
+  movie: TMDB.BaseMovie;
 }) {
   return (
     <Pressable

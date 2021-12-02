@@ -3,14 +3,23 @@ import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  ImageBackground,
   Platform,
   Pressable,
   ScrollView,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
 import { Image } from "react-native-elements";
 import FastImage from "react-native-fast-image";
+import LinearGradient from "react-native-linear-gradient";
+import Animated, {
+  interpolate,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import {
   BottomTabNavigationProp,
@@ -122,7 +131,7 @@ function SlidingMovie({
   );
 }
 
-function MovieDetails({ navigation, movie }: Props) {
+export function MovieDetails({ navigation, movie }: Props) {
   const [movieDetails, setMovieDetails] = useState<MovieDetail>();
   const [detailIndex, setDetailIndex] = useState(0);
   const { theme } = useContext(TabStackContext);
@@ -130,6 +139,7 @@ function MovieDetails({ navigation, movie }: Props) {
   const headerHeight = useHeaderHeight();
   const [showAllOverview, setShowAllOverview] = useState(false);
   const [traktDetails, setTraktDetails] = useState();
+  const scrollOffset = useSharedValue(0);
 
   useEffect(() => {
     setMovieDetails(undefined);
@@ -168,10 +178,56 @@ function MovieDetails({ navigation, movie }: Props) {
     }
   }
 
+  const scrollHandler = useAnimatedScrollHandler(
+    (event) => (scrollOffset.value = event.contentOffset.y)
+  );
+
+  const AnimatedImageBackground =
+    Animated.createAnimatedComponent(ImageBackground);
+
+  const windowHeight = Dimensions.get("window").height;
+
+  const headerStyle = useAnimatedStyle(() => {
+    return {
+      // opacity:
+      //   scrollOffset.value < 0
+      //     ? 2 -
+      //       (styles.backdrop.height + Math.abs(scrollOffset.value)) /
+      //         styles.backdrop.height
+      //     : 1,
+      transform: [
+        {
+          scale:
+            scrollOffset.value < 0
+              ? (styles.backdrop.height + Math.abs(scrollOffset.value)) /
+                styles.backdrop.height
+              : 1,
+        },
+        {
+          translateY: interpolate(
+            scrollOffset.value,
+            [scrollOffset.value, 0],
+            [
+              // No idea why this math is working but after dividing the scale by 2, this looks perfect
+              // Could 2 be the key because I'm spreading the height on two sides?
+              scrollOffset.value /
+                ((styles.backdrop.height + Math.abs(scrollOffset.value)) /
+                  styles.backdrop.height) /
+                2,
+              0,
+            ]
+          ),
+        },
+      ],
+    };
+  });
+
   return (
     <>
       {movieDetails ? (
-        <ScrollView
+        <Animated.ScrollView
+          onScroll={scrollHandler}
+          scrollEventThrottle={16}
           contentContainerStyle={
             Platform.OS === "ios"
               ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
@@ -187,15 +243,32 @@ function MovieDetails({ navigation, movie }: Props) {
           showsVerticalScrollIndicator={detailIndex !== 2}
         >
           {movie?.backdrop_path && (
-            <Image
-              style={{
-                width: Dimensions.get("window").width,
-                height: (720 / 1280) * Dimensions.get("window").width,
-              }}
+            <AnimatedImageBackground
+              style={[styles.backdrop, headerStyle]}
               source={{
                 uri: `https://image.tmdb.org/t/p/w780${movie.backdrop_path}`,
               }}
-            />
+            >
+              <LinearGradient
+                colors={[
+                  // "rgba(0, 0, 0, .5)",
+                  // "rgba(0, 0, 0, 0)",
+                  "rgba(0, 0, 0, 0)",
+                  "rgba(0, 0, 0, 1)",
+                ]}
+                // start={{ x: 0, y: 0 }}
+                start={{ x: 0, y: 0.8 }}
+                end={{ x: 0, y: 1.0 }}
+                // locations={[0.0, insets.top / styles.backdrop.height, 0.8, 1]}
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                }}
+              />
+            </AnimatedImageBackground>
           )}
           <View style={{ margin: 16 }}>
             <Text
@@ -427,7 +500,7 @@ function MovieDetails({ navigation, movie }: Props) {
               </>
             )}
           </View>
-        </ScrollView>
+        </Animated.ScrollView>
       ) : (
         <View style={{ flex: 1, justifyContent: "center" }}>
           <ActivityIndicator size="large" />
@@ -437,4 +510,9 @@ function MovieDetails({ navigation, movie }: Props) {
   );
 }
 
-export default MovieDetails;
+const styles = StyleSheet.create({
+  backdrop: {
+    width: Dimensions.get("screen").width,
+    height: Dimensions.get("screen").width / 1.78,
+  },
+});

@@ -111,12 +111,7 @@ interface Props {
 function Poster({ navigation, movie, game }: Props) {
   return (
     <Pressable
-      onPress={() =>
-        navigation.push(
-          "Details",
-          movie ? { type: "movie", data: movie } : { type: "game", data: game }
-        )
-      }
+      onPress={() => navigation.push("Details", { movie: movie, game: game })}
     >
       {movie ? <MoviePoster item={movie} /> : <GamePoster item={game} />}
     </Pressable>

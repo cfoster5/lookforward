@@ -233,10 +233,7 @@ function CountdownItem({
         showButtons
           ? updateSelections(item.documentID)
           : sectionName === "Movies"
-          ? navigation.navigate("Details", {
-              type: "movie",
-              data: item,
-            })
+          ? navigation.navigate("Details", { movie: item })
           : undefined
       }
     >

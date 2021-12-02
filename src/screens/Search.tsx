@@ -314,9 +314,7 @@ function Search({ navigation, route }: Props) {
               }
               renderItem={({ item }) => (
                 <Pressable
-                  onPress={() =>
-                    navigation.push("Details", { type: "movie", data: item })
-                  }
+                  onPress={() => navigation.push("Details", { movie: item })}
                 >
                   <NewPoster movie={item} />
                 </Pressable>
@@ -424,9 +422,7 @@ function Search({ navigation, route }: Props) {
               data={games}
               renderItem={({ item }: { item: IGDB.Game.Game }) => (
                 <Pressable
-                  onPress={() =>
-                    navigation.push("Details", { type: "game", data: item })
-                  }
+                  onPress={() => navigation.push("Details", { game: item })}
                 >
                   <NewPoster game={item} />
                 </Pressable>

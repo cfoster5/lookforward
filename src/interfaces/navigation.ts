@@ -11,10 +11,10 @@ export namespace Navigation {
 
   export type FindStackParamList = {
     Find: undefined;
-    Details:
-      | { type: "game"; data: IGDB.Game.Game }
-      | { type: "movie"; data: TMDB.Movie.Movie }
-      | { type: "tv"; data: Trakt.ShowPremiere | Trakt.ShowSearch };
+    Details: // | { type: "game"; data: IGDB.Game.Game }
+    // | { type: "movie"; data: TMDB.Movie.Movie }
+    // | { type: "tv"; data: Trakt.ShowPremiere | Trakt.ShowSearch };
+    { movie?: TMDB.BaseMovie; game?: IGDB.Game.Game };
     MovieDiscover: {
       genre?: TMDB.Genre;
       company?: TMDB.ProductionCompany;
@@ -27,7 +27,7 @@ export namespace Navigation {
 
   export type CountdownStackParamList = {
     Countdown: undefined;
-    Details: { type: "movie"; data: TMDB.Movie.Movie };
+    Details: { movie: TMDB.BaseMovie };
     MovieDiscover: {
       genre?: TMDB.Genre;
       company?: TMDB.ProductionCompany;

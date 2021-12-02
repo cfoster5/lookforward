@@ -22,7 +22,6 @@ import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
-import { Movie } from "../interfaces/tmdb";
 
 interface Props {
   navigation:
@@ -50,26 +49,22 @@ function Details({ navigation, route }: Props) {
   const { movies, games } = useContext(SubContext);
 
   useEffect(() => {
-    console.log(`route.params.data`, route.params.data);
-    let title = "";
-    if (route.params.type === "movie") {
-      title = (route.params.data as Movie).title;
-    } else if (route.params.type === "game") {
-      title = (route.params.data as IGDB.Game.Game).name;
+    if (route.params.movie) {
+      navigation.setOptions({ title: route.params.movie.title });
+    } else if (route.params.game) {
+      navigation.setOptions({ title: route.params.game.name });
     }
-    navigation.setOptions({ title: title });
-  }, [route.params.data]);
+  }, [route.params]);
 
   function upcomingRelease() {
     if (
-      route.params.type === "movie" &&
-      DateTime.fromISO((route.params.data as Movie).release_date) >=
-        DateTime.now()
+      route.params.movie &&
+      DateTime.fromISO(route.params.movie.release_date) >= DateTime.now()
     ) {
       return true;
     } else if (
-      route.params.type === "game" &&
-      (route.params.data as IGDB.Game.Game).release_dates.filter(
+      route.params.game &&
+      route.params.game.release_dates.filter(
         (releaseDate) => DateTime.fromISO(releaseDate.date) >= DateTime.now()
       ).length === 0
     ) {
@@ -86,7 +81,7 @@ function Details({ navigation, route }: Props) {
               title="search"
               iconName={countdownId ? "checkmark-outline" : "add-outline"}
               onPress={() =>
-                route.params.type === "movie" || route.params.type === "tv"
+                route.params.movie || route.params.tv
                   ? countdownId
                     ? deleteItem()
                     : addMovieToList()
@@ -104,15 +99,15 @@ function Details({ navigation, route }: Props) {
     // console.log("Details Changes", movies, games)
     // let documentID = route.params.type === "movie" ? movies?.find((movie: Movie) => movie.id === (route.params.data as Movie).id)?.documentID : games.find((releaseDate: IGDB.ReleaseDate.ReleaseDate) => releaseDate.game.id === (route.params.data as IGDB.Game.Game).id)?.documentID;
     let documentID;
-    if (route.params.type === "movie") {
+    if (route.params.movie) {
       documentID = movies?.find(
-        (movie: Movie) => movie.id === (route.params.data as Movie).id
+        (movie: Movie) => movie.id === route.params.movie.id
       )?.documentID;
     }
-    if (route.params.type === "game") {
+    if (route.params.game) {
       documentID = games.find(
         (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
-          releaseDate.game.id === (route.params.data as IGDB.Game.Game).id
+          releaseDate.game.id === route.params.game.id
       )?.documentID;
     }
     setCountdownId(documentID);
@@ -120,8 +115,8 @@ function Details({ navigation, route }: Props) {
   }, [movies, games]);
 
   let docId = "";
-  if (route.params.type === "movie") {
-    docId = (route.params.data as Movie).id.toString();
+  if (route.params.movie) {
+    docId = route.params.movie.id.toString();
   }
 
   async function addMovieToList() {
@@ -129,7 +124,7 @@ function Details({ navigation, route }: Props) {
       await firestore()
         .collection("movies")
         .doc(docId)
-        .set(route.params.data, { merge: true });
+        .set(route.params.movie, { merge: true });
       await firestore()
         .collection("movies")
         .doc(docId)
@@ -149,10 +144,10 @@ function Details({ navigation, route }: Props) {
     console.log("route.params.data.id", countdownId);
     // console.log('route.params.type', route.params.type)
     let collection = "";
-    if (route.params.type === "movie") {
+    if (route.params.movie) {
       collection = "movies";
     }
-    if (route.params.type === "game") {
+    if (route.params.game) {
       collection = "gameReleases";
     }
     try {
@@ -169,23 +164,17 @@ function Details({ navigation, route }: Props) {
 
   return (
     <>
-      {route.params.type === "game" && (
+      {route.params.game && (
         <>
-          <GameDetails
-            navigation={navigation}
-            game={route.params.data as IGDB.Game.Game}
-          />
+          <GameDetails navigation={navigation} game={route.params.game} />
           <GameReleaseModal
             modalizeRef={modalizeRef}
-            game={route.params.data as IGDB.Game.Game}
+            game={route.params.game}
           />
         </>
       )}
-      {route.params.type === "movie" && (
-        <MovieDetails
-          navigation={navigation}
-          movie={route.params.data as Movie}
-        />
+      {route.params.movie && (
+        <MovieDetails navigation={navigation} movie={route.params.movie} />
       )}
     </>
   );

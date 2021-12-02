@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Platform, StatusBar, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SplashScreen from "react-native-splash-screen";
-// import { OverflowMenuProvider } from "react-navigation-header-buttons";
+import { OverflowMenuProvider } from "react-navigation-header-buttons";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
@@ -128,17 +128,17 @@ export default function App() {
         <StatusBar
           barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
         />
-        {/* <OverflowMenuProvider> */}
-        {user ? (
-          <TabStackContext.Provider
-            value={{ user: user.uid, theme: colorScheme }}
-          >
-            <TabStack />
-          </TabStackContext.Provider>
-        ) : (
-          <AuthStack />
-        )}
-        {/* </OverflowMenuProvider> */}
+        <OverflowMenuProvider>
+          {user ? (
+            <TabStackContext.Provider
+              value={{ user: user.uid, theme: colorScheme }}
+            >
+              <TabStack />
+            </TabStackContext.Provider>
+          ) : (
+            <AuthStack />
+          )}
+        </OverflowMenuProvider>
       </NavigationContainer>
     </SafeAreaProvider>
   );

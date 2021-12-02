@@ -35,17 +35,11 @@ import { reusableStyles } from "../../helpers/styles";
 import { getMovieDetails } from "../../helpers/tmdbRequests";
 import { getMovieById, getRelated } from "../../helpers/traktRequests";
 import { Navigation } from "../../interfaces/navigation";
-import {
-  Genre,
-  Keyword,
-  Movie,
-  MovieDetail,
-  ProductionCompany,
-} from "../../interfaces/tmdb";
+import { TMDB } from "../../interfaces/tmdb";
 import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
+import { NewPoster } from "../NewPoster";
 import Person from "../Person";
-import { TextPoster } from "../Poster";
 import Trailer from "../Trailer";
 
 interface Props {
@@ -61,7 +55,7 @@ interface Props {
           "CountdownTab"
         >
       >;
-  movie: Movie;
+  movie: BaseMovie;
 }
 
 function DiscoverButton({
@@ -104,35 +98,27 @@ function SlidingMovie({
   movie,
 }: {
   navigation: any;
-  movie: Movie;
+  movie: BaseMovie;
 }) {
   return (
     <Pressable
       style={{ marginRight: 16 }}
       onPress={() => navigation.push("Details", { data: movie, type: "movie" })}
     >
-      {movie.poster_path ? (
-        <FastImage
-          style={{
-            // I don't know why 18 works here to center the right-most image but it works on every iOS device tested
-            width: Dimensions.get("window").width / 2.5 - 18,
-            height: (Dimensions.get("window").width / 2.5 - 18) * 1.5,
-            borderRadius: 8,
-            marginBottom: 0,
-          }}
-          source={{
-            uri: `https://image.tmdb.org/t/p/w300${movie.poster_path}`,
-          }}
-        />
-      ) : (
-        <TextPoster text={movie.title} />
-      )}
+      <NewPoster
+        movie={movie}
+        style={{
+          // I don't know why 18 works here to center the right-most image but it works on every iOS device tested
+          width: Dimensions.get("window").width / 2.5 - 18,
+          height: (Dimensions.get("window").width / 2.5 - 18) * 1.5,
+        }}
+      />
     </Pressable>
   );
 }
 
 export function MovieDetails({ navigation, movie }: Props) {
-  const [movieDetails, setMovieDetails] = useState<MovieDetail>();
+  const [movieDetails, setMovieDetails] = useState<TMDB.Movie.Details>();
   const [detailIndex, setDetailIndex] = useState(0);
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();

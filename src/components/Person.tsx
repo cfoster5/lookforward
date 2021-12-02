@@ -8,6 +8,7 @@ import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
 import { Cast, Crew } from "../interfaces/tmdb";
+import { TextPoster } from "./NewPoster";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">;
@@ -30,26 +31,13 @@ function Person({ navigation, person }: Props) {
         />
       )}
       {!person.profile_path && (
-        <View
-          style={{
-            ...reusableStyles.credit,
-            borderWidth: 1,
-            borderColor: theme === "dark" ? "#1f1f1f" : "white",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text
-            style={
-              theme === "dark"
-                ? { ...iOSUIKit.title3EmphasizedWhiteObject }
-                : { ...iOSUIKit.title3EmphasizedObject, color: iOSColors.gray }
-            }
-          >
-            {person.name.split(" ").map((i: string) => i.charAt(0))}
-          </Text>
-        </View>
+        <TextPoster
+          text={person.name
+            .split(" ")
+            .map((i: string) => i.charAt(0))
+            .join("")}
+          style={reusableStyles.credit}
+        />
       )}
       <View style={{ marginLeft: 16 }}>
         <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>

@@ -233,76 +233,72 @@ function Search({ navigation, route }: Props) {
           handleCategoryChange={(index) => setCategoryIndex(index)}
         />
       </SafeAreaView>
-      <View style={{ backgroundColor: theme === "dark" ? "black" : "white" }}>
-        <SearchBar
-          cancelIcon={{ color: "white" }}
-          clearIcon={Platform.OS === "android" ? { color: "white" } : undefined}
-          containerStyle={
-            theme === "dark"
+      <SearchBar
+        cancelIcon={{ color: "white" }}
+        clearIcon={Platform.OS === "android" ? { color: "white" } : undefined}
+        containerStyle={
+          theme === "dark"
+            ? {
+                backgroundColor: "black",
+                marginHorizontal: Platform.OS === "ios" ? 8 : 16,
+                paddingVertical: 16,
+              }
+            : { marginHorizontal: 8 }
+        }
+        inputContainerStyle={
+          theme === "dark"
+            ? Platform.OS === "android"
               ? {
-                  backgroundColor: "black",
-                  marginHorizontal: Platform.OS === "ios" ? 8 : 16,
-                  paddingVertical: 16,
+                  backgroundColor: "rgb(28, 28, 31)",
+                  height: 36,
+                  borderRadius: 8,
                 }
-              : { marginHorizontal: 8 }
-          }
-          inputContainerStyle={
-            theme === "dark"
-              ? Platform.OS === "android"
-                ? {
-                    backgroundColor: "rgb(28, 28, 31)",
-                    height: 36,
-                    borderRadius: 8,
-                  }
-                : { backgroundColor: "rgb(28, 28, 31)", height: 36 }
-              : {}
-          }
-          // placeholderTextColor={theme === "dark" ? "#999999" : undefined}
-          placeholderTextColor={
-            theme === "dark" ? "rgb(141, 142, 146)" : undefined
-          }
-          // searchIcon={theme === "dark" ? { color: "#999999" } : {}}
-          searchIcon={theme === "dark" ? { color: "rgb(149, 153, 162)" } : {}}
-          // inputStyle={theme === "dark" ? { color: "white" } : {}}
-          leftIconContainerStyle={{ marginLeft: 6 }}
-          inputStyle={
-            theme === "dark"
-              ? { ...iOSUIKit.bodyWhiteObject, marginLeft: 0 }
-              : {}
-          }
-          cancelButtonProps={
-            theme === "dark"
-              ? {
-                  buttonTextStyle: {
-                    color: iOSColors.blue,
-                    fontSize: iOSUIKit.bodyObject.fontSize,
-                  },
+              : { backgroundColor: "rgb(28, 28, 31)", height: 36 }
+            : {}
+        }
+        // placeholderTextColor={theme === "dark" ? "#999999" : undefined}
+        placeholderTextColor={
+          theme === "dark" ? "rgb(141, 142, 146)" : undefined
+        }
+        // searchIcon={theme === "dark" ? { color: "#999999" } : {}}
+        searchIcon={theme === "dark" ? { color: "rgb(149, 153, 162)" } : {}}
+        // inputStyle={theme === "dark" ? { color: "white" } : {}}
+        leftIconContainerStyle={{ marginLeft: 6 }}
+        inputStyle={
+          theme === "dark" ? { ...iOSUIKit.bodyWhiteObject, marginLeft: 0 } : {}
+        }
+        cancelButtonProps={
+          theme === "dark"
+            ? {
+                buttonTextStyle: {
+                  color: iOSColors.blue,
+                  fontSize: iOSUIKit.bodyObject.fontSize,
+                },
+              }
+            : {}
+        }
+        placeholder={categoryIndex === 0 ? "Movies & People" : "Search"}
+        onChangeText={(value) => setSearchValue(value)}
+        value={searchValue}
+        platform={Platform.OS === "ios" ? "ios" : "android"}
+        onSubmitEditing={
+          searchValue
+            ? async () => {
+                if (categoryIndex === 0) {
+                  setTriggeredSearch(true);
+                  setMovies([]);
+                  getMovies();
                 }
-              : {}
-          }
-          placeholder={categoryIndex === 0 ? "Movies & People" : "Search"}
-          onChangeText={(value) => setSearchValue(value)}
-          value={searchValue}
-          platform={Platform.OS === "ios" ? "ios" : "android"}
-          onSubmitEditing={
-            searchValue
-              ? async () => {
-                  if (categoryIndex === 0) {
-                    setTriggeredSearch(true);
-                    setMovies([]);
-                    getMovies();
-                  }
-                  if (categoryIndex === 1) {
-                    setGames([]);
-                    setGames(await searchGames(searchValue));
-                  }
+                if (categoryIndex === 1) {
+                  setGames([]);
+                  setGames(await searchGames(searchValue));
                 }
-              : undefined
-          }
-          onClear={reinitialize}
-          onCancel={reinitialize}
-        />
-      </View>
+              }
+            : undefined
+        }
+        onClear={reinitialize}
+        onCancel={reinitialize}
+      />
 
       {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}
       {categoryIndex === 0 && (
@@ -353,14 +349,7 @@ function Search({ navigation, route }: Props) {
                       (movie) => movie.media_type === "person"
                     ).length > 0 && (
                       <>
-                        <Text
-                          style={{
-                            ...iOSUIKit.bodyEmphasizedWhiteObject,
-                            marginBottom: 8,
-                          }}
-                        >
-                          People
-                        </Text>
+                        <ListLabel text="People" />
                         <FlatList
                           keyExtractor={(item) => item.id.toString()}
                           data={movies.filter(
@@ -386,16 +375,7 @@ function Search({ navigation, route }: Props) {
                       </>
                     )}
                     {movies.filter((movie) => movie.media_type === "movie")
-                      .length > 0 && (
-                      <Text
-                        style={{
-                          ...iOSUIKit.bodyEmphasizedWhiteObject,
-                          marginBottom: 8,
-                        }}
-                      >
-                        Movies
-                      </Text>
-                    )}
+                      .length > 0 && <ListLabel text="Movies" />}
                   </>
                 ) : (
                   <View
@@ -407,9 +387,10 @@ function Search({ navigation, route }: Props) {
                       justifyContent: "space-between",
                     }}
                   >
-                    <Text style={{ ...iOSUIKit.bodyEmphasizedWhiteObject }}>
-                      {selectedOption}
-                    </Text>
+                    <ListLabel
+                      text={selectedOption}
+                      style={{ marginBottom: 0 }}
+                    />
                     <Pressable onPress={() => filterModalRef.current?.open()}>
                       <Text
                         style={{
@@ -468,14 +449,7 @@ function Search({ navigation, route }: Props) {
                   : undefined
               }
               ListHeaderComponent={
-                <Text
-                  style={{
-                    ...iOSUIKit.bodyEmphasizedWhiteObject,
-                    marginBottom: 16,
-                  }}
-                >
-                  Coming Soon
-                </Text>
+                <ListLabel text="Coming Soon" style={{ marginBottom: 16 }} />
               }
             />
             <GameReleaseModal modalizeRef={modalizeRef} game={game} />
@@ -487,6 +461,20 @@ function Search({ navigation, route }: Props) {
         ))}
     </>
   );
+
+  function ListLabel({ text, style }: { text: string; style?: any }) {
+    return (
+      <Text
+        style={{
+          ...iOSUIKit.bodyEmphasizedWhiteObject,
+          marginBottom: 8,
+          ...style,
+        }}
+      >
+        {text}
+      </Text>
+    );
+  }
 }
 
 export default Search;

@@ -35,6 +35,7 @@ import { getMovieDetails } from "../../helpers/tmdbRequests";
 import { getMovieById, getRelated } from "../../helpers/traktRequests";
 import { Navigation } from "../../interfaces/navigation";
 import { TMDB } from "../../interfaces/tmdb";
+import { BlueBullet } from "../BlueBullet";
 import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
 import { NewPoster } from "../NewPoster";
@@ -114,6 +115,21 @@ function SlidingMovie({
         }}
       />
     </Pressable>
+  );
+}
+
+function DiscoverListLabel({ text }: { text: string }) {
+  return (
+    <Text
+      style={{
+        ...iOSUIKit.subheadEmphasizedObject,
+        color: iOSColors.gray,
+        textAlign: "center",
+        marginTop: 16,
+      }}
+    >
+      {text}
+    </Text>
   );
 }
 
@@ -261,18 +277,7 @@ export function MovieDetails({ navigation, movie }: Props) {
         {(getRuntime() || traktDetails?.certification) && (
           <View style={{ flexDirection: "row" }}>
             <Text style={reusableStyles.date}>{getRuntime()}</Text>
-            {getRuntime() && traktDetails?.certification && (
-              <View
-                style={{
-                  width: 5,
-                  height: 5,
-                  borderRadius: 5,
-                  marginHorizontal: 5,
-                  backgroundColor: iOSColors.blue,
-                  alignSelf: "center",
-                }}
-              />
-            )}
+            {getRuntime() && traktDetails?.certification && <BlueBullet />}
             <Text style={reusableStyles.date}>
               {traktDetails?.certification}
             </Text>
@@ -332,16 +337,7 @@ export function MovieDetails({ navigation, movie }: Props) {
           <>
             {movieDetails?.production_companies.length > 0 && (
               <>
-                <Text
-                  style={{
-                    ...iOSUIKit.subheadEmphasizedObject,
-                    color: iOSColors.gray,
-                    textAlign: "center",
-                    marginTop: 16,
-                  }}
-                >
-                  Production
-                </Text>
+                <DiscoverListLabel text="Production" />
                 <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
@@ -375,16 +371,7 @@ export function MovieDetails({ navigation, movie }: Props) {
             )}
             {movieDetails?.keywords?.keywords.length > 0 && (
               <>
-                <Text
-                  style={{
-                    ...iOSUIKit.subheadEmphasizedObject,
-                    color: iOSColors.gray,
-                    textAlign: "center",
-                    marginTop: 16,
-                  }}
-                >
-                  Keywords
-                </Text>
+                <DiscoverListLabel text="Keywords" />
                 <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}
@@ -414,16 +401,7 @@ export function MovieDetails({ navigation, movie }: Props) {
             )}
             {movieDetails.recommendations.results.length > 0 && (
               <>
-                <Text
-                  style={{
-                    ...iOSUIKit.subheadEmphasizedObject,
-                    color: iOSColors.gray,
-                    textAlign: "center",
-                    marginTop: 16,
-                  }}
-                >
-                  Recommended
-                </Text>
+                <DiscoverListLabel text="Recommended" />
                 <FlatList
                   keyExtractor={(item) => item.id.toString()}
                   data={movieDetails.recommendations.results}

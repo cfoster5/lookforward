@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Dimensions, Platform, ScrollView, View } from "react-native";
+import { Dimensions, Platform, ScrollView, Text, View } from "react-native";
 import { Image } from "react-native-elements";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import {
@@ -14,6 +14,7 @@ import { months } from "../../helpers/helpers";
 import { reusableStyles } from "../../helpers/styles";
 import { IGDB } from "../../interfaces/igdb";
 import { Navigation } from "../../interfaces/navigation";
+import { BlueBullet } from "../BlueBullet";
 import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
 import { Text as ThemedText } from "../Themed";
@@ -81,7 +82,7 @@ function GameDetails({ navigation, game }: Props) {
         <ThemedText style={iOSUIKit.largeTitleEmphasized}>
           {game.name}
         </ThemedText>
-        <ThemedText style={reusableStyles.date}>{getReleaseDate()}</ThemedText>
+        <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
         <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
           {game.summary}
         </ThemedText>
@@ -150,18 +151,7 @@ function GameDetails({ navigation, game }: Props) {
                   .filter((company) => company.supporting)
                   .map((company, i) => (
                     <View style={{ flexDirection: "row" }} key={i}>
-                      {i > 0 && (
-                        <View
-                          style={{
-                            width: 5,
-                            height: 5,
-                            borderRadius: 5,
-                            marginHorizontal: 5,
-                            backgroundColor: iOSColors.blue,
-                            alignSelf: "center",
-                          }}
-                        />
-                      )}
+                      {i > 0 && <BlueBullet />}
                       <ThemedText style={iOSUIKit.body}>
                         {company.company.name}
                       </ThemedText>

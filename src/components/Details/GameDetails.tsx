@@ -56,145 +56,133 @@ function GameDetails({ navigation, game }: Props) {
   }
 
   return (
-    <>
-      <ScrollView
-        contentContainerStyle={
-          Platform.OS === "ios"
-            ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
-            : undefined
-        }
-        scrollIndicatorInsets={
-          Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined
-        }
-      >
-        {game?.cover?.url && (
-          <Image
-            style={{
-              width: Dimensions.get("window").width,
-              height: (720 / 1280) * Dimensions.get("window").width,
-            }}
-            source={{
-              uri: `https:${game.cover.url.replace("thumb", "screenshot_big")}`,
-            }}
-          />
-        )}
-        <View style={{ margin: 16, marginBottom: 0 }}>
-          <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-            {game.name}
-          </ThemedText>
-          <ThemedText style={reusableStyles.date}>
-            {getReleaseDate()}
-          </ThemedText>
-          <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
-            {game.summary}
-          </ThemedText>
-          <View
-            style={{
-              flexDirection: "row",
-              paddingBottom: 16,
-              flexWrap: "wrap",
-            }}
-          >
-            {game?.genres?.map((genre, i) => (
-              <ButtonSingleState
-                key={i}
-                text={genre.name}
-                onPress={() =>
-                  navigation.push("GameDiscover", { genre: genre })
-                }
-              />
-            ))}
-          </View>
-        </View>
-        <CategoryControl
-          buttons={["Credits", "Trailers"]}
-          categoryIndex={detailIndex}
-          handleCategoryChange={(index: number) => setDetailIndex(index)}
+    <ScrollView
+      contentContainerStyle={
+        Platform.OS === "ios"
+          ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
+          : undefined
+      }
+      scrollIndicatorInsets={
+        Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined
+      }
+    >
+      {game?.cover?.url && (
+        <Image
+          style={{
+            width: Dimensions.get("window").width,
+            height: (720 / 1280) * Dimensions.get("window").width,
+          }}
+          source={{
+            uri: `https:${game.cover.url.replace("thumb", "screenshot_big")}`,
+          }}
         />
-        <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-          {detailIndex === 0 && (
-            <>
-              {game.involved_companies?.find(
-                (company) => company.publisher
-              ) && (
-                <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
-                  Published by:
-                  {game.involved_companies
-                    .filter((company) => company.publisher)
-                    .map((company, i) => (
-                      <Fragment key={i}>
-                        {i > 0
-                          ? `, ${company.company.name}`
-                          : ` ${company.company.name}`}
-                      </Fragment>
-                    ))}
-                </ThemedText>
-              )}
-              {game.involved_companies?.find(
-                (company) => company.developer
-              ) && (
-                <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
-                  Developed by:
-                  {game.involved_companies
-                    .filter((company) => company.developer)
-                    .map((company, i) => (
-                      <Fragment key={i}>
-                        {i > 0
-                          ? `, ${company.company.name}`
-                          : ` ${company.company.name}`}
-                      </Fragment>
-                    ))}
-                </ThemedText>
-              )}
-              {game.involved_companies?.find(
-                (company) => company.supporting
-              ) && (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    paddingTop: 16,
-                    flexWrap: "wrap",
-                  }}
-                >
-                  <ThemedText style={iOSUIKit.body}>Supported by: </ThemedText>
-                  {game.involved_companies
-                    .filter((company) => company.supporting)
-                    .map((company, i) => (
-                      <View style={{ flexDirection: "row" }} key={i}>
-                        {i > 0 && (
-                          <View
-                            style={{
-                              width: 5,
-                              height: 5,
-                              borderRadius: 5,
-                              marginHorizontal: 5,
-                              backgroundColor: iOSColors.blue,
-                              alignSelf: "center",
-                            }}
-                          />
-                        )}
-                        <ThemedText style={iOSUIKit.body}>
-                          {company.company.name}
-                        </ThemedText>
-                      </View>
-                    ))}
-                </View>
-              )}
-            </>
-          )}
-          {detailIndex === 1 &&
-            (game.videos ? (
-              game.videos.map((video, i) => (
-                <Trailer key={i} video={video} index={i} />
-              ))
-            ) : (
-              <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
-                No trailers yet! Come back later!
-              </ThemedText>
-            ))}
+      )}
+      <View style={{ margin: 16, marginBottom: 0 }}>
+        <ThemedText style={iOSUIKit.largeTitleEmphasized}>
+          {game.name}
+        </ThemedText>
+        <ThemedText style={reusableStyles.date}>{getReleaseDate()}</ThemedText>
+        <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+          {game.summary}
+        </ThemedText>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingBottom: 16,
+            flexWrap: "wrap",
+          }}
+        >
+          {game?.genres?.map((genre, i) => (
+            <ButtonSingleState
+              key={i}
+              text={genre.name}
+              onPress={() => navigation.push("GameDiscover", { genre: genre })}
+            />
+          ))}
         </View>
-      </ScrollView>
-    </>
+      </View>
+      <CategoryControl
+        buttons={["Credits", "Trailers"]}
+        categoryIndex={detailIndex}
+        handleCategoryChange={(index: number) => setDetailIndex(index)}
+      />
+      <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
+        {detailIndex === 0 && (
+          <>
+            {game.involved_companies?.find((company) => company.publisher) && (
+              <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+                Published by:
+                {game.involved_companies
+                  .filter((company) => company.publisher)
+                  .map((company, i) => (
+                    <Fragment key={i}>
+                      {i > 0
+                        ? `, ${company.company.name}`
+                        : ` ${company.company.name}`}
+                    </Fragment>
+                  ))}
+              </ThemedText>
+            )}
+            {game.involved_companies?.find((company) => company.developer) && (
+              <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+                Developed by:
+                {game.involved_companies
+                  .filter((company) => company.developer)
+                  .map((company, i) => (
+                    <Fragment key={i}>
+                      {i > 0
+                        ? `, ${company.company.name}`
+                        : ` ${company.company.name}`}
+                    </Fragment>
+                  ))}
+              </ThemedText>
+            )}
+            {game.involved_companies?.find((company) => company.supporting) && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  paddingTop: 16,
+                  flexWrap: "wrap",
+                }}
+              >
+                <ThemedText style={iOSUIKit.body}>Supported by: </ThemedText>
+                {game.involved_companies
+                  .filter((company) => company.supporting)
+                  .map((company, i) => (
+                    <View style={{ flexDirection: "row" }} key={i}>
+                      {i > 0 && (
+                        <View
+                          style={{
+                            width: 5,
+                            height: 5,
+                            borderRadius: 5,
+                            marginHorizontal: 5,
+                            backgroundColor: iOSColors.blue,
+                            alignSelf: "center",
+                          }}
+                        />
+                      )}
+                      <ThemedText style={iOSUIKit.body}>
+                        {company.company.name}
+                      </ThemedText>
+                    </View>
+                  ))}
+              </View>
+            )}
+          </>
+        )}
+        {detailIndex === 1 &&
+          (game.videos ? (
+            game.videos.map((video, i) => (
+              <Trailer key={i} video={video} index={i} />
+            ))
+          ) : (
+            <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+              No trailers yet! Come back later!
+            </ThemedText>
+          ))}
+      </View>
+    </ScrollView>
   );
 }
 

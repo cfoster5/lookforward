@@ -145,18 +145,20 @@ export function MovieDetails({ navigation, movie }: Props) {
   useEffect(() => {
     setMovieDetails(undefined);
     setTraktDetails(undefined);
-    getMovieDetails(movie.id).then((movie) => {
-      console.log(`movie`, movie);
-      setMovieDetails(movie);
-    });
+    async function getDetails() {
+      const details = await getMovieDetails(movie.id);
+      setMovieDetails(details);
+    }
+    getDetails();
   }, [movie]);
 
   useEffect(() => {
     if (movieDetails?.imdb_id) {
-      getMovieById(movieDetails.imdb_id).then((json) => {
-        // console.log(`trakt json`, json)
-        setTraktDetails(json);
-      });
+      async function getMovie() {
+        const traktDetails = await getMovieById(movieDetails.imdb_id);
+        setTraktDetails(traktDetails);
+      }
+      getMovie();
     }
   }, [movieDetails]);
 

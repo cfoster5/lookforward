@@ -29,7 +29,6 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import TabStackContext from "../../contexts/TabStackContext";
 import { months } from "../../helpers/helpers";
 import { reusableStyles } from "../../helpers/styles";
 import { getMovieDetails } from "../../helpers/tmdbRequests";
@@ -40,6 +39,7 @@ import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
 import { NewPoster } from "../NewPoster";
 import Person from "../Person";
+import { Text as ThemedText } from "../Themed";
 import Trailer from "../Trailer";
 
 interface Props {
@@ -120,7 +120,6 @@ function SlidingMovie({
 export function MovieDetails({ navigation, movie }: Props) {
   const [movieDetails, setMovieDetails] = useState<TMDB.Movie.Details>();
   const [detailIndex, setDetailIndex] = useState(0);
-  const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const [showAllOverview, setShowAllOverview] = useState(false);
@@ -208,291 +207,247 @@ export function MovieDetails({ navigation, movie }: Props) {
     };
   });
 
-  return (
-    <>
-      {movieDetails ? (
-        <Animated.ScrollView
-          onScroll={scrollHandler}
-          scrollEventThrottle={16}
-          contentContainerStyle={
-            Platform.OS === "ios"
-              ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
-              : undefined
-          }
-          scrollIndicatorInsets={
-            Platform.OS === "ios"
-              ? {
-                  bottom: tabBarheight - 16,
-                }
-              : undefined
-          }
-          showsVerticalScrollIndicator={detailIndex !== 2}
+  return movieDetails ? (
+    <Animated.ScrollView
+      onScroll={scrollHandler}
+      scrollEventThrottle={16}
+      contentContainerStyle={
+        Platform.OS === "ios"
+          ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
+          : undefined
+      }
+      scrollIndicatorInsets={
+        Platform.OS === "ios"
+          ? {
+              bottom: tabBarheight - 16,
+            }
+          : undefined
+      }
+      showsVerticalScrollIndicator={detailIndex !== 2}
+    >
+      {movie?.backdrop_path && (
+        <AnimatedImageBackground
+          style={[styles.backdrop, headerStyle]}
+          source={{
+            uri: `https://image.tmdb.org/t/p/w780${movie.backdrop_path}`,
+          }}
         >
-          {movie?.backdrop_path && (
-            <AnimatedImageBackground
-              style={[styles.backdrop, headerStyle]}
-              source={{
-                uri: `https://image.tmdb.org/t/p/w780${movie.backdrop_path}`,
-              }}
-            >
-              <LinearGradient
-                colors={[
-                  // "rgba(0, 0, 0, .5)",
-                  // "rgba(0, 0, 0, 0)",
-                  "rgba(0, 0, 0, 0)",
-                  "rgba(0, 0, 0, 1)",
-                ]}
-                // start={{ x: 0, y: 0 }}
-                start={{ x: 0, y: 0.8 }}
-                end={{ x: 0, y: 1.0 }}
-                // locations={[0.0, insets.top / styles.backdrop.height, 0.8, 1]}
+          <LinearGradient
+            colors={[
+              // "rgba(0, 0, 0, .5)",
+              // "rgba(0, 0, 0, 0)",
+              "rgba(0, 0, 0, 0)",
+              "rgba(0, 0, 0, 1)",
+            ]}
+            // start={{ x: 0, y: 0 }}
+            start={{ x: 0, y: 0.8 }}
+            end={{ x: 0, y: 1.0 }}
+            // locations={[0.0, insets.top / styles.backdrop.height, 0.8, 1]}
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+            }}
+          />
+        </AnimatedImageBackground>
+      )}
+      <View style={{ margin: 16 }}>
+        <ThemedText style={iOSUIKit.largeTitleEmphasized}>
+          {movie.title}
+        </ThemedText>
+        <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
+        {(getRuntime() || traktDetails?.certification) && (
+          <View style={{ flexDirection: "row" }}>
+            <Text style={reusableStyles.date}>{getRuntime()}</Text>
+            {getRuntime() && traktDetails?.certification && (
+              <View
                 style={{
-                  position: "absolute",
-                  top: 0,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
+                  width: 5,
+                  height: 5,
+                  borderRadius: 5,
+                  marginHorizontal: 5,
+                  backgroundColor: iOSColors.blue,
+                  alignSelf: "center",
                 }}
               />
-            </AnimatedImageBackground>
-          )}
-          <View style={{ margin: 16 }}>
-            <Text
-              style={
-                theme === "dark"
-                  ? iOSUIKit.largeTitleEmphasizedWhite
-                  : iOSUIKit.largeTitleEmphasized
-              }
-            >
-              {movie.title}
-            </Text>
-            <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
-            {(getRuntime() || traktDetails?.certification) && (
-              <View style={{ flexDirection: "row" }}>
-                <Text style={reusableStyles.date}>{getRuntime()}</Text>
-                {getRuntime() && traktDetails?.certification && (
-                  <View
-                    style={{
-                      width: 5,
-                      height: 5,
-                      borderRadius: 5,
-                      marginHorizontal: 5,
-                      backgroundColor: iOSColors.blue,
-                      alignSelf: "center",
-                    }}
-                  />
-                )}
-                <Text style={reusableStyles.date}>
-                  {traktDetails?.certification}
-                </Text>
-              </View>
             )}
-
-            <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
-              <Text
-                style={
-                  theme === "dark"
-                    ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
-                    : { ...iOSUIKit.bodyObject, paddingTop: 16 }
-                }
-                numberOfLines={showAllOverview ? undefined : 4}
-              >
-                {movie.overview}
-              </Text>
-            </Pressable>
-
-            {/* <Text style={theme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</Text> */}
-            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-              {movieDetails?.genres?.map((genre, i) => (
-                <DiscoverButton key={i} navigation={navigation} genre={genre} />
-              ))}
-            </View>
-            <Text
-              style={
-                theme === "dark"
-                  ? { ...iOSUIKit.bodyWhiteObject, marginTop: 16 }
-                  : { ...iOSUIKit.bodyObject }
-              }
-            >
-              Status: {movieDetails?.status}
+            <Text style={reusableStyles.date}>
+              {traktDetails?.certification}
             </Text>
           </View>
-          <CategoryControl
-            buttons={["Cast & Crew", "Trailers", "Discover"]}
-            categoryIndex={detailIndex}
-            handleCategoryChange={(index: number) => setDetailIndex(index)}
-          />
-          <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-            {detailIndex === 0 && (
-              <View>
-                {movieDetails?.credits?.crew
-                  ?.filter((person) => person?.job === "Director")
-                  .map((person, i) => (
-                    <Person key={i} navigation={navigation} person={person} />
-                  ))}
-                {movieDetails?.credits.cast.map((person, i) => (
-                  <Person key={i} navigation={navigation} person={person} />
-                ))}
-              </View>
+        )}
+
+        <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
+          <ThemedText
+            style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}
+            numberOfLines={showAllOverview ? undefined : 4}
+          >
+            {movie.overview}
+          </ThemedText>
+        </Pressable>
+
+        {/* <ThemedText style={theme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</ThemedText> */}
+        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+          {movieDetails?.genres?.map((genre, i) => (
+            <DiscoverButton key={i} navigation={navigation} genre={genre} />
+          ))}
+        </View>
+        <ThemedText style={{ ...iOSUIKit.bodyObject, marginTop: 16 }}>
+          Status: {movieDetails?.status}
+        </ThemedText>
+      </View>
+      <CategoryControl
+        buttons={["Cast & Crew", "Trailers", "Discover"]}
+        categoryIndex={detailIndex}
+        handleCategoryChange={(index: number) => setDetailIndex(index)}
+      />
+      <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
+        {detailIndex === 0 && (
+          <View>
+            {movieDetails?.credits?.crew
+              ?.filter((person) => person?.job === "Director")
+              .map((person, i) => (
+                <Person key={i} navigation={navigation} person={person} />
+              ))}
+            {movieDetails?.credits.cast.map((person, i) => (
+              <Person key={i} navigation={navigation} person={person} />
+            ))}
+          </View>
+        )}
+        {detailIndex === 1 && (
+          <View>
+            {movieDetails?.videos?.results?.map((video, i) => (
+              <Trailer key={i} video={video} index={i} />
+            ))}
+            {movieDetails?.videos?.results?.length === 0 && (
+              <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+                No trailers yet! Come back later!
+              </ThemedText>
             )}
-            {detailIndex === 1 && (
-              <View>
-                {movieDetails?.videos?.results?.map((video, i) => (
-                  <Trailer key={i} video={video} index={i} />
-                ))}
-                {movieDetails?.videos?.results?.length === 0 && (
-                  <Text
-                    style={
-                      theme === "dark"
-                        ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
-                        : { ...iOSUIKit.bodyObject, paddingTop: 16 }
-                    }
-                  >
-                    No trailers yet! Come back later!
-                  </Text>
-                )}
-              </View>
-            )}
-            {detailIndex === 2 && (
+          </View>
+        )}
+        {detailIndex === 2 && (
+          <>
+            {movieDetails?.production_companies.length > 0 && (
               <>
-                {movieDetails?.production_companies.length > 0 && (
-                  <>
-                    <Text
-                      style={
-                        theme === "dark"
-                          ? {
-                              ...iOSUIKit.subheadEmphasizedWhiteObject,
-                              color: iOSColors.gray,
-                              textAlign: "center",
-                              marginTop: 16,
-                            }
-                          : { ...iOSUIKit.bodyObject }
-                      }
-                    >
-                      Production
-                    </Text>
-                    <ScrollView
-                      horizontal={true}
-                      showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={{ paddingRight: 16 }}
-                      style={{ marginHorizontal: -16 }}
-                    >
-                      <FlatList
-                        contentContainerStyle={{
-                          alignSelf: "flex-start",
-                          paddingLeft: 16,
-                          paddingRight: 8,
-                        }}
-                        scrollEnabled={false}
-                        numColumns={
-                          movieDetails?.production_companies.length > 2
-                            ? Math.ceil(
-                                movieDetails?.production_companies.length / 2
-                              )
-                            : 2
-                        }
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                        data={movieDetails?.production_companies}
-                        renderItem={({ item }) => (
-                          <DiscoverButton
-                            navigation={navigation}
-                            company={item}
-                          />
-                        )}
-                        keyExtractor={(item) => item.id.toString()}
-                      />
-                    </ScrollView>
-                  </>
-                )}
-                {movieDetails?.keywords?.keywords.length > 0 && (
-                  <>
-                    <Text
-                      style={
-                        theme === "dark"
-                          ? {
-                              ...iOSUIKit.subheadEmphasizedWhiteObject,
-                              color: iOSColors.gray,
-                              textAlign: "center",
-                              marginTop: 16,
-                            }
-                          : { ...iOSUIKit.bodyObject }
-                      }
-                    >
-                      Keywords
-                    </Text>
-                    <ScrollView
-                      horizontal={true}
-                      showsHorizontalScrollIndicator={false}
-                      contentContainerStyle={{ paddingRight: 16 }}
-                      style={{ marginHorizontal: -16 }}
-                    >
-                      <FlatList
-                        contentContainerStyle={{
-                          alignSelf: "flex-start",
-                          paddingLeft: 16,
-                          paddingRight: 8,
-                        }}
-                        scrollEnabled={false}
-                        numColumns={Math.ceil(
-                          movieDetails?.keywords?.keywords.length / 2
-                        )}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}
-                        data={movieDetails?.keywords?.keywords}
-                        renderItem={({ item }) => (
-                          <DiscoverButton
-                            navigation={navigation}
-                            keyword={item}
-                          />
-                        )}
-                        keyExtractor={(item) => item.id.toString()}
-                      />
-                    </ScrollView>
-                  </>
-                )}
-                {movieDetails.recommendations.results.length > 0 && (
-                  <>
-                    <Text
-                      style={
-                        theme === "dark"
-                          ? {
-                              ...iOSUIKit.subheadEmphasizedWhiteObject,
-                              color: iOSColors.gray,
-                              textAlign: "center",
-                              marginTop: 16,
-                            }
-                          : { ...iOSUIKit.bodyObject }
-                      }
-                    >
-                      Recommended
-                    </Text>
-                    <FlatList
-                      keyExtractor={(item) => item.id.toString()}
-                      data={movieDetails.recommendations.results}
-                      renderItem={({ item }) => (
-                        <SlidingMovie navigation={navigation} movie={item} />
-                      )}
-                      horizontal={true}
-                      contentContainerStyle={{
-                        marginTop: 16,
-                        paddingRight: 16,
-                      }}
-                      style={{ marginHorizontal: -16, paddingHorizontal: 16 }}
-                      showsHorizontalScrollIndicator={false}
-                    />
-                  </>
-                )}
+                <Text
+                  style={{
+                    ...iOSUIKit.subheadEmphasizedObject,
+                    color: iOSColors.gray,
+                    textAlign: "center",
+                    marginTop: 16,
+                  }}
+                >
+                  Production
+                </Text>
+                <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ paddingRight: 16 }}
+                  style={{ marginHorizontal: -16 }}
+                >
+                  <FlatList
+                    contentContainerStyle={{
+                      alignSelf: "flex-start",
+                      paddingLeft: 16,
+                      paddingRight: 8,
+                    }}
+                    scrollEnabled={false}
+                    numColumns={
+                      movieDetails?.production_companies.length > 2
+                        ? Math.ceil(
+                            movieDetails?.production_companies.length / 2
+                          )
+                        : 2
+                    }
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    data={movieDetails?.production_companies}
+                    renderItem={({ item }) => (
+                      <DiscoverButton navigation={navigation} company={item} />
+                    )}
+                    keyExtractor={(item) => item.id.toString()}
+                  />
+                </ScrollView>
               </>
             )}
-          </View>
-        </Animated.ScrollView>
-      ) : (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <ActivityIndicator size="large" />
-        </View>
-      )}
-    </>
+            {movieDetails?.keywords?.keywords.length > 0 && (
+              <>
+                <Text
+                  style={{
+                    ...iOSUIKit.subheadEmphasizedObject,
+                    color: iOSColors.gray,
+                    textAlign: "center",
+                    marginTop: 16,
+                  }}
+                >
+                  Keywords
+                </Text>
+                <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={{ paddingRight: 16 }}
+                  style={{ marginHorizontal: -16 }}
+                >
+                  <FlatList
+                    contentContainerStyle={{
+                      alignSelf: "flex-start",
+                      paddingLeft: 16,
+                      paddingRight: 8,
+                    }}
+                    scrollEnabled={false}
+                    numColumns={Math.ceil(
+                      movieDetails?.keywords?.keywords.length / 2
+                    )}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
+                    data={movieDetails?.keywords?.keywords}
+                    renderItem={({ item }) => (
+                      <DiscoverButton navigation={navigation} keyword={item} />
+                    )}
+                    keyExtractor={(item) => item.id.toString()}
+                  />
+                </ScrollView>
+              </>
+            )}
+            {movieDetails.recommendations.results.length > 0 && (
+              <>
+                <Text
+                  style={{
+                    ...iOSUIKit.subheadEmphasizedObject,
+                    color: iOSColors.gray,
+                    textAlign: "center",
+                    marginTop: 16,
+                  }}
+                >
+                  Recommended
+                </Text>
+                <FlatList
+                  keyExtractor={(item) => item.id.toString()}
+                  data={movieDetails.recommendations.results}
+                  renderItem={({ item }) => (
+                    <SlidingMovie navigation={navigation} movie={item} />
+                  )}
+                  horizontal={true}
+                  contentContainerStyle={{
+                    marginTop: 16,
+                    paddingRight: 16,
+                  }}
+                  style={{ marginHorizontal: -16, paddingHorizontal: 16 }}
+                  showsHorizontalScrollIndicator={false}
+                />
+              </>
+            )}
+          </>
+        )}
+      </View>
+    </Animated.ScrollView>
+  ) : (
+    <View style={{ flex: 1, justifyContent: "center" }}>
+      <ActivityIndicator size="large" />
+    </View>
   );
 }
 

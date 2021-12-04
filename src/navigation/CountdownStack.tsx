@@ -30,7 +30,7 @@ export function CountdownStack({ navigation, route }: Props) {
         component={Countdown}
         options={{
           headerTransparent: Platform.OS === "ios" ? true : false,
-          headerBlurEffect: "regular",
+          headerBlurEffect: "dark",
         }}
       />
       <Stack.Screen
@@ -38,7 +38,7 @@ export function CountdownStack({ navigation, route }: Props) {
         component={Details}
         options={{
           headerTransparent: Platform.OS === "ios" ? true : false,
-          headerBlurEffect: "regular",
+          headerBlurEffect: "dark",
           title: "",
         }}
       />
@@ -56,7 +56,7 @@ export function CountdownStack({ navigation, route }: Props) {
         component={Actor}
         options={{
           headerTransparent: Platform.OS === "ios" ? true : false,
-          headerBlurEffect: "regular",
+          headerBlurEffect: "dark",
           title: "",
         }}
       />

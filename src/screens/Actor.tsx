@@ -21,7 +21,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import ButtonMultiState from "../components/ButtonMultiState";
 import Poster from "../components/Poster";
-import TabStackContext from "../contexts/TabStackContext";
+import { Text as ThemedText } from "../components/Themed";
 import { months } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { getPerson } from "../helpers/tmdbRequests";
@@ -51,7 +51,6 @@ interface Props {
 
 function Actor({ route, navigation }: Props) {
   const [details, setDetails] = useState<Person>();
-  const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const ref = useRef<Carousel<any>>(null);
@@ -93,134 +92,118 @@ function Actor({ route, navigation }: Props) {
     );
   }
 
-  return (
-    <>
-      {details ? (
-        <ScrollView
-          contentContainerStyle={
-            Platform.OS === "ios"
-              ? {
-                  paddingTop: headerHeight,
-                  paddingBottom: tabBarheight - 16,
-                }
-              : undefined
-          }
-          scrollIndicatorInsets={
-            Platform.OS === "ios"
-              ? {
-                  bottom: tabBarheight - 16,
-                }
-              : undefined
-          }
-        >
-          {details?.images?.profiles && (
-            <Carousel
-              ref={ref}
-              data={details?.images?.profiles}
-              renderItem={RenderItem}
-              layout={"default"}
-              loop={true}
-              sliderWidth={Dimensions.get("window").width}
-              itemWidth={width + horizontalMargin * 2}
-              // removeClippedSubviews={true}
-              containerCustomStyle={{ marginTop: 16 }}
-            />
-          )}
-          <View
-            style={
-              Platform.OS === "ios"
-                ? { margin: 16 }
-                : { marginTop: 16, marginHorizontal: 16 }
+  return details ? (
+    <ScrollView
+      contentContainerStyle={
+        Platform.OS === "ios"
+          ? {
+              paddingTop: headerHeight,
+              paddingBottom: tabBarheight - 16,
             }
-          >
-            <Text
-              style={
-                theme === "dark"
-                  ? iOSUIKit.largeTitleEmphasizedWhite
-                  : iOSUIKit.largeTitleEmphasized
-              }
-            >
-              {details?.name}
-            </Text>
-            {details?.birthday && (
-              <Text style={reusableStyles.date}>{getBirthday()}</Text>
-            )}
-            <Pressable onPress={() => setShowBio(!showBio)}>
-              <Text
-                style={
-                  theme === "dark"
-                    ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
-                    : { ...iOSUIKit.bodyObject, paddingTop: 16 }
-                }
-                numberOfLines={showBio ? undefined : 4}
-              >
-                {details?.biography
-                  ? details?.biography
-                  : "No biography yet! Come back later!"}
-              </Text>
-            </Pressable>
-            <View
-              style={{
-                flexDirection: "row",
-                paddingBottom: 16,
-                flexWrap: "wrap",
-              }}
-            >
-              <ButtonMultiState
-                text="Actor"
-                selectedVal={selectedJob}
-                onPress={() => setSelectedJob("Actor")}
-              />
-              {details?.movie_credits.crew
-                .filter((v, i, a) => a.findIndex((t) => t.job === v.job) === i)
-                .sort((a, b) => b.job < a.job)
-                .map((credit, i) => (
-                  <ButtonMultiState
-                    key={i}
-                    text={credit.job}
-                    selectedVal={selectedJob}
-                    onPress={() => setSelectedJob(credit.job)}
-                  />
-                ))}
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                flexWrap: "wrap",
-                justifyContent: "space-between",
-              }}
-            >
-              {selectedJob === "Actor"
-                ? details?.movie_credits.cast
-                    .sort(
-                      (a, b) =>
-                        new Date(b.release_date) - new Date(a.release_date)
-                    )
-                    .map((credit, i) => (
-                      <View key={i} style={{ paddingBottom: 16 }}>
-                        <Poster navigation={navigation} movie={credit} />
-                      </View>
-                    ))
-                : details?.movie_credits.crew
-                    .filter((credit) => credit.job === selectedJob)
-                    .sort(
-                      (a, b) =>
-                        new Date(b.release_date) - new Date(a.release_date)
-                    )
-                    .map((credit, i) => (
-                      <View key={i} style={{ paddingBottom: 16 }}>
-                        <Poster navigation={navigation} movie={credit} />
-                      </View>
-                    ))}
-            </View>
-          </View>
-        </ScrollView>
-      ) : (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <ActivityIndicator size="large" />
-        </View>
+          : undefined
+      }
+      scrollIndicatorInsets={
+        Platform.OS === "ios"
+          ? {
+              bottom: tabBarheight - 16,
+            }
+          : undefined
+      }
+    >
+      {details?.images?.profiles && (
+        <Carousel
+          ref={ref}
+          data={details?.images?.profiles}
+          renderItem={RenderItem}
+          layout={"default"}
+          loop={true}
+          sliderWidth={Dimensions.get("window").width}
+          itemWidth={width + horizontalMargin * 2}
+          // removeClippedSubviews={true}
+          containerCustomStyle={{ marginTop: 16 }}
+        />
       )}
-    </>
+      <View
+        style={
+          Platform.OS === "ios"
+            ? { margin: 16 }
+            : { marginTop: 16, marginHorizontal: 16 }
+        }
+      >
+        <ThemedText style={iOSUIKit.largeTitleEmphasized}>
+          {details?.name}
+        </ThemedText>
+        {details?.birthday && (
+          <Text style={reusableStyles.date}>{getBirthday()}</Text>
+        )}
+        <Pressable onPress={() => setShowBio(!showBio)}>
+          <ThemedText
+            style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}
+            numberOfLines={showBio ? undefined : 4}
+          >
+            {details?.biography
+              ? details?.biography
+              : "No biography yet! Come back later!"}
+          </ThemedText>
+        </Pressable>
+        <View
+          style={{
+            flexDirection: "row",
+            paddingBottom: 16,
+            flexWrap: "wrap",
+          }}
+        >
+          <ButtonMultiState
+            text="Actor"
+            selectedVal={selectedJob}
+            onPress={() => setSelectedJob("Actor")}
+          />
+          {details?.movie_credits.crew
+            .filter((v, i, a) => a.findIndex((t) => t.job === v.job) === i)
+            .sort((a, b) => b.job < a.job)
+            .map((credit, i) => (
+              <ButtonMultiState
+                key={i}
+                text={credit.job}
+                selectedVal={selectedJob}
+                onPress={() => setSelectedJob(credit.job)}
+              />
+            ))}
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+          }}
+        >
+          {selectedJob === "Actor"
+            ? details?.movie_credits.cast
+                .sort(
+                  (a, b) => new Date(b.release_date) - new Date(a.release_date)
+                )
+                .map((credit, i) => (
+                  <View key={i} style={{ paddingBottom: 16 }}>
+                    <Poster navigation={navigation} movie={credit} />
+                  </View>
+                ))
+            : details?.movie_credits.crew
+                .filter((credit) => credit.job === selectedJob)
+                .sort(
+                  (a, b) => new Date(b.release_date) - new Date(a.release_date)
+                )
+                .map((credit, i) => (
+                  <View key={i} style={{ paddingBottom: 16 }}>
+                    <Poster navigation={navigation} movie={credit} />
+                  </View>
+                ))}
+        </View>
+      </View>
+    </ScrollView>
+  ) : (
+    <View style={{ flex: 1, justifyContent: "center" }}>
+      <ActivityIndicator size="large" />
+    </View>
   );
 }
 

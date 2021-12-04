@@ -27,4 +27,7 @@ export const Colors = {
     systemGray5: "#2C2C2E",
     systemGray6: "#1C1C1E",
   },
+  Light: {
+    systemGray6: "#F2F2F7",
+  },
 };

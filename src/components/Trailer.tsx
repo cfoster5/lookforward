@@ -1,17 +1,11 @@
 import React, { useContext } from "react";
-import {
-  Dimensions,
-  Image,
-  Linking,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, Image, Linking, Pressable, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
 import { TMDB } from "../interfaces/tmdb";
+import { Text } from "./Themed";
 
 function Trailer({
   video,
@@ -66,17 +60,10 @@ function Trailer({
           }}
         />
         <Text
-          style={
-            theme === "dark"
-              ? {
-                  ...iOSUIKit.bodyWhiteObject,
-                  width: Dimensions.get("window").width / 2 - 40,
-                }
-              : {
-                  ...iOSUIKit.bodyObject,
-                  width: Dimensions.get("window").width / 2 - 40,
-                }
-          }
+          style={{
+            ...iOSUIKit.bodyObject,
+            width: Dimensions.get("window").width / 2 - 40,
+          }}
         >
           {video.name}
         </Text>

@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Dimensions, Platform, ScrollView, Text, View } from "react-native";
+import { Dimensions, Platform, ScrollView, View } from "react-native";
 import { Image } from "react-native-elements";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import {
@@ -10,13 +10,13 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import TabStackContext from "../../contexts/TabStackContext";
 import { months } from "../../helpers/helpers";
 import { reusableStyles } from "../../helpers/styles";
 import { IGDB } from "../../interfaces/igdb";
 import { Navigation } from "../../interfaces/navigation";
 import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
+import { Text as ThemedText } from "../Themed";
 import Trailer from "../Trailer";
 
 interface Props {
@@ -29,7 +29,6 @@ interface Props {
 
 function GameDetails({ navigation, game }: Props) {
   const [detailIndex, setDetailIndex] = useState(0);
-  const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
 
@@ -80,25 +79,15 @@ function GameDetails({ navigation, game }: Props) {
           />
         )}
         <View style={{ margin: 16, marginBottom: 0 }}>
-          <Text
-            style={
-              theme === "dark"
-                ? iOSUIKit.largeTitleEmphasizedWhite
-                : iOSUIKit.largeTitleEmphasized
-            }
-          >
+          <ThemedText style={iOSUIKit.largeTitleEmphasized}>
             {game.name}
-          </Text>
-          <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
-          <Text
-            style={
-              theme === "dark"
-                ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
-                : { ...iOSUIKit.bodyObject, paddingTop: 16 }
-            }
-          >
+          </ThemedText>
+          <ThemedText style={reusableStyles.date}>
+            {getReleaseDate()}
+          </ThemedText>
+          <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
             {game.summary}
-          </Text>
+          </ThemedText>
           <View
             style={{
               flexDirection: "row",
@@ -128,13 +117,7 @@ function GameDetails({ navigation, game }: Props) {
               {game.involved_companies?.find(
                 (company) => company.publisher
               ) && (
-                <Text
-                  style={
-                    theme === "dark"
-                      ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
-                      : { ...iOSUIKit.bodyObject, paddingTop: 16 }
-                  }
-                >
+                <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
                   Published by:
                   {game.involved_companies
                     .filter((company) => company.publisher)
@@ -145,18 +128,12 @@ function GameDetails({ navigation, game }: Props) {
                           : ` ${company.company.name}`}
                       </Fragment>
                     ))}
-                </Text>
+                </ThemedText>
               )}
               {game.involved_companies?.find(
                 (company) => company.developer
               ) && (
-                <Text
-                  style={
-                    theme === "dark"
-                      ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
-                      : { ...iOSUIKit.bodyObject, paddingTop: 16 }
-                  }
-                >
+                <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
                   Developed by:
                   {game.involved_companies
                     .filter((company) => company.developer)
@@ -167,7 +144,7 @@ function GameDetails({ navigation, game }: Props) {
                           : ` ${company.company.name}`}
                       </Fragment>
                     ))}
-                </Text>
+                </ThemedText>
               )}
               {game.involved_companies?.find(
                 (company) => company.supporting
@@ -179,20 +156,12 @@ function GameDetails({ navigation, game }: Props) {
                     flexWrap: "wrap",
                   }}
                 >
-                  <Text
-                    style={
-                      theme === "dark"
-                        ? { ...iOSUIKit.bodyWhiteObject }
-                        : { ...iOSUIKit.bodyObject }
-                    }
-                  >
-                    Supported by:{" "}
-                  </Text>
+                  <ThemedText style={iOSUIKit.body}>Supported by: </ThemedText>
                   {game.involved_companies
                     .filter((company) => company.supporting)
                     .map((company, i) => (
                       <View style={{ flexDirection: "row" }} key={i}>
-                        {i > 0 ? (
+                        {i > 0 && (
                           <View
                             style={{
                               width: 5,
@@ -203,52 +172,26 @@ function GameDetails({ navigation, game }: Props) {
                               alignSelf: "center",
                             }}
                           />
-                        ) : null}
-                        {i > 0 ? (
-                          <Text
-                            style={
-                              theme === "dark"
-                                ? { ...iOSUIKit.bodyWhiteObject }
-                                : { ...iOSUIKit.bodyObject }
-                            }
-                          >
-                            {company.company.name}
-                          </Text>
-                        ) : (
-                          <Text
-                            style={
-                              theme === "dark"
-                                ? { ...iOSUIKit.bodyWhiteObject }
-                                : { ...iOSUIKit.bodyObject }
-                            }
-                          >
-                            {company.company.name}
-                          </Text>
                         )}
+                        <ThemedText style={iOSUIKit.body}>
+                          {company.company.name}
+                        </ThemedText>
                       </View>
                     ))}
                 </View>
               )}
             </>
           )}
-          {detailIndex === 1 && (
-            <>
-              {game.videos?.map((video, i) => (
+          {detailIndex === 1 &&
+            (game.videos ? (
+              game.videos.map((video, i) => (
                 <Trailer key={i} video={video} index={i} />
-              ))}
-              {game.videos === undefined && (
-                <Text
-                  style={
-                    theme === "dark"
-                      ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 }
-                      : { ...iOSUIKit.bodyObject, paddingTop: 16 }
-                  }
-                >
-                  No trailers yet! Come back later!
-                </Text>
-              )}
-            </>
-          )}
+              ))
+            ) : (
+              <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+                No trailers yet! Come back later!
+              </ThemedText>
+            ))}
         </View>
       </ScrollView>
     </>

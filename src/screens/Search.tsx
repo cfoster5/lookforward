@@ -5,6 +5,7 @@ import {
   Platform,
   Pressable,
   SafeAreaView,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -27,6 +28,7 @@ import GameReleaseModal from "../components/GamePlatformPicker";
 import MovieSearchModal from "../components/MovieSearchModal";
 import { NewPoster } from "../components/NewPoster";
 import SearchPerson from "../components/SearchPerson";
+import { Text as ThemedText } from "../components/Themed";
 import GameContext from "../contexts/GamePlatformPickerContexts";
 import MovieSearchFilterContext from "../contexts/MovieSearchFilterContexts";
 import TabStackContext from "../contexts/TabStackContext";
@@ -70,6 +72,17 @@ function Search({ navigation, route }: Props) {
   const [pageIndex, setPageIndex] = useState(1);
   const filterModalRef = useRef<Modalize>(null);
   const [selectedOption, setSelectedOption] = useState("Coming Soon");
+
+  const styles = StyleSheet.create({
+    flatlistContentContainer: {
+      marginHorizontal: 16,
+      paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
+    },
+    flatlistColumnWrapper: {
+      justifyContent: "space-between",
+      marginBottom: 16,
+    },
+  });
 
   useEffect(() => {
     let isMounted = true;
@@ -222,6 +235,9 @@ function Search({ navigation, route }: Props) {
     }
   }, [selectedOption]);
 
+  const scrollIndicatorInsets =
+    Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined;
+
   return (
     <>
       <SafeAreaView
@@ -320,22 +336,12 @@ function Search({ navigation, route }: Props) {
                 </Pressable>
               )}
               numColumns={2}
-              contentContainerStyle={{
-                marginHorizontal: 16,
-                paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
-              }}
-              columnWrapperStyle={{
-                justifyContent: "space-between",
-                marginBottom: 16,
-              }}
+              contentContainerStyle={styles.flatlistContentContainer}
+              columnWrapperStyle={styles.flatlistColumnWrapper}
               ref={scrollRef}
               keyExtractor={(item, index) => item.id.toString()}
               initialNumToRender={6}
-              scrollIndicatorInsets={
-                Platform.OS === "ios"
-                  ? { bottom: tabBarheight - 16 }
-                  : undefined
-              }
+              scrollIndicatorInsets={scrollIndicatorInsets}
               onEndReached={({ distanceFromEnd }) =>
                 setPageIndex(pageIndex + 1)
               }
@@ -428,22 +434,12 @@ function Search({ navigation, route }: Props) {
                 </Pressable>
               )}
               numColumns={2}
-              contentContainerStyle={{
-                marginHorizontal: 16,
-                paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
-              }}
-              columnWrapperStyle={{
-                justifyContent: "space-between",
-                marginBottom: 16,
-              }}
+              contentContainerStyle={styles.flatlistContentContainer}
+              columnWrapperStyle={styles.flatlistColumnWrapper}
               ref={scrollRef}
               keyExtractor={(item, index) => item.id.toString()}
               initialNumToRender={6}
-              scrollIndicatorInsets={
-                Platform.OS === "ios"
-                  ? { bottom: tabBarheight - 16 }
-                  : undefined
-              }
+              scrollIndicatorInsets={scrollIndicatorInsets}
               ListHeaderComponent={
                 <ListLabel text="Coming Soon" style={{ marginBottom: 16 }} />
               }
@@ -460,15 +456,15 @@ function Search({ navigation, route }: Props) {
 
   function ListLabel({ text, style }: { text: string; style?: any }) {
     return (
-      <Text
+      <ThemedText
         style={{
-          ...iOSUIKit.bodyEmphasizedWhiteObject,
+          ...iOSUIKit.bodyEmphasizedObject,
           marginBottom: 8,
           ...style,
         }}
       >
         {text}
-      </Text>
+      </ThemedText>
     );
   }
 }

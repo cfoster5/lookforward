@@ -39,7 +39,7 @@ export function FindStack({ navigation, route }: Props) {
         component={Details}
         options={{
           headerTransparent: Platform.OS === "ios" ? true : false,
-          headerBlurEffect: "regular",
+          headerBlurEffect: "dark",
           title: "",
         }}
       />
@@ -48,7 +48,7 @@ export function FindStack({ navigation, route }: Props) {
         component={MovieDiscover}
         options={{
           headerTransparent: Platform.OS === "ios" ? true : false,
-          headerBlurEffect: "regular",
+          headerBlurEffect: "dark",
           title: "",
         }}
       />
@@ -57,7 +57,7 @@ export function FindStack({ navigation, route }: Props) {
         component={GameDiscover}
         options={{
           headerTransparent: Platform.OS === "ios" ? true : false,
-          headerBlurEffect: "regular",
+          headerBlurEffect: "dark",
           title: "",
         }}
       />
@@ -66,7 +66,7 @@ export function FindStack({ navigation, route }: Props) {
         component={Actor}
         options={{
           headerTransparent: Platform.OS === "ios" ? true : false,
-          headerBlurEffect: "regular",
+          headerBlurEffect: "dark",
           title: "",
         }}
       />

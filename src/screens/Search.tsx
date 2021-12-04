@@ -106,22 +106,15 @@ function Search({ navigation, route }: Props) {
     //   }
     // });
 
-    getUpcomingGameReleases()
-      .then(async (releaseDates) => {
-        await convertReleasesToGames(releaseDates)
-          .then((games) => {
-            if (isMounted) {
-              setInitGames(games);
-              setGames(games);
-            }
-          })
-          .catch((error) => {
-            console.log("error 1", error);
-          });
-      })
-      .catch((error) => {
-        console.log("error 2", error);
-      });
+    async function getGames() {
+      const releaseDates = await getUpcomingGameReleases();
+      const games = await convertReleasesToGames(releaseDates);
+      if (isMounted) {
+        setInitGames(games);
+        setGames(games);
+      }
+    }
+    getGames();
 
     return () => {
       isMounted = false;

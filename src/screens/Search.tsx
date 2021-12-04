@@ -86,25 +86,6 @@ function Search({ navigation, route }: Props) {
 
   useEffect(() => {
     let isMounted = true;
-    // getUpcomingMovies().then(movies => {
-    //   if (isMounted) {
-    //     setInitMovies(movies);
-    //     setMovies(movies);
-    //   };
-    // })
-    // let tempMovies: TMDB.Movie.Movie[] = [];
-    // getUpcomingMovies().then(json => {
-    //   tempMovies = [...tempMovies, ...json.results];
-    //   for (let pageIndex = 2; pageIndex <= json.total_pages; pageIndex++) {
-    //     getUpcomingMovies(pageIndex).then(json => {
-    //       tempMovies = [...tempMovies, ...json.results];
-    //       if (isMounted) {
-    //         setInitMovies(tempMovies);
-    //         setMovies(tempMovies);
-    //       };
-    //     })
-    //   }
-    // });
 
     async function getGames() {
       const releaseDates = await getUpcomingGameReleases();
@@ -114,6 +95,7 @@ function Search({ navigation, route }: Props) {
         setGames(games);
       }
     }
+
     getGames();
 
     return () => {
@@ -143,7 +125,7 @@ function Search({ navigation, route }: Props) {
     setPageIndex(1);
   }, [triggeredSearch]);
 
-  async function getMovies() {
+  async function getMovieSearch() {
     let json = await searchMovies(searchValue);
     setMovies(
       json.results.sort((a, b) => {
@@ -152,36 +134,34 @@ function Search({ navigation, route }: Props) {
     );
   }
 
+  async function getMovies(method: Promise<any>) {
+    const json = await method;
+    setInitMovies([...initMovies, ...json.results]);
+    setMovies([...movies, ...json.results]);
+  }
+
   useEffect(() => {
-    if (pageIndex > 1 && triggeredSearch) {
-      searchMovies(searchValue, pageIndex).then((json) => {
+    async function getData() {
+      if (pageIndex > 1 && triggeredSearch) {
+        const json = await searchMovies(searchValue, pageIndex);
         setMovies([...movies, ...json.results]);
-      });
+      }
+      if (pageIndex > 1 && !triggeredSearch) {
+        if (selectedOption === "Coming Soon") {
+          getMovies(getUpcomingMovies(pageIndex));
+        }
+        if (selectedOption === "Now Playing") {
+          getMovies(getNowPlayingMovies(pageIndex));
+        }
+        if (selectedOption === "Popular") {
+          getMovies(getPopularMovies(pageIndex));
+        }
+        if (selectedOption === "Trending") {
+          getMovies(getTrendingMovies(pageIndex));
+        }
+      }
     }
-    if (pageIndex > 1 && !triggeredSearch && selectedOption === "Coming Soon") {
-      getUpcomingMovies(pageIndex).then((json) => {
-        setInitMovies([...initMovies, ...json.results]);
-        setMovies([...movies, ...json.results]);
-      });
-    }
-    if (pageIndex > 1 && !triggeredSearch && selectedOption === "Now Playing") {
-      getNowPlayingMovies(pageIndex).then((json) => {
-        setInitMovies([...initMovies, ...json.results]);
-        setMovies([...movies, ...json.results]);
-      });
-    }
-    if (pageIndex > 1 && !triggeredSearch && selectedOption === "Popular") {
-      getPopularMovies(pageIndex).then((json) => {
-        setInitMovies([...initMovies, ...json.results]);
-        setMovies([...movies, ...json.results]);
-      });
-    }
-    if (pageIndex > 1 && !triggeredSearch && selectedOption === "Trending") {
-      getTrendingMovies(pageIndex).then((json) => {
-        setInitMovies([...initMovies, ...json.results]);
-        setMovies([...movies, ...json.results]);
-      });
-    }
+    getData();
   }, [pageIndex]);
 
   function reinitialize() {
@@ -199,33 +179,32 @@ function Search({ navigation, route }: Props) {
     setInitMovies([]);
     setMovies([]);
     filterModalRef.current?.close();
-    if (selectedOption === "Coming Soon") {
-      getUpcomingMovies().then((json) => {
+    async function getData() {
+      if (selectedOption === "Coming Soon") {
+        const json = await getUpcomingMovies();
         setInitMovies(json.results);
         setMovies(json.results);
-      });
-    }
-    if (selectedOption === "Now Playing") {
-      getNowPlayingMovies().then((json) => {
+      }
+      if (selectedOption === "Now Playing") {
+        const json = await getNowPlayingMovies();
         setInitMovies(json.results);
         setMovies(json.results);
-      });
-    }
-    if (selectedOption === "Popular") {
-      getPopularMovies().then((json) => {
+      }
+      if (selectedOption === "Popular") {
+        const json = await getPopularMovies();
         setInitMovies(json.results);
         setMovies(json.results);
-      });
-    }
-    // if (selectedOption === "Top Rated") {
-    //   getTopRatedMovies().then(json => { setInitMovies(json); setMovies(json) });
-    // }
-    if (selectedOption === "Trending") {
-      getTrendingMovies().then((json) => {
+      }
+      // if (selectedOption === "Top Rated") {
+      //   getTopRatedMovies().then(json => { setInitMovies(json); setMovies(json) });
+      // }
+      if (selectedOption === "Trending") {
+        const json = await getTrendingMovies();
         setInitMovies(json.results);
         setMovies(json.results);
-      });
+      }
     }
+    getData();
   }, [selectedOption]);
 
   const scrollIndicatorInsets =
@@ -296,7 +275,7 @@ function Search({ navigation, route }: Props) {
                 if (categoryIndex === 0) {
                   setTriggeredSearch(true);
                   setMovies([]);
-                  getMovies();
+                  getMovieSearch();
                 }
                 if (categoryIndex === 1) {
                   setGames([]);

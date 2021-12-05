@@ -104,7 +104,7 @@ function SlidingMovie({
   return (
     <Pressable
       style={{ marginRight: 16 }}
-      onPress={() => navigation.push("Details", { data: movie, type: "movie" })}
+      onPress={() => navigation.push("Details", { movie: movie })}
     >
       <NewPoster
         movie={movie}
@@ -141,8 +141,10 @@ export function MovieDetails({ navigation, movie }: Props) {
   const [showAllOverview, setShowAllOverview] = useState(false);
   const [traktDetails, setTraktDetails] = useState();
   const scrollOffset = useSharedValue(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     setMovieDetails(undefined);
     setTraktDetails(undefined);
     async function getDetails() {
@@ -153,12 +155,16 @@ export function MovieDetails({ navigation, movie }: Props) {
   }, [movie]);
 
   useEffect(() => {
-    if (movieDetails?.imdb_id) {
+    if (movieDetails && movieDetails.imdb_id) {
       async function getMovie() {
-        const traktDetails = await getMovieById(movieDetails?.imdb_id);
+        const traktDetails = await getMovieById(movieDetails.imdb_id);
         setTraktDetails(traktDetails);
+        setLoading(false);
       }
       getMovie();
+    }
+    if (movieDetails && !movieDetails.imdb_id) {
+      setLoading(false);
     }
   }, [movieDetails]);
 
@@ -224,7 +230,7 @@ export function MovieDetails({ navigation, movie }: Props) {
     };
   });
 
-  return movieDetails ? (
+  return !loading ? (
     <Animated.ScrollView
       onScroll={scrollHandler}
       scrollEventThrottle={16}
@@ -400,7 +406,7 @@ export function MovieDetails({ navigation, movie }: Props) {
                 </ScrollView>
               </>
             )}
-            {movieDetails.recommendations.results.length > 0 && (
+            {movieDetails?.recommendations?.results?.length > 0 && (
               <>
                 <DiscoverListLabel text="Recommended" />
                 <FlatList

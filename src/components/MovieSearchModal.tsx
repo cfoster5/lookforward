@@ -55,14 +55,10 @@ export default function MovieSearchModal({
   useEffect(() => {
     async function getData() {
       const json = await getMovieWatchProviders();
-      setMovieWatchProviders([...movieWatchProviders, ...json.results]);
+      setMovieWatchProviders(json.results);
     }
     getData();
   }, []);
-
-  useEffect(() => {
-    console.log(movieWatchProviders.map((provider) => provider.provider_name));
-  }, [movieWatchProviders]);
 
   return (
     <Modalize

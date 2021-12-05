@@ -10,7 +10,6 @@ import {
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import MovieSearchFilterContext from "../contexts/MovieSearchFilterContexts";
 import TabStackContext from "../contexts/TabStackContext";
 import { getMovieWatchProviders } from "../helpers/tmdbRequests";
 import { Navigation } from "../interfaces/navigation";
@@ -28,6 +27,7 @@ export default function MovieSearchModal({
   navigation,
   filterModalRef,
   selectedOption,
+  setSelectedOption,
 }: {
   navigation: CompositeNavigationProp<
     StackNavigationProp<Navigation.FindStackParamList, "Find">,
@@ -35,10 +35,10 @@ export default function MovieSearchModal({
   >;
   filterModalRef: Modalize;
   selectedOption: string;
+  setSelectedOption: (option: string) => void;
 }) {
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
-  const { setSelectedOption } = useContext(MovieSearchFilterContext);
   const [movieWatchProviders, setMovieWatchProviders] = useState<
     MovieWatchProvider[]
   >([

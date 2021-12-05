@@ -30,7 +30,6 @@ import { NewPoster } from "../components/NewPoster";
 import SearchPerson from "../components/SearchPerson";
 import { Text as ThemedText } from "../components/Themed";
 import GameContext from "../contexts/GamePlatformPickerContexts";
-import MovieSearchFilterContext from "../contexts/MovieSearchFilterContexts";
 import TabStackContext from "../contexts/TabStackContext";
 import { convertReleasesToGames } from "../helpers/helpers";
 import { getUpcomingGameReleases, searchGames } from "../helpers/igdbRequests";
@@ -290,9 +289,7 @@ function Search({ navigation, route }: Props) {
 
       {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}
       {categoryIndex === 0 && (
-        <MovieSearchFilterContext.Provider
-          value={{ selectedOption, setSelectedOption }}
-        >
+        <>
           {movies.length > 0 ? (
             <FlatList
               data={
@@ -390,8 +387,9 @@ function Search({ navigation, route }: Props) {
             navigation={navigation}
             filterModalRef={filterModalRef}
             selectedOption={selectedOption}
+            setSelectedOption={setSelectedOption}
           />
-        </MovieSearchFilterContext.Provider>
+        </>
       )}
       {categoryIndex === 1 &&
         (games.length > 0 ? (

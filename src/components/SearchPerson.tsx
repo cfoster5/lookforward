@@ -9,14 +9,14 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
-import { Cast, Crew } from "../interfaces/tmdb";
+import { TMDB } from "../interfaces/tmdb";
 
 interface Props {
   navigation: CompositeNavigationProp<
     StackNavigationProp<Navigation.FindStackParamList, "Find">,
     BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
   >;
-  person: Crew | Cast;
+  person: TMDB.Crew | TMDB.Cast;
 }
 
 function SearchPerson({ navigation, person }: Props) {
@@ -24,7 +24,7 @@ function SearchPerson({ navigation, person }: Props) {
   return (
     <Pressable
       style={{ marginRight: 16 }}
-      onPress={() => navigation.push("Actor", person)}
+      onPress={() => navigation.push("Actor", { personId: person.id })}
     >
       {person.profile_path && (
         <FastImage

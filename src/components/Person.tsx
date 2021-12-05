@@ -7,12 +7,12 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
-import { Cast, Crew } from "../interfaces/tmdb";
+import { TMDB } from "../interfaces/tmdb";
 import { TextPoster } from "./NewPoster";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">;
-  person: Crew | Cast;
+  person: TMDB.Crew | TMDB.Cast;
 }
 
 function Person({ navigation, person }: Props) {
@@ -20,7 +20,7 @@ function Person({ navigation, person }: Props) {
   return (
     <Pressable
       style={{ flex: 1, flexDirection: "row", alignItems: "center" }}
-      onPress={() => navigation.push("Actor", person)}
+      onPress={() => navigation.push("Actor", { personId: person.id })}
     >
       {person.profile_path && (
         <FastImage
@@ -54,8 +54,8 @@ function Person({ navigation, person }: Props) {
           }
         >
           {"character" in person
-            ? (person as Cast).character
-            : (person as Crew).job}
+            ? (person as TMDB.Cast).character
+            : (person as TMDB.Crew).job}
         </Text>
       </View>
     </Pressable>

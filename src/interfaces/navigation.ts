@@ -22,7 +22,7 @@ export namespace Navigation {
       provider?: MovieWatchProvider;
     };
     GameDiscover: { genre?: any; company?: any; keyword?: any };
-    Actor: TMDB.Movie.Cast | TMDB.Movie.Crew;
+    Actor: { personId: number };
   };
 
   export type CountdownStackParamList = {
@@ -34,7 +34,7 @@ export namespace Navigation {
       keyword?: TMDB.Movie.Keywords;
       provider?: MovieWatchProvider;
     };
-    Actor: TMDB.Movie.Cast | TMDB.Movie.Crew;
+    Actor: { personId: number };
   };
 
   export type ProfileStackParamList = {

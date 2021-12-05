@@ -18,15 +18,15 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { DateTime } from "luxon";
 
 import ButtonMultiState from "../components/ButtonMultiState";
 import Poster from "../components/Poster";
 import { Text as ThemedText } from "../components/Themed";
-import { months } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { getPerson } from "../helpers/tmdbRequests";
 import { Navigation } from "../interfaces/navigation";
-import { Person } from "../interfaces/tmdb";
+import { TMDB } from "../interfaces/tmdb";
 
 interface Props {
   // navigation:
@@ -50,7 +50,7 @@ interface Props {
 }
 
 function Actor({ route, navigation }: Props) {
-  const [details, setDetails] = useState<Person>();
+  const [details, setDetails] = useState<TMDB.Person.Person>();
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const ref = useRef<Carousel<any>>(null);
@@ -61,17 +61,18 @@ function Actor({ route, navigation }: Props) {
 
   useEffect(() => {
     setDetails(undefined);
-    navigation.setOptions({ title: route.params.name });
-    getPerson(route.params.id).then((details) => {
+    async function getData() {
+      const details = await getPerson(route.params.personId);
+      navigation.setOptions({ title: details.name });
       setDetails(details);
-    });
-  }, [route.params]);
+    }
+    getData();
+  }, [route.params.personId]);
 
   function getBirthday(): string {
-    let monthIndex = new Date(details?.birthday as string).getUTCMonth();
-    return `${months[monthIndex].toUpperCase()} ${new Date(
-      details?.birthday as string
-    ).getUTCDate()}, ${new Date(details?.birthday as string).getUTCFullYear()}`;
+    return DateTime.fromFormat(details?.birthday as string, "yyyy-MM-dd")
+      .toFormat("MMMM d, yyyy")
+      .toUpperCase();
   }
 
   function RenderItem({ item, index }: { item: any; index: number }) {
@@ -179,9 +180,7 @@ function Actor({ route, navigation }: Props) {
         >
           {selectedJob === "Actor"
             ? details?.movie_credits.cast
-                .sort(
-                  (a, b) => new Date(b.release_date) - new Date(a.release_date)
-                )
+                .sort((a, b) => b.release_date?.localeCompare(a.release_date))
                 .map((credit, i) => (
                   <View key={i} style={{ paddingBottom: 16 }}>
                     <Poster navigation={navigation} movie={credit} />
@@ -189,9 +188,7 @@ function Actor({ route, navigation }: Props) {
                 ))
             : details?.movie_credits.crew
                 .filter((credit) => credit.job === selectedJob)
-                .sort(
-                  (a, b) => new Date(b.release_date) - new Date(a.release_date)
-                )
+                .sort((a, b) => b.release_date?.localeCompare(a.release_date))
                 .map((credit, i) => (
                   <View key={i} style={{ paddingBottom: 16 }}>
                     <Poster navigation={navigation} movie={credit} />

@@ -1,17 +1,8 @@
-import {
-  BaseMovie,
-  BaseResponse,
-  Movies,
-  People,
-  Search,
-  TMDB,
-  Trending,
-  WatchProviders,
-} from "../interfaces/tmdb";
+import { TMDB } from "../interfaces/tmdb";
 
 export async function getUpcomingMovies(
   pageIndex?: number
-): Promise<Movies.Upcoming.Response> {
+): Promise<TMDB.Movie.Upcoming.Response> {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/upcoming?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=${
       pageIndex ? pageIndex : 1
@@ -23,7 +14,7 @@ export async function getUpcomingMovies(
 export async function searchMovies(
   searchVal: string,
   pageIndex?: number
-): Promise<BaseResponse<Search.MultiSearchResult>> {
+): Promise<TMDB.BaseResponse<TMDB.Search.MultiSearchResult>> {
   const response = await fetch(
     `https://api.themoviedb.org/3/search/multi?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=${
       pageIndex ? pageIndex : 1
@@ -34,7 +25,7 @@ export async function searchMovies(
 
 export async function getMovieDetails(
   movieId: number
-): Promise<Movies.Details> {
+): Promise<TMDB.Movie.Details> {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=credits,similar,videos,release_dates,keywords,recommendations`
   );
@@ -54,7 +45,7 @@ export async function getPerson(personId: number): Promise<TMDB.Person.Person> {
 
 export async function getTrendingMovies(
   pageIndex?: number
-): Promise<BaseResponse<Trending.Movie>> {
+): Promise<TMDB.BaseResponse<TMDB.Trending.Movie>> {
   const response = await fetch(
     `https://api.themoviedb.org/3/trending/movie/day?api_key=68991fbb0b75dba5ae0ecd8182e967b1&page=${
       pageIndex ? pageIndex : 1
@@ -65,7 +56,7 @@ export async function getTrendingMovies(
 
 export async function getNowPlayingMovies(
   pageIndex?: number
-): Promise<Movies.Upcoming.Response> {
+): Promise<TMDB.Movie.Upcoming.Response> {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/now_playing?api_key=68991fbb0b75dba5ae0ecd8182e967b1&region=US&page=${
       pageIndex ? pageIndex : 1
@@ -76,7 +67,7 @@ export async function getNowPlayingMovies(
 
 export async function getPopularMovies(
   pageIndex?: number
-): Promise<BaseResponse<BaseMovie>> {
+): Promise<TMDB.BaseResponse<TMDB.BaseMovie>> {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/popular?api_key=68991fbb0b75dba5ae0ecd8182e967b1&region=US&page=${
       pageIndex ? pageIndex : 1
@@ -134,7 +125,7 @@ export async function getDiscoverMovies({
 }
 
 export async function getMovieWatchProviders(): Promise<{
-  results: WatchProviders.MovieWatchProvider[];
+  results: TMDB.WatchProviders.Movie[];
 }> {
   const response = await fetch(
     `https://api.themoviedb.org/3/watch/providers/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&watch_region=US`

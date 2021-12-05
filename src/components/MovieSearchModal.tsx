@@ -11,6 +11,7 @@ import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import TabStackContext from "../contexts/TabStackContext";
+import { targetedProviders } from "../helpers/helpers";
 import { getMovieWatchProviders } from "../helpers/tmdbRequests";
 import { Navigation } from "../interfaces/navigation";
 import ButtonMultiState from "./ButtonMultiState";
@@ -41,14 +42,7 @@ export default function MovieSearchModal({
   const tabBarheight = useBottomTabBarHeight();
   const [movieWatchProviders, setMovieWatchProviders] = useState<
     MovieWatchProvider[]
-  >([
-    {
-      display_priority: 0,
-      logo_path: "",
-      provider_id: 0,
-      provider_name: "Any",
-    },
-  ]);
+  >([]);
 
   const options = [
     "Coming Soon",
@@ -58,28 +52,17 @@ export default function MovieSearchModal({
     "Trending",
   ];
 
-  const targetedProviders = [
-    "Netflix",
-    "Apple iTunes",
-    "Apple TV Plus",
-    "Amazon Prime Video",
-    "Amazon Video",
-    "Disney Plus",
-    // "Starz",
-    "Hulu",
-    "HBO Max",
-    // "Showtime",
-    "Google Play Movies",
-    "YouTube",
-    "Microsoft Store",
-    // "Paramount Plus"
-  ];
+  useEffect(() => {
+    async function getData() {
+      const json = await getMovieWatchProviders();
+      setMovieWatchProviders([...movieWatchProviders, ...json.results]);
+    }
+    getData();
+  }, []);
 
   useEffect(() => {
-    getMovieWatchProviders().then((json) =>
-      setMovieWatchProviders([...movieWatchProviders, ...json.results])
-    );
-  }, []);
+    console.log(movieWatchProviders.map((provider) => provider.provider_name));
+  }, [movieWatchProviders]);
 
   return (
     <Modalize

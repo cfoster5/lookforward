@@ -50,8 +50,7 @@ function CountdownItem({
       return DateTime.fromFormat((item as Movie).release_date, "yyyy-MM-dd")
         .toUTC()
         .toFormat("MM/dd/yyyy");
-    }
-    if (sectionName === "Games") {
+    } else {
       return DateTime.fromSeconds((item as IGDB.ReleaseDate.ReleaseDate).date)
         .toUTC()
         .toFormat("MM/dd/yyyy");
@@ -67,8 +66,7 @@ function CountdownItem({
         .toObject();
 
       return Math.abs(Math.floor(diff.days));
-    }
-    if (sectionName === "Games") {
+    } else {
       const diff = DateTime.now()
         .diff(
           DateTime.fromSeconds((item as IGDB.ReleaseDate.ReleaseDate).date),

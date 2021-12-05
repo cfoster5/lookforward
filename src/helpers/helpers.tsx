@@ -1,22 +1,6 @@
 import { useEffect, useRef } from "react";
-import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
 
 import { IGDB } from "../interfaces/igdb";
-
-export const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
 
 export const targetedProviders = [
   "Any",

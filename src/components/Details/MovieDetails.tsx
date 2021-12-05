@@ -28,8 +28,8 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { DateTime } from "luxon";
 
-import { months } from "../../helpers/helpers";
 import { reusableStyles } from "../../helpers/styles";
 import { getMovieDetails } from "../../helpers/tmdbRequests";
 import { getMovieById, getRelated } from "../../helpers/traktRequests";
@@ -155,19 +155,18 @@ export function MovieDetails({ navigation, movie }: Props) {
   useEffect(() => {
     if (movieDetails?.imdb_id) {
       async function getMovie() {
-        const traktDetails = await getMovieById(movieDetails.imdb_id);
+        const traktDetails = await getMovieById(movieDetails?.imdb_id);
         setTraktDetails(traktDetails);
       }
       getMovie();
     }
   }, [movieDetails]);
 
-  function getReleaseDate(): string | undefined {
+  function getReleaseDate(): string {
     if (movie.release_date) {
-      let monthIndex = new Date(movie.release_date)?.getUTCMonth();
-      return `${months[monthIndex]?.toUpperCase()} ${new Date(
-        movie.release_date
-      )?.getUTCDate()}, ${new Date(movie.release_date)?.getUTCFullYear()}`;
+      return DateTime.fromISO(movie.release_date)
+        .toFormat("MMMM d, yyyy")
+        .toUpperCase();
     } else {
       return "No release date yet";
     }

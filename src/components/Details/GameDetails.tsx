@@ -9,8 +9,8 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { DateTime } from "luxon";
 
-import { months } from "../../helpers/helpers";
 import { reusableStyles } from "../../helpers/styles";
 import { IGDB } from "../../interfaces/igdb";
 import { Navigation } from "../../interfaces/navigation";
@@ -44,13 +44,10 @@ function GameDetails({ navigation, game }: Props) {
       }
     });
     if (dates.length === 1) {
-      let date = new Date(dates[0] * 1000);
-      let monthIndex = new Date(date).getUTCMonth();
-      return `${months[
-        monthIndex
-      ].toUpperCase()} ${date.getUTCDate()}, ${new Date(
-        date
-      ).getUTCFullYear()}`;
+      return DateTime.fromSeconds(dates[0])
+        .toUTC()
+        .toFormat("MMMM d, yyyy")
+        .toUpperCase();
     } else {
       return "MULTIPLE DATES";
     }

@@ -4,6 +4,7 @@ import {
   Movies,
   People,
   Search,
+  TMDB,
   Trending,
   WatchProviders,
 } from "../interfaces/tmdb";
@@ -44,7 +45,7 @@ export async function getMovieDetails(
 //   const response = await fetch(`https://api.themoviedb.org/3/person/${person}/movie_credits?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US`);
 //   return response.json();
 // }
-export async function getPerson(personId: number): Promise<People.Person> {
+export async function getPerson(personId: number): Promise<TMDB.Person.Person> {
   const response = await fetch(
     `https://api.themoviedb.org/3/person/${personId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=movie_credits,images`
   );

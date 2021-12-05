@@ -12,6 +12,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { DateTime } from "luxon";
 
 import { reusableStyles } from "../helpers/styles";
 import { IGDB } from "../interfaces/igdb";
@@ -46,51 +47,37 @@ function CountdownItem({
 }: Props) {
   function getReleaseDate(): string {
     if (sectionName === "Movies") {
-      let monthIndex = new Date((item as Movie).release_date).getUTCMonth();
-      return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${
-        monthIndex + 1
-      }/${
-        new Date((item as Movie).release_date).getUTCDate().toString().length <
-        2
-          ? "0"
-          : ""
-      }${new Date((item as Movie).release_date).getUTCDate()}/${new Date(
-        (item as Movie).release_date
-      ).getUTCFullYear()}`;
+      return DateTime.fromFormat((item as Movie).release_date, "yyyy-MM-dd")
+        .toUTC()
+        .toFormat("MM/dd/yyyy");
     }
     if (sectionName === "Games") {
-      let date = new Date((item as IGDB.ReleaseDate.ReleaseDate).date * 1000);
-      let monthIndex = new Date(date).getUTCMonth();
-      return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${
-        monthIndex + 1
-      }/${
-        date.getUTCDate().toString().length < 2 ? "0" : ""
-      }${date.getUTCDate()}/${new Date(date).getUTCFullYear()}`;
+      return DateTime.fromSeconds((item as IGDB.ReleaseDate.ReleaseDate).date)
+        .toUTC()
+        .toFormat("MM/dd/yyyy");
     }
   }
 
   function getCountdownDays(): number {
-    let year: number = 0;
-    let month: number = 0;
-    let day: number = 0;
     if (sectionName === "Movies") {
-      year = new Date((item as Movie).release_date).getUTCFullYear();
-      month = new Date((item as Movie).release_date).getUTCMonth();
-      day = new Date((item as Movie).release_date).getUTCDate();
+      const diff = DateTime.now()
+        .diff(DateTime.fromFormat((item as Movie).release_date, "yyyy-MM-dd"), [
+          "days",
+        ])
+        .toObject();
+
+      return Math.abs(Math.floor(diff.days));
     }
     if (sectionName === "Games") {
-      let date = new Date((item as IGDB.ReleaseDate.ReleaseDate).date * 1000);
-      year = new Date(date).getUTCFullYear();
-      month = new Date(date).getUTCMonth();
-      day = new Date(date).getUTCDate();
+      const diff = DateTime.now()
+        .diff(
+          DateTime.fromSeconds((item as IGDB.ReleaseDate.ReleaseDate).date),
+          ["days"]
+        )
+        .toObject();
+
+      return Math.abs(Math.floor(diff.days));
     }
-    let remainingSeconds =
-      Math.floor(Date.UTC(year, month, day) / 1000) -
-      Math.floor(Date.now() / 1000);
-    let remainingMinutes = Math.floor(remainingSeconds / 60);
-    let remainingHours = Math.floor(remainingMinutes / 60);
-    let remainingDays = Math.ceil(remainingHours / 24);
-    return remainingDays;
   }
 
   function RadioButton(props: any) {

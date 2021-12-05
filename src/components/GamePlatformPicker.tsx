@@ -6,6 +6,7 @@ import { IHandles } from "react-native-modalize/lib/options";
 import { iOSUIKit } from "react-native-typography";
 import firestore from "@react-native-firebase/firestore";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { DateTime } from "luxon";
 
 import GameContext from "../contexts/GamePlatformPickerContexts";
 import TabStackContext from "../contexts/TabStackContext";
@@ -22,17 +23,6 @@ function GamePlatformPicker({
   const { user, theme } = useContext(TabStackContext);
   const { setGame } = useContext(GameContext);
   const tabBarheight = useBottomTabBarHeight();
-
-  function formatDate(item: IGDB.Game.ReleaseDate) {
-    let date = new Date(item.date * 1000);
-    let monthIndex = new Date(date).getUTCMonth();
-    // return `${months[monthIndex].toUpperCase()} ${date.getUTCDate()}, ${new Date(date).getUTCFullYear()}`
-    return `${(monthIndex + 1).toString().length < 2 ? "0" : ""}${
-      monthIndex + 1
-    }/${
-      date.getUTCDate().toString().length < 2 ? "0" : ""
-    }${date.getUTCDate()}/${new Date(date).getUTCFullYear()}`;
-  }
 
   async function addGameRelease(releaseDate: IGDB.Game.ReleaseDate) {
     // console.log("releaseDate", releaseDate);
@@ -126,7 +116,9 @@ function GamePlatformPicker({
                   {releaseDate.platform.name}
                 </Text>
                 <Text style={reusableStyles.date}>
-                  {formatDate(releaseDate)}
+                  {DateTime.fromSeconds(releaseDate.date)
+                    .toUTC()
+                    .toFormat("MM/dd/yyyy")}
                 </Text>
               </View>
             </Pressable>

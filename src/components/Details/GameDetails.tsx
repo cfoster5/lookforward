@@ -34,17 +34,12 @@ function GameDetails({ navigation, game }: Props) {
   const headerHeight = useHeaderHeight();
 
   function getReleaseDate(): string {
-    let dates: number[] = [];
-    game.release_dates?.forEach((releaseDate) => {
-      if (
-        dates.indexOf(releaseDate.date) === -1 &&
-        (releaseDate.region === 2 || releaseDate.region === 8)
-      ) {
-        dates.push(releaseDate.date);
-      }
-    });
-    if (dates.length === 1) {
-      return DateTime.fromSeconds(dates[0])
+    let filteredDates = game.release_dates.filter(
+      (releaseDate) => releaseDate.region === 2 || releaseDate.region === 8
+    );
+    let uniqueDates = [...new Set(filteredDates.map((date) => date.date))];
+    if (uniqueDates.length === 1) {
+      return DateTime.fromSeconds(uniqueDates[0])
         .toUTC()
         .toFormat("MMMM d, yyyy")
         .toUpperCase();

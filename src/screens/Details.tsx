@@ -56,42 +56,25 @@ function Details({ navigation, route }: Props) {
     }
   }, [route.params]);
 
-  function upcomingRelease() {
-    if (
-      route.params.movie &&
-      DateTime.fromISO(route.params.movie.release_date) >= DateTime.now()
-    ) {
-      return true;
-    } else if (
-      route.params.game &&
-      route.params.game.release_dates.filter(
-        (releaseDate) => DateTime.fromISO(releaseDate.date) >= DateTime.now()
-      ).length === 0
-    ) {
-      return true;
-    }
-  }
-
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () =>
-        upcomingRelease() && (
-          <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-            <Item
-              title="search"
-              iconName={countdownId ? "checkmark-outline" : "add-outline"}
-              onPress={() =>
-                route.params.movie || route.params.tv
-                  ? countdownId
-                    ? deleteItem()
-                    : addMovieToList()
-                  : countdownId
-                  ? deleteItem()
+      headerRight: () => (
+        // upcomingRelease() && (
+        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+          <Item
+            title="search"
+            iconName={countdownId ? "checkmark-outline" : "add-outline"}
+            onPress={() =>
+              !countdownId
+                ? route.params.movie || route.params.tv
+                  ? addMovieToList()
                   : modalizeRef.current?.open()
-              }
-            />
-          </HeaderButtons>
-        ),
+                : deleteItem()
+            }
+          />
+        </HeaderButtons>
+      ),
+      // ),
     });
   }, [navigation, countdownId]);
 

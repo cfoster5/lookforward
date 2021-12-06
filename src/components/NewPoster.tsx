@@ -18,13 +18,20 @@ function MoviePoster({ item, style }: { item: Movie; style?: any }) {
   inCountdown = movies.some((movie: Movie) => movie.id === item.id);
   return (
     <>
-      {DateTime.fromISO(item.release_date) >= DateTime.now() && (
-        <PosterButton movie={item} inCountdown={inCountdown} />
-      )}
+      {/* {DateTime.fromISO(item.release_date) >= DateTime.now() && ( */}
+      <PosterButton movie={item} inCountdown={inCountdown} />
+      {/* )} */}
       {item.poster_path ? (
         <FastImage
-          style={{ ...reusableStyles.itemRight, ...style }}
-          source={{ uri: `https://image.tmdb.org/t/p/w300${item.poster_path}` }}
+          style={{
+            ...reusableStyles.itemRight,
+            ...style,
+            // opacity:
+            //   DateTime.fromISO(item.release_date) >= DateTime.now() ? 1 : 0.6,
+          }}
+          source={{
+            uri: `https://image.tmdb.org/t/p/w300${item.poster_path}`,
+          }}
         />
       ) : (
         <TextPoster text={item.title} />

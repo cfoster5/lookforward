@@ -1,14 +1,19 @@
+import { DateTime } from "luxon";
+
 import { TMDB } from "../interfaces/tmdb";
 
-export async function getUpcomingMovies(
-  pageIndex?: number
-): Promise<TMDB.Movie.Upcoming.Response> {
+export async function getUpcomingMovies(pageIndex?: number) {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/upcoming?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&region=US&include_adult=false&page=${
       pageIndex ? pageIndex : 1
     }`
   );
-  return await response.json();
+  const json: TMDB.Movie.Upcoming.Response = await response.json();
+  const filtered = json.results.filter(
+    (movie) =>
+      DateTime.fromFormat(movie.release_date, "yyyy-MM-dd") >= DateTime.now()
+  );
+  return { results: filtered };
 }
 
 export async function searchMovies(

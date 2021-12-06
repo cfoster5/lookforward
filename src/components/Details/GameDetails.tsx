@@ -75,9 +75,14 @@ function GameDetails({ navigation, game }: Props) {
           {game.name}
         </ThemedText>
         <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
-        <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
-          {game.summary}
-        </ThemedText>
+        <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
+          <ThemedText
+            style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}
+            numberOfLines={showAllOverview ? undefined : 4}
+          >
+            {game.summary}
+          </ThemedText>
+        </Pressable>
         <View
           style={{
             flexDirection: "row",

@@ -1,5 +1,12 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { Dimensions, Platform, ScrollView, Text, View } from "react-native";
+import {
+  Dimensions,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import { Image } from "react-native-elements";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import {
@@ -32,6 +39,7 @@ function GameDetails({ navigation, game }: Props) {
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
+  const [showAllOverview, setShowAllOverview] = useState(false);
 
   function getReleaseDate(): string {
     let filteredDates = game.release_dates.filter(

@@ -59,22 +59,22 @@ function CountdownItem({
 
   function getCountdownDays(): number {
     if (sectionName === "Movies") {
-      const diff = DateTime.now()
-        .diff(DateTime.fromFormat((item as Movie).release_date, "yyyy-MM-dd"), [
-          "days",
-        ])
+      const diff = DateTime.fromFormat(
+        (item as Movie).release_date,
+        "yyyy-MM-dd"
+      )
+        .diff(DateTime.now(), ["days"])
         .toObject();
 
-      return Math.abs(Math.floor(diff.days));
+      return Math.ceil(diff.days);
     } else {
-      const diff = DateTime.now()
-        .diff(
-          DateTime.fromSeconds((item as IGDB.ReleaseDate.ReleaseDate).date),
-          ["days"]
-        )
+      const diff = DateTime.fromSeconds(
+        (item as IGDB.ReleaseDate.ReleaseDate).date
+      )
+        .diff(DateTime.now(), ["days"])
         .toObject();
 
-      return Math.abs(Math.floor(diff.days));
+      return Math.ceil(diff.days);
     }
   }
 

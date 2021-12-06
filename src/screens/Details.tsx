@@ -174,7 +174,7 @@ function Details({ navigation, route }: Props) {
         </>
       )}
       {route.params.movie && (
-        <MovieDetails navigation={navigation} movie={route.params.movie} />
+        <MovieDetails navigation={navigation} movieId={route.params.movie.id} />
       )}
     </>
   );

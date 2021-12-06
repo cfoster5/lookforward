@@ -56,8 +56,11 @@ interface Props {
           "CountdownTab"
         >
       >;
-  movie: TMDB.BaseMovie;
+  movieId: number;
 }
+
+const AnimatedImageBackground =
+  Animated.createAnimatedComponent(ImageBackground);
 
 function DiscoverButton({
   navigation,
@@ -133,7 +136,7 @@ function DiscoverListLabel({ text }: { text: string }) {
   );
 }
 
-export function MovieDetails({ navigation, movie }: Props) {
+export function MovieDetails({ navigation, movieId }: Props) {
   const [movieDetails, setMovieDetails] = useState<TMDB.Movie.Details>();
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
@@ -148,11 +151,11 @@ export function MovieDetails({ navigation, movie }: Props) {
     setMovieDetails(undefined);
     setTraktDetails(undefined);
     async function getDetails() {
-      const details = await getMovieDetails(movie.id);
+      const details = await getMovieDetails(movieId);
       setMovieDetails(details);
     }
     getDetails();
-  }, [movie]);
+  }, [movieId]);
 
   useEffect(() => {
     if (movieDetails && movieDetails.imdb_id) {
@@ -169,8 +172,8 @@ export function MovieDetails({ navigation, movie }: Props) {
   }, [movieDetails]);
 
   function getReleaseDate(): string {
-    if (movie.release_date) {
-      return DateTime.fromISO(movie.release_date)
+    if (movieDetails?.release_date) {
+      return DateTime.fromISO(movieDetails.release_date)
         .toFormat("MMMM d, yyyy")
         .toUpperCase();
     } else {
@@ -189,9 +192,6 @@ export function MovieDetails({ navigation, movie }: Props) {
   const scrollHandler = useAnimatedScrollHandler(
     (event) => (scrollOffset.value = event.contentOffset.y)
   );
-
-  const AnimatedImageBackground =
-    Animated.createAnimatedComponent(ImageBackground);
 
   const windowHeight = Dimensions.get("window").height;
 
@@ -248,11 +248,11 @@ export function MovieDetails({ navigation, movie }: Props) {
       }
       showsVerticalScrollIndicator={detailIndex !== 2}
     >
-      {movie?.backdrop_path && (
+      {movieDetails?.backdrop_path && (
         <AnimatedImageBackground
           style={[styles.backdrop, headerStyle]}
           source={{
-            uri: `https://image.tmdb.org/t/p/w780${movie.backdrop_path}`,
+            uri: `https://image.tmdb.org/t/p/w780${movieDetails.backdrop_path}`,
           }}
         >
           <LinearGradient
@@ -278,7 +278,7 @@ export function MovieDetails({ navigation, movie }: Props) {
       )}
       <View style={{ margin: 16 }}>
         <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-          {movie.title}
+          {movieDetails?.title}
         </ThemedText>
         <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
         {(getRuntime() || traktDetails?.certification) && (
@@ -296,7 +296,7 @@ export function MovieDetails({ navigation, movie }: Props) {
             style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}
             numberOfLines={showAllOverview ? undefined : 4}
           >
-            {movie.overview}
+            {movieDetails?.overview}
           </ThemedText>
         </Pressable>
 

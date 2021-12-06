@@ -2,7 +2,6 @@ import React, { RefObject, useContext } from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { Modalize } from "react-native-modalize";
-import { IHandles } from "react-native-modalize/lib/options";
 import { iOSUIKit } from "react-native-typography";
 import firestore from "@react-native-firebase/firestore";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -17,7 +16,7 @@ function GamePlatformPicker({
   modalizeRef,
   game,
 }: {
-  modalizeRef: RefObject<IHandles>;
+  modalizeRef: RefObject<Modalize>;
   game: IGDB.Game.Game;
 }) {
   const { user, theme } = useContext(TabStackContext);

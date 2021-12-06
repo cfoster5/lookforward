@@ -309,7 +309,11 @@ function MovieDiscover({ route, navigation }: any) {
                 (v, i, a) =>
                   a.findIndex((t) => t.provider_name === v.provider_name) === i
               )
-              .sort((a, b) => b.provider_name < a.provider_name)}
+              .sort((a, b) =>
+                a.provider_name
+                  .toLowerCase()
+                  .localeCompare(b.provider_name.toLowerCase())
+              )}
             renderItem={({ item }) => (
               <ButtonMultiState
                 text={item.provider_name}

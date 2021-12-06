@@ -161,7 +161,9 @@ function Actor({ route, navigation }: Props) {
           />
           {details?.movie_credits.crew
             .filter((v, i, a) => a.findIndex((t) => t.job === v.job) === i)
-            .sort((a, b) => b.job < a.job)
+            .sort((a, b) =>
+              a.job.toLowerCase().localeCompare(b.job.toLowerCase())
+            )
             .map((credit, i) => (
               <ButtonMultiState
                 key={i}

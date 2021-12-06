@@ -65,7 +65,7 @@ function Search({ navigation, route }: Props) {
   useScrollToTop(scrollRef);
   const { theme } = useContext(TabStackContext);
   const modalizeRef = useRef<Modalize>(null);
-  const [game, setGame] = useState();
+  const [game, setGame] = useState(null);
   const tabBarheight = useBottomTabBarHeight();
   const [triggeredSearch, setTriggeredSearch] = useState(false);
   const [pageIndex, setPageIndex] = useState(1);
@@ -126,11 +126,7 @@ function Search({ navigation, route }: Props) {
 
   async function getMovieSearch() {
     let json = await searchMovies(searchValue);
-    setMovies(
-      json.results.sort((a, b) => {
-        return b.popularity - a.popularity;
-      })
-    );
+    setMovies(json.results.sort((a, b) => b.popularity - a.popularity));
   }
 
   async function getMovies(method: Promise<any>) {

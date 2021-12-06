@@ -34,7 +34,7 @@ export default function MovieSearchModal({
     StackNavigationProp<Navigation.FindStackParamList, "Find">,
     BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
   >;
-  filterModalRef: Modalize;
+  filterModalRef: React.RefObject<Modalize>;
   selectedOption: string;
   setSelectedOption: (option: string) => void;
 }) {
@@ -115,7 +115,11 @@ export default function MovieSearchModal({
               (v, i, a) =>
                 a.findIndex((t) => t.provider_name === v.provider_name) === i
             )
-            .sort((a, b) => b.provider_name < a.provider_name)}
+            .sort((a, b) =>
+              a.provider_name
+                .toLowerCase()
+                .localeCompare(b.provider_name.toLowerCase())
+            )}
           renderItem={({ item }) => (
             <ButtonSingleState
               key={item.provider_id}

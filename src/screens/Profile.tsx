@@ -64,25 +64,35 @@ function Profile({ route, navigation }: ProfileScreenProps) {
 
   useEffect(() => {
     if (Platform.OS === "ios") {
-      connectAsync()
-        .then(() => setConnected(true))
-        .catch(() => console.log(`connection error`));
+      async function connect() {
+        try {
+          await connectAsync();
+          setConnected(true);
+        } catch {
+          console.log(`connection error`);
+        }
+      }
+      connect();
     }
   }, []);
 
   useEffect(() => {
     if (Platform.OS === "ios" && connected) {
-      getProductsAsync([
-        "com.lookforward.tip1",
-        "com.lookforward.tip3",
-        "com.lookforward.tip5",
-      ])
-        .then((response) => {
+      async function getProducts() {
+        try {
+          const response = await getProductsAsync([
+            "com.lookforward.tip1",
+            "com.lookforward.tip3",
+            "com.lookforward.tip5",
+          ]);
           if (response.responseCode === IAPResponseCode.OK) {
             setIapItems(response.results);
           }
-        })
-        .catch(() => console.log("connection error"));
+        } catch {
+          console.log("connection error");
+        }
+      }
+      getProducts();
     }
   }, [connected]);
 

@@ -46,13 +46,10 @@ function PosterButton({ movie, game, inCountdown }: Props) {
         await firestore()
           .collection("movies")
           .doc(docId)
-          .set(movie, { merge: true });
-        await firestore()
-          .collection("movies")
-          .doc(docId)
-          .update({
-            subscribers: firestore.FieldValue.arrayUnion(user),
-          });
+          .set(
+            { subscribers: firestore.FieldValue.arrayUnion(user) },
+            { merge: true }
+          );
         Animated.timing(transformAnim, {
           toValue: 1,
           duration: 50,

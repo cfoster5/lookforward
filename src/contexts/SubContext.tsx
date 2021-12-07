@@ -1,6 +1,8 @@
 import { createContext } from "react";
 
-const SubContext = createContext({
+import { Firebase } from "../interfaces/firebase";
+
+const SubContext = createContext<{ movies: Firebase.Movie[]; games: any }>({
   movies: [],
   games: [],
 });

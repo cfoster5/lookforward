@@ -47,9 +47,16 @@ function CountdownItem({
 }: Props) {
   function getReleaseDate(): string {
     if (sectionName === "Movies") {
-      return DateTime.fromFormat((item as Movie).release_date, "yyyy-MM-dd")
-        .toUTC()
-        .toFormat("MM/dd/yyyy");
+      if (item.traktReleaseDate) {
+        return DateTime.fromFormat(
+          (item as Movie).traktReleaseDate,
+          "yyyy-MM-dd"
+        )
+          .toUTC()
+          .toFormat("MM/dd/yyyy");
+      } else {
+        return "";
+      }
     } else {
       return DateTime.fromSeconds((item as IGDB.ReleaseDate.ReleaseDate).date)
         .toUTC()
@@ -59,14 +66,18 @@ function CountdownItem({
 
   function getCountdownDays(): number {
     if (sectionName === "Movies") {
-      const diff = DateTime.fromFormat(
-        (item as Movie).release_date,
-        "yyyy-MM-dd"
-      )
-        .diff(DateTime.now(), ["days"])
-        .toObject();
+      if (item.traktReleaseDate) {
+        const diff = DateTime.fromFormat(
+          (item as Movie).traktReleaseDate,
+          "yyyy-MM-dd"
+        )
+          .diff(DateTime.now(), ["days"])
+          .toObject();
 
-      return Math.ceil(diff.days);
+        return Math.ceil(diff.days);
+      } else {
+        return 0;
+      }
     } else {
       const diff = DateTime.fromSeconds(
         (item as IGDB.ReleaseDate.ReleaseDate).date

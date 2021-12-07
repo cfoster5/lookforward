@@ -172,8 +172,8 @@ export function MovieDetails({ navigation, movieId }: Props) {
   }, [movieDetails]);
 
   function getReleaseDate(): string {
-    if (movieDetails?.release_date) {
-      return DateTime.fromISO(movieDetails.release_date)
+    if (traktDetails?.released) {
+      return DateTime.fromFormat(traktDetails.released, "yyyy-MM-dd")
         .toFormat("MMMM d, yyyy")
         .toUpperCase();
     } else {

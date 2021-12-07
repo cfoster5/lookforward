@@ -84,7 +84,7 @@ function Details({ navigation, route }: Props) {
     let documentID;
     if (route.params.movie) {
       documentID = movies?.find(
-        (movie: Movie) => movie.id === route.params.movie.id
+        (movie) => movie.documentID == route.params.movie.id.toString()
       )?.documentID;
     }
     if (route.params.game) {
@@ -107,13 +107,10 @@ function Details({ navigation, route }: Props) {
       await firestore()
         .collection("movies")
         .doc(docId)
-        .set(route.params.movie, { merge: true });
-      await firestore()
-        .collection("movies")
-        .doc(docId)
-        .update({
-          subscribers: firestore.FieldValue.arrayUnion(user),
-        });
+        .set(
+          { subscribers: firestore.FieldValue.arrayUnion(user) },
+          { merge: true }
+        );
       ReactNativeHapticFeedback.trigger("impactLight", {
         enableVibrateFallback: true,
         ignoreAndroidSystemSettings: false,

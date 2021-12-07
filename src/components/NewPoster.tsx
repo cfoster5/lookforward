@@ -14,8 +14,9 @@ import PosterButton from "./PosterButton";
 
 function MoviePoster({ item, style }: { item: Movie; style?: any }) {
   const { movies } = useContext(SubContext);
-  let inCountdown = false;
-  inCountdown = movies.some((movie: Movie) => movie.id === item.id);
+  const inCountdown = movies.some(
+    (movie) => movie?.documentID == item.id.toString()
+  );
   return (
     <>
       {/* {DateTime.fromISO(item.release_date) >= DateTime.now() && ( */}

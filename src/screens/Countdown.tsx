@@ -1,5 +1,18 @@
-import React, { useContext, useLayoutEffect, useRef, useState } from "react";
-import { Animated, Platform, SectionList, Text, View } from "react-native";
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import {
+  ActivityIndicator,
+  Animated,
+  Platform,
+  SectionList,
+  Text,
+  View,
+} from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import firestore from "@react-native-firebase/firestore";
@@ -19,7 +32,10 @@ import CountdownItem from "../components/CountdownItem";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
+import { getMovieDetails } from "../helpers/tmdbRequests";
+import { getMovieById } from "../helpers/traktRequests";
 import { Navigation } from "../interfaces/navigation";
+import { TMDB } from "../interfaces/tmdb";
 
 interface Props {
   route: RouteProp<Navigation.CountdownStackParamList, "Countdown">;
@@ -48,6 +64,34 @@ function Countdown({ route, navigation }: Props) {
   const { movies, games } = useContext(SubContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
+  const [promisedMovies, setPromisedMovies] = useState<TMDB.Movie.Details[]>(
+    []
+  );
+
+  async function getMovie(movieId: string) {
+    const movieDetails = await getMovieDetails(movieId);
+    const trakt = await getMovieById(movieDetails.imdb_id);
+    return {
+      ...movieDetails,
+      traktReleaseDate: trakt.released,
+      documentID: movieId,
+    };
+  }
+
+  useEffect(() => {
+    Promise.all(movies.map((movie) => getMovie(movie.documentID)))
+      .then((results) => {
+        // console.log(results);
+        setPromisedMovies(
+          results.sort((a, b) =>
+            a.traktReleaseDate?.localeCompare(b.traktReleaseDate)
+          )
+        );
+      })
+      .catch((err) => {
+        // A request failed, handle the error
+      });
+  }, [movies]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -211,7 +255,7 @@ function Countdown({ route, navigation }: Props) {
     }
   }
 
-  return (
+  return promisedMovies.length ? (
     <SectionList
       contentContainerStyle={
         Platform.OS == "ios"
@@ -233,7 +277,7 @@ function Countdown({ route, navigation }: Props) {
       }
       // sections={listData}
       sections={[
-        { data: movies, title: "Movies" },
+        { data: promisedMovies, title: "Movies" },
         { data: games, title: "Games" },
       ]}
       stickySectionHeadersEnabled={false}
@@ -285,6 +329,10 @@ function Countdown({ route, navigation }: Props) {
       }
       ref={scrollRef}
     />
+  ) : (
+    <View style={{ flex: 1, justifyContent: "center" }}>
+      <ActivityIndicator size="large" />
+    </View>
   );
 }
 

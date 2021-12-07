@@ -22,7 +22,6 @@ export function TabStack() {
   useEffect(() => {
     const movieSubscription = firestore()
       .collection("movies")
-      .orderBy("release_date")
       .where("subscribers", "array-contains", user)
       .onSnapshot((documentSnapshot) => {
         const movieSubsData = documentSnapshot.docs.map((doc) => ({

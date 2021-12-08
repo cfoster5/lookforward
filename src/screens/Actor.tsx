@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -21,7 +21,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
 import ButtonMultiState from "../components/ButtonMultiState";
-import Poster from "../components/Poster";
+import NewPoster from "../components/NewPoster";
 import { Text as ThemedText } from "../components/Themed";
 import { reusableStyles } from "../helpers/styles";
 import { getPerson } from "../helpers/tmdbRequests";
@@ -184,17 +184,29 @@ function Actor({ route, navigation }: Props) {
             ? details?.movie_credits.cast
                 .sort((a, b) => b.release_date?.localeCompare(a.release_date))
                 .map((credit, i) => (
-                  <View key={i} style={{ paddingBottom: 16 }}>
-                    <Poster navigation={navigation} movie={credit} />
-                  </View>
+                  <Pressable
+                    key={i}
+                    style={{ marginBottom: 16 }}
+                    onPress={() =>
+                      navigation.push("Details", { movie: credit })
+                    }
+                  >
+                    <NewPoster movie={credit} />
+                  </Pressable>
                 ))
             : details?.movie_credits.crew
                 .filter((credit) => credit.job === selectedJob)
                 .sort((a, b) => b.release_date?.localeCompare(a.release_date))
                 .map((credit, i) => (
-                  <View key={i} style={{ paddingBottom: 16 }}>
-                    <Poster navigation={navigation} movie={credit} />
-                  </View>
+                  <Pressable
+                    key={i}
+                    style={{ marginBottom: 16 }}
+                    onPress={() =>
+                      navigation.push("Details", { movie: credit })
+                    }
+                  >
+                    <NewPoster movie={credit} />
+                  </Pressable>
                 ))}
         </View>
       </View>

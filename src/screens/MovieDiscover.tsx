@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   FlatList,
   Platform,
+  Pressable,
   Text,
   View,
 } from "react-native";
@@ -22,7 +23,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 
 import ButtonMultiState from "../components/ButtonMultiState";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
-import Poster from "../components/Poster";
+import NewPoster from "../components/NewPoster";
 import TabStackContext from "../contexts/TabStackContext";
 import { targetedProviders } from "../helpers/helpers";
 import {
@@ -200,7 +201,12 @@ function MovieDiscover({ route, navigation }: any) {
           }
           data={movies}
           renderItem={({ item }: { item: Movie }) => (
-            <Poster navigation={navigation} movie={item} />
+            <Pressable
+              style={{ marginBottom: 16 }}
+              onPress={() => navigation.push("Details", { movie: item })}
+            >
+              <NewPoster movie={item} />
+            </Pressable>
           )}
           numColumns={2}
           columnWrapperStyle={{

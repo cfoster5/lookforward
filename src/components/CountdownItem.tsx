@@ -55,7 +55,7 @@ function CountdownItem({
           .toUTC()
           .toFormat("MM/dd/yyyy");
       } else {
-        return "";
+        return "No release date yet";
       }
     } else {
       return DateTime.fromSeconds((item as IGDB.ReleaseDate.ReleaseDate).date)
@@ -76,7 +76,7 @@ function CountdownItem({
 
         return Math.ceil(diff.days);
       } else {
-        return 0;
+        return "∞";
       }
     } else {
       const diff = DateTime.fromSeconds(

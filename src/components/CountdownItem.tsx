@@ -1,12 +1,11 @@
-import React from "react";
-import {
-  Animated,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import React, { useEffect } from "react";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
@@ -30,8 +29,6 @@ interface Props {
   showButtons: boolean;
   selected: boolean;
   updateSelections: (documentID: string) => void;
-  transformAnim: Animated.Value;
-  opacityAnim: Animated.Value;
 }
 
 function CountdownItem({
@@ -42,9 +39,17 @@ function CountdownItem({
   showButtons,
   selected,
   updateSelections,
-  transformAnim,
-  opacityAnim,
 }: Props) {
+  const transformAmount = useSharedValue(-24);
+
+  useEffect(() => {
+    if (showButtons) {
+      transformAmount.value = withTiming(16);
+    } else if (!showButtons) {
+      transformAmount.value = withTiming(-24);
+    }
+  }, [showButtons]);
+
   function getReleaseDate(): string {
     if (sectionName === "Movies") {
       if (item.traktReleaseDate) {
@@ -173,44 +178,6 @@ function CountdownItem({
     },
   });
 
-  const SlideView = ({
-    children,
-    style,
-  }: {
-    children: any;
-    style: { flex: number; flexDirection: "row"; flexWrap: "wrap" };
-  }) => {
-    return (
-      <Animated.View
-        style={{
-          ...style,
-          transform: [{ translateX: transformAnim }],
-        }}
-      >
-        {children}
-      </Animated.View>
-    );
-  };
-
-  const FadeView = ({
-    children,
-    style,
-  }: {
-    children: any;
-    style: { justifyContent: "center" };
-  }) => {
-    return (
-      <Animated.View
-        style={{
-          ...style,
-          opacity: opacityAnim,
-        }}
-      >
-        {children}
-      </Animated.View>
-    );
-  };
-
   let imageSrc = "";
   let title = "";
   if (sectionName === "Movies") {
@@ -221,6 +188,23 @@ function CountdownItem({
     imageSrc = `https:${item.game.cover.url.replace("thumb", "cover_big_2x")}`;
     title = item.game.name;
   }
+
+  const slideStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          // translateX: transformAmount.value,
+          translateX: interpolate(transformAmount.value, [-24, 16], [-24, 16]),
+        },
+      ],
+    };
+  });
+
+  const radioButtonStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(transformAmount.value, [-24, 16], [0, 1]),
+    };
+  });
 
   return (
     // <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : navigation.navigate('Details', { type: sectionName === "Movies" ? "movie" : "game", data: item })}>
@@ -234,10 +218,12 @@ function CountdownItem({
       }
     >
       <View style={styles.rowFront}>
-        <SlideView style={styles.slide}>
-          <FadeView style={{ justifyContent: "center" }}>
+        <Animated.View style={[styles.slide, slideStyle]}>
+          <Animated.View
+            style={[{ justifyContent: "center" }, radioButtonStyle]}
+          >
             <RadioButton selected={selected} />
-          </FadeView>
+          </Animated.View>
           <View style={{ justifyContent: "center" }}>
             <Image style={styles.image} source={{ uri: imageSrc }} />
           </View>
@@ -260,7 +246,7 @@ function CountdownItem({
               days
             </Text>
           </View>
-        </SlideView>
+        </Animated.View>
       </View>
     </Pressable>
   );

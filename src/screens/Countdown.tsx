@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import {
   ActivityIndicator,
-  Animated,
   Platform,
   SectionList,
   Text,
@@ -56,10 +55,6 @@ function Countdown({ route, navigation }: Props) {
   >([]);
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
-  const transformAnim = useRef(
-    new Animated.Value(!showButtons ? -16 : 16)
-  ).current;
-  const opacityAnim = useRef(new Animated.Value(!showButtons ? 0 : 1)).current;
   const { user } = useContext(TabStackContext);
   const { movies, games } = useContext(SubContext);
   const tabBarheight = useBottomTabBarHeight();
@@ -108,9 +103,8 @@ function Countdown({ route, navigation }: Props) {
                 onPress={() => {
                   if (selections.length > 0) {
                     setShowButtons(false);
-                    deleteItems();
+                    // deleteItems();
                     setSelections([]);
-                    startAnimation();
                   }
                 }}
               />
@@ -124,7 +118,6 @@ function Countdown({ route, navigation }: Props) {
               title="Edit"
               onPress={() => {
                 setShowButtons(true);
-                startAnimation();
               }}
             />
           )}
@@ -139,7 +132,6 @@ function Countdown({ route, navigation }: Props) {
                   onPress={() => {
                     setShowButtons(false);
                     setSelections([]);
-                    startAnimation();
                   }}
                 />
               )
@@ -155,7 +147,6 @@ function Countdown({ route, navigation }: Props) {
                   onPress={() => {
                     setShowButtons(false);
                     setSelections([]);
-                    startAnimation();
                   }}
                 />
               )}
@@ -178,7 +169,6 @@ function Countdown({ route, navigation }: Props) {
                   setShowButtons(false);
                   deleteItems();
                   setSelections([]);
-                  startAnimation();
                 }
               }}
             />
@@ -187,21 +177,6 @@ function Countdown({ route, navigation }: Props) {
       ),
     });
   }, [navigation, showButtons, selections]);
-
-  function startAnimation() {
-    Animated.parallel([
-      Animated.timing(transformAnim, {
-        toValue: !showButtons ? 16 : -16,
-        duration: 250,
-        useNativeDriver: true,
-      }),
-      Animated.timing(opacityAnim, {
-        toValue: !showButtons ? 1 : 0,
-        duration: 250,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }
 
   const renderSectionHeader = ({ section }) => (
     <View style={{ backgroundColor: "#1f1f1f" }}>
@@ -302,8 +277,6 @@ function Countdown({ route, navigation }: Props) {
           updateSelections={(documentID) =>
             updateSelections(documentID, data.section.title)
           }
-          transformAnim={transformAnim}
-          opacityAnim={opacityAnim}
         />
       )}
       renderSectionHeader={renderSectionHeader}

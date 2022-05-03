@@ -126,6 +126,8 @@ function Search({ navigation, route }: Props) {
 
   async function getMovieSearch() {
     let json = await searchMovies(searchValue);
+    console.log(`triggeredSearch`, triggeredSearch);
+    console.log(`json.results`, json.results);
     setMovies(json.results.sort((a, b) => b.popularity - a.popularity));
   }
 
@@ -160,6 +162,7 @@ function Search({ navigation, route }: Props) {
   }, [pageIndex]);
 
   function reinitialize() {
+    console.log("reinit");
     if (categoryIndex === 0) {
       setMovies(initMovies);
       setTriggeredSearch(false);
@@ -280,7 +283,7 @@ function Search({ navigation, route }: Props) {
             : undefined
         }
         onClear={reinitialize}
-        onCancel={reinitialize}
+        onCancel={Platform.OS === "ios" ? reinitialize : () => undefined}
       />
 
       {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}

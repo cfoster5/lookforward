@@ -81,7 +81,7 @@ function Welcome({ navigation }: Props) {
               ? `https://image.tmdb.org/t/p/w500${
                   (item as TrendingMovie).poster_path
                 }`
-              : `https:${(item as IGDB.Game.Game).cover?.url.replace(
+              : `https:${(item as IGDB.Game.Game)?.cover?.url.replace(
                   "thumb",
                   "cover_big_2x"
                 )}`,

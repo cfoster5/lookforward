@@ -110,8 +110,7 @@ def enableProguardInReleaseBuilds = false
  * give correct results when using with locales other than en-US.  Note that
  * this variant is about 6MiB larger per architecture than default.
  */
-// def jscFlavor = 'org.webkit:android-jsc:+'
-def jscFlavor = 'org.webkit:android-jsc-intl:+'
+def jscFlavor = 'org.webkit:android-jsc:+'
 
 /**
  * Whether to enable the Hermes VM.
@@ -136,8 +135,8 @@ android {
         applicationId "com.lookforward.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 430
-        versionName "4.3.0"
+        versionCode 434
+        versionName "4.3.4"
         multiDexEnabled true
     }
     splits {

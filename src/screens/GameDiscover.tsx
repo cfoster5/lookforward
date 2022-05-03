@@ -38,11 +38,13 @@ function GameDiscover({ route, navigation }: any) {
       discoverBy = { keywordId: keyword.id };
     }
     navigation.setOptions({ title: title });
-    discoverGames({ genreId: genre.id }).then(async (releaseDates) => {
-      await convertReleasesToGames(releaseDates).then((games) => {
-        setGames(games);
-      });
-    });
+
+    async function getGames() {
+      const releaseDates = await discoverGames({ genreId: genre.id });
+      const games = await convertReleasesToGames(releaseDates);
+      setGames(games);
+    }
+    getGames();
   }, [route.params]);
 
   useEffect(() => {

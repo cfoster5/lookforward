@@ -161,8 +161,17 @@ function Actor({ route, navigation }: Props) {
           />
           {details?.movie_credits.crew
             .filter((v, i, a) => a.findIndex((t) => t.job === v.job) === i)
+            // .sort((a, b) =>
+            //   a.job.toLowerCase().localeCompare(b.job.toLowerCase())
+            // )
             .sort((a, b) =>
-              a.job.toLowerCase().localeCompare(b.job.toLowerCase())
+              Platform.OS === "ios"
+                ? a.job.toLowerCase().localeCompare(b.job.toLowerCase())
+                : a.job.toLowerCase() !== b.job.toLowerCase()
+                ? a.job.toLowerCase() < b.job.toLowerCase()
+                  ? -1
+                  : 1
+                : 0
             )
             .map((credit, i) => (
               <ButtonMultiState
@@ -182,7 +191,16 @@ function Actor({ route, navigation }: Props) {
         >
           {selectedJob === "Actor"
             ? details?.movie_credits.cast
-                .sort((a, b) => b.release_date?.localeCompare(a.release_date))
+                // .sort((a, b) => b.release_date?.localeCompare(a.release_date))
+                .sort((a, b) =>
+                  Platform.OS === "ios"
+                    ? b.release_date?.localeCompare(a.release_date)
+                    : b.release_date !== a.release_date
+                    ? b.release_date < a.release_date
+                      ? -1
+                      : 1
+                    : 0
+                )
                 .map((credit, i) => (
                   <Pressable
                     key={i}
@@ -196,7 +214,16 @@ function Actor({ route, navigation }: Props) {
                 ))
             : details?.movie_credits.crew
                 .filter((credit) => credit.job === selectedJob)
-                .sort((a, b) => b.release_date?.localeCompare(a.release_date))
+                // .sort((a, b) => b.release_date?.localeCompare(a.release_date))
+                .sort((a, b) =>
+                  Platform.OS === "ios"
+                    ? b.release_date?.localeCompare(a.release_date)
+                    : b.release_date !== a.release_date
+                    ? b.release_date < a.release_date
+                      ? -1
+                      : 1
+                    : 0
+                )
                 .map((credit, i) => (
                   <Pressable
                     key={i}

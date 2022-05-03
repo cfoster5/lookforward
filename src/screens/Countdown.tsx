@@ -74,18 +74,17 @@ function Countdown({ route, navigation }: Props) {
   }
 
   useEffect(() => {
-    Promise.all(movies.map((movie) => getMovie(movie.documentID)))
-      .then((results) => {
-        // console.log(results);
-        setPromisedMovies(
-          results.sort((a, b) =>
-            a.traktReleaseDate?.localeCompare(b.traktReleaseDate)
-          )
-        );
-      })
-      .catch((err) => {
-        // A request failed, handle the error
-      });
+    async function getMovies() {
+      const results = await Promise.all(
+        movies.map((movie) => getMovie(movie.documentID))
+      );
+      setPromisedMovies(
+        results.sort((a, b) =>
+          a.traktReleaseDate?.localeCompare(b.traktReleaseDate)
+        )
+      );
+    }
+    getMovies();
   }, [movies]);
 
   useLayoutEffect(() => {
@@ -103,7 +102,7 @@ function Countdown({ route, navigation }: Props) {
                 onPress={() => {
                   if (selections.length > 0) {
                     setShowButtons(false);
-                    // deleteItems();
+                    deleteItems();
                     setSelections([]);
                   }
                 }}

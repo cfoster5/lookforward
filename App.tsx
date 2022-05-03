@@ -56,7 +56,7 @@ export default function App() {
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
     if (enabled) {
-      firestore()
+      await firestore()
         .collection("users")
         .doc(user?.uid)
         .collection("contentPreferences")
@@ -64,22 +64,13 @@ export default function App() {
         .set({
           weekNotifications: true,
           dayNotifications: true,
-        })
-        .then(() => {
-          // console.log("Document successfully written!");
-        })
-        .catch((error) => {
-          // console.error("Error writing document: ", error);
         });
-      messaging()
-        .getToken()
-        .then((token) => {
-          return saveTokenToDatabase(token);
-        });
+      const token = await messaging().getToken();
+      await saveTokenToDatabase(token);
       // Listen to whether the token changes
-      return messaging().onTokenRefresh((token) => {
-        saveTokenToDatabase(token);
-      });
+      return messaging().onTokenRefresh(
+        async (token) => await saveTokenToDatabase(token)
+      );
     }
   }
 
@@ -128,17 +119,17 @@ export default function App() {
         <StatusBar
           barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
         />
-        <OverflowMenuProvider>
-          {user ? (
+        {user ? (
+          <OverflowMenuProvider>
             <TabStackContext.Provider
               value={{ user: user.uid, theme: colorScheme }}
             >
               <TabStack />
             </TabStackContext.Provider>
-          ) : (
-            <AuthStack />
-          )}
-        </OverflowMenuProvider>
+          </OverflowMenuProvider>
+        ) : (
+          <AuthStack />
+        )}
       </NavigationContainer>
     </SafeAreaProvider>
   );

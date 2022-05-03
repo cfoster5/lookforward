@@ -3,6 +3,8 @@
  */
 
  import 'react-native-gesture-handler'
+ import 'intl';
+ import 'intl/locale-data/jsonp/en';
 
  import messaging from '@react-native-firebase/messaging';
  import { AppRegistry } from 'react-native';

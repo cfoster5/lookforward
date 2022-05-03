@@ -48,16 +48,15 @@ function Details({ navigation, route }: Props) {
   const { user } = useContext(TabStackContext);
   const { movies, games } = useContext(SubContext);
 
-  useEffect(() => {
-    if (route.params.movie) {
-      navigation.setOptions({ title: route.params.movie.title });
-    } else if (route.params.game) {
-      navigation.setOptions({ title: route.params.game.name });
-    }
-  }, [route.params]);
-
   useLayoutEffect(() => {
+    let title = "";
+    if (route.params.movie) {
+      title = route.params.movie.title;
+    } else if (route.params.game) {
+      title = route.params.game.name;
+    }
     navigation.setOptions({
+      title: title,
       headerRight: () => (
         // upcomingRelease() && (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
@@ -76,7 +75,7 @@ function Details({ navigation, route }: Props) {
       ),
       // ),
     });
-  }, [navigation, countdownId]);
+  }, [route.params, navigation, countdownId]);
 
   useEffect(() => {
     // console.log("Details Changes", movies, games)

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -31,8 +31,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
 import { reusableStyles } from "../../helpers/styles";
-import { getMovieDetails } from "../../helpers/tmdbRequests";
-import { getMovieById, getRelated } from "../../helpers/traktRequests";
+import { useGetMovie } from "../../hooks/useGetMovie";
 import { Navigation } from "../../interfaces/navigation";
 import { TMDB } from "../../interfaces/tmdb";
 import { BlueBullet } from "../BlueBullet";
@@ -137,39 +136,12 @@ function DiscoverListLabel({ text }: { text: string }) {
 }
 
 export function MovieDetails({ navigation, movieId }: Props) {
-  const [movieDetails, setMovieDetails] = useState<TMDB.Movie.Details>();
+  const { movieDetails, traktDetails, loading } = useGetMovie(movieId);
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const [showAllOverview, setShowAllOverview] = useState(false);
-  const [traktDetails, setTraktDetails] = useState();
   const scrollOffset = useSharedValue(0);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    setMovieDetails(undefined);
-    setTraktDetails(undefined);
-    async function getDetails() {
-      const details = await getMovieDetails(movieId);
-      setMovieDetails(details);
-    }
-    getDetails();
-  }, [movieId]);
-
-  useEffect(() => {
-    if (movieDetails && movieDetails.imdb_id) {
-      async function getMovie() {
-        const traktDetails = await getMovieById(movieDetails.imdb_id);
-        setTraktDetails(traktDetails);
-        setLoading(false);
-      }
-      getMovie();
-    }
-    if (movieDetails && !movieDetails.imdb_id) {
-      setLoading(false);
-    }
-  }, [movieDetails]);
 
   function getReleaseDate(): string {
     if (traktDetails?.released) {

@@ -28,6 +28,7 @@ import {
 import TabStackContext from "../contexts/TabStackContext";
 import usePrevious from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
+import { useGetPurchaseOptions } from "../hooks/useGetPurchaseOptions";
 import { Navigation } from "../interfaces/navigation";
 
 type ProfileScreenRouteProp = RouteProp<
@@ -60,7 +61,7 @@ function Profile({ route, navigation }: ProfileScreenProps) {
   const tabBarheight = useBottomTabBarHeight();
   const { theme } = useContext(TabStackContext);
   const [connected, setConnected] = useState(false);
-  const [iapItems, setIapItems] = useState<IAPItemDetails[]>();
+  const { purchaseOptions, loadingOptions } = useGetPurchaseOptions(connected);
 
   useEffect(() => {
     if (Platform.OS === "ios") {
@@ -75,26 +76,6 @@ function Profile({ route, navigation }: ProfileScreenProps) {
       connect();
     }
   }, []);
-
-  useEffect(() => {
-    if (Platform.OS === "ios" && connected) {
-      async function getProducts() {
-        try {
-          const response = await getProductsAsync([
-            "com.lookforward.tip1",
-            "com.lookforward.tip3",
-            "com.lookforward.tip5",
-          ]);
-          if (response.responseCode === IAPResponseCode.OK) {
-            setIapItems(response.results);
-          }
-        } catch {
-          console.log("connection error");
-        }
-      }
-      getProducts();
-    }
-  }, [connected]);
 
   useEffect(() => {
     if (user) {

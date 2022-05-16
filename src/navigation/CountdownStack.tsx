@@ -9,6 +9,7 @@ import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor";
 import Countdown from "../screens/Countdown";
 import Details from "../screens/Details";
+import Movie from "../screens/Movie";
 import MovieDiscover from "../screens/MovieDiscover";
 
 type CountdownStackNavProp = CompositeNavigationProp<
@@ -34,6 +35,15 @@ export function CountdownStack({ navigation, route }: Props) {
         }}
       />
       <Stack.Screen
+        name="Movie"
+        component={Movie}
+        options={{
+          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "dark",
+          title: "",
+        }}
+      />
+      {/* <Stack.Screen
         name="Details"
         component={Details}
         options={{
@@ -41,7 +51,7 @@ export function CountdownStack({ navigation, route }: Props) {
           headerBlurEffect: "dark",
           title: "",
         }}
-      />
+      /> */}
       <Stack.Screen
         name="MovieDiscover"
         component={MovieDiscover}

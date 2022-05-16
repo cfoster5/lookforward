@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 
 import { TMDB } from "../interfaces/tmdb";
+import { MovieWatchProvider } from "../interfaces/tmdb.old";
 
 export async function getUpcomingMovies(pageIndex?: number) {
   const response = await fetch(
@@ -41,12 +42,12 @@ export async function getMovieDetails(
 //   const response = await fetch(`https://api.themoviedb.org/3/person/${person}/movie_credits?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US`);
 //   return response.json();
 // }
-export async function getPerson(personId: number): Promise<TMDB.Person.Person> {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/person/${personId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=movie_credits,images`
-  );
-  return response.json();
-}
+// export async function getPerson(personId: number): Promise<TMDB.Person.Person> {
+//   const response = await fetch(
+//     `https://api.themoviedb.org/3/person/${personId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=movie_credits,images`
+//   );
+//   return response.json();
+// }
 
 export async function getTrendingMovies(
   pageIndex?: number
@@ -109,6 +110,7 @@ export async function getDiscoverMovies({
   watchProvider: number;
   pageIndex?: number;
 }) {
+  console.log("pageIndex", pageIndex);
   let filter = "";
   filter += genreId ? `&with_genres=${genreId}` : ``;
   filter += companyId ? `&with_companies=${companyId}` : ``;
@@ -125,15 +127,6 @@ export async function getDiscoverMovies({
     `https://api.themoviedb.org/3/discover/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1${filter}&region=US&watch_region=US&sort_by=${sortMethod}&page=${
       pageIndex ? pageIndex : 1
     }`
-  );
-  return await response.json();
-}
-
-export async function getMovieWatchProviders(): Promise<{
-  results: TMDB.WatchProviders.Movie[];
-}> {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/watch/providers/movie?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&watch_region=US`
   );
   return await response.json();
 }

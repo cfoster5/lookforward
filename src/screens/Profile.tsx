@@ -19,15 +19,13 @@ import { RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import {
   connectAsync,
-  getProductsAsync,
   IAPItemDetails,
-  IAPResponseCode,
   purchaseItemAsync,
 } from "expo-in-app-purchases";
 
 import TabStackContext from "../contexts/TabStackContext";
-import usePrevious from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
+import { useFirstRender } from "../hooks/useFirstRender";
 import { useGetPurchaseOptions } from "../hooks/useGetPurchaseOptions";
 import { Navigation } from "../interfaces/navigation";
 
@@ -49,19 +47,18 @@ type ProfileScreenProps = {
 function Profile({ route, navigation }: ProfileScreenProps) {
   const { user } = useContext(TabStackContext);
   const [hasPermissions, setHasPermissions] = useState(true);
-  const [dayNotifications, setDayNotifications] = useState(false);
-  const [weekNotifications, setWeekNotifications] = useState(false);
-  const toggleDaySwitch = () =>
-    setDayNotifications((previousState) => !previousState);
-  const toggleWeekSwitch = () =>
-    setWeekNotifications((previousState) => !previousState);
-  const prevDayNotifications = usePrevious(dayNotifications);
-  const prevWeekNotifications = usePrevious(weekNotifications);
+
+  const [notifications, setNotifications] = useState({
+    dayNotifications: false,
+    weekNotifications: false,
+  });
+
   const modalizeRef = useRef<Modalize>(null);
   const tabBarheight = useBottomTabBarHeight();
   const { theme } = useContext(TabStackContext);
   const [connected, setConnected] = useState(false);
   const { purchaseOptions, loadingOptions } = useGetPurchaseOptions(connected);
+  const firstRender = useFirstRender();
 
   useEffect(() => {
     if (Platform.OS === "ios") {
@@ -88,75 +85,31 @@ function Profile({ route, navigation }: ProfileScreenProps) {
         .onSnapshot(
           (querySnapshot) => {
             let preferences = querySnapshot.data();
-            if (preferences?.dayNotifications) {
-              setDayNotifications(true);
-            }
-            if (preferences?.weekNotifications) {
-              setWeekNotifications(true);
-            }
+            setNotifications({
+              dayNotifications: preferences?.dayNotifications ? true : false,
+              weekNotifications: preferences?.weekNotifications ? true : false,
+            });
           },
           (error) => console.log(error)
         );
 
       // Stop listening for updates when no longer required
-      return () => {
-        // Unmounting
-        preferenceSubscription();
-      };
+      return () => preferenceSubscription();
     }
   }, [user]);
 
   useEffect(() => {
-    getNotificationPermissions();
-    if (
-      prevDayNotifications !== undefined &&
-      prevDayNotifications !== dayNotifications
-    ) {
+    if (!firstRender) {
+      console.log("notifications update", notifications);
+      getNotificationPermissions();
       firestore()
         .collection("users")
         .doc(user)
         .collection("contentPreferences")
         .doc("preferences")
-        .set(
-          {
-            dayNotifications: dayNotifications,
-          },
-          { merge: true }
-        )
-        .then(() => {
-          // console.log("Document successfully written!");
-        })
-        .catch((error) => {
-          // console.error("Error writing document: ", error);
-        });
+        .set(notifications, { merge: true });
     }
-  }, [dayNotifications]);
-
-  useEffect(() => {
-    getNotificationPermissions();
-    if (
-      prevWeekNotifications !== undefined &&
-      prevWeekNotifications !== weekNotifications
-    ) {
-      firestore()
-        .collection("users")
-        .doc(user)
-        .collection("contentPreferences")
-        .doc("preferences")
-        .set(
-          {
-            weekNotifications: weekNotifications,
-          },
-          { merge: true }
-        )
-        .then(() => {
-          // console.log("Document successfully written!");
-        })
-        .catch((error) => {
-          // console.error("Error writing document: ", error);
-        });
-    }
-  }, [weekNotifications]);
+  }, [notifications]);
 
   function signOut() {
     auth()
@@ -179,7 +132,7 @@ function Profile({ route, navigation }: ProfileScreenProps) {
     value,
   }: {
     title: string;
-    onValueChange: () => void;
+    onValueChange: (value: boolean) => void;
     value: boolean;
   }) {
     return (
@@ -238,8 +191,8 @@ function Profile({ route, navigation }: ProfileScreenProps) {
           If you're feeling generous and would like to support LookForward's
           development further, any tip helps!
         </Text>
-        {iapItems?.length > 0 ? (
-          iapItems?.map((details, i) => {
+        {!loadingOptions ? (
+          purchaseOptions?.map((details, i) => {
             return (
               <Pressable
                 key={i}
@@ -247,10 +200,13 @@ function Profile({ route, navigation }: ProfileScreenProps) {
                 style={{
                   marginHorizontal: 16,
                   marginTop: 16,
-                  paddingBottom: i < iapItems.length - 1 ? 16 : 0,
+                  paddingBottom: i < purchaseOptions.length - 1 ? 16 : 0,
                   borderBottomWidth:
-                    i < iapItems.length - 1 ? StyleSheet.hairlineWidth : 0,
-                  borderColor: i < iapItems.length - 1 ? "#3c3d41" : undefined,
+                    i < purchaseOptions.length - 1
+                      ? StyleSheet.hairlineWidth
+                      : 0,
+                  borderColor:
+                    i < purchaseOptions.length - 1 ? "#3c3d41" : undefined,
                 }}
               >
                 <View
@@ -305,13 +261,17 @@ function Profile({ route, navigation }: ProfileScreenProps) {
         </Text>
         <NotificationSetting
           title="Day Before"
-          onValueChange={toggleDaySwitch}
-          value={dayNotifications}
+          onValueChange={(value) =>
+            setNotifications({ ...notifications, dayNotifications: value })
+          }
+          value={notifications.dayNotifications}
         />
         <NotificationSetting
           title="Week Before"
-          onValueChange={toggleWeekSwitch}
-          value={weekNotifications}
+          onValueChange={(value) =>
+            setNotifications({ ...notifications, weekNotifications: value })
+          }
+          value={notifications.weekNotifications}
         />
         {!hasPermissions && (
           <Text

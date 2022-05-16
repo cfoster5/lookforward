@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -26,7 +32,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import CategoryControl from "../components/CategoryControl";
 import GameReleaseModal from "../components/GamePlatformPicker";
 import MovieSearchModal from "../components/MovieSearchModal";
-import { NewPoster } from "../components/NewPoster";
+import { GamePoster } from "../components/Posters/GamePoster";
+import { MoviePoster } from "../components/Posters/MoviePoster";
 import SearchPerson from "../components/SearchPerson";
 import { Text as ThemedText } from "../components/Themed";
 import GameContext from "../contexts/GamePlatformPickerContexts";
@@ -43,6 +50,7 @@ import {
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
 import { TMDB } from "../interfaces/tmdb";
+import { reducer } from "./reducer";
 
 interface Props {
   navigation: CompositeNavigationProp<
@@ -52,24 +60,54 @@ interface Props {
   route: RouteProp<Navigation.FindStackParamList, "Find">;
 }
 
+function ListLabel({ text, style }: { text: string; style?: any }) {
+  return (
+    <ThemedText
+      style={{
+        ...iOSUIKit.bodyEmphasizedObject,
+        marginBottom: 8,
+        ...style,
+      }}
+    >
+      {text}
+    </ThemedText>
+  );
+}
+
 function Search({ navigation, route }: Props) {
-  const [searchValue, setSearchValue] = useState("");
-  const [movies, setMovies] = useState<
-    (TMDB.BaseMovie | TMDB.Search.MultiSearchResult | TMDB.Trending.Movie)[]
-  >([]);
-  const [initMovies, setInitMovies] = useState<TMDB.BaseMovie[]>([]);
-  const [games, setGames] = useState<IGDB.Game.Game[]>([]);
-  const [initGames, setInitGames] = useState<IGDB.Game.Game[]>([]);
-  const [categoryIndex, setCategoryIndex] = useState(0);
+  const [
+    {
+      categoryIndex,
+      searchValue,
+      triggeredSearch,
+      pageIndex,
+      initMovies,
+      movies,
+      initGames,
+      games,
+    },
+    dispatch,
+  ] = useReducer(reducer, {
+    categoryIndex: 0,
+    searchValue: "",
+    triggeredSearch: false,
+    pageIndex: 1,
+    initMovies: [],
+    movies: [],
+    initGames: [],
+    games: [],
+  });
+
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
   const { theme } = useContext(TabStackContext);
   const modalizeRef = useRef<Modalize>(null);
   const [game, setGame] = useState(null);
   const tabBarheight = useBottomTabBarHeight();
-  const [triggeredSearch, setTriggeredSearch] = useState(false);
-  const [pageIndex, setPageIndex] = useState(1);
   const filterModalRef = useRef<Modalize>(null);
+  const [gameReleaseDates, setGameReleaseDates] = useState<
+    IGDB.ReleaseDate.ReleaseDate[]
+  >([]);
   const [selectedOption, setSelectedOption] = useState("Coming Soon");
 
   const styles = StyleSheet.create({
@@ -86,16 +124,11 @@ function Search({ navigation, route }: Props) {
   useEffect(() => {
     let isMounted = true;
 
-    async function getGames() {
+    async function getGameReleaseDates() {
       const releaseDates = await getUpcomingGameReleases();
-      const games = await convertReleasesToGames(releaseDates);
-      if (isMounted) {
-        setInitGames(games);
-        setGames(games);
-      }
+      setGameReleaseDates(releaseDates);
     }
-
-    getGames();
+    getGameReleaseDates();
 
     return () => {
       isMounted = false;
@@ -103,45 +136,39 @@ function Search({ navigation, route }: Props) {
   }, []);
 
   useEffect(() => {
-    // Condition eliminates flash when data is reset
-    if (categoryIndex === 1) {
-      setMovies(initMovies);
-    }
-    if (categoryIndex === 0) {
-      setGames(initGames);
-    }
-    setSearchValue("");
-
-    setTriggeredSearch(false);
-  }, [categoryIndex]);
+    const games = convertReleasesToGames(gameReleaseDates);
+    dispatch({ type: "set-initGames", initGames: games });
+  }, [gameReleaseDates]);
 
   useEffect(() => {
     // Open GamePlatformPicker if game is changed
     modalizeRef.current?.open();
   }, [game]);
 
-  useEffect(() => {
-    setPageIndex(1);
-  }, [triggeredSearch]);
-
   async function getMovieSearch() {
     let json = await searchMovies(searchValue);
-    console.log(`triggeredSearch`, triggeredSearch);
-    console.log(`json.results`, json.results);
-    setMovies(json.results.sort((a, b) => b.popularity - a.popularity));
+    dispatch({
+      type: "set-movies",
+      movies: json.results.sort((a, b) => b.popularity - a.popularity),
+    });
   }
 
   async function getMovies(method: Promise<any>) {
     const json = await method;
-    setInitMovies([...initMovies, ...json.results]);
-    setMovies([...movies, ...json.results]);
+    dispatch({
+      type: "set-initMovies",
+      initMovies: [...initMovies, ...json.results],
+    });
   }
 
   useEffect(() => {
     async function getData() {
       if (pageIndex > 1 && triggeredSearch) {
         const json = await searchMovies(searchValue, pageIndex);
-        setMovies([...movies, ...json.results]);
+        dispatch({
+          type: "set-movies",
+          movies: [...movies, ...json.results],
+        });
       }
       if (pageIndex > 1 && !triggeredSearch) {
         if (selectedOption === "Coming Soon") {
@@ -164,42 +191,40 @@ function Search({ navigation, route }: Props) {
   function reinitialize() {
     console.log("reinit");
     if (categoryIndex === 0) {
-      setMovies(initMovies);
-      setTriggeredSearch(false);
+      dispatch({ type: "set-movies", movies: initMovies });
+      dispatch({ type: "set-triggeredSearch", triggeredSearch: false });
     }
     if (categoryIndex === 1) {
-      setGames(initGames);
+      dispatch({ type: "set-games", games: initGames });
     }
   }
 
   useEffect(() => {
-    setPageIndex(1);
-    setInitMovies([]);
-    setMovies([]);
+    dispatch({ type: "set-pageIndex", pageIndex: 1 });
+    dispatch({
+      type: "set-initMovies",
+      initMovies: [],
+    });
     filterModalRef.current?.close();
     async function getData() {
       if (selectedOption === "Coming Soon") {
         const json = await getUpcomingMovies();
-        setInitMovies(json.results);
-        setMovies(json.results);
+        dispatch({ type: "set-initMovies", initMovies: json.results });
       }
       if (selectedOption === "Now Playing") {
         const json = await getNowPlayingMovies();
-        setInitMovies(json.results);
-        setMovies(json.results);
+        dispatch({ type: "set-initMovies", initMovies: json.results });
       }
       if (selectedOption === "Popular") {
         const json = await getPopularMovies();
-        setInitMovies(json.results);
-        setMovies(json.results);
+        dispatch({ type: "set-initMovies", initMovies: json.results });
       }
       // if (selectedOption === "Top Rated") {
       //   getTopRatedMovies().then(json => { setInitMovies(json); setMovies(json) });
       // }
       if (selectedOption === "Trending") {
         const json = await getTrendingMovies();
-        setInitMovies(json.results);
-        setMovies(json.results);
+        dispatch({ type: "set-initMovies", initMovies: json.results });
       }
     }
     getData();
@@ -207,6 +232,24 @@ function Search({ navigation, route }: Props) {
 
   const scrollIndicatorInsets =
     Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined;
+
+  async function handleSearch() {
+    if (searchValue && categoryIndex === 0) {
+      dispatch({
+        type: "set-triggeredSearch",
+        triggeredSearch: true,
+      });
+      dispatch({ type: "set-movies", movies: [] });
+      getMovieSearch();
+    }
+    if (searchValue && categoryIndex === 1) {
+      dispatch({ type: "set-games", games: [] });
+      dispatch({
+        type: "set-games",
+        games: await searchGames(searchValue),
+      });
+    }
+  }
 
   return (
     <>
@@ -216,7 +259,10 @@ function Search({ navigation, route }: Props) {
         <CategoryControl
           buttons={["Movies", "Games"]}
           categoryIndex={categoryIndex}
-          handleCategoryChange={(index) => setCategoryIndex(index)}
+          // handleCategoryChange={(index) => setCategoryIndex(index)}
+          handleCategoryChange={(index) =>
+            dispatch({ type: "set-categoryIndex", categoryIndex: index })
+          }
         />
       </SafeAreaView>
       <SearchBar
@@ -264,24 +310,12 @@ function Search({ navigation, route }: Props) {
             : {}
         }
         placeholder={categoryIndex === 0 ? "Movies & People" : "Search"}
-        onChangeText={(value) => setSearchValue(value)}
+        onChangeText={(value) =>
+          dispatch({ type: "set-searchValue", searchValue: value })
+        }
         value={searchValue}
         platform={Platform.OS === "ios" ? "ios" : "android"}
-        onSubmitEditing={
-          searchValue
-            ? async () => {
-                if (categoryIndex === 0) {
-                  setTriggeredSearch(true);
-                  setMovies([]);
-                  getMovieSearch();
-                }
-                if (categoryIndex === 1) {
-                  setGames([]);
-                  setGames(await searchGames(searchValue));
-                }
-              }
-            : undefined
-        }
+        onSubmitEditing={handleSearch}
         onClear={reinitialize}
         onCancel={Platform.OS === "ios" ? reinitialize : () => undefined}
       />
@@ -298,9 +332,9 @@ function Search({ navigation, route }: Props) {
               }
               renderItem={({ item }) => (
                 <Pressable
-                  onPress={() => navigation.push("Details", { movie: item })}
+                  onPress={() => navigation.push("Movie", { movie: item })}
                 >
-                  <NewPoster movie={item} />
+                  <MoviePoster movie={item} />
                 </Pressable>
               )}
               numColumns={2}
@@ -311,7 +345,7 @@ function Search({ navigation, route }: Props) {
               initialNumToRender={6}
               scrollIndicatorInsets={scrollIndicatorInsets}
               onEndReached={({ distanceFromEnd }) =>
-                setPageIndex(pageIndex + 1)
+                dispatch({ type: "set-pageIndex", pageIndex: pageIndex + 1 })
               }
               onEndReachedThreshold={4}
               ListHeaderComponent={
@@ -397,9 +431,9 @@ function Search({ navigation, route }: Props) {
               data={games}
               renderItem={({ item }: { item: IGDB.Game.Game }) => (
                 <Pressable
-                  onPress={() => navigation.push("Details", { game: item })}
+                  onPress={() => navigation.push("Game", { game: item })}
                 >
-                  <NewPoster game={item} />
+                  <GamePoster item={item} />
                 </Pressable>
               )}
               numColumns={2}
@@ -422,20 +456,6 @@ function Search({ navigation, route }: Props) {
         ))}
     </>
   );
-
-  function ListLabel({ text, style }: { text: string; style?: any }) {
-    return (
-      <ThemedText
-        style={{
-          ...iOSUIKit.bodyEmphasizedObject,
-          marginBottom: 8,
-          ...style,
-        }}
-      >
-        {text}
-      </ThemedText>
-    );
-  }
 }
 
 export default Search;

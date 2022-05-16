@@ -20,43 +20,20 @@ export const targetedProviders = [
   // "Paramount Plus"
 ];
 
-export async function convertReleasesToGames(
+export function convertReleasesToGames(
   releaseDates: IGDB.ReleaseDate.ReleaseDate[]
-): Promise<IGDB.Game.Game[]> {
+): IGDB.Game.Game[] {
   // Converts releases into one game with many releases
   // console.log(releaseDates)
   let games: IGDB.Game.Game[] = [];
-  releaseDates.forEach((releaseDate) => {
+  releaseDates.map((releaseDate) => {
     if (releaseDate.game) {
+      let game = { ...releaseDate.game, release_dates: [releaseDate] };
       let foundGame = games.find((game) => game.name === releaseDate.game.name);
-      // console.log(foundGame);
-      let tempReleaseDate = {
-        id: releaseDate.id,
-        category: releaseDate.category,
-        created_at: releaseDate.created_at,
-        date: releaseDate.date,
-        game: releaseDate.game.id,
-        human: releaseDate.human,
-        m: releaseDate.m,
-        platform: releaseDate.platform,
-        region: releaseDate.region,
-        updated_at: releaseDate.updated_at,
-        y: releaseDate.y,
-        checksum: releaseDate.checksum,
-      };
-      let game: IGDB.Game.Game = {
-        id: releaseDate.game.id,
-        cover: releaseDate.game.cover,
-        genres: releaseDate.game.genres,
-        name: releaseDate.game.name,
-        release_dates: [tempReleaseDate],
-        summary: releaseDate.game.summary,
-        videos: releaseDate.game.videos,
-        involved_companies: releaseDate.game.involved_companies,
-      };
-      foundGame
-        ? foundGame.release_dates.push(tempReleaseDate)
-        : games.push(game);
+      // check if game has already been added to games array
+      // if so, add tempReleaseDate to foundGame.release_dates
+      // if not, add game to games array
+      foundGame ? foundGame.release_dates.push(releaseDate) : games.push(game);
     }
   });
   return games;

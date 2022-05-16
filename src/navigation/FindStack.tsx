@@ -7,7 +7,9 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor";
 import Details from "../screens/Details";
+import Game from "../screens/Game";
 import GameDiscover from "../screens/GameDiscover";
+import Movie from "../screens/Movie";
 import MovieDiscover from "../screens/MovieDiscover";
 import Search from "../screens/Search";
 
@@ -35,6 +37,24 @@ export function FindStack({ navigation, route }: Props) {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name="Movie"
+        component={Movie}
+        options={{
+          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "dark",
+          title: "",
+        }}
+      />
+      <Stack.Screen
+        name="Game"
+        component={Game}
+        options={{
+          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "dark",
+          title: "",
+        }}
+      />
+      {/* <Stack.Screen
         name="Details"
         component={Details}
         options={{
@@ -42,7 +62,7 @@ export function FindStack({ navigation, route }: Props) {
           headerBlurEffect: "dark",
           title: "",
         }}
-      />
+      /> */}
       <Stack.Screen
         name="MovieDiscover"
         component={MovieDiscover}

@@ -11,8 +11,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { Image } from "react-native-elements";
-import FastImage from "react-native-fast-image";
 import LinearGradient from "react-native-linear-gradient";
 import Animated, {
   interpolate,
@@ -37,8 +35,8 @@ import { TMDB } from "../../interfaces/tmdb";
 import { BlueBullet } from "../BlueBullet";
 import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
-import { NewPoster } from "../NewPoster";
 import Person from "../Person";
+import { MoviePoster } from "../Posters/MoviePoster";
 import { Text as ThemedText } from "../Themed";
 import Trailer from "../Trailer";
 
@@ -106,9 +104,9 @@ function SlidingMovie({
   return (
     <Pressable
       style={{ marginRight: 16 }}
-      onPress={() => navigation.push("Details", { movie: movie })}
+      onPress={() => navigation.push("Movie", { movie: movie })}
     >
-      <NewPoster
+      <MoviePoster
         movie={movie}
         style={{
           // I don't know why 18 works here to center the right-most image but it works on every iOS device tested

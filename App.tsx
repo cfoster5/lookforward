@@ -55,16 +55,25 @@ export default function App() {
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+    const docRef = firestore()
+      .collection("users")
+      .doc(user?.uid)
+      .collection("contentPreferences")
+      .doc("preferences");
+    const doc = await docRef.get();
     if (enabled) {
-      await firestore()
-        .collection("users")
-        .doc(user?.uid)
-        .collection("contentPreferences")
-        .doc("preferences")
-        .set({
-          weekNotifications: true,
-          dayNotifications: true,
-        });
+      if (!doc.exists) {
+        // Only set notification preferences to true if they haven't been set before
+        await firestore()
+          .collection("users")
+          .doc(user?.uid)
+          .collection("contentPreferences")
+          .doc("preferences")
+          .set({
+            weekNotifications: true,
+            dayNotifications: true,
+          });
+      }
       const token = await messaging().getToken();
       await saveTokenToDatabase(token);
       // Listen to whether the token changes

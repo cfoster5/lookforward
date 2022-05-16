@@ -52,7 +52,7 @@ export function TabStack() {
   }, []);
 
   return (
-    <SubContext.Provider value={{ movies: movieSubs, games: gameSubs }}>
+    <SubContext.Provider value={{ movieSubs: movieSubs, games: gameSubs }}>
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {

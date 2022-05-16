@@ -8,7 +8,7 @@ import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
 import { TMDB } from "../interfaces/tmdb";
-import { TextPoster } from "./NewPoster";
+import { TextPoster } from "./Posters/TextPoster";
 
 interface Props {
   navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">;

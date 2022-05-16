@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Dimensions,
@@ -21,10 +21,9 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
 import ButtonMultiState from "../components/ButtonMultiState";
-import NewPoster from "../components/NewPoster";
+import { MoviePoster } from "../components/Posters/MoviePoster";
 import { Text as ThemedText } from "../components/Themed";
 import { reusableStyles } from "../helpers/styles";
-import { getPerson } from "../helpers/tmdbRequests";
 import { Navigation } from "../interfaces/navigation";
 import { TMDB } from "../interfaces/tmdb";
 
@@ -49,8 +48,25 @@ interface Props {
     | RouteProp<Navigation.CountdownStackParamList, "Actor">;
 }
 
+function useGetPerson(personId: number) {
+  const [person, setPerson] = useState();
+
+  useEffect(() => {
+    async function getPerson() {
+      const response = await fetch(
+        `https://api.themoviedb.org/3/person/${personId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=movie_credits,images`
+      );
+      const json = await response.json();
+      setPerson(json);
+    }
+    getPerson();
+  }, [personId]);
+
+  return person;
+}
+
 function Actor({ route, navigation }: Props) {
-  const [details, setDetails] = useState<TMDB.Person.Person>();
+  const person = useGetPerson(route.params.personId);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const ref = useRef<Carousel<any>>(null);
@@ -59,18 +75,12 @@ function Actor({ route, navigation }: Props) {
   const [showBio, setShowBio] = useState(false);
   const [selectedJob, setSelectedJob] = useState("Actor");
 
-  useEffect(() => {
-    setDetails(undefined);
-    async function getData() {
-      const details = await getPerson(route.params.personId);
-      navigation.setOptions({ title: details.name });
-      setDetails(details);
-    }
-    getData();
-  }, [route.params.personId]);
+  useLayoutEffect(() => {
+    navigation.setOptions({ title: person?.name });
+  }, [person]);
 
   function getBirthday(): string {
-    return DateTime.fromFormat(details?.birthday as string, "yyyy-MM-dd")
+    return DateTime.fromFormat(person?.birthday as string, "yyyy-MM-dd")
       .toFormat("MMMM d, yyyy")
       .toUpperCase();
   }
@@ -93,7 +103,7 @@ function Actor({ route, navigation }: Props) {
     );
   }
 
-  return details ? (
+  return person ? (
     <ScrollView
       contentContainerStyle={
         Platform.OS === "ios"
@@ -111,10 +121,10 @@ function Actor({ route, navigation }: Props) {
           : undefined
       }
     >
-      {details?.images?.profiles && (
+      {person?.images?.profiles && (
         <Carousel
           ref={ref}
-          data={details?.images?.profiles}
+          data={person?.images?.profiles}
           renderItem={RenderItem}
           layout={"default"}
           loop={true}
@@ -132,9 +142,9 @@ function Actor({ route, navigation }: Props) {
         }
       >
         <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-          {details?.name}
+          {person?.name}
         </ThemedText>
-        {details?.birthday && (
+        {person?.birthday && (
           <Text style={reusableStyles.date}>{getBirthday()}</Text>
         )}
         <Pressable onPress={() => setShowBio(!showBio)}>
@@ -142,8 +152,8 @@ function Actor({ route, navigation }: Props) {
             style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}
             numberOfLines={showBio ? undefined : 4}
           >
-            {details?.biography
-              ? details?.biography
+            {person?.biography
+              ? person?.biography
               : "No biography yet! Come back later!"}
           </ThemedText>
         </Pressable>
@@ -159,7 +169,7 @@ function Actor({ route, navigation }: Props) {
             selectedVal={selectedJob}
             onPress={() => setSelectedJob("Actor")}
           />
-          {details?.movie_credits.crew
+          {person?.movie_credits.crew
             .filter((v, i, a) => a.findIndex((t) => t.job === v.job) === i)
             // .sort((a, b) =>
             //   a.job.toLowerCase().localeCompare(b.job.toLowerCase())
@@ -190,7 +200,7 @@ function Actor({ route, navigation }: Props) {
           }}
         >
           {selectedJob === "Actor"
-            ? details?.movie_credits.cast
+            ? person?.movie_credits.cast
                 // .sort((a, b) => b.release_date?.localeCompare(a.release_date))
                 .sort((a, b) =>
                   Platform.OS === "ios"
@@ -205,14 +215,12 @@ function Actor({ route, navigation }: Props) {
                   <Pressable
                     key={i}
                     style={{ marginBottom: 16 }}
-                    onPress={() =>
-                      navigation.push("Details", { movie: credit })
-                    }
+                    onPress={() => navigation.push("Movie", { movie: credit })}
                   >
-                    <NewPoster movie={credit} />
+                    <MoviePoster movie={credit} />
                   </Pressable>
                 ))
-            : details?.movie_credits.crew
+            : person?.movie_credits.crew
                 .filter((credit) => credit.job === selectedJob)
                 // .sort((a, b) => b.release_date?.localeCompare(a.release_date))
                 .sort((a, b) =>
@@ -228,11 +236,9 @@ function Actor({ route, navigation }: Props) {
                   <Pressable
                     key={i}
                     style={{ marginBottom: 16 }}
-                    onPress={() =>
-                      navigation.push("Details", { movie: credit })
-                    }
+                    onPress={() => navigation.push("Movie", { movie: credit })}
                   >
-                    <NewPoster movie={credit} />
+                    <MoviePoster movie={credit} />
                   </Pressable>
                 ))}
         </View>

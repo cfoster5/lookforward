@@ -1,11 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, FlatList, Platform, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Platform,
+  Pressable,
+  View,
+} from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
 
 import GameReleaseModal from "../components/GamePlatformPicker";
-import Poster from "../components/Poster";
+import { GamePoster } from "../components/Posters/GamePoster";
 import GameContext from "../contexts/GamePlatformPickerContexts";
 import { convertReleasesToGames } from "../helpers/helpers";
 import { discoverGames } from "../helpers/igdbRequests";
@@ -17,6 +23,9 @@ function GameDiscover({ route, navigation }: any) {
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const modalizeRef = useRef<Modalize>(null);
+  const [releaseDates, setReleaseDates] = useState<
+    IGDB.ReleaseDate.ReleaseDate[]
+  >([]);
   const [game, setGame] = useState();
 
   useEffect(() => {
@@ -39,13 +48,17 @@ function GameDiscover({ route, navigation }: any) {
     }
     navigation.setOptions({ title: title });
 
-    async function getGames() {
+    async function getReleaseDates() {
       const releaseDates = await discoverGames({ genreId: genre.id });
-      const games = await convertReleasesToGames(releaseDates);
-      setGames(games);
+      setReleaseDates(releaseDates);
     }
-    getGames();
+    getReleaseDates();
   }, [route.params]);
+
+  useEffect(() => {
+    const games = convertReleasesToGames(releaseDates);
+    setGames(games);
+  }, [releaseDates]);
 
   useEffect(() => {
     // Open GamePlatformPicker if game is changed
@@ -71,7 +84,9 @@ function GameDiscover({ route, navigation }: any) {
         indicatorStyle="white"
         data={games}
         renderItem={({ item }: { item: IGDB.Game.Game }) => (
-          <Poster navigation={navigation} game={item} />
+          <Pressable onPress={() => navigation.push("Game", { game: item })}>
+            <GamePoster item={item} />
+          </Pressable>
         )}
         numColumns={2}
         columnWrapperStyle={{

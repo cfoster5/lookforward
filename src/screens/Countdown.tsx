@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useLayoutEffect, useReducer, useRef } from "react";
 import {
   ActivityIndicator,
   Platform,
@@ -31,10 +25,40 @@ import CountdownItem from "../components/CountdownItem";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
-import { getMovieDetails } from "../helpers/tmdbRequests";
-import { getMovieById } from "../helpers/traktRequests";
+import { useGetAllMovies } from "../hooks/useGetAllMovies";
 import { Navigation } from "../interfaces/navigation";
-import { TMDB } from "../interfaces/tmdb";
+
+// Look into toggling isSelected on subs to eliminate pushing and popping with array
+
+export function reducer(
+  state: any,
+  action: {
+    type: string;
+    showButtons?: boolean;
+    selections?: { documentID: string; sectionName: string }[];
+  }
+) {
+  switch (action.type) {
+    case "set-showButtons":
+      return {
+        ...state,
+        showButtons: action.showButtons,
+      };
+    case "set-hideButtons":
+      return {
+        ...state,
+        showButtons: false,
+        selections: [],
+      };
+    case "set-selections":
+      return {
+        ...state,
+        selections: action.selections,
+      };
+    default:
+      return state;
+  }
+}
 
 interface Props {
   route: RouteProp<Navigation.CountdownStackParamList, "Countdown">;
@@ -49,43 +73,17 @@ interface Props {
 }
 
 function Countdown({ route, navigation }: Props) {
-  const [showButtons, setShowButtons] = useState(false);
-  const [selections, setSelections] = useState<
-    { documentID: string; sectionName: string }[]
-  >([]);
+  const [{ showButtons, selections }, dispatch] = useReducer(reducer, {
+    showButtons: false,
+    selections: [],
+  });
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
   const { user } = useContext(TabStackContext);
-  const { movies, games } = useContext(SubContext);
+  const { movieSubs, games } = useContext(SubContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [promisedMovies, setPromisedMovies] = useState<TMDB.Movie.Details[]>(
-    []
-  );
-
-  async function getMovie(movieId: string) {
-    const movieDetails = await getMovieDetails(movieId);
-    const trakt = await getMovieById(movieDetails.imdb_id);
-    return {
-      ...movieDetails,
-      traktReleaseDate: trakt.released,
-      documentID: movieId,
-    };
-  }
-
-  useEffect(() => {
-    async function getMovies() {
-      const results = await Promise.all(
-        movies.map((movie) => getMovie(movie.documentID))
-      );
-      setPromisedMovies(
-        results.sort((a, b) =>
-          a.traktReleaseDate?.localeCompare(b.traktReleaseDate)
-        )
-      );
-    }
-    getMovies();
-  }, [movies]);
+  const { movies, loading } = useGetAllMovies(movieSubs);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -101,79 +99,57 @@ function Countdown({ route, navigation }: Props) {
                 }}
                 onPress={() => {
                   if (selections.length > 0) {
-                    setShowButtons(false);
                     deleteItems();
-                    setSelections([]);
                   }
                 }}
               />
             )}
           </HeaderButtons>
         ) : null,
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-          {!showButtons && (
+      headerRight: () => {
+        let HeaderRight = null;
+        if (!showButtons) {
+          HeaderRight = (
             <Item
               title="Edit"
-              onPress={() => {
-                setShowButtons(true);
-              }}
+              onPress={() =>
+                dispatch({ type: "set-showButtons", showButtons: true })
+              }
             />
-          )}
-          {Platform.OS === "ios"
-            ? showButtons && (
-                <Item
-                  title="Done"
-                  buttonStyle={{
-                    ...iOSUIKit.bodyEmphasizedObject,
-                    color: iOSColors.blue,
-                  }}
-                  onPress={() => {
-                    setShowButtons(false);
-                    setSelections([]);
-                  }}
-                />
-              )
-            : showButtons &&
-              selections.length === 0 &&
-              Platform.OS === "android" && (
-                <Item
-                  title="Done"
-                  buttonStyle={{
-                    ...iOSUIKit.bodyEmphasizedObject,
-                    color: iOSColors.blue,
-                  }}
-                  onPress={() => {
-                    setShowButtons(false);
-                    setSelections([]);
-                  }}
-                />
-              )}
-          {/* {(showButtons && Platform.OS === "ios") || (showButtons && selections.length === 0 && Platform.OS === "android") &&
-            <Item title="Done" buttonStyle={{ ...iOSUIKit.bodyEmphasizedObject, color: iOSColors.blue }} onPress={() => {
-              setShowButtons(false);
-              setSelections([]);
-              startAnimation()
-            }} />
-          } */}
-          {Platform.OS === "android" && showButtons && selections.length > 0 && (
-            <Item
-              title="Delete"
-              buttonStyle={{
-                ...iOSUIKit.bodyEmphasizedObject,
-                color: selections.length === 0 ? "#48494a" : iOSColors.red,
-              }}
-              onPress={() => {
-                if (selections.length > 0) {
-                  setShowButtons(false);
-                  deleteItems();
-                  setSelections([]);
-                }
-              }}
-            />
-          )}
-        </HeaderButtons>
-      ),
+          );
+        } else {
+          if (
+            Platform.OS === "ios" ||
+            (Platform.OS === "android" && selections.length)
+          ) {
+            HeaderRight = (
+              <Item
+                title="Done"
+                buttonStyle={{
+                  ...iOSUIKit.bodyEmphasizedObject,
+                  color: iOSColors.blue,
+                }}
+                onPress={() => dispatch({ type: "set-hideButtons" })}
+              />
+            );
+          }
+        }
+        return (
+          <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+            {HeaderRight}
+            {Platform.OS === "android" && showButtons && selections.length > 0 && (
+              <Item
+                title="Delete"
+                buttonStyle={{
+                  ...iOSUIKit.bodyEmphasizedObject,
+                  color: selections.length === 0 ? "#48494a" : iOSColors.red,
+                }}
+                onPress={() => deleteItems()}
+              />
+            )}
+          </HeaderButtons>
+        );
+      },
     });
   }, [navigation, showButtons, selections]);
 
@@ -201,13 +177,12 @@ function Countdown({ route, navigation }: Props) {
     } else {
       tempSelections.splice(selectionIndex, 1);
     }
-    setSelections(tempSelections);
+    dispatch({ type: "set-selections", selections: tempSelections });
   }
 
   async function deleteItems() {
-    for (const selection of selections) {
-      // Animate as if deleting and then delete
-      // Animate height to 0
+    let batch = firestore().batch();
+    selections.map((selection) => {
       let collection = "";
       if (selection.sectionName === "Movies") {
         collection = "movies";
@@ -215,21 +190,18 @@ function Countdown({ route, navigation }: Props) {
       if (selection.sectionName === "Games") {
         collection = "gameReleases";
       }
-      try {
-        await firestore()
-          .collection(collection)
-          .doc(selection.documentID)
-          .update({
-            subscribers: firestore.FieldValue.arrayRemove(user),
-          });
-      } catch (error) {
-        console.error("Error writing document: ", error);
-      }
-      setSelections([]);
-    }
+      const docRef = firestore()
+        .collection(collection)
+        .doc(selection.documentID);
+      batch.update(docRef, {
+        subscribers: firestore.FieldValue.arrayRemove(user),
+      });
+    });
+    await batch.commit();
+    dispatch({ type: "set-hideButtons" });
   }
 
-  return promisedMovies.length ? (
+  return !loading ? (
     <SectionList
       contentContainerStyle={
         Platform.OS == "ios"
@@ -251,30 +223,33 @@ function Countdown({ route, navigation }: Props) {
       }
       // sections={listData}
       sections={[
-        { data: promisedMovies, title: "Movies" },
+        {
+          data: movies.sort((a, b) =>
+            a.traktReleaseDate?.localeCompare(b.traktReleaseDate)
+          ),
+          title: "Movies",
+        },
         { data: games, title: "Games" },
       ]}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}
-      renderItem={(data) => (
+      renderItem={({ item, section, index }) => (
         <CountdownItem
           navigation={navigation}
-          item={data.item}
-          sectionName={data.section.title}
-          // isLastInSection={data.section.title === "Movies" ? data.index + 1 === route.params.movies.length : data.index + 1 === route.params.games.length}
+          item={item}
+          sectionName={section.title}
           isLastInSection={
-            data.section.title === "Movies"
-              ? data.index + 1 === movies.length
-              : data.index + 1 === games.length
+            section.title === "Movies"
+              ? index + 1 === movieSubs.length
+              : index + 1 === games.length
           }
           showButtons={showButtons}
           selected={
-            selections.findIndex(
-              (obj) => obj.documentID === data.item.documentID
-            ) > -1
+            selections.findIndex((obj) => obj.documentID === item.documentID) >
+            -1
           }
           updateSelections={(documentID) =>
-            updateSelections(documentID, data.section.title)
+            updateSelections(documentID, section.title)
           }
         />
       )}
@@ -287,7 +262,7 @@ function Countdown({ route, navigation }: Props) {
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
           }}
-        ></View>
+        />
       }
       ListFooterComponent={
         <View
@@ -297,7 +272,7 @@ function Countdown({ route, navigation }: Props) {
             borderBottomLeftRadius: 8,
             borderBottomRightRadius: 8,
           }}
-        ></View>
+        />
       }
       ref={scrollRef}
     />

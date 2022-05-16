@@ -11,8 +11,8 @@ import Carousel from "react-native-snap-carousel";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { getHypedGames } from "../helpers/igdbRequests";
-import { getTrendingMovies } from "../helpers/tmdbRequests";
+import { useGetHypedGames } from "../hooks/useGetHypedGames";
+import { useGetTrendingMovies } from "../hooks/useGetTrendingMovies";
 import { IGDB } from "../interfaces/igdb";
 import { TrendingMovie } from "../interfaces/tmdb";
 import { AuthStackParamList } from "../navigation/AuthStack";
@@ -23,48 +23,11 @@ interface Props {
 }
 
 function Welcome({ navigation }: Props) {
-  const [carouselData, setCarouselData] = useState<
-    TrendingMovie[] | IGDB.Game.Game[]
-  >([]);
-  const [trendingMovies, setTrendingMovies] = useState<TrendingMovie[]>();
-  const [hypedGames, setHypedGames] = useState<IGDB.Game.Game[]>();
+  const trendingMovies: TrendingMovie[] = useGetTrendingMovies().slice(0, 10);
+  const hypedGames: IGDB.Game.Game[] = useGetHypedGames();
   const ref = useRef<Carousel<any>>(null);
   const width = 200;
   const horizontalMargin = 4;
-
-  useEffect(() => {
-    let isMounted = true;
-    getTrendingMovies().then((json) => {
-      if (isMounted) {
-        setTrendingMovies(json.results);
-      }
-    });
-    getHypedGames().then((games) => {
-      if (isMounted) {
-        setHypedGames(games);
-      }
-    });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (trendingMovies && hypedGames) {
-      let tempCarouselData = Array(20).fill({});
-      for (let i = 0; i < 10; i++) {
-        const movie = trendingMovies[i];
-        tempCarouselData[i * 2] = movie;
-        // Inserts movie at every other element starting at 0
-      }
-      for (let i = 0; i < 10; i++) {
-        const game = hypedGames[i];
-        tempCarouselData[i * 2 + 1] = game;
-        // Inserts game at every other element starting at 1
-      }
-      setCarouselData(tempCarouselData);
-    }
-  }, [trendingMovies, hypedGames]);
 
   function RenderItem({
     item,
@@ -100,7 +63,7 @@ function Welcome({ navigation }: Props) {
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      {carouselData.length > 0 && (
+      {trendingMovies.length > 0 && hypedGames.length > 0 && (
         <>
           <View style={{ alignItems: "center" }}>
             <Text style={iOSUIKit.title3EmphasizedWhite}>
@@ -109,7 +72,10 @@ function Welcome({ navigation }: Props) {
           </View>
           <Carousel
             ref={ref}
-            data={carouselData}
+            // Merge two arrays so that the values alternate
+            data={trendingMovies
+              .map((movie, i) => [movie, hypedGames[i]])
+              .reduce((a, b) => a.concat(b))}
             renderItem={RenderItem}
             layout={"default"}
             loop={true}

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useState } from "react";
-import { FlatList, Platform, Pressable, Text } from "react-native";
+import React, { useContext } from "react";
+import { FlatList, Platform, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { iOSUIKit } from "react-native-typography";
@@ -12,17 +12,10 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import TabStackContext from "../contexts/TabStackContext";
 import { targetedProviders } from "../helpers/helpers";
-import { getMovieWatchProviders } from "../helpers/tmdbRequests";
+import { useGetMovieWatchProviders } from "../hooks/useGetMovieWatchProviders";
 import { Navigation } from "../interfaces/navigation";
 import ButtonMultiState from "./ButtonMultiState";
 import ButtonSingleState from "./ButtonSingleState";
-
-interface MovieWatchProvider {
-  display_priority: number;
-  logo_path: string;
-  provider_id: number;
-  provider_name: string;
-}
 
 export default function MovieSearchModal({
   navigation,
@@ -40,9 +33,7 @@ export default function MovieSearchModal({
 }) {
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
-  const [movieWatchProviders, setMovieWatchProviders] = useState<
-    MovieWatchProvider[]
-  >([]);
+  const movieWatchProviders = useGetMovieWatchProviders();
 
   const options = [
     "Coming Soon",
@@ -51,14 +42,6 @@ export default function MovieSearchModal({
     // "Top Rated",
     "Trending",
   ];
-
-  useEffect(() => {
-    async function getData() {
-      const json = await getMovieWatchProviders();
-      setMovieWatchProviders(json.results);
-    }
-    getData();
-  }, []);
 
   return (
     <Modalize

@@ -28,8 +28,8 @@ import TabStackContext from "../contexts/TabStackContext";
 import { targetedProviders } from "../helpers/helpers";
 import {
   getDiscoverMovies,
-  getMovieWatchProviders,
 } from "../helpers/tmdbRequests";
+import { useGetMovieWatchProviders } from "../hooks/useGetMovieWatchProviders";
 import { Movie, MovieWatchProvider } from "../interfaces/tmdb";
 
 function MovieDiscover({ route, navigation }: any) {
@@ -42,18 +42,9 @@ function MovieDiscover({ route, navigation }: any) {
   const { theme } = useContext(TabStackContext);
   const [sortMethod, setSortMethod] = useState("popularity.desc");
   const modalRef = useRef<Modalize>(null);
-  const [movieWatchProviders, setMovieWatchProviders] = useState<
-    MovieWatchProvider[]
-  >([
-    {
-      display_priority: 0,
-      logo_path: "",
-      provider_id: 0,
-      provider_name: "Any",
-    },
-  ]);
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
     useState<number>(0);
+  const movieWatchProviders = useGetMovieWatchProviders(true);
 
   useEffect(() => {
     if (provider) {
@@ -86,12 +77,6 @@ function MovieDiscover({ route, navigation }: any) {
     // "vote_count.asc",
     // "vote_count.desc"
   ];
-
-  useEffect(() => {
-    getMovieWatchProviders().then((json: { results: MovieWatchProvider[] }) =>
-      setMovieWatchProviders([...movieWatchProviders, ...json.results])
-    );
-  }, []);
 
   useLayoutEffect(() => {
     navigation.setOptions({

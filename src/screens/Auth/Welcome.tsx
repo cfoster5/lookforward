@@ -11,11 +11,11 @@ import Carousel from "react-native-snap-carousel";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { useGetHypedGames } from "../hooks/useGetHypedGames";
-import { useGetTrendingMovies } from "../hooks/useGetTrendingMovies";
-import { IGDB } from "../interfaces/igdb";
-import { TrendingMovie } from "../interfaces/tmdb";
-import { AuthStackParamList } from "../navigation/AuthStack";
+import { useGetHypedGames } from "../../hooks/useGetHypedGames";
+import { useGetTrendingMovies } from "../../hooks/useGetTrendingMovies";
+import { IGDB } from "../../interfaces/igdb";
+import { TrendingMovie } from "../../interfaces/tmdb";
+import { AuthStackParamList } from "../../navigation/AuthStack";
 
 interface Props {
   navigation: StackNavigationProp<AuthStackParamList, "Welcome">;

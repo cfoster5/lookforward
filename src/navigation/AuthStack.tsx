@@ -1,10 +1,10 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import CreateAccount from "../screens/CreateAccount";
-import Login from "../screens/Login";
-import PasswordReset from "../screens/PasswordReset";
-import Welcome from "../screens/Welcome";
+import CreateAccount from "../screens/Auth/CreateAccount";
+import Login from "../screens/Auth/Login";
+import PasswordReset from "../screens/Auth/PasswordReset";
+import Welcome from "../screens/Auth/Welcome";
 
 export type AuthStackParamList = {
   Welcome: undefined;

@@ -13,7 +13,7 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 import auth from "@react-native-firebase/auth";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { AuthStackParamList } from "../navigation/AuthStack";
+import { AuthStackParamList } from "../../navigation/AuthStack";
 
 interface Props {
   navigation: StackNavigationProp<AuthStackParamList, "Password Reset">;

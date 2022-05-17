@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Platform,
   Pressable,
   StyleSheet,
@@ -294,7 +295,13 @@ function Profile({ route, navigation }: ProfileScreenProps) {
         )}
         <Pressable
           style={{ ...styles.buttonContainer }}
-          onPress={() => signOut()}
+          // onPress={() => signOut()}
+          onPress={() =>
+            Alert.alert("Sign out?", undefined, [
+              { text: "Cancel", style: "cancel" },
+              { text: "Sign Out", style: "destructive", onPress: signOut },
+            ])
+          }
         >
           <View style={styles.button}>
             <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.red }}>

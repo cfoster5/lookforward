@@ -28,8 +28,6 @@ import TabStackContext from "../contexts/TabStackContext";
 import { useGetAllMovies } from "../hooks/useGetAllMovies";
 import { Navigation } from "../interfaces/navigation";
 
-// Look into toggling isSelected on subs to eliminate pushing and popping with array
-
 export function reducer(
   state: any,
   action: {
@@ -181,17 +179,12 @@ function Countdown({ route, navigation }: Props) {
   }
 
   async function deleteItems() {
+    const collectionMap = { Movies: "movies", Games: "gameReleases" };
+
     let batch = firestore().batch();
     selections.map((selection) => {
-      let collection = "";
-      if (selection.sectionName === "Movies") {
-        collection = "movies";
-      }
-      if (selection.sectionName === "Games") {
-        collection = "gameReleases";
-      }
       const docRef = firestore()
-        .collection(collection)
+        .collection(collectionMap[selection.sectionName])
         .doc(selection.documentID);
       batch.update(docRef, {
         subscribers: firestore.FieldValue.arrayRemove(user),

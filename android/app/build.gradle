@@ -135,8 +135,8 @@ android {
         applicationId "com.lookforward.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 434
-        versionName "4.3.4"
+        versionCode 435
+        versionName "4.3.5"
         multiDexEnabled true
     }
     splits {

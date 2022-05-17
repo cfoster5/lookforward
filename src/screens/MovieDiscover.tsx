@@ -26,14 +26,14 @@ import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import { MoviePoster } from "../components/Posters/MoviePoster";
 import TabStackContext from "../contexts/TabStackContext";
 import { targetedProviders } from "../helpers/helpers";
-import { useDiscoverFilterCreation } from "../hooks/useDiscoverFilterCreation";
-import { useGetDiscoverMovies } from "../hooks/useGetDiscoverMovies";
+import { getDiscoverMovies } from "../helpers/tmdbRequests";
+// import { useDiscoverFilterCreation } from "../hooks/useDiscoverFilterCreation";
 import { useGetMovieWatchProviders } from "../hooks/useGetMovieWatchProviders";
-import { Movie, MovieWatchProvider } from "../interfaces/tmdb";
+import { Movie } from "../interfaces/tmdb";
 
 function MovieDiscover({ route, navigation }: any) {
   const { genre, company, keyword, provider } = route.params;
-  // const [movies, setMovies] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
@@ -43,15 +43,15 @@ function MovieDiscover({ route, navigation }: any) {
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
     useState<number>(0);
   const movieWatchProviders = useGetMovieWatchProviders(true);
-  const discoverFilter = useDiscoverFilterCreation(
-    genre,
-    company,
-    keyword,
-    provider,
-    selectedMovieWatchProvider,
-    sortMethod
-  );
-  const movies = useGetDiscoverMovies(discoverFilter, pageIndex);
+  // const discoverFilter = useDiscoverFilterCreation(
+  //   genre,
+  //   company,
+  //   keyword,
+  //   provider,
+  //   selectedMovieWatchProvider,
+  //   sortMethod
+  // );
+  // const movies = useGetDiscoverMovies(discoverFilter, pageIndex);
   const modalRef = useRef<Modalize>(null);
 
   useEffect(() => {
@@ -105,25 +105,75 @@ function MovieDiscover({ route, navigation }: any) {
   }, [navigation]);
 
   useEffect(() => {
+    setMovies([]);
     let title = "";
+    let discoverBy = {
+      genreId: undefined,
+      companyId: undefined,
+      keywordId: undefined,
+      watchProvider: selectedMovieWatchProvider,
+      sortMethod: sortMethod,
+    };
     if (genre) {
       title = genre.name;
+      discoverBy.genreId = genre.id;
     } else if (company) {
       title = company.name;
+      discoverBy.companyId = company.id;
     } else if (keyword) {
       title = keyword.name;
+      discoverBy.keywordId = keyword.id;
     } else if (provider) {
       if (provider.provider_id !== selectedMovieWatchProvider) {
         title = movieWatchProviders.find(
           (provider, i) => provider.provider_id === selectedMovieWatchProvider
         )?.provider_name;
+        discoverBy.watchProvider = selectedMovieWatchProvider;
       } else {
         title = provider.provider_name;
+        discoverBy.watchProvider = provider.provider_id;
       }
     }
 
     navigation.setOptions({ title: title });
+    getDiscoverMovies(discoverBy).then((json) => {
+      setMovies(json.results);
+      scrollRef?.current?.scrollToIndex({
+        index: 0,
+        animated: false,
+      });
+    });
   }, [genre, company, keyword, sortMethod, selectedMovieWatchProvider]);
+
+  useEffect(() => {
+    if (pageIndex > 1) {
+      let discoverBy = {
+        genreId: undefined,
+        companyId: undefined,
+        keywordId: undefined,
+        watchProvider: selectedMovieWatchProvider,
+        sortMethod: sortMethod,
+        pageIndex: 1,
+      };
+      if (genre) {
+        discoverBy.genreId = genre.id;
+      } else if (company) {
+        discoverBy.companyId = company.id;
+      } else if (keyword) {
+        discoverBy.keywordId = keyword.id;
+      } else if (provider) {
+        if (provider.provider_id !== selectedMovieWatchProvider) {
+          discoverBy.watchProvider = selectedMovieWatchProvider;
+        } else {
+          discoverBy.watchProvider = provider.provider_id;
+        }
+      }
+      discoverBy.pageIndex = pageIndex;
+      getDiscoverMovies(discoverBy).then((json) => {
+        setMovies([...movies, ...json.results]);
+      });
+    }
+  }, [pageIndex]);
 
   return (
     <>

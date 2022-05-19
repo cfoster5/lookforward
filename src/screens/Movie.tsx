@@ -6,6 +6,7 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+import { AnimatedBackground } from "../components/AnimatedBackground";
 import { MovieDetails } from "../components/Details/MovieDetails";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import SubContext from "../contexts/SubContext";
@@ -96,7 +97,13 @@ function Movie({ navigation, route }: Props) {
     }
   }
 
-  return <MovieDetails navigation={navigation} movieId={movie.id} />;
+  return (
+    <AnimatedBackground
+      uri={movie?.backdrop_path ? movie.backdrop_path : movie?.poster_path}
+    >
+      <MovieDetails navigation={navigation} movieId={movie.id} />
+    </AnimatedBackground>
+  );
 }
 
 export default Movie;

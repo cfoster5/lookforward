@@ -54,15 +54,6 @@ export function FindStack({ navigation, route }: Props) {
           title: "",
         }}
       />
-      {/* <Stack.Screen
-        name="Details"
-        component={Details}
-        options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
-          headerBlurEffect: "dark",
-          title: "",
-        }}
-      /> */}
       <Stack.Screen
         name="MovieDiscover"
         component={MovieDiscover}

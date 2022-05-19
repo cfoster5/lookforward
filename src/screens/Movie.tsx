@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import firestore from "@react-native-firebase/firestore";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -11,6 +9,7 @@ import { MovieDetails } from "../components/Details/MovieDetails";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
+import { removeSub, subToMovie } from "../helpers/helpers";
 import { Navigation } from "../interfaces/navigation";
 
 interface Props {
@@ -47,7 +46,11 @@ function Movie({ navigation, route }: Props) {
           <Item
             title="search"
             iconName={countdownId ? "checkmark-outline" : "add-outline"}
-            onPress={() => (!countdownId ? addMovieToList() : deleteItem())}
+            onPress={() =>
+              !countdownId
+                ? subToMovie(movie?.id.toString(), user)
+                : removeSub("movies", countdownId, user)
+            }
           />
         </HeaderButtons>
       ),
@@ -65,37 +68,6 @@ function Movie({ navigation, route }: Props) {
     setCountdownId(documentID);
     // setInCountdown(movies.some((movie: Movie) => movie.id === route.params.data.id))
   }, [movieSubs]);
-
-  async function addMovieToList() {
-    try {
-      await firestore()
-        .collection("movies")
-        .doc(movie?.id.toString())
-        .set(
-          { subscribers: firestore.FieldValue.arrayUnion(user) },
-          { merge: true }
-        );
-      ReactNativeHapticFeedback.trigger("impactLight", {
-        enableVibrateFallback: true,
-        ignoreAndroidSystemSettings: false,
-      });
-    } catch (error) {
-      console.error("Error writing document: ", error);
-    }
-  }
-
-  async function deleteItem() {
-    try {
-      await firestore()
-        .collection("movies")
-        .doc(countdownId)
-        .update({
-          subscribers: firestore.FieldValue.arrayRemove(user),
-        });
-    } catch (error) {
-      console.error("Error writing document: ", error);
-    }
-  }
 
   return (
     <AnimatedBackground

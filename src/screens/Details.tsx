@@ -5,10 +5,8 @@ import React, {
   useRef,
   useState,
 } from "react";
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { Modalize } from "react-native-modalize";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import firestore from "@react-native-firebase/firestore";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -19,6 +17,7 @@ import GameReleaseModal from "../components/GamePlatformPicker";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
+import { removeSub, subToMovie } from "../helpers/helpers";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
 
@@ -66,7 +65,7 @@ function Details({ navigation, route }: Props) {
             onPress={() =>
               !countdownId
                 ? movie || route.params.tv
-                  ? addMovieToList()
+                  ? subToMovie(movie?.id.toString(), user)
                   : modalizeRef.current?.open()
                 : deleteItem()
             }
@@ -96,24 +95,6 @@ function Details({ navigation, route }: Props) {
     // setInCountdown(movies.some((movie: Movie) => movie.id === route.params.data.id))
   }, [movieSubs, games]);
 
-  async function addMovieToList() {
-    try {
-      await firestore()
-        .collection("movies")
-        .doc(movie?.id.toString())
-        .set(
-          { subscribers: firestore.FieldValue.arrayUnion(user) },
-          { merge: true }
-        );
-      ReactNativeHapticFeedback.trigger("impactLight", {
-        enableVibrateFallback: true,
-        ignoreAndroidSystemSettings: false,
-      });
-    } catch (error) {
-      console.error("Error writing document: ", error);
-    }
-  }
-
   async function deleteItem() {
     console.log("route.params.data.id", countdownId);
     // console.log('route.params.type', route.params.type)
@@ -124,16 +105,7 @@ function Details({ navigation, route }: Props) {
     if (game) {
       collection = "gameReleases";
     }
-    try {
-      await firestore()
-        .collection(collection)
-        .doc(countdownId)
-        .update({
-          subscribers: firestore.FieldValue.arrayRemove(user),
-        });
-    } catch (error) {
-      console.error("Error writing document: ", error);
-    }
+    removeSub(collection, countdownId, user);
   }
 
   return (

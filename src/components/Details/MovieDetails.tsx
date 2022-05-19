@@ -163,8 +163,6 @@ export function MovieDetails({ navigation, movieId }: Props) {
     (event) => (scrollOffset.value = event.contentOffset.y)
   );
 
-  const windowHeight = Dimensions.get("window").height;
-
   const headerStyle = useAnimatedStyle(() => {
     return {
       // opacity:

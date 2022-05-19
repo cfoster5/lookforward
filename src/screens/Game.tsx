@@ -18,32 +18,22 @@ import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
 import { removeSub } from "../helpers/helpers";
+import { FirestoreGame } from "../interfaces/firebase";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
 
 interface Props {
-  navigation:
-    | CompositeNavigationProp<
-        StackNavigationProp<Navigation.FindStackParamList, "Details">,
-        BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
-      >
-    | CompositeNavigationProp<
-        StackNavigationProp<Navigation.CountdownStackParamList, "Details">,
-        BottomTabNavigationProp<
-          Navigation.TabNavigationParamList,
-          "CountdownTab"
-        >
-      >;
-  route: RouteProp<
-    Navigation.FindStackParamList | Navigation.CountdownStackParamList,
-    "Details"
+  navigation: CompositeNavigationProp<
+    StackNavigationProp<Navigation.FindStackParamList, "Game">,
+    BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
   >;
+  route: RouteProp<Navigation.FindStackParamList, "Game">;
 }
 
 function Game({ navigation, route }: Props) {
   const { game } = route.params;
   const modalizeRef = useRef<Modalize>(null);
-  const [countdownId, setCountdownId] = useState();
+  const [countdownId, setCountdownId] = useState<FirestoreGame["documentID"]>();
   const { user } = useContext(TabStackContext);
   const { games } = useContext(SubContext);
 
@@ -51,7 +41,6 @@ function Game({ navigation, route }: Props) {
     navigation.setOptions({
       title: game.name,
       headerRight: () => (
-        // upcomingRelease() && (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           <Item
             title="search"
@@ -64,7 +53,6 @@ function Game({ navigation, route }: Props) {
           />
         </HeaderButtons>
       ),
-      // ),
     });
   }, [game, navigation, countdownId]);
 

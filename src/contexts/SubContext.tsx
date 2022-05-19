@@ -1,8 +1,11 @@
 import { createContext } from "react";
 
-import { FirestoreMovie } from "../interfaces/firebase";
+import { FirestoreGame, FirestoreMovie } from "../interfaces/firebase";
 
-const SubContext = createContext<{ movieSubs: FirestoreMovie[]; games: any }>({
+const SubContext = createContext<{
+  movieSubs: FirestoreMovie[];
+  games: FirestoreGame[];
+}>({
   movieSubs: [],
   games: [],
 });

@@ -29,7 +29,7 @@ import Trailer from "../Trailer";
 
 interface Props {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<Navigation.FindStackParamList, "Details">,
+    StackNavigationProp<Navigation.FindStackParamList, "Game">,
     BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
   >;
   game: IGDB.Game.Game;

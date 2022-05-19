@@ -8,6 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
+import { FirestoreMovie } from "../interfaces/firebase";
 import { Navigation } from "../interfaces/navigation";
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
@@ -15,7 +16,7 @@ import { ProfileStack } from "./ProfileStack";
 
 const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
 export function TabStack() {
-  const [movieSubs, setMovieSubs] = useState([]);
+  const [movieSubs, setMovieSubs] = useState<FirestoreMovie[]>([]);
   const [gameSubs, setGameSubs] = useState([]);
   const { user } = useContext(TabStackContext);
 

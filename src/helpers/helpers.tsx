@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import firestore from "@react-native-firebase/firestore";
 
+import { FirestoreMovie } from "../interfaces/firebase";
 import { IGDB } from "../interfaces/igdb";
 
 export const targetedProviders = [
@@ -41,7 +42,10 @@ export function convertReleasesToGames(
   return games;
 }
 
-export async function subToMovie(movieId: string, user: string) {
+export async function subToMovie(
+  movieId: FirestoreMovie["documentID"],
+  user: string
+) {
   try {
     await firestore()
       .collection("movies")

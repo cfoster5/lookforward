@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { Firebase } from "../interfaces/firebase";
+import { FirestoreMovie } from "../interfaces/firebase";
 import { TMDB } from "../interfaces/tmdb";
 
-export function useGetAllMovies(movieSubs: Firebase.Movie[]) {
-  // <TMDB.Movie.Details[]>
+export function useGetAllMovies(movieSubs: FirestoreMovie[]) {
   const [state, setState] = useState<{
     movies: TMDB.Movie.Details[];
     loading: boolean;
@@ -15,7 +14,7 @@ export function useGetAllMovies(movieSubs: Firebase.Movie[]) {
 
   useEffect(() => {
     async function getAllMovies() {
-      async function getMovie(movieId) {
+      async function getMovie(movieId: FirestoreMovie["documentID"]) {
         const tmdbResponse = await fetch(
           `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=credits,similar,videos,release_dates,keywords,recommendations`
         );

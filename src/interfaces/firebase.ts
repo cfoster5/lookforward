@@ -1,6 +1,5 @@
-export namespace Firebase {
-  export interface Movie {
-    documentID: string;
-    subscribers: string[];
-  }
+import { FirebaseFirestoreTypes } from "@react-native-firebase/firestore";
+
+export interface FirestoreMovie extends FirebaseFirestoreTypes.DocumentData {
+  documentID: string;
 }

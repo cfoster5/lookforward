@@ -1,4 +1,6 @@
 import { useEffect, useRef } from "react";
+import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import firestore from "@react-native-firebase/firestore";
 
 import { IGDB } from "../interfaces/igdb";
 
@@ -37,6 +39,41 @@ export function convertReleasesToGames(
     }
   });
   return games;
+}
+
+export async function subToMovie(movieId: string, user: string) {
+  try {
+    await firestore()
+      .collection("movies")
+      .doc(movieId)
+      .set(
+        { subscribers: firestore.FieldValue.arrayUnion(user) },
+        { merge: true }
+      );
+    ReactNativeHapticFeedback.trigger("impactLight", {
+      enableVibrateFallback: true,
+      ignoreAndroidSystemSettings: false,
+    });
+  } catch (error) {
+    console.error("Error writing document: ", error);
+  }
+}
+
+export async function removeSub(
+  collection: string,
+  countdownId?: string,
+  user: string
+) {
+  try {
+    await firestore()
+      .collection(collection)
+      .doc(countdownId)
+      .update({
+        subscribers: firestore.FieldValue.arrayRemove(user),
+      });
+  } catch (error) {
+    console.error("Error writing document: ", error);
+  }
 }
 
 // Hook

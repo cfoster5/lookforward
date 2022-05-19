@@ -17,6 +17,7 @@ import GameReleaseModal from "../components/GamePlatformPicker";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
+import { removeSub } from "../helpers/helpers";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
 
@@ -56,7 +57,9 @@ function Game({ navigation, route }: Props) {
             title="search"
             iconName={countdownId ? "checkmark-outline" : "add-outline"}
             onPress={() =>
-              !countdownId ? modalizeRef.current?.open() : deleteItem()
+              !countdownId
+                ? modalizeRef.current?.open()
+                : removeSub("gameReleases", countdownId, user)
             }
           />
         </HeaderButtons>
@@ -73,19 +76,6 @@ function Game({ navigation, route }: Props) {
 
     setCountdownId(documentID);
   }, [games]);
-
-  async function deleteItem() {
-    try {
-      await firestore()
-        .collection("gameReleases")
-        .doc(countdownId)
-        .update({
-          subscribers: firestore.FieldValue.arrayRemove(user),
-        });
-    } catch (error) {
-      console.error("Error writing document: ", error);
-    }
-  }
 
   return (
     <>

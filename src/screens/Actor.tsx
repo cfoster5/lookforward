@@ -49,7 +49,7 @@ interface Props {
 }
 
 function useGetPerson(personId: number) {
-  const [person, setPerson] = useState();
+  const [person, setPerson] = useState<TMDB.Person.Person>();
 
   useEffect(() => {
     async function getPerson() {

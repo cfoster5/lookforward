@@ -175,6 +175,111 @@ function MovieDiscover({ route, navigation }: any) {
     }
   }, [pageIndex]);
 
+  function ModalListWrapper({
+    text,
+    children,
+  }: {
+    text: string;
+    children: any;
+  }) {
+    return (
+      <>
+        <Text
+          style={{
+            ...iOSUIKit.bodyEmphasizedWhiteObject,
+            marginTop: 16,
+            marginHorizontal: 16,
+          }}
+        >
+          {text}
+        </Text>
+        {/* // Wrap FlatList in ScrollView with horizontal prop so that scrollEnabled within FlatList can be disabled */}
+        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          {children}
+        </ScrollView>
+      </>
+    );
+  }
+
+  function DiscoveryFilterModal() {
+    return (
+      <Modalize
+        ref={modalRef}
+        adjustToContentHeight={true}
+        childrenStyle={{
+          marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
+        }}
+        modalStyle={theme === "dark" ? { backgroundColor: "#121212" } : {}}
+      >
+        <ModalListWrapper text="Sort By">
+          <FlatList
+            scrollEnabled={false}
+            contentContainerStyle={{
+              alignSelf: "flex-start",
+              paddingLeft: 16,
+              paddingRight: 8,
+            }}
+            numColumns={Math.ceil(sortOptions.length / 2)}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={sortOptions}
+            renderItem={({ item }) => (
+              <ButtonMultiState
+                text={item.friendly}
+                selectedVal={sortMethod}
+                onPress={() => setSortMethod(item.actual)}
+                test={item.actual}
+                children={
+                  <Ionicons
+                    name={item.direction === "Up" ? "arrow-up" : "arrow-down"}
+                    color="white"
+                  />
+                }
+              />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </ModalListWrapper>
+        <ModalListWrapper text="Provider">
+          <FlatList
+            scrollEnabled={false}
+            contentContainerStyle={{
+              alignSelf: "flex-start",
+              paddingLeft: 16,
+              paddingRight: 8,
+            }}
+            numColumns={Math.ceil(targetedProviders.length / 3)}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={movieWatchProviders
+              .filter(
+                (provider) =>
+                  targetedProviders.indexOf(provider.provider_name) > -1
+              )
+              .filter(
+                (v, i, a) =>
+                  a.findIndex((t) => t.provider_name === v.provider_name) === i
+              )
+              .sort((a, b) =>
+                a.provider_name
+                  .toLowerCase()
+                  .localeCompare(b.provider_name.toLowerCase())
+              )}
+            renderItem={({ item }) => (
+              <ButtonMultiState
+                text={item.provider_name}
+                selectedVal={selectedMovieWatchProvider}
+                onPress={() => setSelectedMovieWatchProvider(item.provider_id)}
+                test={item.provider_id}
+              />
+            )}
+            keyExtractor={(item) => item.provider_id.toString()}
+          />
+        </ModalListWrapper>
+      </Modalize>
+    );
+  }
+
   return (
     <>
       {movies.length > 0 ? (
@@ -231,100 +336,7 @@ function MovieDiscover({ route, navigation }: any) {
           <ActivityIndicator size="large" />
         </View>
       )}
-      <Modalize
-        ref={modalRef}
-        adjustToContentHeight={true}
-        childrenStyle={{
-          marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
-        }}
-        modalStyle={theme === "dark" ? { backgroundColor: "#121212" } : {}}
-      >
-        <Text
-          style={{
-            ...iOSUIKit.bodyEmphasizedWhiteObject,
-            marginTop: 16,
-            marginHorizontal: 16,
-          }}
-        >
-          Sort by
-        </Text>
-        {/* Wrap FlatList in ScrollView with horizontal prop so that scrollEnabled within FlatList can be disabled  */}
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <FlatList
-            scrollEnabled={false}
-            contentContainerStyle={{
-              alignSelf: "flex-start",
-              paddingLeft: 16,
-              paddingRight: 8,
-            }}
-            numColumns={Math.ceil(sortOptions.length / 2)}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            data={sortOptions}
-            renderItem={({ item }) => (
-              <ButtonMultiState
-                text={item.friendly}
-                selectedVal={sortMethod}
-                onPress={() => setSortMethod(item.actual)}
-                test={item.actual}
-                children={
-                  <Ionicons
-                    name={item.direction === "Up" ? "arrow-up" : "arrow-down"}
-                    color="white"
-                  />
-                }
-              />
-            )}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </ScrollView>
-        <Text
-          style={{
-            ...iOSUIKit.bodyEmphasizedWhiteObject,
-            marginTop: 16,
-            marginHorizontal: 16,
-          }}
-        >
-          Provider
-        </Text>
-        {/* Wrap FlatList in ScrollView with horizontal prop so that scrollEnabled within FlatList can be disabled  */}
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          <FlatList
-            scrollEnabled={false}
-            contentContainerStyle={{
-              alignSelf: "flex-start",
-              paddingLeft: 16,
-              paddingRight: 8,
-            }}
-            numColumns={Math.ceil(targetedProviders.length / 3)}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            data={movieWatchProviders
-              .filter(
-                (provider) =>
-                  targetedProviders.indexOf(provider.provider_name) > -1
-              )
-              .filter(
-                (v, i, a) =>
-                  a.findIndex((t) => t.provider_name === v.provider_name) === i
-              )
-              .sort((a, b) =>
-                a.provider_name
-                  .toLowerCase()
-                  .localeCompare(b.provider_name.toLowerCase())
-              )}
-            renderItem={({ item }) => (
-              <ButtonMultiState
-                text={item.provider_name}
-                selectedVal={selectedMovieWatchProvider}
-                onPress={() => setSelectedMovieWatchProvider(item.provider_id)}
-                test={item.provider_id}
-              />
-            )}
-            keyExtractor={(item) => item.provider_id.toString()}
-          />
-        </ScrollView>
-      </Modalize>
+      <DiscoveryFilterModal />
     </>
   );
 }

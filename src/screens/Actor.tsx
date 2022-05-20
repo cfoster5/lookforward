@@ -33,11 +33,11 @@ interface Props {
   //   | StackNavigationProp<Navigation.CountdownStackParamList, "Actor">;
   navigation:
     | CompositeNavigationProp<
-        StackNavigationProp<Navigation.FindStackParamList, "Find" | "Details">,
+        StackNavigationProp<Navigation.FindStackParamList, "Find" | "Movie">,
         BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
       >
     | CompositeNavigationProp<
-        StackNavigationProp<Navigation.CountdownStackParamList, "Details">,
+        StackNavigationProp<Navigation.CountdownStackParamList, "Movie">,
         BottomTabNavigationProp<
           Navigation.TabNavigationParamList,
           "CountdownTab"

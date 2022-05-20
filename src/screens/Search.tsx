@@ -102,7 +102,7 @@ function Search({ navigation, route }: Props) {
   useScrollToTop(scrollRef);
   const { theme } = useContext(TabStackContext);
   const modalizeRef = useRef<Modalize>(null);
-  const [game, setGame] = useState(null);
+  const [game, setGame] = useState();
   const tabBarheight = useBottomTabBarHeight();
   const filterModalRef = useRef<Modalize>(null);
   const [gameReleaseDates, setGameReleaseDates] = useState<

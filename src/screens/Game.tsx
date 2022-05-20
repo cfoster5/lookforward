@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import { Modalize } from "react-native-modalize";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import firestore from "@react-native-firebase/firestore";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";

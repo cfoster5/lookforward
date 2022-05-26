@@ -245,7 +245,7 @@ function Search({ navigation, route }: Props) {
         onCancel={Platform.OS === "ios" ? reinitialize : () => undefined}
       />
 
-      {!isSearchTriggered && categoryIndex === 0 && (
+      {((!isSearchTriggered && categoryIndex === 0) || categoryIndex === 1) && (
         <View
           style={{
             // flex: 1,
@@ -256,17 +256,22 @@ function Search({ navigation, route }: Props) {
             justifyContent: "space-between",
           }}
         >
-          <ListLabel text={option} style={{ marginBottom: 0 }} />
-          <Pressable onPress={() => filterModalRef.current?.open()}>
-            <Text
-              style={{
-                ...iOSUIKit.bodyObject,
-                color: iOSColors.blue,
-              }}
-            >
-              More
-            </Text>
-          </Pressable>
+          <ListLabel
+            text={categoryIndex === 0 ? option : "Coming Soon"}
+            style={{ marginBottom: 0 }}
+          />
+          {categoryIndex === 0 && (
+            <Pressable onPress={() => filterModalRef.current?.open()}>
+              <Text
+                style={{
+                  ...iOSUIKit.bodyObject,
+                  color: iOSColors.blue,
+                }}
+              >
+                More
+              </Text>
+            </Pressable>
+          )}
         </View>
       )}
 
@@ -386,9 +391,9 @@ function Search({ navigation, route }: Props) {
               keyExtractor={(item, index) => item.id.toString()}
               initialNumToRender={6}
               scrollIndicatorInsets={scrollIndicatorInsets}
-              ListHeaderComponent={
-                <ListLabel text="Coming Soon" style={{ marginBottom: 16 }} />
-              }
+              // ListHeaderComponent={
+              //   <ListLabel text="Coming Soon" style={{ marginBottom: 16 }} />
+              // }
             />
             <GameReleaseModal modalizeRef={modalizeRef} game={game} />
           </GameContext.Provider>

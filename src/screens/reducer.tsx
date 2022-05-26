@@ -7,27 +7,22 @@ export function reducer(
     type: string;
     categoryIndex?: number;
     searchValue?: string;
-    triggeredSearch?: boolean;
-    pageIndex?: number;
+    isSearchTriggered?: boolean;
+    page?: number;
     initGames?: IGDB.Game.Game[];
     games?: IGDB.Game.Game[];
-    initMovies?: TMDB.BaseMovie[];
-    movies?: (
-      | TMDB.BaseMovie
-      | TMDB.Search.MultiSearchResult
-      | TMDB.Trending.Movie
-    )[];
+    option?: "Coming Soon" | "Now Playing" | "Popular" | "Trending";
   }
 ) {
   switch (action.type) {
     case "set-categoryIndex":
-      // When categoryIndex is changed reset searchValue, triggeredSearch, movies and games to initial values
+      // When categoryIndex is changed reset searchValue, isSearchTriggered, movies and games to initial values
       return {
         ...state,
         categoryIndex: action.categoryIndex,
         searchValue: "",
-        triggeredSearch: false,
-        movies: state.initMovies,
+        isSearchTriggered: false,
+        page: 1,
         games: state.initGames,
       };
     case "set-searchValue":
@@ -35,27 +30,16 @@ export function reducer(
         ...state,
         searchValue: action.searchValue,
       };
-    case "set-triggeredSearch":
+    case "set-isSearchTriggered":
       return {
         ...state,
-        triggeredSearch: action.triggeredSearch,
-        pageIndex: 1,
+        isSearchTriggered: action.isSearchTriggered,
+        page: 1,
       };
-    case "set-pageIndex":
+    case "set-page":
       return {
         ...state,
-        pageIndex: action.pageIndex,
-      };
-    case "set-initMovies":
-      return {
-        ...state,
-        initMovies: action.initMovies,
-        movies: action.initMovies,
-      };
-    case "set-movies":
-      return {
-        ...state,
-        movies: action.movies,
+        page: action.page,
       };
     case "set-initGames":
       return {
@@ -67,6 +51,13 @@ export function reducer(
       return {
         ...state,
         games: action.games,
+      };
+    case "set-option":
+      return {
+        ...state,
+        option: action.option,
+        page: 1,
+        isSearchTriggered: false,
       };
     default:
       return state;

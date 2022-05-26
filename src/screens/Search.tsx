@@ -6,7 +6,6 @@ import React, {
   useState,
 } from "react";
 import {
-  ActivityIndicator,
   FlatList,
   Platform,
   Pressable,
@@ -31,6 +30,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import CategoryControl from "../components/CategoryControl";
 import GameReleaseModal from "../components/GamePlatformPicker";
+import { LoadingScreen } from "../components/LoadingScreen";
 import MovieSearchModal from "../components/MovieSearchModal";
 import { GamePoster } from "../components/Posters/GamePoster";
 import { MoviePoster } from "../components/Posters/MoviePoster";
@@ -450,9 +450,7 @@ function Search({ navigation, route }: Props) {
             <GameReleaseModal modalizeRef={modalizeRef} game={game} />
           </GameContext.Provider>
         ) : (
-          <View style={{ flex: 1, justifyContent: "center" }}>
-            <ActivityIndicator size="large" />
-          </View>
+          <LoadingScreen />
         ))}
     </>
   );

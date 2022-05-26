@@ -5,14 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Platform,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, Platform, Pressable, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { iOSUIKit } from "react-native-typography";
@@ -23,6 +16,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 
 import ButtonMultiState from "../components/ButtonMultiState";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
+import { LoadingScreen } from "../components/LoadingScreen";
 import { MoviePoster } from "../components/Posters/MoviePoster";
 import TabStackContext from "../contexts/TabStackContext";
 import { targetedProviders } from "../helpers/helpers";
@@ -332,9 +326,7 @@ function MovieDiscover({ route, navigation }: any) {
           // }
         />
       ) : (
-        <View style={{ flex: 1, justifyContent: "center" }}>
-          <ActivityIndicator size="large" />
-        </View>
+        <LoadingScreen />
       )}
       <DiscoveryFilterModal />
     </>

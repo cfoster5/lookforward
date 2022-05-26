@@ -1,6 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-  ActivityIndicator,
   Dimensions,
   Platform,
   Pressable,
@@ -21,6 +20,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
 import ButtonMultiState from "../components/ButtonMultiState";
+import { LoadingScreen } from "../components/LoadingScreen";
 import { MoviePoster } from "../components/Posters/MoviePoster";
 import { Text as ThemedText } from "../components/Themed";
 import { reusableStyles } from "../helpers/styles";
@@ -245,9 +245,7 @@ function Actor({ route, navigation }: Props) {
       </View>
     </ScrollView>
   ) : (
-    <View style={{ flex: 1, justifyContent: "center" }}>
-      <ActivityIndicator size="large" />
-    </View>
+    <LoadingScreen />
   );
 }
 

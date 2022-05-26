@@ -1,16 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Platform,
-  Pressable,
-  View,
-} from "react-native";
+import { FlatList, Platform, Pressable, View } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
 
 import GameReleaseModal from "../components/GamePlatformPicker";
+import { LoadingScreen } from "../components/LoadingScreen";
 import { GamePoster } from "../components/Posters/GamePoster";
 import GameContext from "../contexts/GamePlatformPickerContexts";
 import { convertReleasesToGames } from "../helpers/helpers";
@@ -100,9 +95,7 @@ function GameDiscover({ route, navigation }: any) {
       <GameReleaseModal modalizeRef={modalizeRef} game={game} />
     </GameContext.Provider>
   ) : (
-    <View style={{ flex: 1, justifyContent: "center" }}>
-      <ActivityIndicator size="large" />
-    </View>
+    <LoadingScreen />
   );
 }
 

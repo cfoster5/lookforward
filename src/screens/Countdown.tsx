@@ -1,11 +1,5 @@
 import React, { useContext, useLayoutEffect, useReducer, useRef } from "react";
-import {
-  ActivityIndicator,
-  Platform,
-  SectionList,
-  Text,
-  View,
-} from "react-native";
+import { Platform, SectionList, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import firestore from "@react-native-firebase/firestore";
@@ -23,6 +17,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import CountdownItem from "../components/CountdownItem";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
+import { LoadingScreen } from "../components/LoadingScreen";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
 import { useGetAllMovies } from "../hooks/useGetAllMovies";
@@ -270,9 +265,7 @@ function Countdown({ route, navigation }: Props) {
       ref={scrollRef}
     />
   ) : (
-    <View style={{ flex: 1, justifyContent: "center" }}>
-      <ActivityIndicator size="large" />
-    </View>
+    <LoadingScreen />
   );
 }
 

@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Platform,
   Pressable,
@@ -24,6 +23,7 @@ import {
   purchaseItemAsync,
 } from "expo-in-app-purchases";
 
+import { LoadingScreen } from "../components/LoadingScreen";
 import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { useFirstRender } from "../hooks/useFirstRender";
@@ -239,9 +239,7 @@ function Profile({ route, navigation }: ProfileScreenProps) {
             );
           })
         ) : (
-          <View style={{ flex: 1, justifyContent: "center" }}>
-            <ActivityIndicator size="large" />
-          </View>
+          <LoadingScreen />
         )}
       </Modalize>
     );

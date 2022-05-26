@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  ActivityIndicator,
   Dimensions,
   FlatList,
   ImageBackground,
@@ -35,6 +34,7 @@ import { TMDB } from "../../interfaces/tmdb";
 import { BlueBullet } from "../BlueBullet";
 import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
+import { LoadingScreen } from "../LoadingScreen";
 import Person from "../Person";
 import { MoviePoster } from "../Posters/MoviePoster";
 import { Text as ThemedText } from "../Themed";
@@ -398,9 +398,7 @@ export function MovieDetails({ navigation, movieId }: Props) {
       </View>
     </Animated.ScrollView>
   ) : (
-    <View style={{ flex: 1, justifyContent: "center" }}>
-      <ActivityIndicator size="large" />
-    </View>
+    <LoadingScreen />
   );
 }
 

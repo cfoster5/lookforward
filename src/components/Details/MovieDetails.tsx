@@ -30,7 +30,12 @@ import { DateTime } from "luxon";
 import { reusableStyles } from "../../helpers/styles";
 import { useGetMovie } from "../../hooks/useGetMovie";
 import { Navigation } from "../../interfaces/navigation";
-import { TMDB } from "../../interfaces/tmdb";
+import {
+  Genre,
+  Keywords,
+  ProductionCompany,
+  Recommendation,
+} from "../../interfaces/tmdb";
 import { BlueBullet } from "../BlueBullet";
 import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
@@ -66,11 +71,11 @@ function DiscoverButton({
   keyword,
 }: {
   navigation: any;
-  genre?: TMDB.Genre;
-  company?: TMDB.ProductionCompany;
-  keyword?: TMDB.Keyword;
+  genre?: Genre;
+  company?: ProductionCompany;
+  keyword?: Keywords;
 }) {
-  let obj: TMDB.Genre | TMDB.ProductionCompany | TMDB.Keyword = {
+  let obj: Genre | ProductionCompany | Keywords = {
     id: 0,
     name: "",
   };
@@ -99,7 +104,7 @@ function SlidingMovie({
   movie,
 }: {
   navigation: any;
-  movie: TMDB.BaseMovie;
+  movie: Recommendation;
 }) {
   return (
     <Pressable
@@ -379,7 +384,7 @@ export function MovieDetails({ navigation, movieId }: Props) {
                 <DiscoverListLabel text="Recommended" />
                 <FlatList
                   keyExtractor={(item) => item.id.toString()}
-                  data={movieDetails.recommendations.results}
+                  data={movieDetails?.recommendations.results}
                   renderItem={({ item }) => (
                     <SlidingMovie navigation={navigation} movie={item} />
                   )}

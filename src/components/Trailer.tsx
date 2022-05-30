@@ -4,14 +4,14 @@ import { iOSUIKit } from "react-native-typography";
 
 import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
-import { TMDB } from "../interfaces/tmdb";
+import { Video } from "../interfaces/tmdb";
 import { Text } from "./Themed";
 
 function Trailer({
   video,
   index,
 }: {
-  video: TMDB.Movie.VideoResult | IGDB.Game.Video;
+  video: Video | IGDB.Game.Video;
   index: number;
 }) {
   const { theme } = useContext(TabStackContext);
@@ -21,10 +21,8 @@ function Trailer({
       key={index}
       onPress={() =>
         Linking.openURL(
-          (video as TMDB.Movie.VideoResult).key
-            ? `https://www.youtube.com/watch?v=${
-                (video as TMDB.Movie.VideoResult).key
-              }`
+          (video as Video).key
+            ? `https://www.youtube.com/watch?v=${(video as Video).key}`
             : `https://www.youtube.com/watch?v=${
                 (video as IGDB.Game.Video).video_id
               }`
@@ -50,9 +48,9 @@ function Trailer({
             borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
           }}
           source={{
-            uri: (video as TMDB.Movie.VideoResult).key
+            uri: (video as Video).key
               ? `https://img.youtube.com/vi/${
-                  (video as TMDB.Movie.VideoResult).key
+                  (video as Video).key
                 }/mqdefault.jpg`
               : `https://img.youtube.com/vi/${
                   (video as IGDB.Game.Video).video_id

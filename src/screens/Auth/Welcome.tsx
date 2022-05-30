@@ -14,7 +14,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { useGetHypedGames } from "../../hooks/useGetHypedGames";
 import { useGetTrendingMovies } from "../../hooks/useGetTrendingMovies";
 import { IGDB } from "../../interfaces/igdb";
-import { TrendingMovie } from "../../interfaces/tmdb";
+import { Movie } from "../../interfaces/tmdb";
 import { AuthStackParamList } from "../../navigation/AuthStack";
 
 interface Props {
@@ -23,7 +23,7 @@ interface Props {
 }
 
 function Welcome({ navigation }: Props) {
-  const trendingMovies: TrendingMovie[] = useGetTrendingMovies().slice(0, 10);
+  const trendingMovies = useGetTrendingMovies().slice(0, 10);
   const hypedGames: IGDB.Game.Game[] = useGetHypedGames();
   const ref = useRef<Carousel<any>>(null);
   const width = 200;
@@ -33,7 +33,7 @@ function Welcome({ navigation }: Props) {
     item,
     index,
   }: {
-    item: TrendingMovie | IGDB.Game.Game;
+    item: Movie | IGDB.Game.Game;
     index: number;
   }) {
     return (
@@ -41,9 +41,7 @@ function Welcome({ navigation }: Props) {
         source={{
           uri:
             index % 2
-              ? `https://image.tmdb.org/t/p/w500${
-                  (item as TrendingMovie).poster_path
-                }`
+              ? `https://image.tmdb.org/t/p/w500${(item as Movie).poster_path}`
               : `https:${(item as IGDB.Game.Game)?.cover?.url.replace(
                   "thumb",
                   "cover_big_2x"

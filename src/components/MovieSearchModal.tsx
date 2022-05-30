@@ -29,7 +29,9 @@ export default function MovieSearchModal({
   >;
   filterModalRef: React.RefObject<Modalize>;
   selectedOption: string;
-  setSelectedOption: (option: string) => void;
+  setSelectedOption: (
+    option: "Coming Soon" | "Now Playing" | "Popular" | "Trending"
+  ) => void;
 }) {
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();

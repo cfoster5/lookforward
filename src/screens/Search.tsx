@@ -27,6 +27,7 @@ import {
   useScrollToTop,
 } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { DateTime } from "luxon";
 
 import CategoryControl from "../components/CategoryControl";
 import GameReleaseModal from "../components/GamePlatformPicker";
@@ -39,18 +40,13 @@ import { Text as ThemedText } from "../components/Themed";
 import GameContext from "../contexts/GamePlatformPickerContexts";
 import TabStackContext from "../contexts/TabStackContext";
 import { convertReleasesToGames } from "../helpers/helpers";
-import { getUpcomingGameReleases, searchGames } from "../helpers/igdbRequests";
-import {
-  getNowPlayingMovies,
-  getPopularMovies,
-  getTrendingMovies,
-  getUpcomingMovies,
-  searchMovies,
-} from "../helpers/tmdbRequests";
+import { searchGames } from "../helpers/igdbRequests";
+import { useGetMovies } from "../hooks/useGetMovies";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
 import { TMDB } from "../interfaces/tmdb";
 import { reducer } from "./reducer";
+import { useGetUpcomingGameReleases } from "./useGetUpcomingGameReleases";
 
 interface Props {
   navigation: CompositeNavigationProp<
@@ -79,23 +75,21 @@ function Search({ navigation, route }: Props) {
     {
       categoryIndex,
       searchValue,
-      triggeredSearch,
-      pageIndex,
-      initMovies,
-      movies,
+      isSearchTriggered,
+      page,
       initGames,
       games,
+      option,
     },
     dispatch,
   ] = useReducer(reducer, {
     categoryIndex: 0,
     searchValue: "",
-    triggeredSearch: false,
-    pageIndex: 1,
-    initMovies: [],
-    movies: [],
+    isSearchTriggered: false,
+    page: 1,
     initGames: [],
     games: [],
+    option: "Coming Soon",
   });
 
   const scrollRef = useRef<FlatList>(null);
@@ -105,10 +99,13 @@ function Search({ navigation, route }: Props) {
   const [game, setGame] = useState();
   const tabBarheight = useBottomTabBarHeight();
   const filterModalRef = useRef<Modalize>(null);
-  const [gameReleaseDates, setGameReleaseDates] = useState<
-    IGDB.ReleaseDate.ReleaseDate[]
-  >([]);
-  const [selectedOption, setSelectedOption] = useState("Coming Soon");
+  const gameReleaseDates = useGetUpcomingGameReleases();
+  const { movies, loading } = useGetMovies(
+    option,
+    page,
+    searchValue,
+    isSearchTriggered
+  );
 
   const styles = StyleSheet.create({
     flatlistContentContainer: {
@@ -122,20 +119,6 @@ function Search({ navigation, route }: Props) {
   });
 
   useEffect(() => {
-    let isMounted = true;
-
-    async function getGameReleaseDates() {
-      const releaseDates = await getUpcomingGameReleases();
-      setGameReleaseDates(releaseDates);
-    }
-    getGameReleaseDates();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  useEffect(() => {
     const games = convertReleasesToGames(gameReleaseDates);
     dispatch({ type: "set-initGames", initGames: games });
   }, [gameReleaseDates]);
@@ -145,54 +128,10 @@ function Search({ navigation, route }: Props) {
     modalizeRef.current?.open();
   }, [game]);
 
-  async function getMovieSearch() {
-    let json = await searchMovies(searchValue);
-    dispatch({
-      type: "set-movies",
-      movies: json.results.sort((a, b) => b.popularity - a.popularity),
-    });
-  }
-
-  async function getMovies(method: Promise<any>) {
-    const json = await method;
-    dispatch({
-      type: "set-initMovies",
-      initMovies: [...initMovies, ...json.results],
-    });
-  }
-
-  useEffect(() => {
-    async function getData() {
-      if (pageIndex > 1 && triggeredSearch) {
-        const json = await searchMovies(searchValue, pageIndex);
-        dispatch({
-          type: "set-movies",
-          movies: [...movies, ...json.results],
-        });
-      }
-      if (pageIndex > 1 && !triggeredSearch) {
-        if (selectedOption === "Coming Soon") {
-          getMovies(getUpcomingMovies(pageIndex));
-        }
-        if (selectedOption === "Now Playing") {
-          getMovies(getNowPlayingMovies(pageIndex));
-        }
-        if (selectedOption === "Popular") {
-          getMovies(getPopularMovies(pageIndex));
-        }
-        if (selectedOption === "Trending") {
-          getMovies(getTrendingMovies(pageIndex));
-        }
-      }
-    }
-    getData();
-  }, [pageIndex]);
-
   function reinitialize() {
     console.log("reinit");
     if (categoryIndex === 0) {
-      dispatch({ type: "set-movies", movies: initMovies });
-      dispatch({ type: "set-triggeredSearch", triggeredSearch: false });
+      dispatch({ type: "set-isSearchTriggered", isSearchTriggered: false });
     }
     if (categoryIndex === 1) {
       dispatch({ type: "set-games", games: initGames });
@@ -200,35 +139,8 @@ function Search({ navigation, route }: Props) {
   }
 
   useEffect(() => {
-    dispatch({ type: "set-pageIndex", pageIndex: 1 });
-    dispatch({
-      type: "set-initMovies",
-      initMovies: [],
-    });
     filterModalRef.current?.close();
-    async function getData() {
-      if (selectedOption === "Coming Soon") {
-        const json = await getUpcomingMovies();
-        dispatch({ type: "set-initMovies", initMovies: json.results });
-      }
-      if (selectedOption === "Now Playing") {
-        const json = await getNowPlayingMovies();
-        dispatch({ type: "set-initMovies", initMovies: json.results });
-      }
-      if (selectedOption === "Popular") {
-        const json = await getPopularMovies();
-        dispatch({ type: "set-initMovies", initMovies: json.results });
-      }
-      // if (selectedOption === "Top Rated") {
-      //   getTopRatedMovies().then(json => { setInitMovies(json); setMovies(json) });
-      // }
-      if (selectedOption === "Trending") {
-        const json = await getTrendingMovies();
-        dispatch({ type: "set-initMovies", initMovies: json.results });
-      }
-    }
-    getData();
-  }, [selectedOption]);
+  }, [option]);
 
   const scrollIndicatorInsets =
     Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined;
@@ -236,11 +148,9 @@ function Search({ navigation, route }: Props) {
   async function handleSearch() {
     if (searchValue && categoryIndex === 0) {
       dispatch({
-        type: "set-triggeredSearch",
-        triggeredSearch: true,
+        type: "set-isSearchTriggered",
+        isSearchTriggered: true,
       });
-      dispatch({ type: "set-movies", movies: [] });
-      getMovieSearch();
     }
     if (searchValue && categoryIndex === 1) {
       dispatch({ type: "set-games", games: [] });
@@ -248,6 +158,24 @@ function Search({ navigation, route }: Props) {
         type: "set-games",
         games: await searchGames(searchValue),
       });
+    }
+  }
+
+  function filteredMovies() {
+    if (isSearchTriggered) {
+      return movies.filter((movie) => movie.media_type === "movie");
+    } else {
+      if (option == "Coming Soon") {
+        return movies?.filter((movie) => {
+          return movie.release_date
+            ? DateTime.fromFormat(movie?.release_date, "yyyy-MM-dd") >=
+                DateTime.now()
+            : null;
+        });
+        // return movies;
+      } else {
+        return movies;
+      }
     }
   }
 
@@ -259,7 +187,6 @@ function Search({ navigation, route }: Props) {
         <CategoryControl
           buttons={["Movies", "Games"]}
           categoryIndex={categoryIndex}
-          // handleCategoryChange={(index) => setCategoryIndex(index)}
           handleCategoryChange={(index) =>
             dispatch({ type: "set-categoryIndex", categoryIndex: index })
           }
@@ -320,16 +247,42 @@ function Search({ navigation, route }: Props) {
         onCancel={Platform.OS === "ios" ? reinitialize : () => undefined}
       />
 
+      {((!isSearchTriggered && categoryIndex === 0) || categoryIndex === 1) && (
+        <View
+          style={{
+            // flex: 1,
+            marginHorizontal: 16,
+            marginBottom: 16,
+            flexDirection: "row",
+            flexWrap: "nowrap",
+            justifyContent: "space-between",
+          }}
+        >
+          <ListLabel
+            text={categoryIndex === 0 ? option : "Coming Soon"}
+            style={{ marginBottom: 0 }}
+          />
+          {categoryIndex === 0 && (
+            <Pressable onPress={() => filterModalRef.current?.open()}>
+              <Text
+                style={{
+                  ...iOSUIKit.bodyObject,
+                  color: iOSColors.blue,
+                }}
+              >
+                More
+              </Text>
+            </Pressable>
+          )}
+        </View>
+      )}
+
       {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}
       {categoryIndex === 0 && (
         <>
-          {movies.length > 0 ? (
+          {!loading ? (
             <FlatList
-              data={
-                triggeredSearch
-                  ? movies.filter((movie) => movie.media_type === "movie")
-                  : initMovies
-              }
+              data={filteredMovies()}
               renderItem={({ item }) => (
                 <Pressable
                   onPress={() => navigation.push("Movie", { movie: item })}
@@ -345,70 +298,44 @@ function Search({ navigation, route }: Props) {
               initialNumToRender={6}
               scrollIndicatorInsets={scrollIndicatorInsets}
               onEndReached={({ distanceFromEnd }) =>
-                dispatch({ type: "set-pageIndex", pageIndex: pageIndex + 1 })
+                dispatch({ type: "set-page", page: page + 1 })
               }
               onEndReachedThreshold={4}
               ListHeaderComponent={
-                triggeredSearch ? (
-                  <>
-                    {(movies as TMDB.Search.MultiSearchResult[]).filter(
-                      (movie) => movie.media_type === "person"
-                    ).length > 0 && (
-                      <>
-                        <ListLabel text="People" />
-                        <FlatList
-                          keyExtractor={(item) => item.id.toString()}
-                          data={movies.filter(
-                            (movie) => movie.media_type === "person"
-                          )}
-                          renderItem={(person) => (
-                            <SearchPerson
-                              navigation={navigation}
-                              person={person.item}
-                            />
-                          )}
-                          horizontal={true}
-                          contentContainerStyle={{
-                            marginBottom: 16,
-                            paddingRight: 16,
-                          }}
-                          style={{
-                            marginHorizontal: -16,
-                            paddingHorizontal: 16,
-                          }}
-                          showsHorizontalScrollIndicator={false}
-                        />
-                      </>
-                    )}
-                    {movies.filter((movie) => movie.media_type === "movie")
-                      .length > 0 && <ListLabel text="Movies" />}
-                  </>
-                ) : (
-                  <View
-                    style={{
-                      flex: 1,
-                      marginBottom: 16,
-                      flexDirection: "row",
-                      flexWrap: "nowrap",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <ListLabel
-                      text={selectedOption}
-                      style={{ marginBottom: 0 }}
-                    />
-                    <Pressable onPress={() => filterModalRef.current?.open()}>
-                      <Text
-                        style={{
-                          ...iOSUIKit.bodyObject,
-                          color: iOSColors.blue,
+                // isSearchTriggered ? (
+                <>
+                  {(movies as TMDB.Search.MultiSearchResult[]).filter(
+                    (movie) => movie.media_type === "person"
+                  ).length > 0 && (
+                    <>
+                      <ListLabel text="People" />
+                      <FlatList
+                        keyExtractor={(item) => item.id.toString()}
+                        data={movies.filter(
+                          (movie) => movie.media_type === "person"
+                        )}
+                        renderItem={(person) => (
+                          <SearchPerson
+                            navigation={navigation}
+                            person={person.item}
+                          />
+                        )}
+                        horizontal={true}
+                        contentContainerStyle={{
+                          marginBottom: 16,
+                          paddingRight: 16,
                         }}
-                      >
-                        More
-                      </Text>
-                    </Pressable>
-                  </View>
-                )
+                        style={{
+                          marginHorizontal: -16,
+                          paddingHorizontal: 16,
+                        }}
+                        showsHorizontalScrollIndicator={false}
+                      />
+                    </>
+                  )}
+                  {movies.filter((movie) => movie.media_type === "movie")
+                    .length > 0 && <ListLabel text="Movies" />}
+                </>
               }
             />
           ) : (
@@ -417,8 +344,10 @@ function Search({ navigation, route }: Props) {
           <MovieSearchModal
             navigation={navigation}
             filterModalRef={filterModalRef}
-            selectedOption={selectedOption}
-            setSelectedOption={setSelectedOption}
+            selectedOption={option}
+            setSelectedOption={(option) =>
+              dispatch({ type: "set-option", option: option })
+            }
           />
         </>
       )}
@@ -441,9 +370,6 @@ function Search({ navigation, route }: Props) {
               keyExtractor={(item, index) => item.id.toString()}
               initialNumToRender={6}
               scrollIndicatorInsets={scrollIndicatorInsets}
-              ListHeaderComponent={
-                <ListLabel text="Coming Soon" style={{ marginBottom: 16 }} />
-              }
             />
             <GameReleaseModal modalizeRef={modalizeRef} game={game} />
           </GameContext.Provider>

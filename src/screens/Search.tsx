@@ -27,6 +27,7 @@ import {
   useScrollToTop,
 } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { DateTime } from "luxon";
 
 import CategoryControl from "../components/CategoryControl";
 import GameReleaseModal from "../components/GamePlatformPicker";
@@ -165,12 +166,13 @@ function Search({ navigation, route }: Props) {
       return movies.filter((movie) => movie.media_type === "movie");
     } else {
       if (option == "Coming Soon") {
-        // return movies.filter(
-        //   (movie) =>
-        //     DateTime.fromFormat(movie.release_date, "yyyy-MM-dd") >=
-        //     DateTime.now()
-        // );
-        return movies;
+        return movies?.filter((movie) => {
+          return movie.release_date
+            ? DateTime.fromFormat(movie?.release_date, "yyyy-MM-dd") >=
+                DateTime.now()
+            : null;
+        });
+        // return movies;
       } else {
         return movies;
       }
@@ -334,29 +336,6 @@ function Search({ navigation, route }: Props) {
                   {movies.filter((movie) => movie.media_type === "movie")
                     .length > 0 && <ListLabel text="Movies" />}
                 </>
-                // ) : (
-                //   <View
-                //     style={{
-                //       flex: 1,
-                //       marginBottom: 16,
-                //       flexDirection: "row",
-                //       flexWrap: "nowrap",
-                //       justifyContent: "space-between",
-                //     }}
-                //   >
-                //     <ListLabel text={option} style={{ marginBottom: 0 }} />
-                //     <Pressable onPress={() => filterModalRef.current?.open()}>
-                //       <Text
-                //         style={{
-                //           ...iOSUIKit.bodyObject,
-                //           color: iOSColors.blue,
-                //         }}
-                //       >
-                //         More
-                //       </Text>
-                //     </Pressable>
-                //   </View>
-                // )
               }
             />
           ) : (
@@ -391,9 +370,6 @@ function Search({ navigation, route }: Props) {
               keyExtractor={(item, index) => item.id.toString()}
               initialNumToRender={6}
               scrollIndicatorInsets={scrollIndicatorInsets}
-              // ListHeaderComponent={
-              //   <ListLabel text="Coming Soon" style={{ marginBottom: 16 }} />
-              // }
             />
             <GameReleaseModal modalizeRef={modalizeRef} game={game} />
           </GameContext.Provider>

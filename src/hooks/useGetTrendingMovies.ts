@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
 import { TmdbKey } from "../constants/ApiKeys";
+import { Movie } from "../interfaces/tmdb";
 
 export function useGetTrendingMovies(pageIndex?: number) {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
     async function getTrendingMovies() {

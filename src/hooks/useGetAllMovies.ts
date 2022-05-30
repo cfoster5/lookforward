@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 
 import { FirestoreMovie } from "../interfaces/firebase";
-import { TMDB } from "../interfaces/tmdb";
+import { MovieDetails } from "../interfaces/tmdb/movies";
+import { ExtendedMovie } from "../interfaces/trakt/index";
+
+interface MyInterface extends MovieDetails {
+  traktReleaseDate: ExtendedMovie["released"];
+  documentID: FirestoreMovie["documentID"];
+}
 
 export function useGetAllMovies(movieSubs: FirestoreMovie[]) {
   const [state, setState] = useState<{
-    movies: TMDB.Movie.Details[];
+    movies: MyInterface[];
     loading: boolean;
   }>({
     movies: [],
@@ -15,11 +21,13 @@ export function useGetAllMovies(movieSubs: FirestoreMovie[]) {
   useEffect(() => {
     async function getAllMovies() {
       async function getMovie(movieId: FirestoreMovie["documentID"]) {
+        // Get imdb_id based on tmdb_id
         const tmdbResponse = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=credits,similar,videos,release_dates,keywords,recommendations`
+          `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US`
         );
-        const tmdbJson = await tmdbResponse.json();
+        const tmdbJson: MovieDetails = await tmdbResponse.json();
 
+        // Get release date from trakt based on imdb_id
         const traktResponse = await fetch(
           `https://api.trakt.tv/movies/${tmdbJson.imdb_id}?extended=full`,
           {
@@ -29,7 +37,7 @@ export function useGetAllMovies(movieSubs: FirestoreMovie[]) {
             },
           }
         );
-        const traktJson = await traktResponse.json();
+        const traktJson: ExtendedMovie = await traktResponse.json();
 
         return {
           ...tmdbJson,

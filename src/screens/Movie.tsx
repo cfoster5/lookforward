@@ -67,11 +67,11 @@ function Movie({ navigation, route }: Props) {
   }, [movieSubs, movie]);
 
   return (
-    <AnimatedBackground
-      uri={movie.backdrop_path ? movie.backdrop_path : movie.poster_path}
-    >
-      <MovieDetails navigation={navigation} movieId={movie.id} />
-    </AnimatedBackground>
+    // <AnimatedBackground
+    //   uri={movie.backdrop_path ? movie.backdrop_path : movie.poster_path}
+    // >
+    <MovieDetails navigation={navigation} movieId={movie.id} />
+    // </AnimatedBackground>
   );
 }
 

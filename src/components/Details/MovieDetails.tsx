@@ -192,16 +192,9 @@ export function MovieDetails({ navigation, movieId }: Props) {
           }}
         >
           <LinearGradient
-            colors={[
-              // "rgba(0, 0, 0, .5)",
-              // "rgba(0, 0, 0, 0)",
-              "rgba(0, 0, 0, 0)",
-              "rgba(0, 0, 0, 1)",
-            ]}
-            // start={{ x: 0, y: 0 }}
+            colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
             start={{ x: 0, y: 0.8 }}
             end={{ x: 0, y: 1.0 }}
-            // locations={[0.0, insets.top / styles.backdrop.height, 0.8, 1]}
             style={{
               position: "absolute",
               top: 0,

@@ -23,6 +23,7 @@ import ButtonMultiState from "../components/ButtonMultiState";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { MoviePoster } from "../components/Posters/MoviePoster";
 import { Text as ThemedText } from "../components/Themed";
+import { dateToLocaleString } from "../helpers/formatting";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
 import { TMDB } from "../interfaces/tmdb";
@@ -78,12 +79,6 @@ function Actor({ route, navigation }: Props) {
   useLayoutEffect(() => {
     navigation.setOptions({ title: person?.name });
   }, [person]);
-
-  function getBirthday(): string {
-    return DateTime.fromFormat(person?.birthday as string, "yyyy-MM-dd")
-      .toFormat("MMMM d, yyyy")
-      .toUpperCase();
-  }
 
   function RenderItem({ item, index }: { item: any; index: number }) {
     return (
@@ -145,7 +140,9 @@ function Actor({ route, navigation }: Props) {
           {person?.name}
         </ThemedText>
         {person?.birthday && (
-          <Text style={reusableStyles.date}>{getBirthday()}</Text>
+          <Text style={reusableStyles.date}>
+            {dateToLocaleString(person?.birthday)}
+          </Text>
         )}
         <Pressable onPress={() => setShowBio(!showBio)}>
           <ThemedText

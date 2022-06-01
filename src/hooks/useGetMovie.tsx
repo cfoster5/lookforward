@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import {
   Credits,
+  Images,
   Keywords,
   MovieDetails,
   Recommendations,
@@ -14,6 +15,7 @@ interface MyInterface extends MovieDetails {
   videos: Videos;
   keywords: Keywords;
   recommendations: Recommendations;
+  images: Images;
 }
 
 export function useGetMovie(movieId: number) {
@@ -30,7 +32,8 @@ export function useGetMovie(movieId: number) {
   useEffect(() => {
     async function getMovie() {
       const tmdbResponse = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=credits,videos,keywords,recommendations`
+        // `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=credits,videos,keywords,recommendations`
+        `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&append_to_response=credits,videos,keywords,recommendations,images&include_image_language=en,null`
       );
       const tmdbJson: MyInterface = await tmdbResponse.json();
 

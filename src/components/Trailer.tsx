@@ -1,24 +1,24 @@
 import React, { useContext } from "react";
-import { Dimensions, Image, Linking, Pressable, View } from "react-native";
-import { iOSUIKit } from "react-native-typography";
+import {
+  Dimensions,
+  Image,
+  Linking,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
+import { iOSColors, iOSUIKit } from "react-native-typography";
 
 import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
 import { Video } from "../interfaces/tmdb";
-import { Text } from "./Themed";
+// import { Text } from "./Themed";
 
-function Trailer({
-  video,
-  index,
-}: {
-  video: Video | IGDB.Game.Video;
-  index: number;
-}) {
+function Trailer({ video }: { video: Video | IGDB.Game.Video }) {
   const { theme } = useContext(TabStackContext);
   return (
     // <Pressable key={index} onPress={() => Linking.openURL(`https://www.youtube.com/watch?v=${video.key}`)}>
     <Pressable
-      key={index}
       onPress={() =>
         Linking.openURL(
           (video as Video).key
@@ -39,8 +39,8 @@ function Trailer({
       >
         <Image
           style={{
-            width: Dimensions.get("window").width / 2 - 16,
-            height: (180 / 320) * (Dimensions.get("window").width / 2 - 16),
+            width: Dimensions.get("window").width / 1.5 - 16,
+            height: (180 / 320) * (Dimensions.get("window").width / 1.5 - 16),
             resizeMode: "cover",
             borderRadius: 8,
             marginRight: 8,
@@ -57,15 +57,19 @@ function Trailer({
                 }/mqdefault.jpg`,
           }}
         />
-        <Text
-          style={{
-            ...iOSUIKit.bodyObject,
-            width: Dimensions.get("window").width / 2 - 40,
-          }}
-        >
-          {video.name}
-        </Text>
       </View>
+      <Text
+        style={{
+          ...iOSUIKit.subheadEmphasizedObject,
+          color: iOSColors.gray,
+
+          // ...iOSUIKit.bodyObject,
+          marginTop: 8,
+          // width: Dimensions.get("window").width / 2 - 40,
+        }}
+      >
+        {video.name}
+      </Text>
     </Pressable>
   );
 }

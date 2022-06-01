@@ -195,13 +195,12 @@ export function MovieDetails({ navigation, movieId }: Props) {
             colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
             start={{ x: 0, y: 0.8 }}
             end={{ x: 0, y: 1.0 }}
-            style={{
-              position: "absolute",
-              top: 0,
-              bottom: 0,
-              left: 0,
-              right: 0,
-            }}
+            style={[
+              {
+                position: "absolute",
+              },
+              reusableStyles.inset,
+            ]}
           />
         </AnimatedImageBackground>
       )}

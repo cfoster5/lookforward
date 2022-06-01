@@ -34,5 +34,6 @@ export const reusableStyles = StyleSheet.create({
     borderRadius: 8,
     resizeMode: "stretch",
     marginTop: 16,
-  }
-})
+  },
+  inset: { top: 0, bottom: 0, left: 0, right: 0 },
+});

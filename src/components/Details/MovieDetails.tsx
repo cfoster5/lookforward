@@ -68,41 +68,6 @@ interface Props {
 const AnimatedImageBackground =
   Animated.createAnimatedComponent(ImageBackground);
 
-function DiscoverButton({
-  navigation,
-  genre,
-  company,
-  keyword,
-}: {
-  navigation: any;
-  genre?: Genre;
-  company?: ProductionCompany;
-  keyword?: Keywords;
-}) {
-  let obj: Genre | ProductionCompany | Keywords = {
-    id: 0,
-    name: "",
-  };
-  let key = "";
-  if (genre) {
-    obj = genre;
-    key = "genre";
-  } else if (company) {
-    obj = company;
-    key = "company";
-  } else if (keyword) {
-    obj = keyword;
-    key = "keyword";
-  }
-
-  return (
-    <ButtonSingleState
-      text={obj.name}
-      onPress={() => navigation.push("MovieDiscover", { [key]: obj })}
-    />
-  );
-}
-
 function SlidingMovie({
   navigation,
   movie,
@@ -279,7 +244,11 @@ export function MovieDetails({ navigation, movieId }: Props) {
         {/* <ThemedText style={theme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</ThemedText> */}
         <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
           {movieDetails?.genres?.map((genre, i) => (
-            <DiscoverButton key={i} navigation={navigation} genre={genre} />
+            <ButtonSingleState
+              key={i}
+              text={genre.name}
+              onPress={() => navigation.push("MovieDiscover", { genre: genre })}
+            />
           ))}
         </View>
         <ThemedText style={{ ...iOSUIKit.bodyObject, marginTop: 16 }}>
@@ -466,7 +435,12 @@ export function MovieDetails({ navigation, movieId }: Props) {
                     showsHorizontalScrollIndicator={false}
                     data={movieDetails?.production_companies}
                     renderItem={({ item }) => (
-                      <DiscoverButton navigation={navigation} company={item} />
+                      <ButtonSingleState
+                        text={item.name}
+                        onPress={() =>
+                          navigation.push("MovieDiscover", { company: item })
+                        }
+                      />
                     )}
                     keyExtractor={(item) => item.id.toString()}
                   />
@@ -496,7 +470,12 @@ export function MovieDetails({ navigation, movieId }: Props) {
                     showsHorizontalScrollIndicator={false}
                     data={movieDetails?.keywords?.keywords}
                     renderItem={({ item }) => (
-                      <DiscoverButton navigation={navigation} keyword={item} />
+                      <ButtonSingleState
+                        text={item.name}
+                        onPress={() =>
+                          navigation.push("MovieDiscover", { keyword: item })
+                        }
+                      />
                     )}
                     keyExtractor={(item) => item.id.toString()}
                   />

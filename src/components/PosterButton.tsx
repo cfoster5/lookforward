@@ -9,10 +9,10 @@ import GameContext from "../contexts/GamePlatformPickerContexts";
 import SubContext from "../contexts/SubContext";
 import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
-import { Movie } from "../interfaces/tmdb";
+import { Movie, Recommendation } from "../interfaces/tmdb";
 
 interface Props {
-  movie?: Movie;
+  movie?: Movie | Recommendation;
   game?: IGDB.Game.Game;
   inCountdown: boolean;
 }

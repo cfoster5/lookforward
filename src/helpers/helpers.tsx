@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { Dimensions } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import firestore from "@react-native-firebase/firestore";
 
@@ -21,6 +22,28 @@ export const targetedProviders = [
   "YouTube",
   "Microsoft Store",
   // "Paramount Plus"
+];
+
+export const tmdbMovieGenres = [
+  { id: 28, name: "Action", icon: "explosion" },
+  { id: 12, name: "Adventure", icon: "person-hiking" },
+  { id: 16, name: "Animation", icon: "person-running" },
+  { id: 35, name: "Comedy", icon: "face-laugh-squint" },
+  { id: 80, name: "Crime", icon: "handcuffs" },
+  { id: 99, name: "Documentary", icon: "camcorder" },
+  { id: 18, name: "Drama", icon: "masks-theater" },
+  { id: 10751, name: "Family", icon: "children" },
+  { id: 14, name: "Fantasy", icon: "hat-wizard" },
+  { id: 36, name: "History", icon: "scroll" },
+  { id: 27, name: "Horror", icon: "ghost" },
+  { id: 10402, name: "Music", icon: "music" },
+  { id: 9648, name: "Mystery", icon: "magnifying-glass" },
+  { id: 10749, name: "Romance", icon: "heart" },
+  { id: 878, name: "Science Fiction", icon: "rocket" },
+  { id: 10770, name: "TV Movie", icon: "tv" },
+  { id: 53, name: "Thriller", icon: "user-secret" },
+  { id: 10752, name: "War", icon: "jet-fighter" },
+  { id: 37, name: "Western", icon: "hat-cowboy" },
 ];
 
 export function convertReleasesToGames(
@@ -93,4 +116,14 @@ export default function usePrevious(value: any) {
 
   // Return previous value (happens before update in useEffect above)
   return ref.current;
+}
+
+export function calculateWidth(
+  headerSpace: number,
+  separatingSpace: number,
+  elementCount: number
+): number {
+  let totalEmptySpace =
+    headerSpace + separatingSpace * Math.floor(elementCount);
+  return (Dimensions.get("window").width - totalEmptySpace) / elementCount;
 }

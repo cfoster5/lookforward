@@ -56,7 +56,7 @@ interface Props {
   route: RouteProp<Navigation.FindStackParamList, "Find">;
 }
 
-function ListLabel({ text, style }: { text: string; style?: any }) {
+export function ListLabel({ text, style }: { text: string; style?: any }) {
   return (
     <ThemedText
       style={{

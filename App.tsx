@@ -3,6 +3,26 @@ import { Platform, StatusBar, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SplashScreen from "react-native-splash-screen";
 import { OverflowMenuProvider } from "react-navigation-header-buttons";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import {
+  faChildren,
+  faExplosion,
+  faFaceLaughSquint,
+  faGhost,
+  faHandcuffs,
+  faHatCowboy,
+  faHatWizard,
+  faHeart,
+  faJetFighter,
+  faMagnifyingGlass,
+  faMasksTheater,
+  faMusic,
+  faPersonHiking,
+  faPersonRunning,
+  faRocket,
+  faScroll,
+  faUserSecret,
+} from "@fortawesome/free-solid-svg-icons";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
@@ -20,6 +40,26 @@ import {
 import TabStackContext from "./src/contexts/TabStackContext";
 import { AuthStack } from "./src/navigation/AuthStack";
 import { TabStack } from "./src/navigation/TabStack";
+
+library.add(
+  faPersonHiking,
+  faHatWizard,
+  faGhost,
+  faMusic,
+  faMagnifyingGlass,
+  faHeart,
+  faJetFighter,
+  faHatCowboy,
+  faRocket,
+  faUserSecret,
+  faExplosion,
+  faHandcuffs,
+  faPersonRunning,
+  faFaceLaughSquint,
+  faMasksTheater,
+  faChildren,
+  faScroll
+);
 
 export default function App() {
   // Set an initializing state whilst Firebase connects

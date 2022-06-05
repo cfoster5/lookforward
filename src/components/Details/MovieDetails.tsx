@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
+  Image,
   ImageBackground,
   Platform,
   Pressable,
@@ -13,6 +14,7 @@ import {
 import FastImage from "react-native-fast-image";
 import ImageView from "react-native-image-viewing";
 import LinearGradient from "react-native-linear-gradient";
+import { Modalize } from "react-native-modalize";
 import Animated, {
   interpolate,
   useAnimatedScrollHandler,
@@ -20,6 +22,8 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSColors, iOSUIKit } from "react-native-typography";
+import { faCoffee } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import {
   BottomTabNavigationProp,
   useBottomTabBarHeight,
@@ -27,19 +31,14 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { DateTime } from "luxon";
 
 import TabStackContext from "../../contexts/TabStackContext";
 import { dateToLocaleString, getRuntime } from "../../helpers/formatting";
+import { calculateWidth, tmdbMovieGenres } from "../../helpers/helpers";
 import { reusableStyles } from "../../helpers/styles";
 import { useGetMovie } from "../../hooks/useGetMovie";
 import { Navigation } from "../../interfaces/navigation";
-import {
-  Genre,
-  Keywords,
-  ProductionCompany,
-  Recommendation,
-} from "../../interfaces/tmdb";
+import { ListLabel } from "../../screens/Search";
 import { BlueBullet } from "../BlueBullet";
 import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
@@ -48,6 +47,7 @@ import Person from "../Person";
 import { MoviePoster } from "../Posters/MoviePoster";
 import { Text as ThemedText } from "../Themed";
 import Trailer from "../Trailer";
+import WatchProvidersModal from "./WatchProvidersModal";
 
 interface Props {
   navigation:
@@ -68,30 +68,6 @@ interface Props {
 const AnimatedImageBackground =
   Animated.createAnimatedComponent(ImageBackground);
 
-function SlidingMovie({
-  navigation,
-  movie,
-}: {
-  navigation: any;
-  movie: Recommendation;
-}) {
-  return (
-    <Pressable
-      style={{ marginRight: 16 }}
-      onPress={() => navigation.push("Movie", { movie: movie })}
-    >
-      <MoviePoster
-        movie={movie}
-        style={{
-          // I don't know why 18 works here to center the right-most image but it works on every iOS device tested
-          width: Dimensions.get("window").width / 2.5 - 18,
-          height: (Dimensions.get("window").width / 2.5 - 18) * 1.5,
-        }}
-      />
-    </Pressable>
-  );
-}
-
 function DiscoverListLabel({ text }: { text: string }) {
   return (
     <Text
@@ -107,6 +83,58 @@ function DiscoverListLabel({ text }: { text: string }) {
   );
 }
 
+function ScrollViewWithFlatList({
+  data,
+  numColumns,
+  navigation,
+  navParamKey,
+}: {
+  data: any;
+  numColumns: number;
+  navigation: any;
+  navParamKey: string;
+}) {
+  return (
+    <ScrollView
+      horizontal={true}
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ paddingRight: 16 }}
+      style={{ marginHorizontal: -16 }}
+    >
+      <FlatList
+        contentContainerStyle={{
+          alignSelf: "flex-start",
+          paddingLeft: 16,
+          paddingRight: 8,
+        }}
+        scrollEnabled={false}
+        numColumns={numColumns}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        data={data}
+        renderItem={({ item }) => (
+          <ButtonSingleState
+            text={item.name}
+            onPress={() =>
+              navigation.push("MovieDiscover", { [navParamKey]: item })
+            }
+          />
+        )}
+        keyExtractor={(item) => item.id.toString()}
+      />
+    </ScrollView>
+  );
+}
+
+export const horizontalListProps = {
+  horizontal: true,
+  style: { marginHorizontal: -16, marginTop: 16 },
+  ListHeaderComponent: () => <View style={{ width: 16 }} />,
+  ItemSeparatorComponent: () => <View style={{ width: 8 }} />,
+  ListFooterComponent: () => <View style={{ width: 16 }} />,
+  showsHorizontalScrollIndicator: false,
+};
+
 export function MovieDetails({ navigation, movieId }: Props) {
   const { movieDetails, traktDetails, loading } = useGetMovie(movieId);
   const [detailIndex, setDetailIndex] = useState(0);
@@ -114,6 +142,9 @@ export function MovieDetails({ navigation, movieId }: Props) {
   const headerHeight = useHeaderHeight();
   const [showAllOverview, setShowAllOverview] = useState(false);
   const scrollOffset = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler(
+    (e) => (scrollOffset.value = e.contentOffset.y)
+  );
   const [mediaSelections, setMediaSelections] = useState<{
     videos: "Trailer" | "Teaser";
     images: "posters" | "backdrops";
@@ -127,9 +158,7 @@ export function MovieDetails({ navigation, movieId }: Props) {
     index: 0,
   });
 
-  const scrollHandler = useAnimatedScrollHandler(
-    (event) => (scrollOffset.value = event.contentOffset.y)
-  );
+  const providersModalRef = useRef<Modalize>(null);
 
   const headerStyle = useAnimatedStyle(() => {
     return {
@@ -166,339 +195,431 @@ export function MovieDetails({ navigation, movieId }: Props) {
     };
   });
 
-  return !loading ? (
-    <Animated.ScrollView
-      onScroll={scrollHandler}
-      scrollEventThrottle={16}
-      contentContainerStyle={
-        Platform.OS === "ios"
-          ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
-          : undefined
-      }
-      scrollIndicatorInsets={
-        Platform.OS === "ios"
-          ? {
-              bottom: tabBarheight - 16,
-            }
-          : undefined
-      }
-      showsVerticalScrollIndicator={detailIndex !== 2}
-    >
-      {movieDetails?.backdrop_path && (
-        <AnimatedImageBackground
-          style={[styles.backdrop, headerStyle]}
-          source={{
-            uri: `https://image.tmdb.org/t/p/w780${movieDetails.backdrop_path}`,
-          }}
-        >
-          <LinearGradient
-            colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
-            start={{ x: 0, y: 0.8 }}
-            end={{ x: 0, y: 1.0 }}
-            style={[
-              {
-                position: "absolute",
-              },
-              reusableStyles.inset,
-            ]}
-          />
-        </AnimatedImageBackground>
-      )}
-      <View style={{ margin: 16 }}>
-        <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-          {movieDetails?.title}
-        </ThemedText>
-        <Text style={reusableStyles.date}>
-          {dateToLocaleString(traktDetails.released)}
-        </Text>
-        {(getRuntime(movieDetails?.runtime) || traktDetails?.certification) && (
-          <View style={{ flexDirection: "row" }}>
-            <Text style={reusableStyles.date}>
-              {getRuntime(movieDetails?.runtime)}
-            </Text>
-            {getRuntime(movieDetails?.runtime) &&
-              traktDetails?.certification && <BlueBullet />}
-            <Text style={reusableStyles.date}>
-              {traktDetails?.certification}
-            </Text>
-          </View>
-        )}
+  useEffect(() => {
+    if (
+      movieDetails?.videos.results.filter((result) => result.type === "Trailer")
+        .length === 0
+    ) {
+      setMediaSelections({ ...mediaSelections, videos: "Teaser" });
+    }
+  }, [movieDetails?.videos.results]);
 
-        <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
-          <ThemedText
-            style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}
-            numberOfLines={showAllOverview ? undefined : 4}
+  if (loading) return <LoadingScreen />;
+
+  return (
+    <>
+      <Animated.ScrollView
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+        contentContainerStyle={
+          Platform.OS === "ios"
+            ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
+            : undefined
+        }
+        scrollIndicatorInsets={
+          Platform.OS === "ios"
+            ? {
+                bottom: tabBarheight - 16,
+              }
+            : undefined
+        }
+        showsVerticalScrollIndicator={detailIndex !== 2}
+      >
+        {movieDetails!.backdrop_path && (
+          <AnimatedImageBackground
+            style={[styles.backdrop, headerStyle]}
+            source={{
+              uri: `https://image.tmdb.org/t/p/w780${
+                movieDetails!.backdrop_path
+              }`,
+            }}
           >
-            {movieDetails?.overview}
-          </ThemedText>
-        </Pressable>
-
-        {/* <ThemedText style={theme === "dark" ? { ...iOSUIKit.bodyWhiteObject, paddingTop: 16 } : { ...iOSUIKit.bodyObject, paddingTop: 16 }}>{movie.overview}</ThemedText> */}
-        <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-          {movieDetails?.genres?.map((genre, i) => (
-            <ButtonSingleState
-              key={i}
-              text={genre.name}
-              onPress={() => navigation.push("MovieDiscover", { genre: genre })}
+            <LinearGradient
+              colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
+              start={{ x: 0, y: 0.8 }}
+              end={{ x: 0, y: 1.0 }}
+              style={[
+                {
+                  position: "absolute",
+                },
+                reusableStyles.inset,
+              ]}
             />
-          ))}
+          </AnimatedImageBackground>
+        )}
+        <View style={{ margin: 16 }}>
+          <ThemedText style={iOSUIKit.largeTitleEmphasized}>
+            {movieDetails!.title}
+          </ThemedText>
+          <Text style={reusableStyles.date}>
+            {traktDetails?.released
+              ? dateToLocaleString(traktDetails.released)
+              : "No release date yet"}
+          </Text>
+          {(getRuntime(movieDetails!.runtime) ||
+            traktDetails?.certification) && (
+            <View style={{ flexDirection: "row" }}>
+              <Text style={reusableStyles.date}>
+                {getRuntime(movieDetails!.runtime)}
+              </Text>
+              {getRuntime(movieDetails!.runtime) &&
+                traktDetails?.certification && <BlueBullet />}
+              <Text style={reusableStyles.date}>
+                {traktDetails?.certification}
+              </Text>
+            </View>
+          )}
+
+          <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
+            <ThemedText
+              style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}
+              numberOfLines={showAllOverview ? undefined : 4}
+            >
+              {movieDetails!.overview}
+            </ThemedText>
+          </Pressable>
+
+          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            {movieDetails!.genres.map((genre, i) => (
+              // {/* <FontAwesomeIcon
+              //   icon={
+              //     tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon
+              //   }
+              //   color={"red"}
+              // />
+              // <ButtonSingleState
+              //   key={genre.id}
+              //   text={genre.name}
+              //   onPress={() =>
+              //     navigation.push("MovieDiscover", { genre: genre })
+              //   }
+              // /> */}
+
+              <Pressable
+                key={genre.id}
+                onPress={() =>
+                  navigation.push("MovieDiscover", { genre: genre })
+                }
+                style={{
+                  backgroundColor: "rgb(91, 91, 96)",
+                  borderColor: "rgb(91, 91, 96)",
+                  borderWidth: 1,
+                  borderRadius: 16,
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
+                  marginRight: 8,
+                  marginTop: 16,
+                  justifyContent: "center",
+                  flexDirection: "row",
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={
+                    tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon
+                  }
+                  // size={iOSUIKit.footnoteEmphasizedObject.fontSize}
+                  color={"white"}
+                  style={{ marginRight: 8, alignSelf: "center" }}
+                />
+                <Text
+                  style={
+                    theme === "dark"
+                      ? {
+                          ...iOSUIKit.footnoteEmphasizedObject,
+                          color: "white",
+                          alignSelf: "center",
+                        }
+                      : { ...iOSUIKit.bodyObject }
+                  }
+                >
+                  {genre.name}
+                </Text>
+              </Pressable>
+            ))}
+          </View>
+          <ThemedText style={{ ...iOSUIKit.bodyObject, marginTop: 16 }}>
+            Status: {movieDetails!.status}
+            {/* {JSON.stringify(movieDetails!["watch/providers"])} */}
+          </ThemedText>
+          {/*  */}
+
+          {(movieDetails!["watch/providers"].results.US?.flatrate?.length > 0 ||
+            movieDetails!["watch/providers"].results.US?.rent?.length > 0 ||
+            movieDetails!["watch/providers"].results.US?.buy?.length > 0) && (
+            <>
+              <View
+                style={{
+                  marginTop: 16,
+                  flexDirection: "row",
+                  flexWrap: "nowrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                <ListLabel text="Watch on" style={{ marginBottom: 0 }} />
+                <Pressable onPress={() => providersModalRef.current?.open()}>
+                  <Text
+                    style={{
+                      ...iOSUIKit.bodyEmphasizedObject,
+                      color: iOSColors.blue,
+                    }}
+                  >
+                    More
+                  </Text>
+                </Pressable>
+              </View>
+
+              {/* <View>
+                <Image
+                  source={{
+                    uri: `https://image.tmdb.org/t/p/w154${
+                      movieDetails!["watch/providers"].results.US?.flatrate[0]
+                        .logo_path
+                    }`,
+                  }}
+                  style={{ height: 75, width: 75, borderRadius: 8 }}
+                />
+              </View> */}
+
+              <FlatList
+                // unique list of objects by key
+                // https://stackoverflow.com/a/56768137/5648619
+                data={[
+                  ...new Map(
+                    movieDetails!["watch/providers"].results.US?.flatrate
+                      ?.concat(
+                        movieDetails!["watch/providers"].results.US?.rent,
+                        movieDetails!["watch/providers"].results.US?.buy
+                      )
+                      .map((item, key) => [item["provider_id"], item])
+                  ).values(),
+                ]}
+                renderItem={({ item }) => (
+                  <Image
+                    source={{
+                      uri: `https://image.tmdb.org/t/p/w154${item.logo_path}`,
+                    }}
+                    style={{
+                      height: calculateWidth(16, 8, 6),
+                      width: calculateWidth(16, 8, 6),
+                      borderWidth: 1,
+                      borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
+                      borderRadius: 8,
+                    }}
+                  />
+                )}
+                {...horizontalListProps}
+                scrollEnabled={false}
+              />
+            </>
+          )}
+
+          {/*  */}
         </View>
-        <ThemedText style={{ ...iOSUIKit.bodyObject, marginTop: 16 }}>
-          Status: {movieDetails?.status}
-        </ThemedText>
-      </View>
-      <CategoryControl
-        buttons={["Cast & Crew", "Media", "Discover"]}
-        categoryIndex={detailIndex}
-        handleCategoryChange={(index: number) => setDetailIndex(index)}
-      />
-      <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-        {detailIndex === 0 && (
-          <View>
-            {movieDetails?.credits?.crew
-              ?.filter((person) => person?.job === "Director")
-              .map((person, i) => (
+        <CategoryControl
+          buttons={["Cast & Crew", "Media", "Discover"]}
+          categoryIndex={detailIndex}
+          handleCategoryChange={(index: number) => setDetailIndex(index)}
+        />
+        <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
+          {detailIndex === 0 && (
+            <View>
+              {movieDetails!.credits.crew
+                ?.filter((person) => person.job === "Director")
+                .map((person, i) => (
+                  <Person key={i} navigation={navigation} person={person} />
+                ))}
+              {movieDetails!.credits.cast.map((person, i) => (
                 <Person key={i} navigation={navigation} person={person} />
               ))}
-            {movieDetails?.credits.cast.map((person, i) => (
-              <Person key={i} navigation={navigation} person={person} />
-            ))}
-          </View>
-        )}
-        {detailIndex === 1 && (
-          <View>
-            {/* <DiscoverListLabel text="Trailers" /> */}
-            <View style={{ flexDirection: "row" }}>
-              <MediaSelection
-                option={"Trailers"}
-                action={() =>
-                  setMediaSelections({ ...mediaSelections, videos: "Trailer" })
-                }
-              />
-              <MediaSelection
-                option={"Teasers"}
-                action={() =>
-                  setMediaSelections({ ...mediaSelections, videos: "Teaser" })
-                }
-              />
             </View>
-            <FlatList
-              keyExtractor={(item) => item.id.toString()}
-              data={movieDetails?.videos?.results?.filter(
-                (result) => result.type === mediaSelections.videos
-              )}
-              renderItem={({ item }) => <Trailer video={item} />}
-              horizontal={true}
-              contentContainerStyle={{
-                // marginTop: 16,
-                paddingRight: 24,
-              }}
-              style={{ marginHorizontal: -16, paddingHorizontal: 16 }}
-              showsHorizontalScrollIndicator={false}
-            />
-
-            <View style={{ flexDirection: "row" }}>
-              <MediaSelection
-                option={"Posters"}
-                action={() =>
-                  setMediaSelections({ ...mediaSelections, images: "posters" })
-                }
-              />
-              <MediaSelection
-                option={"Backdrops"}
-                action={() =>
-                  setMediaSelections({
-                    ...mediaSelections,
-                    images: "backdrops",
-                  })
-                }
-              />
-            </View>
-            <FlatList
-              keyExtractor={(item) => item.file_path}
-              data={movieDetails?.images?.[mediaSelections.images]}
-              renderItem={({ item, index }) =>
-                mediaSelections.images === "posters" ? (
-                  <Pressable
-                    onPress={() =>
-                      setShowImageViewer({ isVisible: true, index: index })
-                    }
-                  >
-                    <FastImage
-                      style={{
-                        width: Dimensions.get("window").width / 2.5 - 24,
-                        height:
-                          (Dimensions.get("window").width / 2.5 - 24) * 1.5,
-                        marginRight: 8,
-                        marginTop: 16,
-                        borderWidth: 1,
-                        borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
-                        borderRadius: 8,
-                      }}
-                      source={{
-                        uri: `https://image.tmdb.org/t/p/w300${item.file_path}`,
-                      }}
-                    />
-                  </Pressable>
-                ) : (
-                  <Pressable
-                    onPress={() =>
-                      setShowImageViewer({ isVisible: true, index: index })
-                    }
-                  >
-                    <FastImage
-                      style={{
-                        width: Dimensions.get("window").width / 1.5 - 16,
-                        height:
-                          (180 / 320) *
-                          (Dimensions.get("window").width / 1.5 - 16),
-                        resizeMode: "cover",
-                        borderRadius: 8,
-                        marginRight: 8,
-                        marginTop: 16,
-                        borderWidth: 1,
-                        borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
-                      }}
-                      source={{
-                        uri: `https://image.tmdb.org/t/p/w780${item.file_path}`,
-                      }}
-                    />
-                  </Pressable>
-                )
-              }
-              horizontal={true}
-              contentContainerStyle={{
-                // marginTop: 16,
-                paddingRight: 24,
-              }}
-              style={{ marginHorizontal: -16, paddingHorizontal: 16 }}
-              showsHorizontalScrollIndicator={false}
-            />
-
-            {/* {movieDetails?.videos?.results.map((video, i) => (
-              <Trailer key={i} video={video} />
-            ))}
-            <ThemedText>{traktDetails?.trailer}</ThemedText> */}
-            {movieDetails?.videos?.results?.length === 0 && (
-              <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
-                No trailers yet! Come back later!
-              </ThemedText>
-            )}
-            <ImageView
-              images={movieDetails?.images?.[mediaSelections.images].map(
-                (image) => ({
-                  uri: `https://image.tmdb.org/t/p/w780${image.file_path}`,
-                })
-              )}
-              imageIndex={showImageViewer.index}
-              visible={showImageViewer.isVisible}
-              onRequestClose={() =>
-                setShowImageViewer({ isVisible: false, index: 0 })
-              }
-            />
-          </View>
-        )}
-        {detailIndex === 2 && (
-          <>
-            {movieDetails?.production_companies.length > 0 && (
-              <>
-                <DiscoverListLabel text="Production" />
-                <ScrollView
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={{ paddingRight: 16 }}
-                  style={{ marginHorizontal: -16 }}
-                >
+          )}
+          {detailIndex === 1 && (
+            <View>
+              {/* <DiscoverListLabel text="Trailers" /> */}
+              {movieDetails!.videos.results.filter(
+                (result) =>
+                  result.type === "Trailer" || result.type === "Teaser"
+              ).length > 0 ? (
+                <>
+                  <View style={{ flexDirection: "row" }}>
+                    {movieDetails!.videos.results.filter(
+                      (result) => result.type === "Trailer"
+                    ).length > 0 && (
+                      <MediaSelection
+                        option={"Trailers"}
+                        action={() =>
+                          setMediaSelections({
+                            ...mediaSelections,
+                            videos: "Trailer",
+                          })
+                        }
+                      />
+                    )}
+                    {movieDetails!.videos.results.filter(
+                      (result) => result.type === "Teaser"
+                    ).length > 0 && (
+                      <MediaSelection
+                        option={"Teasers"}
+                        action={() =>
+                          setMediaSelections({
+                            ...mediaSelections,
+                            videos: "Teaser",
+                          })
+                        }
+                      />
+                    )}
+                  </View>
                   <FlatList
-                    contentContainerStyle={{
-                      alignSelf: "flex-start",
-                      paddingLeft: 16,
-                      paddingRight: 8,
-                    }}
-                    scrollEnabled={false}
+                    keyExtractor={(item) => item.id}
+                    data={movieDetails!.videos.results.filter(
+                      (result) => result.type === mediaSelections.videos
+                    )}
+                    renderItem={({ item }) => <Trailer video={item} />}
+                    {...horizontalListProps}
+                  />
+                </>
+              ) : (
+                <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+                  No trailers yet! Come back later!
+                </ThemedText>
+              )}
+
+              <View style={{ flexDirection: "row" }}>
+                {movieDetails!.images.posters.length > 0 && (
+                  <MediaSelection
+                    option={"Posters"}
+                    action={() =>
+                      setMediaSelections({
+                        ...mediaSelections,
+                        images: "posters",
+                      })
+                    }
+                  />
+                )}
+                {movieDetails!.images.backdrops.length > 0 && (
+                  <MediaSelection
+                    option={"Backdrops"}
+                    action={() =>
+                      setMediaSelections({
+                        ...mediaSelections,
+                        images: "backdrops",
+                      })
+                    }
+                  />
+                )}
+              </View>
+              <FlatList
+                keyExtractor={(item) => item.file_path}
+                data={movieDetails!.images[mediaSelections.images]}
+                renderItem={({ item, index }) => (
+                  <Pressable
+                    onPress={() =>
+                      setShowImageViewer({ isVisible: true, index: index })
+                    }
+                  >
+                    <FastImage
+                      style={{
+                        width:
+                          mediaSelections.images === "posters"
+                            ? calculateWidth(16, 8, 2.5)
+                            : calculateWidth(16, 8, 1.5),
+                        height:
+                          mediaSelections.images === "posters"
+                            ? calculateWidth(16, 8, 2.5) * 1.5
+                            : calculateWidth(16, 8, 1.5) / 1.78,
+                        borderWidth: 1,
+                        borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
+                        borderRadius: 8,
+                      }}
+                      source={{
+                        uri:
+                          mediaSelections.images === "posters"
+                            ? `https://image.tmdb.org/t/p/w300${item.file_path}`
+                            : `https://image.tmdb.org/t/p/w780${item.file_path}`,
+                      }}
+                    />
+                  </Pressable>
+                )}
+                {...horizontalListProps}
+              />
+            </View>
+          )}
+          {detailIndex === 2 && (
+            <>
+              {movieDetails!.production_companies.length > 0 && (
+                <>
+                  <DiscoverListLabel text="Production" />
+                  <ScrollViewWithFlatList
+                    data={movieDetails!.production_companies}
                     numColumns={
-                      movieDetails?.production_companies.length > 2
+                      movieDetails!.production_companies.length > 2
                         ? Math.ceil(
-                            movieDetails?.production_companies.length / 2
+                            movieDetails!.production_companies.length / 2
                           )
                         : 2
                     }
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    data={movieDetails?.production_companies}
-                    renderItem={({ item }) => (
-                      <ButtonSingleState
-                        text={item.name}
-                        onPress={() =>
-                          navigation.push("MovieDiscover", { company: item })
-                        }
-                      />
-                    )}
-                    keyExtractor={(item) => item.id.toString()}
+                    navigation={navigation}
+                    navParamKey={"company"}
                   />
-                </ScrollView>
-              </>
-            )}
-            {movieDetails?.keywords?.keywords.length > 0 && (
-              <>
-                <DiscoverListLabel text="Keywords" />
-                <ScrollView
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={{ paddingRight: 16 }}
-                  style={{ marginHorizontal: -16 }}
-                >
-                  <FlatList
-                    contentContainerStyle={{
-                      alignSelf: "flex-start",
-                      paddingLeft: 16,
-                      paddingRight: 8,
-                    }}
-                    scrollEnabled={false}
+                </>
+              )}
+              {movieDetails!.keywords.keywords.length > 0 && (
+                <>
+                  <DiscoverListLabel text="Keywords" />
+                  <ScrollViewWithFlatList
+                    data={movieDetails!.keywords.keywords}
                     numColumns={Math.ceil(
-                      movieDetails?.keywords?.keywords.length / 2
+                      movieDetails!.keywords.keywords.length / 2
                     )}
-                    showsVerticalScrollIndicator={false}
-                    showsHorizontalScrollIndicator={false}
-                    data={movieDetails?.keywords?.keywords}
-                    renderItem={({ item }) => (
-                      <ButtonSingleState
-                        text={item.name}
-                        onPress={() =>
-                          navigation.push("MovieDiscover", { keyword: item })
-                        }
-                      />
-                    )}
-                    keyExtractor={(item) => item.id.toString()}
+                    navigation={navigation}
+                    navParamKey={"keyword"}
                   />
-                </ScrollView>
-              </>
-            )}
-            {movieDetails?.recommendations?.results?.length > 0 && (
-              <>
-                <DiscoverListLabel text="Recommended" />
-                <FlatList
-                  keyExtractor={(item) => item.id.toString()}
-                  data={movieDetails?.recommendations.results}
-                  renderItem={({ item }) => (
-                    <SlidingMovie navigation={navigation} movie={item} />
-                  )}
-                  horizontal={true}
-                  contentContainerStyle={{
-                    marginTop: 16,
-                    paddingRight: 16,
-                  }}
-                  style={{ marginHorizontal: -16, paddingHorizontal: 16 }}
-                  showsHorizontalScrollIndicator={false}
-                />
-              </>
-            )}
-          </>
-        )}
-      </View>
-    </Animated.ScrollView>
-  ) : (
-    <LoadingScreen />
+                </>
+              )}
+              {movieDetails!.recommendations.results.length > 0 && (
+                <>
+                  <DiscoverListLabel text="Recommended" />
+                  <FlatList
+                    keyExtractor={(item) => item.id.toString()}
+                    data={movieDetails!.recommendations.results}
+                    renderItem={({ item }) => (
+                      <Pressable
+                        onPress={() =>
+                          navigation.push("Movie", { movie: item })
+                        }
+                      >
+                        <MoviePoster
+                          movie={item}
+                          style={{
+                            width: calculateWidth(16, 8, 2.5),
+                            height: calculateWidth(16, 8, 2.5) * 1.5,
+                          }}
+                        />
+                      </Pressable>
+                    )}
+                    {...horizontalListProps}
+                  />
+                </>
+              )}
+            </>
+          )}
+        </View>
+        <ImageView
+          images={movieDetails!.images[mediaSelections.images].map((image) => ({
+            uri: `https://image.tmdb.org/t/p/w780${image.file_path}`,
+          }))}
+          imageIndex={showImageViewer.index}
+          visible={showImageViewer.isVisible}
+          onRequestClose={() =>
+            setShowImageViewer({ isVisible: false, index: 0 })
+          }
+        />
+      </Animated.ScrollView>
+      <WatchProvidersModal
+        modalRef={providersModalRef}
+        providers={movieDetails!["watch/providers"].results.US}
+      />
+    </>
   );
 
   function MediaSelection({

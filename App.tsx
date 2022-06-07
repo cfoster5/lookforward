@@ -5,6 +5,7 @@ import SplashScreen from "react-native-splash-screen";
 import { OverflowMenuProvider } from "react-navigation-header-buttons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+  faBomb,
   faChildren,
   faExplosion,
   faFaceLaughSquint,
@@ -52,7 +53,8 @@ library.add(
   faHatCowboy,
   faRocket,
   faUserSecret,
-  faExplosion,
+  // faExplosion,
+  faBomb,
   faHandcuffs,
   faPersonRunning,
   faFaceLaughSquint,

@@ -21,6 +21,7 @@ export namespace Navigation {
     };
     GameDiscover: { genre?: any; company?: any; keyword?: any };
     Actor: { personId: number };
+    Collection: { collectionId: number };
   };
 
   export type CountdownStackParamList = {
@@ -33,6 +34,7 @@ export namespace Navigation {
       provider?: MovieWatchProvider;
     };
     Actor: { personId: number };
+    Collection: { collectionId: number };
   };
 
   export type ProfileStackParamList = {

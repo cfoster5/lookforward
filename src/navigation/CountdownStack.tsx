@@ -7,6 +7,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor";
+import { Collection } from "../screens/Collection";
 import Countdown from "../screens/Countdown";
 import Movie from "../screens/Movie";
 import MovieDiscover from "../screens/MovieDiscover";
@@ -54,6 +55,15 @@ export function CountdownStack({ navigation, route }: Props) {
       <Stack.Screen
         name="Actor"
         component={Actor}
+        options={{
+          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "dark",
+          title: "",
+        }}
+      />
+      <Stack.Screen
+        name="Collection"
+        component={Collection}
         options={{
           headerTransparent: Platform.OS === "ios" ? true : false,
           headerBlurEffect: "dark",

@@ -25,7 +25,8 @@ export const targetedProviders = [
 ];
 
 export const tmdbMovieGenres = [
-  { id: 28, name: "Action", icon: "explosion" },
+  // { id: 28, name: "Action", icon: "explosion" },
+  { id: 28, name: "Action", icon: "jet-fighter" },
   { id: 12, name: "Adventure", icon: "person-hiking" },
   { id: 16, name: "Animation", icon: "person-running" },
   { id: 35, name: "Comedy", icon: "face-laugh-squint" },
@@ -42,7 +43,8 @@ export const tmdbMovieGenres = [
   { id: 878, name: "Science Fiction", icon: "rocket" },
   { id: 10770, name: "TV Movie", icon: "tv" },
   { id: 53, name: "Thriller", icon: "user-secret" },
-  { id: 10752, name: "War", icon: "jet-fighter" },
+  // { id: 10752, name: "War", icon: "jet-fighter" },
+  { id: 10752, name: "War", icon: "bomb" },
   { id: 37, name: "Western", icon: "hat-cowboy" },
 ];
 

@@ -1,9 +1,16 @@
-import { Genre, Movie, ProductionCompany, ProductionCountry, SpokenLanguage } from './';
+import {
+  Collection,
+  Genre,
+  Movie,
+  ProductionCompany,
+  ProductionCountry,
+  SpokenLanguage,
+} from "./";
 
 export interface MovieDetails {
   adult: boolean;
   backdrop_path: string;
-  belongs_to_collection?: any;
+  belongs_to_collection?: Collection;
   budget: number;
   genres: Genre[];
   homepage: string;
@@ -29,12 +36,12 @@ export interface MovieDetails {
 }
 
 export enum ReleaseDateType {
-  'Premiere' = 1,
-  'Theatrical (limited)',
-  'Theatrical',
-  'Digital',
-  'Physical',
-  'TV'
+  "Premiere" = 1,
+  "Theatrical (limited)",
+  "Theatrical",
+  "Digital",
+  "Physical",
+  "TV",
 }
 
 export interface ReleaseDate {
@@ -54,7 +61,6 @@ export interface ReleaseDates {
   id: number;
   results: ReleaseDateResult[];
 }
-
 
 export interface SimilarMovies {
   page: number;
@@ -82,7 +88,6 @@ export interface MovieLists {
   total_results: number;
 }
 
-
 export interface MovieChangeItem {
   id: string;
   action: string;
@@ -104,7 +109,7 @@ export interface MovieChanges {
 export interface LatestMovie {
   adult: boolean;
   backdrop_path?: any;
-  belongs_to_collection?: any;
+  belongs_to_collection?: Collection;
   budget: number;
   genres: Genre[];
   homepage: string;
@@ -128,7 +133,6 @@ export interface LatestMovie {
   vote_average: number;
   vote_count: number;
 }
-
 
 export interface Dates {
   maximum: string;

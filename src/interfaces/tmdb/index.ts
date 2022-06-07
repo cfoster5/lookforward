@@ -49,6 +49,11 @@ export interface Collection {
   poster_path: string;
 }
 
+export interface CollectionDetails extends Collection {
+  overview: string;
+  parts: Movie[];
+}
+
 export interface Movie {
   id: number;
   logo_path: string;

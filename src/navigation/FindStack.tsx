@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor";
+import { Collection } from "../screens/Collection";
 import Game from "../screens/Game";
 import GameDiscover from "../screens/GameDiscover";
 import Movie from "../screens/Movie";
@@ -74,6 +75,15 @@ export function FindStack({ navigation, route }: Props) {
       <Stack.Screen
         name="Actor"
         component={Actor}
+        options={{
+          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerBlurEffect: "dark",
+          title: "",
+        }}
+      />
+      <Stack.Screen
+        name="Collection"
+        component={Collection}
         options={{
           headerTransparent: Platform.OS === "ios" ? true : false,
           headerBlurEffect: "dark",

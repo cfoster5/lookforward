@@ -22,8 +22,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { faCoffee } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { BlurView } from "@react-native-community/blur";
 import {
   BottomTabNavigationProp,
   useBottomTabBarHeight,
@@ -71,12 +70,14 @@ const AnimatedImageBackground =
 function DiscoverListLabel({ text }: { text: string }) {
   return (
     <Text
-      style={{
-        ...iOSUIKit.subheadEmphasizedObject,
-        color: iOSColors.gray,
-        textAlign: "center",
-        marginTop: 16,
-      }}
+      style={[
+        iOSUIKit.subheadEmphasized,
+        {
+          color: iOSColors.gray,
+          textAlign: "center",
+          marginTop: 16,
+        },
+      ]}
     >
       {text}
     </Text>
@@ -251,11 +252,16 @@ export function MovieDetails({ navigation, movieId }: Props) {
           <ThemedText style={iOSUIKit.largeTitleEmphasized}>
             {movieDetails!.title}
           </ThemedText>
-          <Text style={reusableStyles.date}>
-            {traktDetails?.released
-              ? dateToLocaleString(traktDetails.released)
-              : "No release date yet"}
-          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={reusableStyles.date}>
+              {traktDetails?.released
+                ? dateToLocaleString(traktDetails.released)
+                : "No release date yet"}
+            </Text>
+            <BlueBullet />
+            <Text style={reusableStyles.date}>{movieDetails!.status}</Text>
+          </View>
+
           {(getRuntime(movieDetails!.runtime) ||
             traktDetails?.certification) && (
             <View style={{ flexDirection: "row" }}>
@@ -270,9 +276,20 @@ export function MovieDetails({ navigation, movieId }: Props) {
             </View>
           )}
 
+          {movieDetails!.tagline ? (
+            <Text
+              style={[
+                iOSUIKit.body,
+                { paddingTop: 16, fontStyle: "italic", color: iOSColors.gray },
+              ]}
+            >
+              {movieDetails!.tagline}
+            </Text>
+          ) : null}
+
           <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
             <ThemedText
-              style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}
+              style={[iOSUIKit.body, { paddingTop: 16 }]}
               numberOfLines={showAllOverview ? undefined : 4}
             >
               {movieDetails!.overview}
@@ -280,68 +297,19 @@ export function MovieDetails({ navigation, movieId }: Props) {
           </Pressable>
 
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-            {movieDetails!.genres.map((genre, i) => (
-              // {/* <FontAwesomeIcon
-              //   icon={
-              //     tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon
-              //   }
-              //   color={"red"}
-              // />
-              // <ButtonSingleState
-              //   key={genre.id}
-              //   text={genre.name}
-              //   onPress={() =>
-              //     navigation.push("MovieDiscover", { genre: genre })
-              //   }
-              // /> */}
-
-              <Pressable
-                key={genre.id}
+            {movieDetails!.genres.map((genre, index) => (
+              <ButtonSingleState
+                key={index}
+                text={genre.name}
                 onPress={() =>
                   navigation.push("MovieDiscover", { genre: genre })
                 }
-                style={{
-                  backgroundColor: "rgb(91, 91, 96)",
-                  borderColor: "rgb(91, 91, 96)",
-                  borderWidth: 1,
-                  borderRadius: 16,
-                  paddingHorizontal: 16,
-                  paddingVertical: 8,
-                  marginRight: 8,
-                  marginTop: 16,
-                  justifyContent: "center",
-                  flexDirection: "row",
-                }}
-              >
-                <FontAwesomeIcon
-                  icon={
-                    tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon
-                  }
-                  // size={iOSUIKit.footnoteEmphasizedObject.fontSize}
-                  color={"white"}
-                  style={{ marginRight: 8, alignSelf: "center" }}
-                />
-                <Text
-                  style={
-                    theme === "dark"
-                      ? {
-                          ...iOSUIKit.footnoteEmphasizedObject,
-                          color: "white",
-                          alignSelf: "center",
-                        }
-                      : { ...iOSUIKit.bodyObject }
-                  }
-                >
-                  {genre.name}
-                </Text>
-              </Pressable>
+                buttonStyle={{ paddingHorizontal: 16, flexDirection: "row" }}
+                icon={tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon}
+                textStyle={{ alignSelf: "center" }}
+              />
             ))}
           </View>
-          <ThemedText style={{ ...iOSUIKit.bodyObject, marginTop: 16 }}>
-            Status: {movieDetails!.status}
-            {/* {JSON.stringify(movieDetails!["watch/providers"])} */}
-          </ThemedText>
-          {/*  */}
 
           {(movieDetails!["watch/providers"].results.US?.flatrate?.length > 0 ||
             movieDetails!["watch/providers"].results.US?.rent?.length > 0 ||
@@ -358,39 +326,28 @@ export function MovieDetails({ navigation, movieId }: Props) {
                 <ListLabel text="Watch on" style={{ marginBottom: 0 }} />
                 <Pressable onPress={() => providersModalRef.current?.open()}>
                   <Text
-                    style={{
-                      ...iOSUIKit.bodyEmphasizedObject,
-                      color: iOSColors.blue,
-                    }}
+                    style={[iOSUIKit.bodyEmphasized, { color: iOSColors.blue }]}
                   >
                     More
                   </Text>
                 </Pressable>
               </View>
 
-              {/* <View>
-                <Image
-                  source={{
-                    uri: `https://image.tmdb.org/t/p/w154${
-                      movieDetails!["watch/providers"].results.US?.flatrate[0]
-                        .logo_path
-                    }`,
-                  }}
-                  style={{ height: 75, width: 75, borderRadius: 8 }}
-                />
-              </View> */}
-
               <FlatList
                 // unique list of objects by key
                 // https://stackoverflow.com/a/56768137/5648619
+                // .concat() would not work if first array was undefined
+                // https://stackoverflow.com/a/51992342/5648619
                 data={[
                   ...new Map(
-                    movieDetails!["watch/providers"].results.US?.flatrate
-                      ?.concat(
-                        movieDetails!["watch/providers"].results.US?.rent,
-                        movieDetails!["watch/providers"].results.US?.buy
-                      )
-                      .map((item, key) => [item["provider_id"], item])
+                    [
+                      ...(movieDetails!["watch/providers"].results.US
+                        ?.flatrate || []),
+                      ...(movieDetails!["watch/providers"].results.US?.rent ||
+                        []),
+                      ...(movieDetails!["watch/providers"].results.US?.buy ||
+                        []),
+                    ].map((item, key) => [item["provider_id"], item])
                   ).values(),
                 ]}
                 renderItem={({ item }) => (
@@ -479,7 +436,7 @@ export function MovieDetails({ navigation, movieId }: Props) {
                   />
                 </>
               ) : (
-                <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+                <ThemedText style={[iOSUIKit.body, { paddingTop: 16 }]}>
                   No trailers yet! Come back later!
                 </ThemedText>
               )}
@@ -576,6 +533,73 @@ export function MovieDetails({ navigation, movieId }: Props) {
                   />
                 </>
               )}
+
+              {movieDetails!.belongs_to_collection && (
+                <>
+                  <DiscoverListLabel text="Collection" />
+                  <Pressable
+                    onPress={() =>
+                      navigation.push("Collection", {
+                        collectionId: movieDetails!.belongs_to_collection?.id,
+                      })
+                    }
+                    style={{
+                      marginTop: 16,
+                      borderTopRightRadius: 8,
+                      borderTopLeftRadius: 8,
+                      overflow: "hidden",
+                    }}
+                  >
+                    <FastImage
+                      style={{
+                        width: Dimensions.get("screen").width - 32,
+                        height: (Dimensions.get("screen").width - 32) / 1.78,
+                        borderWidth: 1,
+                        borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
+                        borderRadius: 8,
+                      }}
+                      source={{
+                        uri: `https://image.tmdb.org/t/p/w780${
+                          movieDetails!.belongs_to_collection.backdrop_path
+                        }`,
+                      }}
+                    />
+                    <BlurView
+                      style={{
+                        position: "absolute",
+                        ...reusableStyles.inset,
+                        bottom:
+                          // use lineHeight to account for font size + space above/below
+                          (Dimensions.get("screen").width - 32) / 1.78 -
+                          iOSUIKit.bodyObject.lineHeight -
+                          16,
+                      }}
+                    />
+                    <ThemedText
+                      style={[
+                        iOSUIKit.body,
+                        { margin: 8, position: "absolute" },
+                      ]}
+                    >
+                      {movieDetails!.belongs_to_collection.name}
+                    </ThemedText>
+                  </Pressable>
+
+                  {/* <Text
+                    style={[
+                      iOSUIKit.body,
+                      {
+                        paddingTop: 16,
+                        fontStyle: "italic",
+                        color: iOSColors.gray,
+                      },
+                    ]}
+                  >
+                    {JSON.stringify(movieDetails!.belongs_to_collection)}
+                  </Text> */}
+                </>
+              )}
+
               {movieDetails!.recommendations.results.length > 0 && (
                 <>
                   <DiscoverListLabel text="Recommended" />
@@ -604,17 +628,17 @@ export function MovieDetails({ navigation, movieId }: Props) {
             </>
           )}
         </View>
-        <ImageView
-          images={movieDetails!.images[mediaSelections.images].map((image) => ({
-            uri: `https://image.tmdb.org/t/p/w780${image.file_path}`,
-          }))}
-          imageIndex={showImageViewer.index}
-          visible={showImageViewer.isVisible}
-          onRequestClose={() =>
-            setShowImageViewer({ isVisible: false, index: 0 })
-          }
-        />
       </Animated.ScrollView>
+      <ImageView
+        images={movieDetails!.images[mediaSelections.images].map((image) => ({
+          uri: `https://image.tmdb.org/t/p/w780${image.file_path}`,
+        }))}
+        imageIndex={showImageViewer.index}
+        visible={showImageViewer.isVisible}
+        onRequestClose={() =>
+          setShowImageViewer({ isVisible: false, index: 0 })
+        }
+      />
       <WatchProvidersModal
         modalRef={providersModalRef}
         providers={movieDetails!["watch/providers"].results.US}
@@ -631,21 +655,21 @@ export function MovieDetails({ navigation, movieId }: Props) {
   }) {
     return (
       <Pressable style={{ marginRight: 8 }} onPress={action}>
-        <ThemedText
+        <Text
           style={[
             option
               .toLowerCase()
               .includes(mediaSelections.images.toLowerCase()) ||
             option.toLowerCase().includes(mediaSelections.videos.toLowerCase())
-              ? iOSUIKit.bodyEmphasized
-              : iOSUIKit.body,
+              ? iOSUIKit.bodyEmphasizedWhite
+              : { ...iOSUIKit.bodyObject, color: iOSColors.gray },
             {
               marginTop: 16,
             },
           ]}
         >
           {option}
-        </ThemedText>
+        </Text>
       </Pressable>
     );
   }

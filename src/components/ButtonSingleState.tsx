@@ -1,15 +1,22 @@
 import React, { useContext } from "react";
 import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import TabStackContext from "../contexts/TabStackContext";
 
 export default function ButtonSingleState({
   text,
   onPress,
+  buttonStyle,
+  icon,
+  textStyle,
 }: {
   text: string;
   onPress: any;
+  buttonStyle?: any;
+  icon?: string;
+  textStyle?: any;
 }) {
   const { theme } = useContext(TabStackContext);
   return (
@@ -18,6 +25,9 @@ export default function ButtonSingleState({
       style={{
         backgroundColor: "rgb(91, 91, 96)",
         borderColor: "rgb(91, 91, 96)",
+        // Use below when animated background with colors is implemented
+        // backgroundColor: "transparent",
+        // borderColor: "#636366",
         borderWidth: 1,
         borderRadius: 16,
         paddingHorizontal: 24,
@@ -25,14 +35,23 @@ export default function ButtonSingleState({
         marginRight: 8,
         marginTop: 16,
         justifyContent: "center",
+        ...buttonStyle,
       }}
     >
+      {icon && (
+        <FontAwesomeIcon
+          icon={icon}
+          color={"white"}
+          style={{ marginRight: 8, alignSelf: "center" }}
+        />
+      )}
       <Text
-        style={
+        style={[
           theme === "dark"
             ? { ...iOSUIKit.footnoteEmphasizedObject, color: "white" }
-            : { ...iOSUIKit.bodyObject }
-        }
+            : { ...iOSUIKit.bodyObject },
+          textStyle,
+        ]}
       >
         {text}
       </Text>

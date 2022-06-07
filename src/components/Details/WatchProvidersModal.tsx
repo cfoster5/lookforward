@@ -5,7 +5,6 @@ import {
   Linking,
   Platform,
   Pressable,
-  SectionList,
   Text,
   View,
 } from "react-native";
@@ -17,7 +16,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import TabStackContext from "../../contexts/TabStackContext";
 import { calculateWidth } from "../../helpers/helpers";
 import { WatchLocale } from "../../interfaces/tmdb";
-import { horizontalListProps } from "./MovieDetails";
+import { horizontalListProps } from "../../screens/Movie";
 
 function WatchProvidersModal({
   modalRef,

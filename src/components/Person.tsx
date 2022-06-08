@@ -2,6 +2,8 @@ import React, { useContext, useEffect } from "react";
 import { Pressable, Text, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import { iOSColors, iOSUIKit } from "react-native-typography";
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import TabStackContext from "../contexts/TabStackContext";
@@ -11,7 +13,18 @@ import { Cast, Crew } from "../interfaces/tmdb";
 import { TextPoster } from "./Posters/TextPoster";
 
 interface Props {
-  navigation: StackNavigationProp<Navigation.FindStackParamList, "Details">;
+  navigation:
+    | CompositeNavigationProp<
+        StackNavigationProp<Navigation.FindStackParamList, "Movie">,
+        BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+      >
+    | CompositeNavigationProp<
+        StackNavigationProp<Navigation.CountdownStackParamList, "Movie">,
+        BottomTabNavigationProp<
+          Navigation.TabNavigationParamList,
+          "CountdownTab"
+        >
+      >;
   person: Cast | Crew;
 }
 

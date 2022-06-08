@@ -17,6 +17,7 @@ import {
 import { SearchBar } from "react-native-elements";
 import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
+import { useInfiniteQuery } from "react-query";
 import {
   BottomTabNavigationProp,
   useBottomTabBarHeight,
@@ -41,10 +42,18 @@ import GameContext from "../contexts/GamePlatformPickerContexts";
 import TabStackContext from "../contexts/TabStackContext";
 import { convertReleasesToGames } from "../helpers/helpers";
 import { searchGames } from "../helpers/igdbRequests";
-import { useGetMovies } from "../hooks/useGetMovies";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
-import { TMDB } from "../interfaces/tmdb";
+import {
+  Movie,
+  MoviesPlayingNow,
+  Person,
+  PopularMovies,
+  TMDB,
+  TV,
+  UpcomingMovies,
+} from "../interfaces/tmdb";
+import { Search as SearchInterface } from "../interfaces/tmdb/search";
 import { reducer } from "./reducer";
 import { useGetUpcomingGameReleases } from "./useGetUpcomingGameReleases";
 
@@ -70,23 +79,38 @@ export function ListLabel({ text, style }: { text: string; style?: any }) {
   );
 }
 
+const key = "68991fbb0b75dba5ae0ecd8182e967b1";
+
+async function getMovies({ pageParam = 1, queryKey }) {
+  const { type, searchValue } = queryKey[1];
+
+  const endpoints = {
+    "Coming Soon": `https://api.themoviedb.org/3/movie/upcoming?api_key=${key}&language=en-US&page=${pageParam}&region=US`,
+    "Now Playing": `https://api.themoviedb.org/3/movie/now_playing?api_key=${key}&language=en-US&page=${pageParam}&region=US`,
+    Popular: `https://api.themoviedb.org/3/movie/popular?api_key=${key}&language=en-US&page=${pageParam}&region=US`,
+    Trending: `https://api.themoviedb.org/3/trending/movie/day?api_key=${key}&page=${pageParam}`,
+    Search: `https://api.themoviedb.org/3/search/multi?api_key=${key}&language=en-US&query=${searchValue}&page=${pageParam}&include_adult=false&region=US`,
+  };
+  const response = await fetch(
+    !searchValue ? endpoints[type] : endpoints.Search
+  );
+  const json: UpcomingMovies | MoviesPlayingNow | PopularMovies =
+    await response.json();
+  // return json;
+  return {
+    ...json,
+    nextPage: json.page !== json.total_pages ? json.page + 1 : undefined,
+  };
+}
+
 function Search({ navigation, route }: Props) {
   const [
-    {
-      categoryIndex,
-      searchValue,
-      isSearchTriggered,
-      page,
-      initGames,
-      games,
-      option,
-    },
+    { categoryIndex, searchValue, isSearchTriggered, initGames, games, option },
     dispatch,
   ] = useReducer(reducer, {
     categoryIndex: 0,
     searchValue: "",
     isSearchTriggered: false,
-    page: 1,
     initGames: [],
     games: [],
     option: "Coming Soon",
@@ -100,11 +124,25 @@ function Search({ navigation, route }: Props) {
   const tabBarheight = useBottomTabBarHeight();
   const filterModalRef = useRef<Modalize>(null);
   const gameReleaseDates = useGetUpcomingGameReleases();
-  const { movies, loading } = useGetMovies(
-    option,
-    page,
-    searchValue,
-    isSearchTriggered
+
+  const {
+    isLoading,
+    data: movies,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(
+    [
+      "movies",
+      {
+        type: option,
+        searchValue: isSearchTriggered ? searchValue : undefined,
+      },
+    ],
+    getMovies,
+    {
+      getNextPageParam: (lastPage) => lastPage.nextPage,
+      select: (movieData) => movieData.pages.flatMap((page) => page.results),
+    }
   );
 
   const styles = StyleSheet.create({
@@ -142,8 +180,8 @@ function Search({ navigation, route }: Props) {
     filterModalRef.current?.close();
   }, [option]);
 
-  const scrollIndicatorInsets =
-    Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined;
+  // const scrollIndicatorInsets =
+  //   Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined;
 
   async function handleSearch() {
     if (searchValue && categoryIndex === 0) {
@@ -177,6 +215,21 @@ function Search({ navigation, route }: Props) {
         return movies;
       }
     }
+  }
+
+  function MoviePosterButton({ item }) {
+    return (
+      <Pressable
+        onPress={() =>
+          navigation.push("Movie", {
+            movieId: item.id,
+            movieTitle: item.title,
+          })
+        }
+      >
+        <MoviePoster movie={item} />
+      </Pressable>
+    );
   }
 
   return (
@@ -280,67 +333,56 @@ function Search({ navigation, route }: Props) {
       {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}
       {categoryIndex === 0 && (
         <>
-          {!loading ? (
+          {!isLoading ? (
             <FlatList
               data={filteredMovies()}
-              renderItem={({ item }) => (
-                <Pressable
-                  onPress={() =>
-                    navigation.push("Movie", {
-                      movieId: item.id,
-                      movieTitle: item.title,
-                    })
-                  }
-                >
-                  <MoviePoster movie={item} />
-                </Pressable>
-              )}
+              renderItem={MoviePosterButton}
               numColumns={2}
               contentContainerStyle={styles.flatlistContentContainer}
               columnWrapperStyle={styles.flatlistColumnWrapper}
               ref={scrollRef}
               keyExtractor={(item, index) => item.id.toString()}
               initialNumToRender={6}
-              scrollIndicatorInsets={scrollIndicatorInsets}
-              onEndReached={({ distanceFromEnd }) =>
-                dispatch({ type: "set-page", page: page + 1 })
-              }
-              onEndReachedThreshold={4}
+              // scrollIndicatorInsets={scrollIndicatorInsets}
+              showsVerticalScrollIndicator={false}
+              onEndReached={() => (hasNextPage ? fetchNextPage() : null)}
+              onEndReachedThreshold={1.5}
               ListHeaderComponent={
-                // isSearchTriggered ? (
-                <>
-                  {(movies as TMDB.Search.MultiSearchResult[]).filter(
-                    (movie) => movie.media_type === "person"
-                  ).length > 0 && (
-                    <>
-                      <ListLabel text="People" />
-                      <FlatList
-                        keyExtractor={(item) => item.id.toString()}
-                        data={movies.filter(
-                          (movie) => movie.media_type === "person"
-                        )}
-                        renderItem={(person) => (
-                          <SearchPerson
-                            navigation={navigation}
-                            person={person.item}
-                          />
-                        )}
-                        horizontal={true}
-                        contentContainerStyle={{
-                          marginBottom: 16,
-                          paddingRight: 16,
-                        }}
-                        style={{
-                          marginHorizontal: -16,
-                          paddingHorizontal: 16,
-                        }}
-                        showsHorizontalScrollIndicator={false}
-                      />
-                    </>
-                  )}
-                  {movies.filter((movie) => movie.media_type === "movie")
-                    .length > 0 && <ListLabel text="Movies" />}
-                </>
+                isSearchTriggered && (
+                  <>
+                    {(movies as TMDB.Search.MultiSearchResult[]).filter(
+                      (movie) => movie.media_type === "person"
+                    ).length > 0 && (
+                      <>
+                        <ListLabel text="People" />
+                        <FlatList
+                          keyExtractor={(item) => item.id.toString()}
+                          data={movies.filter(
+                            (movie) => movie.media_type === "person"
+                          )}
+                          renderItem={(person) => (
+                            <SearchPerson
+                              navigation={navigation}
+                              person={person.item}
+                            />
+                          )}
+                          horizontal={true}
+                          contentContainerStyle={{
+                            marginBottom: 16,
+                            paddingRight: 16,
+                          }}
+                          style={{
+                            marginHorizontal: -16,
+                            paddingHorizontal: 16,
+                          }}
+                          showsHorizontalScrollIndicator={false}
+                        />
+                      </>
+                    )}
+                    {movies.filter((movie) => movie.media_type === "movie")
+                      .length > 0 && <ListLabel text="Movies" />}
+                  </>
+                )
               }
             />
           ) : (
@@ -374,7 +416,8 @@ function Search({ navigation, route }: Props) {
               ref={scrollRef}
               keyExtractor={(item, index) => item.id.toString()}
               initialNumToRender={6}
-              scrollIndicatorInsets={scrollIndicatorInsets}
+              // scrollIndicatorInsets={scrollIndicatorInsets}
+              showsVerticalScrollIndicator={false}
             />
             <GameReleaseModal modalizeRef={modalizeRef} game={game} />
           </GameContext.Provider>

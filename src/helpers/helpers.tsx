@@ -31,7 +31,7 @@ export const tmdbMovieGenres = [
   { id: 16, name: "Animation", icon: "person-running" },
   { id: 35, name: "Comedy", icon: "face-laugh-squint" },
   { id: 80, name: "Crime", icon: "handcuffs" },
-  { id: 99, name: "Documentary", icon: "camcorder" },
+  { id: 99, name: "Documentary", icon: "video-camera" },
   { id: 18, name: "Drama", icon: "masks-theater" },
   { id: 10751, name: "Family", icon: "children" },
   { id: 14, name: "Fantasy", icon: "hat-wizard" },

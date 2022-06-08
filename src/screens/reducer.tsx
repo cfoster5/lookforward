@@ -22,7 +22,6 @@ export function reducer(
         categoryIndex: action.categoryIndex,
         searchValue: "",
         isSearchTriggered: false,
-        page: 1,
         games: state.initGames,
       };
     case "set-searchValue":
@@ -34,12 +33,6 @@ export function reducer(
       return {
         ...state,
         isSearchTriggered: action.isSearchTriggered,
-        page: 1,
-      };
-    case "set-page":
-      return {
-        ...state,
-        page: action.page,
       };
     case "set-initGames":
       return {
@@ -56,7 +49,6 @@ export function reducer(
       return {
         ...state,
         option: action.option,
-        page: 1,
         isSearchTriggered: false,
       };
     default:

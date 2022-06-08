@@ -3,6 +3,7 @@ import { Platform, StatusBar, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import SplashScreen from "react-native-splash-screen";
 import { OverflowMenuProvider } from "react-navigation-header-buttons";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faBomb,
@@ -23,6 +24,7 @@ import {
   faRocket,
   faScroll,
   faUserSecret,
+  faVideoCamera,
 } from "@fortawesome/free-solid-svg-icons";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
@@ -42,6 +44,8 @@ import TabStackContext from "./src/contexts/TabStackContext";
 import { AuthStack } from "./src/navigation/AuthStack";
 import { TabStack } from "./src/navigation/TabStack";
 
+const queryClient = new QueryClient();
+
 library.add(
   faPersonHiking,
   faHatWizard,
@@ -60,7 +64,8 @@ library.add(
   faFaceLaughSquint,
   faMasksTheater,
   faChildren,
-  faScroll
+  faScroll,
+  faVideoCamera
 );
 
 export default function App() {
@@ -170,17 +175,19 @@ export default function App() {
         <StatusBar
           barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
         />
-        {user ? (
-          <OverflowMenuProvider>
-            <TabStackContext.Provider
-              value={{ user: user.uid, theme: colorScheme }}
-            >
-              <TabStack />
-            </TabStackContext.Provider>
-          </OverflowMenuProvider>
-        ) : (
-          <AuthStack />
-        )}
+        <QueryClientProvider client={queryClient}>
+          {user ? (
+            <OverflowMenuProvider>
+              <TabStackContext.Provider
+                value={{ user: user.uid, theme: colorScheme }}
+              >
+                <TabStack />
+              </TabStackContext.Provider>
+            </OverflowMenuProvider>
+          ) : (
+            <AuthStack />
+          )}
+        </QueryClientProvider>
       </NavigationContainer>
     </SafeAreaProvider>
   );

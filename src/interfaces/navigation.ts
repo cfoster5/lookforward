@@ -9,33 +9,27 @@ export namespace Navigation {
     ProfileTab: undefined;
   };
 
-  export type FindStackParamList = {
-    Find: undefined;
+  type MovieScreens = {
     Movie: { movieId: Movie["id"]; movieTitle: Movie["title"] };
-    Game: { game: IGDB.Game.Game };
     MovieDiscover: {
       genre?: TMDB.Genre;
       company?: TMDB.ProductionCompany;
       keyword?: TMDB.Movie.Keywords;
       provider?: MovieWatchProvider;
     };
-    GameDiscover: { genre?: any; company?: any; keyword?: any };
     Actor: { personId: number };
     Collection: { collectionId: number };
   };
 
+  export type FindStackParamList = {
+    Find: undefined;
+    Game: { game: IGDB.Game.Game };
+    GameDiscover: { genre?: any; company?: any; keyword?: any };
+  } & MovieScreens;
+
   export type CountdownStackParamList = {
     Countdown: undefined;
-    Movie: { movieId: Movie["id"]; movieTitle: Movie["title"] };
-    MovieDiscover: {
-      genre?: TMDB.Genre;
-      company?: TMDB.ProductionCompany;
-      keyword?: TMDB.Movie.Keywords;
-      provider?: MovieWatchProvider;
-    };
-    Actor: { personId: number };
-    Collection: { collectionId: number };
-  };
+  } & MovieScreens;
 
   export type ProfileStackParamList = {
     Profile: undefined;

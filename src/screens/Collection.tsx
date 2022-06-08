@@ -197,7 +197,12 @@ export function Collection({ navigation, route }: Props) {
             <Pressable
               key={index}
               style={{ marginBottom: 16 }}
-              onPress={() => navigation.push("Movie", { movie: movie })}
+              onPress={() =>
+                navigation.push("Movie", {
+                  movieId: movie.id,
+                  movieTitle: movie.title,
+                })
+              }
             >
               <MoviePoster movie={movie} />
             </Pressable>

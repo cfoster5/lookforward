@@ -213,7 +213,7 @@ function CountdownItem({
         showButtons
           ? updateSelections(item.documentID)
           : sectionName === "Movies"
-          ? navigation.navigate("Movie", { movie: item })
+          ? navigation.navigate("Movie", { movieId: item.id })
           : undefined
       }
     >

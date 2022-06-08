@@ -1,5 +1,5 @@
 import { IGDB } from "./igdb";
-import { MovieWatchProvider, TMDB } from "./tmdb";
+import { Movie, MovieWatchProvider, TMDB } from "./tmdb";
 import { Trakt } from "./trakt";
 
 export namespace Navigation {
@@ -11,7 +11,7 @@ export namespace Navigation {
 
   export type FindStackParamList = {
     Find: undefined;
-    Movie: { movie: TMDB.BaseMovie };
+    Movie: { movieId: Movie["id"]; movieTitle: Movie["title"] };
     Game: { game: IGDB.Game.Game };
     MovieDiscover: {
       genre?: TMDB.Genre;
@@ -26,7 +26,7 @@ export namespace Navigation {
 
   export type CountdownStackParamList = {
     Countdown: undefined;
-    Movie: { movie: TMDB.BaseMovie };
+    Movie: { movieId: Movie["id"]; movieTitle: Movie["title"] };
     MovieDiscover: {
       genre?: TMDB.Genre;
       company?: TMDB.ProductionCompany;

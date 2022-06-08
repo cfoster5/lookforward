@@ -295,7 +295,12 @@ function MovieDiscover({ route, navigation }: any) {
           renderItem={({ item }: { item: Movie }) => (
             <Pressable
               style={{ marginBottom: 16 }}
-              onPress={() => navigation.push("Movie", { movie: item })}
+              onPress={() =>
+                navigation.push("Movie", {
+                  movieId: item.id,
+                  movieTitle: item.title,
+                })
+              }
             >
               <MoviePoster movie={item} />
             </Pressable>

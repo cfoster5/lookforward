@@ -212,7 +212,12 @@ function Actor({ route, navigation }: Props) {
                   <Pressable
                     key={i}
                     style={{ marginBottom: 16 }}
-                    onPress={() => navigation.push("Movie", { movie: credit })}
+                    onPress={() =>
+                      navigation.push("Movie", {
+                        movieId: credit.id,
+                        movieTitle: credit.title,
+                      })
+                    }
                   >
                     <MoviePoster movie={credit} />
                   </Pressable>
@@ -233,7 +238,12 @@ function Actor({ route, navigation }: Props) {
                   <Pressable
                     key={i}
                     style={{ marginBottom: 16 }}
-                    onPress={() => navigation.push("Movie", { movie: credit })}
+                    onPress={() =>
+                      navigation.push("Movie", {
+                        movieId: credit.id,
+                        movieTitle: credit.title,
+                      })
+                    }
                   >
                     <MoviePoster movie={credit} />
                   </Pressable>

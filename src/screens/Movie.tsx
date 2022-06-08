@@ -141,13 +141,13 @@ interface Props {
 }
 
 function MovieScreen({ navigation, route }: Props) {
-  const { movie } = route.params;
+  const { movieId, movieTitle } = route.params;
   const [countdownId, setCountdownId] =
     useState<FirestoreMovie["documentID"]>();
   const { user, theme } = useContext(TabStackContext);
   const { movieSubs } = useContext(SubContext);
 
-  const { movieDetails, traktDetails, loading } = useGetMovie(movie.id);
+  const { movieDetails, traktDetails, loading } = useGetMovie(movieId);
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
@@ -207,7 +207,7 @@ function MovieScreen({ navigation, route }: Props) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: movie.title,
+      title: movieTitle,
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           <Item
@@ -215,22 +215,22 @@ function MovieScreen({ navigation, route }: Props) {
             iconName={countdownId ? "checkmark-outline" : "add-outline"}
             onPress={() =>
               !countdownId
-                ? subToMovie(movie.id.toString(), user)
+                ? subToMovie(movieId.toString(), user)
                 : removeSub("movies", countdownId, user)
             }
           />
         </HeaderButtons>
       ),
     });
-  }, [movie, navigation, countdownId]);
+  }, [movieTitle, navigation, countdownId]);
 
   useEffect(() => {
     let documentID = movieSubs.find(
-      (sub) => sub.documentID == movie.id.toString()
+      (sub) => sub.documentID == movieId.toString()
     )?.documentID;
 
     setCountdownId(documentID);
-  }, [movieSubs, movie]);
+  }, [movieSubs, movieId]);
 
   useEffect(() => {
     if (
@@ -636,7 +636,10 @@ function MovieScreen({ navigation, route }: Props) {
                     renderItem={({ item }) => (
                       <Pressable
                         onPress={() =>
-                          navigation.push("Movie", { movie: item })
+                          navigation.push("Movie", {
+                            movieId: item.id,
+                            movieTitle: item.title,
+                          })
                         }
                       >
                         <MoviePoster

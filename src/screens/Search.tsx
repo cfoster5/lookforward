@@ -285,7 +285,12 @@ function Search({ navigation, route }: Props) {
               data={filteredMovies()}
               renderItem={({ item }) => (
                 <Pressable
-                  onPress={() => navigation.push("Movie", { movie: item })}
+                  onPress={() =>
+                    navigation.push("Movie", {
+                      movieId: item.id,
+                      movieTitle: item.title,
+                    })
+                  }
                 >
                   <MoviePoster movie={item} />
                 </Pressable>

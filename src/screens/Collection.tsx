@@ -1,12 +1,10 @@
 import React, { useLayoutEffect, useState } from "react";
 import {
   Dimensions,
-  FlatList,
   ImageBackground,
   Platform,
   Pressable,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
@@ -16,7 +14,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 import {
   BottomTabNavigationProp,
   useBottomTabBarHeight,
@@ -28,7 +26,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { MoviePoster } from "../components/Posters/MoviePoster";
 import { Text as ThemedText } from "../components/Themed";
-import { calculateWidth } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { useGetCollection } from "../hooks/useGetCollection";
 import { Navigation } from "../interfaces/navigation";
@@ -54,23 +51,6 @@ interface Props {
 
 const AnimatedImageBackground =
   Animated.createAnimatedComponent(ImageBackground);
-
-function DiscoverListLabel({ text }: { text: string }) {
-  return (
-    <Text
-      style={[
-        iOSUIKit.subheadEmphasized,
-        {
-          color: iOSColors.gray,
-          textAlign: "center",
-          marginTop: 16,
-        },
-      ]}
-    >
-      {text}
-    </Text>
-  );
-}
 
 export const horizontalListProps = {
   horizontal: true,

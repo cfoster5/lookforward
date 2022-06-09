@@ -23,11 +23,12 @@ export default function ButtonMultiState({
     <Pressable
       onPress={onPress}
       style={{
+        // Below colors extracted from Apple Fitness category buttons
         backgroundColor:
           selectedVal === (test !== undefined ? test : text)
-            ? "rgb(91, 91, 96)"
+            ? "rgb(53, 53, 53)"
             : undefined,
-        borderColor: "rgb(91, 91, 96)",
+        borderColor: "rgb(53, 53, 53)",
         borderWidth: 1,
         borderRadius: 16,
         paddingHorizontal: 24,

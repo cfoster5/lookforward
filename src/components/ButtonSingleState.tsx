@@ -23,8 +23,8 @@ export default function ButtonSingleState({
     <Pressable
       onPress={onPress}
       style={{
-        backgroundColor: "rgb(91, 91, 96)",
-        borderColor: "rgb(91, 91, 96)",
+        backgroundColor: "rgb(53, 53, 53)",
+        borderColor: "rgb(53, 53, 53)",
         // Use below when animated background with colors is implemented
         // backgroundColor: "transparent",
         // borderColor: "#636366",

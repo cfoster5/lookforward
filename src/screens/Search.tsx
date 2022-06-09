@@ -178,6 +178,9 @@ function Search({ navigation, route }: Props) {
 
   useEffect(() => {
     filterModalRef.current?.close();
+    if (movies) {
+      scrollRef.current?.scrollToIndex({ index: 0 });
+    }
   }, [option]);
 
   // const scrollIndicatorInsets =

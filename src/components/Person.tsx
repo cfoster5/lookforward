@@ -42,6 +42,8 @@ function Person({ navigation, person }: Props) {
       width: windowWidth / 3.5 - 16,
       height: (windowWidth / 3.5 - 16) * 1.5,
       borderRadius: 8,
+      borderWidth: 1,
+      borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
     },
   });
 

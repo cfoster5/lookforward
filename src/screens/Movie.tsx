@@ -269,7 +269,7 @@ function MovieScreen({ navigation, route }: Props) {
               }
             : undefined
         }
-        showsVerticalScrollIndicator={detailIndex !== 2}
+        showsVerticalScrollIndicator={detailIndex === 0}
       >
         {movieDetails!.backdrop_path && (
           <AnimatedImageBackground

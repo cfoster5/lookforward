@@ -30,7 +30,7 @@ export default function ButtonMultiState({
             : undefined,
         borderColor: "rgb(53, 53, 53)",
         borderWidth: 1,
-        borderRadius: 16,
+        borderRadius: 22,
         paddingHorizontal: 24,
         paddingVertical: 8,
         marginRight: 8,

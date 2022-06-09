@@ -29,7 +29,7 @@ export default function ButtonSingleState({
         // backgroundColor: "transparent",
         // borderColor: "#636366",
         borderWidth: 1,
-        borderRadius: 16,
+        borderRadius: 22,
         paddingHorizontal: 24,
         paddingVertical: 8,
         marginRight: 8,

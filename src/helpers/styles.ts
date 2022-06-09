@@ -26,14 +26,5 @@ export const reusableStyles = StyleSheet.create({
     ...iOSUIKit.footnoteEmphasizedObject,
     color: iOSColors.gray,
   },
-  credit: {
-    // width: (Dimensions.get("window").width / 3) - 32, // is 50% of container width
-    width: Dimensions.get("window").width / 3.5 - 32, // is 50% of container width
-    // height: (4 / 3) * ((Dimensions.get("window").width / 3) - 32),
-    height: (Dimensions.get("window").width / 3.5 - 32) * 1.5,
-    borderRadius: 8,
-    resizeMode: "stretch",
-    marginTop: 16,
-  },
   inset: { top: 0, bottom: 0, left: 0, right: 0 },
 });

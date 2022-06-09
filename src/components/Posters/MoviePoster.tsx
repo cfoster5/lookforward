@@ -20,7 +20,7 @@ export function MoviePoster({
   );
   return (
     <>
-      <PosterButton movie={movie} inCountdown={inCountdown} />
+      <PosterButton movieId={movie.id.toString()} inCountdown={inCountdown} />
       {movie.poster_path ? (
         <FastImage
           style={{

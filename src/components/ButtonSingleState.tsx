@@ -43,6 +43,7 @@ export default function ButtonSingleState({
           icon={icon}
           color={"white"}
           style={{ marginRight: 8, alignSelf: "center" }}
+          size={iOSUIKit.footnoteEmphasizedObject.lineHeight}
         />
       )}
       <Text

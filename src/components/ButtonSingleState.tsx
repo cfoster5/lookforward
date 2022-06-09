@@ -35,6 +35,7 @@ export default function ButtonSingleState({
         marginRight: 8,
         marginTop: 16,
         justifyContent: "center",
+        minHeight: 44,
         ...buttonStyle,
       }}
     >

@@ -35,6 +35,7 @@ export default function ButtonMultiState({
         paddingVertical: 8,
         marginRight: 8,
         marginTop: 16,
+        minHeight: 44,
         justifyContent: "center",
       }}
     >

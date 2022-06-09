@@ -306,11 +306,9 @@ function Search({ navigation, route }: Props) {
       {((!isSearchTriggered && categoryIndex === 0) || categoryIndex === 1) && (
         <View
           style={{
-            // flex: 1,
             marginHorizontal: 16,
             marginBottom: 16,
             flexDirection: "row",
-            flexWrap: "nowrap",
             justifyContent: "space-between",
           }}
         >
@@ -320,12 +318,7 @@ function Search({ navigation, route }: Props) {
           />
           {categoryIndex === 0 && (
             <Pressable onPress={() => filterModalRef.current?.open()}>
-              <Text
-                style={{
-                  ...iOSUIKit.bodyObject,
-                  color: iOSColors.blue,
-                }}
-              >
+              <Text style={[iOSUIKit.body, { color: iOSColors.blue }]}>
                 More
               </Text>
             </Pressable>

@@ -233,13 +233,19 @@ function MovieScreen({ navigation, route }: Props) {
   }, [movieSubs, movieId]);
 
   useEffect(() => {
-    if (
-      movieDetails?.videos.results.filter((result) => result.type === "Trailer")
-        .length === 0
-    ) {
-      setMediaSelections({ ...mediaSelections, videos: "Teaser" });
-    }
-  }, [movieDetails?.videos.results]);
+    const obj = {
+      videos:
+        movieDetails?.videos.results.filter(
+          (result) => result.type === "Trailer"
+        ).length === 0
+          ? "Teaser"
+          : "Trailer",
+      images:
+        movieDetails?.images.posters.length === 0 ? "backdrops" : "posters",
+    };
+
+    setMediaSelections(obj);
+  }, [movieDetails?.videos.results, movieDetails?.images]);
 
   if (loading) return <LoadingScreen />;
 

@@ -5,7 +5,14 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { FlatList, Platform, Pressable, Text, View } from "react-native";
+import {
+  FlatList,
+  Platform,
+  Pressable,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { iOSUIKit } from "react-native-typography";
@@ -26,6 +33,7 @@ import { useGetMovieWatchProviders } from "../hooks/useGetMovieWatchProviders";
 import { Movie } from "../interfaces/tmdb";
 
 function MovieDiscover({ route, navigation }: any) {
+  const { width: windowWidth } = useWindowDimensions();
   const { genre, company, keyword, provider } = route.params;
   const [movies, setMovies] = useState<Movie[]>([]);
   const scrollRef = useRef<FlatList>(null);
@@ -293,17 +301,20 @@ function MovieDiscover({ route, navigation }: any) {
           }
           data={movies}
           renderItem={({ item }: { item: Movie }) => (
-            <Pressable
-              style={{ marginBottom: 16 }}
-              onPress={() =>
+            <MoviePoster
+              pressHandler={() =>
                 navigation.push("Movie", {
                   movieId: item.id,
                   movieTitle: item.title,
                 })
               }
-            >
-              <MoviePoster movie={item} />
-            </Pressable>
+              movie={item}
+              posterPath={item.poster_path}
+              style={{
+                width: windowWidth / 2 - 24,
+                height: (windowWidth / 2 - 24) * 1.5,
+              }}
+            />
           )}
           numColumns={2}
           columnWrapperStyle={{
@@ -316,19 +327,6 @@ function MovieDiscover({ route, navigation }: any) {
           onEndReached={({ distanceFromEnd }) => setPageIndex(pageIndex + 1)}
           // Fire onEndReached when 4 screen lengths away from bottom
           onEndReachedThreshold={4}
-          // ListHeaderComponent={
-          //   showSortOptions
-          //     ?
-          //     <FlatList
-          //       style={{ flexDirection: "row" }}
-          //       horizontal={true}
-          //       data={sortOptions}
-          //       renderItem={({ item }) => <SortMethod method={item} />}
-          //       keyExtractor={index => index.toString()}
-          //     />
-          //     :
-          //     <></>
-          // }
         />
       ) : (
         <LoadingScreen />

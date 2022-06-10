@@ -38,14 +38,13 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { AnimatedBackground } from "../components/AnimatedBackground";
 import { BlueBullet } from "../components/BlueBullet";
 import ButtonSingleState from "../components/ButtonSingleState";
 import CategoryControl from "../components/CategoryControl";
 import WatchProvidersModal from "../components/Details/WatchProvidersModal";
 import { DiscoverListLabel } from "../components/DiscoverListLabel";
-import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import { ExpandableText } from "../components/ExpandableText";
+import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { MediaSelection } from "../components/MediaSelection";
 import Person from "../components/Person";
@@ -512,35 +511,39 @@ function MovieScreen({ navigation, route }: Props) {
               <FlatList
                 keyExtractor={(item) => item.file_path}
                 data={movieDetails!.images[mediaSelections.images]}
-                renderItem={({ item, index }) => (
-                  <Pressable
-                    onPress={() =>
-                      setShowImageViewer({ isVisible: true, index: index })
-                    }
-                  >
-                    <FastImage
+                renderItem={({ item, index }) =>
+                  mediaSelections.images === "posters" ? (
+                    <MoviePoster
+                      pressHandler={() =>
+                        setShowImageViewer({ isVisible: true, index: index })
+                      }
+                      posterPath={item.file_path}
                       style={{
-                        width:
-                          mediaSelections.images === "posters"
-                            ? calculateWidth(16, 8, 2.5)
-                            : calculateWidth(16, 8, 1.5),
-                        height:
-                          mediaSelections.images === "posters"
-                            ? calculateWidth(16, 8, 2.5) * 1.5
-                            : calculateWidth(16, 8, 1.5) / 1.78,
-                        borderWidth: 1,
-                        borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
-                        borderRadius: 8,
-                      }}
-                      source={{
-                        uri:
-                          mediaSelections.images === "posters"
-                            ? `https://image.tmdb.org/t/p/w300${item.file_path}`
-                            : `https://image.tmdb.org/t/p/w780${item.file_path}`,
+                        width: calculateWidth(16, 8, 2.5),
+                        height: calculateWidth(16, 8, 2.5) * 1.5,
                       }}
                     />
-                  </Pressable>
-                )}
+                  ) : (
+                    <Pressable
+                      onPress={() =>
+                        setShowImageViewer({ isVisible: true, index: index })
+                      }
+                    >
+                      <FastImage
+                        style={{
+                          width: calculateWidth(16, 8, 1.5),
+                          height: calculateWidth(16, 8, 1.5) / 1.78,
+                          borderWidth: 1,
+                          borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
+                          borderRadius: 8,
+                        }}
+                        source={{
+                          uri: `https://image.tmdb.org/t/p/w780${item.file_path}`,
+                        }}
+                      />
+                    </Pressable>
+                  )
+                }
                 {...horizontalListProps}
               />
             </View>
@@ -638,22 +641,20 @@ function MovieScreen({ navigation, route }: Props) {
                     keyExtractor={(item) => item.id.toString()}
                     data={movieDetails!.recommendations.results}
                     renderItem={({ item }) => (
-                      <Pressable
-                        onPress={() =>
+                      <MoviePoster
+                        pressHandler={() =>
                           navigation.push("Movie", {
                             movieId: item.id,
                             movieTitle: item.title,
                           })
                         }
-                      >
-                        <MoviePoster
-                          movie={item}
-                          style={{
-                            width: calculateWidth(16, 8, 2.5),
-                            height: calculateWidth(16, 8, 2.5) * 1.5,
-                          }}
-                        />
-                      </Pressable>
+                        movie={item}
+                        posterPath={item.poster_path}
+                        style={{
+                          width: calculateWidth(16, 8, 2.5),
+                          height: calculateWidth(16, 8, 2.5) * 1.5,
+                        }}
+                      />
                     )}
                     {...horizontalListProps}
                   />

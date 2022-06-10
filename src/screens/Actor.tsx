@@ -24,6 +24,7 @@ import { LoadingScreen } from "../components/LoadingScreen";
 import { MoviePoster } from "../components/Posters/MoviePoster";
 import { Text as ThemedText } from "../components/Themed";
 import { dateToLocaleString } from "../helpers/formatting";
+import { calculateWidth } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
 import { TMDB } from "../interfaces/tmdb";
@@ -209,18 +210,22 @@ function Actor({ route, navigation }: Props) {
                     : 0
                 )
                 .map((credit, i) => (
-                  <Pressable
-                    key={i}
-                    style={{ marginBottom: 16 }}
-                    onPress={() =>
+                  <MoviePoster
+                    key={credit.id.toString()}
+                    pressHandler={() =>
                       navigation.push("Movie", {
                         movieId: credit.id,
                         movieTitle: credit.title,
                       })
                     }
-                  >
-                    <MoviePoster movie={credit} />
-                  </Pressable>
+                    movie={credit}
+                    posterPath={credit.poster_path}
+                    style={{
+                      width: calculateWidth(16, 16, 2),
+                      height: calculateWidth(16, 16, 2) * 1.5,
+                    }}
+                    buttonStyle={{ marginBottom: 16 }}
+                  />
                 ))
             : person?.movie_credits.crew
                 .filter((credit) => credit.job === selectedJob)
@@ -235,18 +240,22 @@ function Actor({ route, navigation }: Props) {
                     : 0
                 )
                 .map((credit, i) => (
-                  <Pressable
-                    key={i}
-                    style={{ marginBottom: 16 }}
-                    onPress={() =>
+                  <MoviePoster
+                    key={credit.id.toString()}
+                    pressHandler={() =>
                       navigation.push("Movie", {
                         movieId: credit.id,
                         movieTitle: credit.title,
                       })
                     }
-                  >
-                    <MoviePoster movie={credit} />
-                  </Pressable>
+                    movie={credit}
+                    posterPath={credit.poster_path}
+                    style={{
+                      width: calculateWidth(16, 16, 2),
+                      height: calculateWidth(16, 16, 2) * 1.5,
+                    }}
+                    buttonStyle={{ marginBottom: 16 }}
+                  />
                 ))}
         </View>
       </View>

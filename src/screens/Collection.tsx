@@ -27,6 +27,7 @@ import { ExpandableText } from "../components/ExpandableText";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { MoviePoster } from "../components/Posters/MoviePoster";
 import { Text as ThemedText } from "../components/Themed";
+import { calculateWidth } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { useGetCollection } from "../hooks/useGetCollection";
 import { Navigation } from "../interfaces/navigation";
@@ -173,18 +174,22 @@ export function Collection({ navigation, route }: Props) {
           }}
         >
           {collection!.parts.map((movie, index) => (
-            <Pressable
-              key={index}
-              style={{ marginBottom: 16 }}
-              onPress={() =>
+            <MoviePoster
+              key={movie.id.toString()}
+              pressHandler={() =>
                 navigation.push("Movie", {
                   movieId: movie.id,
                   movieTitle: movie.title,
                 })
               }
-            >
-              <MoviePoster movie={movie} />
-            </Pressable>
+              movie={movie}
+              posterPath={movie.poster_path}
+              style={{
+                width: calculateWidth(16, 16, 2),
+                height: calculateWidth(16, 16, 2) * 1.5,
+              }}
+              buttonStyle={{ marginBottom: 16 }}
+            />
           ))}
         </View>
       </View>

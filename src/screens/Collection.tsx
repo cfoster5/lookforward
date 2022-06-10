@@ -23,6 +23,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+import { ExpandableText } from "../components/ExpandableText";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { MoviePoster } from "../components/Posters/MoviePoster";
 import { Text as ThemedText } from "../components/Themed";
@@ -156,14 +157,12 @@ export function Collection({ navigation, route }: Props) {
           <ThemedText style={iOSUIKit.largeTitleEmphasized}>
             {collection!.name}
           </ThemedText>
-          <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
-            <ThemedText
-              style={[iOSUIKit.body, { paddingTop: 16 }]}
-              numberOfLines={showAllOverview ? undefined : 4}
-            >
-              {collection!.overview}
-            </ThemedText>
-          </Pressable>
+
+          <ExpandableText
+            isExpanded={showAllOverview}
+            pressHandler={() => setShowAllOverview(!showAllOverview)}
+            text={collection!.overview}
+          />
         </View>
         <View
           style={{

@@ -1,14 +1,7 @@
-import React, { Fragment, useContext, useEffect, useState } from "react";
-import {
-  Dimensions,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import React, { Fragment, useState } from "react";
+import { Dimensions, Platform, ScrollView, Text, View } from "react-native";
 import { Image } from "react-native-elements";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 import {
   BottomTabNavigationProp,
   useBottomTabBarHeight,
@@ -24,6 +17,7 @@ import { Navigation } from "../../interfaces/navigation";
 import { BlueBullet } from "../BlueBullet";
 import ButtonSingleState from "../ButtonSingleState";
 import CategoryControl from "../CategoryControl";
+import { ExpandableText } from "../ExpandableText";
 import { Text as ThemedText } from "../Themed";
 import Trailer from "../Trailer";
 
@@ -83,14 +77,13 @@ function GameDetails({ navigation, game }: Props) {
           {game.name}
         </ThemedText>
         <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
-        <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
-          <ThemedText
-            style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}
-            numberOfLines={showAllOverview ? undefined : 4}
-          >
-            {game.summary}
-          </ThemedText>
-        </Pressable>
+
+        <ExpandableText
+          isExpanded={showAllOverview}
+          pressHandler={() => setShowAllOverview(!showAllOverview)}
+          text={game.summary}
+        />
+
         <View
           style={{
             flexDirection: "row",

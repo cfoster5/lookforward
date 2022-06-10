@@ -45,6 +45,7 @@ import CategoryControl from "../components/CategoryControl";
 import WatchProvidersModal from "../components/Details/WatchProvidersModal";
 import { DiscoverListLabel } from "../components/DiscoverListLabel";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
+import { ExpandableText } from "../components/ExpandableText";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { MediaSelection } from "../components/MediaSelection";
 import Person from "../components/Person";
@@ -332,14 +333,11 @@ function MovieScreen({ navigation, route }: Props) {
             </Text>
           ) : null}
 
-          <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
-            <ThemedText
-              style={[iOSUIKit.body, { paddingTop: 16 }]}
-              numberOfLines={showAllOverview ? undefined : 4}
-            >
-              {movieDetails!.overview}
-            </ThemedText>
-          </Pressable>
+          <ExpandableText
+            pressHandler={() => setShowAllOverview(!showAllOverview)}
+            isExpanded={showAllOverview}
+            text={movieDetails!.overview}
+          />
 
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {movieDetails!.genres.map((genre, index) => (

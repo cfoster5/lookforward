@@ -12,19 +12,19 @@ import { IGDB } from "../interfaces/igdb";
 import { Movie, Recommendation } from "../interfaces/tmdb";
 
 interface Props {
-  movie?: Movie | Recommendation;
+  movieId?: string;
   game?: IGDB.Game.Game;
   inCountdown: boolean;
 }
 
-function PosterButton({ movie, game, inCountdown }: Props) {
+function PosterButton({ movieId, game, inCountdown }: Props) {
   const { user } = useContext(TabStackContext);
   const { setGame } = useContext(GameContext);
   const { games } = useContext(SubContext);
 
   let docId = "";
-  if (movie) {
-    docId = movie.id.toString();
+  if (movieId) {
+    docId = movieId;
   }
   if (game) {
     docId = games.find(
@@ -95,7 +95,7 @@ function PosterButton({ movie, game, inCountdown }: Props) {
   }
 
   function handlePress() {
-    if (movie) {
+    if (movieId) {
       inCountdown ? deleteItem("movies") : addMovieToList();
     }
     if (game) {

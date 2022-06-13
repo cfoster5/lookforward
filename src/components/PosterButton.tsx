@@ -11,7 +11,7 @@ import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
 
 interface Props {
-  movieId: string;
+  movieId?: string;
   game?: IGDB.Game.Game;
   inCountdown: boolean;
 }

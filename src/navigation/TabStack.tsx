@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Platform } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 import { iOSColors } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { BlurView } from "@react-native-community/blur";
@@ -77,7 +77,7 @@ export function TabStack() {
               : undefined,
           tabBarBackground: () =>
             Platform.OS === "ios" ? (
-              <BlurView style={{ flex: 1 }} />
+              <BlurView style={StyleSheet.absoluteFill} />
             ) : undefined,
         })}
       >

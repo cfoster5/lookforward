@@ -75,7 +75,7 @@ export function AnimatedBackground({
             ))}
           </Animated.View>
           <BlurView
-            style={styles.absolute}
+            style={StyleSheet.absoluteFill}
             // Adapts to device setting, so manually setting to dark
             blurType="dark"
             // blurAmount={100}
@@ -89,13 +89,3 @@ export function AnimatedBackground({
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  absolute: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    bottom: 0,
-    right: 0,
-  },
-});

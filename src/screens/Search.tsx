@@ -12,6 +12,7 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
@@ -30,7 +31,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
-import CategoryControl from "../components/CategoryControl";
+import CategoryControl from "../components/CategoryControl/CategoryControl";
 import GameReleaseModal from "../components/GamePlatformPicker";
 import { LoadingScreen } from "../components/LoadingScreen";
 import MovieSearchModal from "../components/MovieSearchModal";
@@ -104,6 +105,7 @@ async function getMovies({ pageParam = 1, queryKey }) {
 }
 
 function Search({ navigation, route }: Props) {
+  const { width: windowWidth } = useWindowDimensions();
   const [
     { categoryIndex, searchValue, isSearchTriggered, initGames, games, option },
     dispatch,
@@ -220,21 +222,6 @@ function Search({ navigation, route }: Props) {
     }
   }
 
-  function MoviePosterButton({ item }) {
-    return (
-      <Pressable
-        onPress={() =>
-          navigation.push("Movie", {
-            movieId: item.id,
-            movieTitle: item.title,
-          })
-        }
-      >
-        <MoviePoster movie={item} />
-      </Pressable>
-    );
-  }
-
   return (
     <>
       <SafeAreaView
@@ -332,7 +319,22 @@ function Search({ navigation, route }: Props) {
           {!isLoading ? (
             <FlatList
               data={filteredMovies()}
-              renderItem={MoviePosterButton}
+              renderItem={({ item }) => (
+                <MoviePoster
+                  pressHandler={() =>
+                    navigation.push("Movie", {
+                      movieId: item.id,
+                      movieTitle: item.title,
+                    })
+                  }
+                  movie={item}
+                  posterPath={item.poster_path}
+                  style={{
+                    width: windowWidth / 2 - 24,
+                    height: (windowWidth / 2 - 24) * 1.5,
+                  }}
+                />
+              )}
               numColumns={2}
               contentContainerStyle={styles.flatlistContentContainer}
               columnWrapperStyle={styles.flatlistColumnWrapper}

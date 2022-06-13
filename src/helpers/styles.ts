@@ -26,5 +26,4 @@ export const reusableStyles = StyleSheet.create({
     ...iOSUIKit.footnoteEmphasizedObject,
     color: iOSColors.gray,
   },
-  inset: { top: 0, bottom: 0, left: 0, right: 0 },
 });

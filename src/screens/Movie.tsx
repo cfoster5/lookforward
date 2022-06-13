@@ -9,7 +9,6 @@ import {
   Dimensions,
   FlatList,
   Image,
-  ImageBackground,
   Platform,
   Pressable,
   ScrollView,
@@ -19,12 +18,9 @@ import {
 } from "react-native";
 import FastImage from "react-native-fast-image";
 import ImageView from "react-native-image-viewing";
-import LinearGradient from "react-native-linear-gradient";
 import { Modalize } from "react-native-modalize";
 import Animated, {
-  interpolate,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSColors, iOSUIKit } from "react-native-typography";
@@ -38,12 +34,13 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { AnimatedBackground } from "../components/AnimatedBackground";
+import { AnimatedHeaderImage } from "../components/AnimatedHeaderImage";
 import { BlueBullet } from "../components/BlueBullet";
 import ButtonSingleState from "../components/ButtonSingleState";
-import CategoryControl from "../components/CategoryControl";
+import CategoryControl from "../components/CategoryControl/CategoryControl";
 import WatchProvidersModal from "../components/Details/WatchProvidersModal";
 import { DiscoverListLabel } from "../components/DiscoverListLabel";
+import { ExpandableText } from "../components/ExpandableText";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { MediaSelection } from "../components/MediaSelection";
@@ -167,40 +164,7 @@ function MovieScreen({ navigation, route }: Props) {
 
   const [creditsSelection, setCreditsSelection] = useState("Cast");
 
-  const headerStyle = useAnimatedStyle(() => {
-    return {
-      // opacity:
-      //   scrollOffset.value < 0
-      //     ? 2 -
-      //       (styles.backdrop.height + Math.abs(scrollOffset.value)) /
-      //         styles.backdrop.height
-      //     : 1,
-      transform: [
-        {
-          scale:
-            scrollOffset.value < 0
-              ? (styles.backdrop.height + Math.abs(scrollOffset.value)) /
-                styles.backdrop.height
-              : 1,
-        },
-        {
-          translateY: interpolate(
-            scrollOffset.value,
-            [scrollOffset.value, 0],
-            [
-              // No idea why this math is working but after dividing the scale by 2, this looks perfect
-              // Could 2 be the key because I'm spreading the height on two sides?
-              scrollOffset.value /
-                ((styles.backdrop.height + Math.abs(scrollOffset.value)) /
-                  styles.backdrop.height) /
-                2,
-              0,
-            ]
-          ),
-        },
-      ],
-    };
-  });
+  const providersModalRef = useRef<Modalize>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -269,26 +233,10 @@ function MovieScreen({ navigation, route }: Props) {
         showsVerticalScrollIndicator={detailIndex === 0}
       >
         {movieDetails!.backdrop_path && (
-          <AnimatedImageBackground
-            style={[styles.backdrop, headerStyle]}
-            source={{
-              uri: `https://image.tmdb.org/t/p/w780${
-                movieDetails!.backdrop_path
-              }`,
-            }}
-          >
-            <LinearGradient
-              colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
-              start={{ x: 0, y: 0.8 }}
-              end={{ x: 0, y: 1.0 }}
-              style={[
-                {
-                  position: "absolute",
-                },
-                reusableStyles.inset,
-              ]}
-            />
-          </AnimatedImageBackground>
+          <AnimatedHeaderImage
+            scrollOffset={scrollOffset}
+            path={movieDetails!.backdrop_path}
+          />
         )}
         <View style={{ margin: 16 }}>
           <ThemedText style={iOSUIKit.largeTitleEmphasized}>
@@ -329,14 +277,11 @@ function MovieScreen({ navigation, route }: Props) {
             </Text>
           ) : null}
 
-          <Pressable onPress={() => setShowAllOverview(!showAllOverview)}>
-            <ThemedText
-              style={[iOSUIKit.body, { paddingTop: 16 }]}
-              numberOfLines={showAllOverview ? undefined : 4}
-            >
-              {movieDetails!.overview}
-            </ThemedText>
-          </Pressable>
+          <ExpandableText
+            pressHandler={() => setShowAllOverview(!showAllOverview)}
+            isExpanded={showAllOverview}
+            text={movieDetails!.overview}
+          />
 
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {movieDetails!.genres.map((genre, index) => (
@@ -615,15 +560,16 @@ function MovieScreen({ navigation, route }: Props) {
                       }}
                     />
                     <BlurView
-                      style={{
-                        position: "absolute",
-                        ...reusableStyles.inset,
-                        bottom:
-                          // use lineHeight to account for font size + space above/below
-                          (Dimensions.get("screen").width - 32) / 1.78 -
-                          iOSUIKit.bodyObject.lineHeight -
-                          16,
-                      }}
+                      style={[
+                        StyleSheet.absoluteFill,
+                        {
+                          bottom:
+                            // use lineHeight to account for font size + space above/below
+                            (Dimensions.get("screen").width - 32) / 1.78 -
+                            iOSUIKit.bodyObject.lineHeight -
+                            16,
+                        },
+                      ]}
                     />
                     <ThemedText
                       style={[
@@ -644,22 +590,20 @@ function MovieScreen({ navigation, route }: Props) {
                     keyExtractor={(item) => item.id.toString()}
                     data={movieDetails!.recommendations.results}
                     renderItem={({ item }) => (
-                      <Pressable
-                        onPress={() =>
+                      <MoviePoster
+                        pressHandler={() =>
                           navigation.push("Movie", {
                             movieId: item.id,
                             movieTitle: item.title,
                           })
                         }
-                      >
-                        <MoviePoster
-                          movie={item}
-                          style={{
-                            width: calculateWidth(16, 8, 2.5),
-                            height: calculateWidth(16, 8, 2.5) * 1.5,
-                          }}
-                        />
-                      </Pressable>
+                        movie={item}
+                        posterPath={item.poster_path}
+                        style={{
+                          width: calculateWidth(16, 8, 2.5),
+                          height: calculateWidth(16, 8, 2.5) * 1.5,
+                        }}
+                      />
                     )}
                     {...horizontalListProps}
                   />

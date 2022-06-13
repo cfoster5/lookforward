@@ -66,9 +66,6 @@ import { FirestoreMovie } from "../interfaces/firebase";
 import { Navigation } from "../interfaces/navigation";
 import { ListLabel } from "./Search";
 
-const AnimatedImageBackground =
-  Animated.createAnimatedComponent(ImageBackground);
-
 function ScrollViewWithFlatList({
   data,
   numColumns,
@@ -168,7 +165,7 @@ function MovieScreen({ navigation, route }: Props) {
     index: 0,
   });
 
-  const providersModalRef = useRef<Modalize>(null);
+  const [creditsSelection, setCreditsSelection] = useState("Cast");
 
   const headerStyle = useAnimatedStyle(() => {
     return {
@@ -370,9 +367,7 @@ function MovieScreen({ navigation, route }: Props) {
               >
                 <ListLabel text="Watch on" style={{ marginBottom: 0 }} />
                 <Pressable onPress={() => providersModalRef.current?.open()}>
-                  <Text
-                    style={[iOSUIKit.bodyEmphasized, { color: iOSColors.blue }]}
-                  >
+                  <Text style={[iOSUIKit.body, { color: iOSColors.blue }]}>
                     More
                   </Text>
                 </Pressable>
@@ -422,17 +417,33 @@ function MovieScreen({ navigation, route }: Props) {
         />
         <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
           {detailIndex === 0 && (
-            <View>
-              {movieDetails!.credits.crew
-                ?.filter((person) => person.job === "Director")
-                .map((person, i) => (
-                  <Person key={i} navigation={navigation} person={person} />
+            <>
+              <View style={{ flexDirection: "row" }}>
+                {["Cast", "Crew"].map((element, i) => (
+                  <MediaSelection
+                    key={i}
+                    option={element}
+                    action={() => setCreditsSelection(element)}
+                    creditsSelection={creditsSelection}
+                  />
                 ))}
-              {movieDetails!.credits.cast.map((person, i) => (
-                <Person key={i} navigation={navigation} person={person} />
+              </View>
+
+              {(creditsSelection === "Cast"
+                ? movieDetails!.credits.cast
+                : movieDetails!.credits.crew.sort(
+                    ({ popularity: a }, { popularity: b }) => b - a
+                  )
+              ).map((person) => (
+                <Person
+                  key={person.credit_id}
+                  navigation={navigation}
+                  person={person}
+                />
               ))}
-            </View>
+            </>
           )}
+
           {detailIndex === 1 && (
             <View>
               {movieDetails!.videos.results.filter(
@@ -515,33 +526,26 @@ function MovieScreen({ navigation, route }: Props) {
                 keyExtractor={(item) => item.file_path}
                 data={movieDetails!.images[mediaSelections.images]}
                 renderItem={({ item, index }) => (
-                  <Pressable
-                    onPress={() =>
+                  <MoviePoster
+                    pressHandler={() =>
                       setShowImageViewer({ isVisible: true, index: index })
                     }
-                  >
-                    <FastImage
-                      style={{
-                        width:
-                          mediaSelections.images === "posters"
-                            ? calculateWidth(16, 8, 2.5)
-                            : calculateWidth(16, 8, 1.5),
-                        height:
-                          mediaSelections.images === "posters"
-                            ? calculateWidth(16, 8, 2.5) * 1.5
-                            : calculateWidth(16, 8, 1.5) / 1.78,
-                        borderWidth: 1,
-                        borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
-                        borderRadius: 8,
-                      }}
-                      source={{
-                        uri:
-                          mediaSelections.images === "posters"
-                            ? `https://image.tmdb.org/t/p/w300${item.file_path}`
-                            : `https://image.tmdb.org/t/p/w780${item.file_path}`,
-                      }}
-                    />
-                  </Pressable>
+                    posterPath={
+                      mediaSelections.images === "posters"
+                        ? item.file_path
+                        : `https://image.tmdb.org/t/p/w780${item.file_path}`
+                    }
+                    style={{
+                      width:
+                        mediaSelections.images === "posters"
+                          ? calculateWidth(16, 8, 2.5)
+                          : calculateWidth(16, 8, 1.5),
+                      height:
+                        mediaSelections.images === "posters"
+                          ? calculateWidth(16, 8, 2.5) * 1.5
+                          : calculateWidth(16, 8, 1.5) / 1.78,
+                    }}
+                  />
                 )}
                 {...horizontalListProps}
               />
@@ -685,10 +689,3 @@ function MovieScreen({ navigation, route }: Props) {
 }
 
 export default MovieScreen;
-
-const styles = StyleSheet.create({
-  backdrop: {
-    width: Dimensions.get("screen").width,
-    height: Dimensions.get("screen").width / 1.78,
-  },
-});

@@ -109,18 +109,20 @@ function WatchProvidersModal({
                       }}
                     />
                     <Text
-                      style={{
-                        ...iOSUIKit.footnoteObject,
-                        color: iOSColors.gray,
-                        marginTop: 8,
-                        textAlign: "center",
-                      }}
+                      style={[
+                        iOSUIKit.caption2,
+                        {
+                          color: iOSColors.white,
+                          marginTop: 8,
+                          textAlign: "center",
+                        },
+                      ]}
                     >
                       {item.provider_name}
                     </Text>
                   </View>
                 )}
-                keyExtractor={(item, index) => index.toString()}
+                keyExtractor={(item) => item.provider_id.toString()}
                 {...mod}
               />
             </View>

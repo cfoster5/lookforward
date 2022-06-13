@@ -1,17 +1,7 @@
 import React, { useLayoutEffect, useState } from "react";
-import {
-  Dimensions,
-  ImageBackground,
-  Platform,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
-import LinearGradient from "react-native-linear-gradient";
+import { Platform, View } from "react-native";
 import Animated, {
-  interpolate,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
@@ -23,14 +13,15 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+import { AnimatedHeaderImage } from "../components/AnimatedHeaderImage";
 import { ExpandableText } from "../components/ExpandableText";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { MoviePoster } from "../components/Posters/MoviePoster";
 import { Text as ThemedText } from "../components/Themed";
 import { calculateWidth } from "../helpers/helpers";
-import { reusableStyles } from "../helpers/styles";
 import { useGetCollection } from "../hooks/useGetCollection";
 import { Navigation } from "../interfaces/navigation";
+import { CollectionDetails } from "../interfaces/tmdb";
 
 interface Props {
   navigation:
@@ -51,18 +42,6 @@ interface Props {
   >;
 }
 
-const AnimatedImageBackground =
-  Animated.createAnimatedComponent(ImageBackground);
-
-export const horizontalListProps = {
-  horizontal: true,
-  style: { marginHorizontal: -16, marginTop: 16 },
-  ListHeaderComponent: () => <View style={{ width: 16 }} />,
-  ItemSeparatorComponent: () => <View style={{ width: 8 }} />,
-  ListFooterComponent: () => <View style={{ width: 16 }} />,
-  showsHorizontalScrollIndicator: false,
-};
-
 export function Collection({ navigation, route }: Props) {
   const { collectionId } = route.params;
   const { collection, loading } = useGetCollection(collectionId);
@@ -74,41 +53,6 @@ export function Collection({ navigation, route }: Props) {
     (e) => (scrollOffset.value = e.contentOffset.y)
   );
 
-  const headerStyle = useAnimatedStyle(() => {
-    return {
-      // opacity:
-      //   scrollOffset.value < 0
-      //     ? 2 -
-      //       (styles.backdrop.height + Math.abs(scrollOffset.value)) /
-      //         styles.backdrop.height
-      //     : 1,
-      transform: [
-        {
-          scale:
-            scrollOffset.value < 0
-              ? (styles.backdrop.height + Math.abs(scrollOffset.value)) /
-                styles.backdrop.height
-              : 1,
-        },
-        {
-          translateY: interpolate(
-            scrollOffset.value,
-            [scrollOffset.value, 0],
-            [
-              // No idea why this math is working but after dividing the scale by 2, this looks perfect
-              // Could 2 be the key because I'm spreading the height on two sides?
-              scrollOffset.value /
-                ((styles.backdrop.height + Math.abs(scrollOffset.value)) /
-                  styles.backdrop.height) /
-                2,
-              0,
-            ]
-          ),
-        },
-      ],
-    };
-  });
-
   useLayoutEffect(() => {
     navigation.setOptions({ title: collection?.name });
   }, [collection]);
@@ -116,14 +60,60 @@ export function Collection({ navigation, route }: Props) {
   if (loading) return <LoadingScreen />;
 
   return (
-    <Animated.ScrollView
+    <Animated.FlatList
+      ListHeaderComponent={
+        <>
+          {collection!.backdrop_path && (
+            <View style={{ marginHorizontal: -16 }}>
+              <AnimatedHeaderImage
+                scrollOffset={scrollOffset}
+                path={collection!.backdrop_path}
+              />
+            </View>
+          )}
+          <ThemedText
+            style={[iOSUIKit.largeTitleEmphasized, { paddingTop: 16 }]}
+          >
+            {collection!.name}
+          </ThemedText>
+          <ExpandableText
+            isExpanded={showAllOverview}
+            pressHandler={() => setShowAllOverview(!showAllOverview)}
+            text={collection!.overview}
+          />
+          <View style={{ height: 16 }} />
+        </>
+      }
       onScroll={scrollHandler}
       scrollEventThrottle={16}
-      contentContainerStyle={
+      data={collection!.parts}
+      renderItem={({ item }: { item: CollectionDetails["parts"][0] }) => (
+        <MoviePoster
+          pressHandler={() =>
+            navigation.push("Movie", {
+              movieId: item.id,
+              movieTitle: item.title,
+            })
+          }
+          movie={item}
+          posterPath={item.poster_path}
+          style={{
+            width: calculateWidth(16, 16, 2),
+            height: calculateWidth(16, 16, 2) * 1.5,
+          }}
+        />
+      )}
+      numColumns={2}
+      contentContainerStyle={[
+        { marginHorizontal: 16 },
         Platform.OS === "ios"
           ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
-          : undefined
-      }
+          : undefined,
+      ]}
+      columnWrapperStyle={{
+        justifyContent: "space-between",
+        marginBottom: 16,
+      }}
       scrollIndicatorInsets={
         Platform.OS === "ios"
           ? {
@@ -131,75 +121,9 @@ export function Collection({ navigation, route }: Props) {
             }
           : undefined
       }
-    >
-      {collection!.backdrop_path && (
-        <AnimatedImageBackground
-          style={[styles.backdrop, headerStyle]}
-          source={{
-            uri: `https://image.tmdb.org/t/p/w780${collection!.backdrop_path}`,
-          }}
-        >
-          <LinearGradient
-            colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
-            start={{ x: 0, y: 0.8 }}
-            end={{ x: 0, y: 1.0 }}
-            style={[
-              {
-                position: "absolute",
-              },
-              reusableStyles.inset,
-            ]}
-          />
-        </AnimatedImageBackground>
-      )}
-
-      <View style={{ margin: 16, marginBottom: 0 }}>
-        <View>
-          <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-            {collection!.name}
-          </ThemedText>
-
-          <ExpandableText
-            isExpanded={showAllOverview}
-            pressHandler={() => setShowAllOverview(!showAllOverview)}
-            text={collection!.overview}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "space-between",
-            marginTop: 16,
-          }}
-        >
-          {collection!.parts.map((movie, index) => (
-            <MoviePoster
-              key={movie.id.toString()}
-              pressHandler={() =>
-                navigation.push("Movie", {
-                  movieId: movie.id,
-                  movieTitle: movie.title,
-                })
-              }
-              movie={movie}
-              posterPath={movie.poster_path}
-              style={{
-                width: calculateWidth(16, 16, 2),
-                height: calculateWidth(16, 16, 2) * 1.5,
-              }}
-              buttonStyle={{ marginBottom: 16 }}
-            />
-          ))}
-        </View>
-      </View>
-    </Animated.ScrollView>
+      keyExtractor={(movie: CollectionDetails["parts"][0]) =>
+        movie.id.toString()
+      }
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  backdrop: {
-    width: Dimensions.get("screen").width,
-    height: Dimensions.get("screen").width / 1.78,
-  },
-});

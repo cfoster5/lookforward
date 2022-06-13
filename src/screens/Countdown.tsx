@@ -213,7 +213,7 @@ function Countdown({ route, navigation }: Props) {
       sections={[
         {
           data: movies.sort((a, b) =>
-            a.traktReleaseDate?.localeCompare(b.traktReleaseDate)
+            a.releaseDate?.localeCompare(b.releaseDate)
           ),
           title: "Movies",
         },

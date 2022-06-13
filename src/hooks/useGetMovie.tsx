@@ -6,6 +6,7 @@ import {
   Keywords,
   MovieDetails,
   Recommendations,
+  ReleaseDates,
   Videos,
   WatchProviders,
 } from "../interfaces/tmdb";
@@ -18,6 +19,7 @@ interface MyInterface extends MovieDetails {
   recommendations: Recommendations;
   images: Images;
   "watch/providers": WatchProviders;
+  release_dates: ReleaseDates;
 }
 
 export function useGetMovie(movieId: number) {
@@ -35,7 +37,7 @@ export function useGetMovie(movieId: number) {
     async function getMovie() {
       const tmdbResponse = await fetch(
         // `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=credits,videos,keywords,recommendations`
-        `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&append_to_response=credits,videos,keywords,recommendations,images,watch/providers&include_image_language=en,null`
+        `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&append_to_response=credits,videos,keywords,recommendations,images,watch/providers,release_dates&include_image_language=en,null,`
       );
       const tmdbJson: MyInterface = await tmdbResponse.json();
 

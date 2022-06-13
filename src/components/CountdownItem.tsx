@@ -52,11 +52,8 @@ function CountdownItem({
 
   function getReleaseDate(): string {
     if (sectionName === "Movies") {
-      if (item.traktReleaseDate) {
-        return DateTime.fromFormat(
-          (item as Movie).traktReleaseDate,
-          "yyyy-MM-dd"
-        )
+      if (item.releaseDate) {
+        return DateTime.fromISO(item.releaseDate)
           .toUTC()
           .toFormat("MM/dd/yyyy");
       } else {
@@ -71,14 +68,10 @@ function CountdownItem({
 
   function getCountdownDays(): number {
     if (sectionName === "Movies") {
-      if (item.traktReleaseDate) {
-        const diff = DateTime.fromFormat(
-          (item as Movie).traktReleaseDate,
-          "yyyy-MM-dd"
-        )
+      if (item.releaseDate) {
+        const diff = DateTime.fromISO(item.releaseDate)
           .diff(DateTime.now(), ["days"])
           .toObject();
-
         return Math.ceil(diff.days);
       } else {
         return "∞";

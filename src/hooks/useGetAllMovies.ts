@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
+import { DateTime } from "luxon";
 
 import { FirestoreMovie } from "../interfaces/firebase";
-import { MovieDetails } from "../interfaces/tmdb/movies";
+import { MovieDetails, ReleaseDates } from "../interfaces/tmdb/movies";
 import { ExtendedMovie } from "../interfaces/trakt/index";
 
 interface MyInterface extends MovieDetails {
-  traktReleaseDate: ExtendedMovie["released"];
   documentID: FirestoreMovie["documentID"];
+  traktReleaseDate: ExtendedMovie["released"];
 }
 
 export function useGetAllMovies(movieSubs: FirestoreMovie[]) {
@@ -23,25 +24,27 @@ export function useGetAllMovies(movieSubs: FirestoreMovie[]) {
       async function getMovie(movieId: FirestoreMovie["documentID"]) {
         // Get imdb_id based on tmdb_id
         const tmdbResponse = await fetch(
-          `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US`
+          `https://api.themoviedb.org/3/movie/${movieId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&append_to_response=release_dates&language=en-US`
         );
-        const tmdbJson: MovieDetails = await tmdbResponse.json();
+        const tmdbJson: MovieDetails & { release_dates: ReleaseDates } =
+          await tmdbResponse.json();
 
-        // Get release date from trakt based on imdb_id
-        const traktResponse = await fetch(
-          `https://api.trakt.tv/movies/${tmdbJson.imdb_id}?extended=full`,
-          {
-            headers: {
-              "trakt-api-key":
-                "8c5d0879072bf8414e5d6963e9a4c3bfc69b24db9ac28f1c664ff0431d2e31bb",
-            },
-          }
-        );
-        const traktJson: ExtendedMovie = await traktResponse.json();
+        console.log(DateTime.fromFormat(tmdbJson.release_date, "yyyy-MM-dd"));
+
+        let date = tmdbJson.release_dates.results
+          .find((result) => result.iso_3166_1 === "US")
+          ?.release_dates.filter((release) => release.type !== 1)
+          .sort(
+            ({ release_date: a }, { release_date: b }) =>
+              DateTime.fromISO(a) > DateTime.fromISO(b)
+          )[0].release_date;
+
+        console.log("date", date, tmdbJson.release_date);
 
         return {
           ...tmdbJson,
-          traktReleaseDate: traktJson.released,
+          // traktReleaseDate: traktJson.released,
+          releaseDate: date,
           documentID: movieId,
         };
       }

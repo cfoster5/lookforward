@@ -33,6 +33,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { DateTime } from "luxon";
 
 import { AnimatedHeaderImage } from "../components/AnimatedHeaderImage";
 import { BlueBullet } from "../components/BlueBullet";
@@ -61,6 +62,7 @@ import { reusableStyles } from "../helpers/styles";
 import { useGetMovie } from "../hooks/useGetMovie";
 import { FirestoreMovie } from "../interfaces/firebase";
 import { Navigation } from "../interfaces/navigation";
+import { ReleaseDate } from "../interfaces/tmdb";
 import { ListLabel } from "./Search";
 
 function ScrollViewWithFlatList({
@@ -132,6 +134,20 @@ interface Props {
     Navigation.FindStackParamList | Navigation.CountdownStackParamList,
     "Movie"
   >;
+}
+
+export function getReleaseDate(releaseDates: ReleaseDate[]) {
+  return DateTime.fromISO(
+    releaseDates
+      .filter((release) => release.type !== 1)
+      .sort(
+        ({ release_date: a }, { release_date: b }) =>
+          DateTime.fromISO(a) > DateTime.fromISO(b)
+      )[0].release_date
+  )
+    .toUTC()
+    .toFormat("MMMM d, yyyy")
+    .toUpperCase();
 }
 
 function MovieScreen({ navigation, route }: Props) {
@@ -244,8 +260,14 @@ function MovieScreen({ navigation, route }: Props) {
           </ThemedText>
           <View style={{ flexDirection: "row" }}>
             <Text style={reusableStyles.date}>
-              {traktDetails?.released
-                ? dateToLocaleString(traktDetails.released)
+              {movieDetails!.release_dates.results.find(
+                (result) => result.iso_3166_1 === "US"
+              )?.release_dates
+                ? getReleaseDate(
+                    movieDetails!.release_dates.results.find(
+                      (result) => result.iso_3166_1 === "US"
+                    )?.release_dates
+                  )
                 : "No release date yet"}
             </Text>
             <BlueBullet />

@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Dimensions,
+  FlatList,
   Platform,
   Pressable,
   ScrollView,
@@ -20,6 +21,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
 import ButtonMultiState from "../components/ButtonMultiState";
+import { ExpandableText } from "../components/ExpandableText";
 import { LoadingScreen } from "../components/LoadingScreen";
 import { MoviePoster } from "../components/Posters/MoviePoster";
 import { Text as ThemedText } from "../components/Themed";
@@ -99,16 +101,73 @@ function Actor({ route, navigation }: Props) {
     );
   }
 
+  function returnData() {
+    if (selectedJob === "Actor") {
+      return (
+        person?.movie_credits.cast
+          // .sort((a, b) => b.release_date?.localeCompare(a.release_date))
+          .sort((a, b) =>
+            Platform.OS === "ios"
+              ? b.release_date?.localeCompare(a.release_date)
+              : b.release_date !== a.release_date
+              ? b.release_date < a.release_date
+                ? -1
+                : 1
+              : 0
+          )
+      );
+    } else {
+      return (
+        person?.movie_credits.crew
+          .filter((credit) => credit.job === selectedJob)
+          // .sort((a, b) => b.release_date?.localeCompare(a.release_date))
+          .sort((a, b) =>
+            Platform.OS === "ios"
+              ? b.release_date?.localeCompare(a.release_date)
+              : b.release_date !== a.release_date
+              ? b.release_date < a.release_date
+                ? -1
+                : 1
+              : 0
+          )
+      );
+    }
+  }
+
   return person ? (
-    <ScrollView
-      contentContainerStyle={
+    <FlatList
+      data={returnData()}
+      renderItem={({ item }) => (
+        <MoviePoster
+          key={item.id.toString()}
+          pressHandler={() =>
+            navigation.push("Movie", {
+              movieId: item.id,
+              movieTitle: item.title,
+            })
+          }
+          movie={item}
+          posterPath={item.poster_path}
+          style={{
+            width: calculateWidth(16, 16, 2),
+            height: calculateWidth(16, 16, 2) * 1.5,
+          }}
+        />
+      )}
+      keyExtractor={(item, index) => item.id.toString()}
+      numColumns={2}
+      contentContainerStyle={[
+        {
+          marginHorizontal: 16,
+        },
         Platform.OS === "ios"
-          ? {
-              paddingTop: headerHeight,
-              paddingBottom: tabBarheight - 16,
-            }
-          : undefined
-      }
+          ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
+          : undefined,
+      ]}
+      columnWrapperStyle={{
+        justifyContent: "space-between",
+        marginBottom: 16,
+      }}
       scrollIndicatorInsets={
         Platform.OS === "ios"
           ? {
@@ -116,150 +175,72 @@ function Actor({ route, navigation }: Props) {
             }
           : undefined
       }
-    >
-      {person?.images?.profiles && (
-        <Carousel
-          ref={ref}
-          data={person?.images?.profiles}
-          renderItem={RenderItem}
-          layout={"default"}
-          loop={true}
-          sliderWidth={Dimensions.get("window").width}
-          itemWidth={width + horizontalMargin * 2}
-          // removeClippedSubviews={true}
-          containerCustomStyle={{ marginTop: 16 }}
-        />
-      )}
-      <View
-        style={
-          Platform.OS === "ios"
-            ? { margin: 16 }
-            : { marginTop: 16, marginHorizontal: 16 }
-        }
-      >
-        <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-          {person?.name}
-        </ThemedText>
-        {person?.birthday && (
-          <Text style={reusableStyles.date}>
-            {dateToLocaleString(person?.birthday)}
-          </Text>
-        )}
-        <Pressable onPress={() => setShowBio(!showBio)}>
-          <ThemedText
-            style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}
-            numberOfLines={showBio ? undefined : 4}
-          >
-            {person?.biography
-              ? person?.biography
-              : "No biography yet! Come back later!"}
+      // do not use arrow functions for header and footer components
+      // fixed issue where carousel would re-render
+      // https://stackoverflow.com/a/70232246/5648619
+      ListHeaderComponent={
+        <>
+          {person?.images?.profiles && (
+            <Carousel
+              ref={ref}
+              data={person?.images?.profiles}
+              renderItem={RenderItem}
+              layout={"default"}
+              loop={true}
+              sliderWidth={Dimensions.get("window").width}
+              itemWidth={width + horizontalMargin * 2}
+              // removeClippedSubviews={true}
+              containerCustomStyle={{ marginVertical: 16 }}
+            />
+          )}
+          <ThemedText style={iOSUIKit.largeTitleEmphasized}>
+            {person?.name}
           </ThemedText>
-        </Pressable>
-        <View
-          style={{
-            flexDirection: "row",
-            paddingBottom: 16,
-            flexWrap: "wrap",
-          }}
-        >
-          <ButtonMultiState
-            text="Actor"
-            selectedVal={selectedJob}
-            onPress={() => setSelectedJob("Actor")}
+          {person?.birthday && (
+            <Text style={reusableStyles.date}>
+              {dateToLocaleString(person?.birthday)}
+            </Text>
+          )}
+          <ExpandableText
+            isExpanded={showBio}
+            pressHandler={() => setShowBio(!showBio)}
+            text={person.biography}
           />
-          {person?.movie_credits.crew
-            .filter((v, i, a) => a.findIndex((t) => t.job === v.job) === i)
-            // .sort((a, b) =>
-            //   a.job.toLowerCase().localeCompare(b.job.toLowerCase())
-            // )
-            .sort((a, b) =>
-              Platform.OS === "ios"
-                ? a.job.toLowerCase().localeCompare(b.job.toLowerCase())
-                : a.job.toLowerCase() !== b.job.toLowerCase()
-                ? a.job.toLowerCase() < b.job.toLowerCase()
-                  ? -1
-                  : 1
-                : 0
-            )
-            .map((credit, i) => (
-              <ButtonMultiState
-                key={i}
-                text={credit.job}
-                selectedVal={selectedJob}
-                onPress={() => setSelectedJob(credit.job)}
-              />
-            ))}
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "space-between",
-          }}
-        >
-          {selectedJob === "Actor"
-            ? person?.movie_credits.cast
-                // .sort((a, b) => b.release_date?.localeCompare(a.release_date))
-                .sort((a, b) =>
-                  Platform.OS === "ios"
-                    ? b.release_date?.localeCompare(a.release_date)
-                    : b.release_date !== a.release_date
-                    ? b.release_date < a.release_date
-                      ? -1
-                      : 1
-                    : 0
-                )
-                .map((credit, i) => (
-                  <MoviePoster
-                    key={credit.id.toString()}
-                    pressHandler={() =>
-                      navigation.push("Movie", {
-                        movieId: credit.id,
-                        movieTitle: credit.title,
-                      })
-                    }
-                    movie={credit}
-                    posterPath={credit.poster_path}
-                    style={{
-                      width: calculateWidth(16, 16, 2),
-                      height: calculateWidth(16, 16, 2) * 1.5,
-                    }}
-                    buttonStyle={{ marginBottom: 16 }}
-                  />
-                ))
-            : person?.movie_credits.crew
-                .filter((credit) => credit.job === selectedJob)
-                // .sort((a, b) => b.release_date?.localeCompare(a.release_date))
-                .sort((a, b) =>
-                  Platform.OS === "ios"
-                    ? b.release_date?.localeCompare(a.release_date)
-                    : b.release_date !== a.release_date
-                    ? b.release_date < a.release_date
-                      ? -1
-                      : 1
-                    : 0
-                )
-                .map((credit, i) => (
-                  <MoviePoster
-                    key={credit.id.toString()}
-                    pressHandler={() =>
-                      navigation.push("Movie", {
-                        movieId: credit.id,
-                        movieTitle: credit.title,
-                      })
-                    }
-                    movie={credit}
-                    posterPath={credit.poster_path}
-                    style={{
-                      width: calculateWidth(16, 16, 2),
-                      height: calculateWidth(16, 16, 2) * 1.5,
-                    }}
-                    buttonStyle={{ marginBottom: 16 }}
-                  />
-                ))}
-        </View>
-      </View>
-    </ScrollView>
+          <View
+            style={{
+              flexDirection: "row",
+              paddingBottom: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            <ButtonMultiState
+              text="Actor"
+              selectedVal={selectedJob}
+              onPress={() => setSelectedJob("Actor")}
+            />
+            {person?.movie_credits.crew
+              .filter((v, i, a) => a.findIndex((t) => t.job === v.job) === i)
+              .sort((a, b) =>
+                Platform.OS === "ios"
+                  ? a.job.toLowerCase().localeCompare(b.job.toLowerCase())
+                  : a.job.toLowerCase() !== b.job.toLowerCase()
+                  ? a.job.toLowerCase() < b.job.toLowerCase()
+                    ? -1
+                    : 1
+                  : 0
+              )
+              .map((credit, i) => (
+                <ButtonMultiState
+                  key={i}
+                  text={credit.job}
+                  selectedVal={selectedJob}
+                  onPress={() => setSelectedJob(credit.job)}
+                />
+              ))}
+          </View>
+        </>
+      }
+    />
   ) : (
     <LoadingScreen />
   );

@@ -9,7 +9,6 @@ import {
   Dimensions,
   FlatList,
   Image,
-  ImageBackground,
   Platform,
   Pressable,
   ScrollView,
@@ -19,12 +18,9 @@ import {
 } from "react-native";
 import FastImage from "react-native-fast-image";
 import ImageView from "react-native-image-viewing";
-import LinearGradient from "react-native-linear-gradient";
 import { Modalize } from "react-native-modalize";
 import Animated, {
-  interpolate,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSColors, iOSUIKit } from "react-native-typography";
@@ -38,6 +34,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+import { AnimatedHeaderImage } from "../components/AnimatedHeaderImage";
 import { BlueBullet } from "../components/BlueBullet";
 import ButtonSingleState from "../components/ButtonSingleState";
 import CategoryControl from "../components/CategoryControl/CategoryControl";
@@ -170,40 +167,7 @@ function MovieScreen({ navigation, route }: Props) {
 
   const providersModalRef = useRef<Modalize>(null);
 
-  const headerStyle = useAnimatedStyle(() => {
-    return {
-      // opacity:
-      //   scrollOffset.value < 0
-      //     ? 2 -
-      //       (styles.backdrop.height + Math.abs(scrollOffset.value)) /
-      //         styles.backdrop.height
-      //     : 1,
-      transform: [
-        {
-          scale:
-            scrollOffset.value < 0
-              ? (styles.backdrop.height + Math.abs(scrollOffset.value)) /
-                styles.backdrop.height
-              : 1,
-        },
-        {
-          translateY: interpolate(
-            scrollOffset.value,
-            [scrollOffset.value, 0],
-            [
-              // No idea why this math is working but after dividing the scale by 2, this looks perfect
-              // Could 2 be the key because I'm spreading the height on two sides?
-              scrollOffset.value /
-                ((styles.backdrop.height + Math.abs(scrollOffset.value)) /
-                  styles.backdrop.height) /
-                2,
-              0,
-            ]
-          ),
-        },
-      ],
-    };
-  });
+  const providersModalRef = useRef<Modalize>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -272,26 +236,10 @@ function MovieScreen({ navigation, route }: Props) {
         showsVerticalScrollIndicator={detailIndex === 0}
       >
         {movieDetails!.backdrop_path && (
-          <AnimatedImageBackground
-            style={[styles.backdrop, headerStyle]}
-            source={{
-              uri: `https://image.tmdb.org/t/p/w780${
-                movieDetails!.backdrop_path
-              }`,
-            }}
-          >
-            <LinearGradient
-              colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
-              start={{ x: 0, y: 0.8 }}
-              end={{ x: 0, y: 1.0 }}
-              style={[
-                {
-                  position: "absolute",
-                },
-                reusableStyles.inset,
-              ]}
-            />
-          </AnimatedImageBackground>
+          <AnimatedHeaderImage
+            scrollOffset={scrollOffset}
+            path={movieDetails!.backdrop_path}
+          />
         )}
         <View style={{ margin: 16 }}>
           <ThemedText style={iOSUIKit.largeTitleEmphasized}>

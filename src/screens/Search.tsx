@@ -31,7 +31,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
-import CategoryControl from "../components/CategoryControl";
+import CategoryControl from "../components/CategoryControl/CategoryControl";
 import GameReleaseModal from "../components/GamePlatformPicker";
 import { LoadingScreen } from "../components/LoadingScreen";
 import MovieSearchModal from "../components/MovieSearchModal";

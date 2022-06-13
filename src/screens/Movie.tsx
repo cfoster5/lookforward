@@ -40,7 +40,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 import { BlueBullet } from "../components/BlueBullet";
 import ButtonSingleState from "../components/ButtonSingleState";
-import CategoryControl from "../components/CategoryControl";
+import CategoryControl from "../components/CategoryControl/CategoryControl";
 import WatchProvidersModal from "../components/Details/WatchProvidersModal";
 import { DiscoverListLabel } from "../components/DiscoverListLabel";
 import { ExpandableText } from "../components/ExpandableText";

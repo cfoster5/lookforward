@@ -16,7 +16,7 @@ import { IGDB } from "../../interfaces/igdb";
 import { Navigation } from "../../interfaces/navigation";
 import { BlueBullet } from "../BlueBullet";
 import ButtonSingleState from "../ButtonSingleState";
-import CategoryControl from "../CategoryControl";
+import CategoryControl from "../CategoryControl/CategoryControl";
 import { ExpandableText } from "../ExpandableText";
 import { Text as ThemedText } from "../Themed";
 import Trailer from "../Trailer";

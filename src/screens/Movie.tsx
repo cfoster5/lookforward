@@ -612,15 +612,16 @@ function MovieScreen({ navigation, route }: Props) {
                       }}
                     />
                     <BlurView
-                      style={{
-                        position: "absolute",
-                        ...reusableStyles.inset,
-                        bottom:
-                          // use lineHeight to account for font size + space above/below
-                          (Dimensions.get("screen").width - 32) / 1.78 -
-                          iOSUIKit.bodyObject.lineHeight -
-                          16,
-                      }}
+                      style={[
+                        StyleSheet.absoluteFill,
+                        {
+                          bottom:
+                            // use lineHeight to account for font size + space above/below
+                            (Dimensions.get("screen").width - 32) / 1.78 -
+                            iOSUIKit.bodyObject.lineHeight -
+                            16,
+                        },
+                      ]}
                     />
                     <ThemedText
                       style={[

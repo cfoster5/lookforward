@@ -43,6 +43,7 @@ import GameContext from "../contexts/GamePlatformPickerContexts";
 import TabStackContext from "../contexts/TabStackContext";
 import { convertReleasesToGames } from "../helpers/helpers";
 import { searchGames } from "../helpers/igdbRequests";
+import useDebounce from "../hooks/useDebounce";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
 import {
@@ -106,17 +107,14 @@ async function getMovies({ pageParam = 1, queryKey }) {
 
 function Search({ navigation, route }: Props) {
   const { width: windowWidth } = useWindowDimensions();
-  const [
-    { categoryIndex, searchValue, isSearchTriggered, initGames, games, option },
-    dispatch,
-  ] = useReducer(reducer, {
-    categoryIndex: 0,
-    searchValue: "",
-    isSearchTriggered: false,
-    initGames: [],
-    games: [],
-    option: "Coming Soon",
-  });
+  const [{ categoryIndex, searchValue, initGames, games, option }, dispatch] =
+    useReducer(reducer, {
+      categoryIndex: 0,
+      searchValue: "",
+      initGames: [],
+      games: [],
+      option: "Coming Soon",
+    });
 
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
@@ -126,24 +124,27 @@ function Search({ navigation, route }: Props) {
   const tabBarheight = useBottomTabBarHeight();
   const filterModalRef = useRef<Modalize>(null);
   const gameReleaseDates = useGetUpcomingGameReleases();
+  const debouncedSearch = useDebounce(searchValue, 400);
 
   const {
     isLoading,
     data: movies,
     fetchNextPage,
     hasNextPage,
+    isPreviousData,
   } = useInfiniteQuery(
     [
       "movies",
       {
         type: option,
-        searchValue: isSearchTriggered ? searchValue : undefined,
+        searchValue: debouncedSearch,
       },
     ],
     getMovies,
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
       select: (movieData) => movieData.pages.flatMap((page) => page.results),
+      keepPreviousData: true,
     }
   );
 
@@ -189,7 +190,7 @@ function Search({ navigation, route }: Props) {
   //   Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined;
 
   async function handleSearch() {
-    if (searchValue && categoryIndex === 0) {
+    if (debouncedSearch && categoryIndex === 0) {
       dispatch({
         type: "set-isSearchTriggered",
         isSearchTriggered: true,
@@ -205,7 +206,7 @@ function Search({ navigation, route }: Props) {
   }
 
   function filteredMovies() {
-    if (isSearchTriggered) {
+    if (debouncedSearch) {
       return movies.filter((movie) => movie.media_type === "movie");
     } else {
       if (option == "Coming Soon") {
@@ -275,6 +276,7 @@ function Search({ navigation, route }: Props) {
                 buttonTextStyle: {
                   color: iOSColors.blue,
                   fontSize: iOSUIKit.bodyObject.fontSize,
+                  lineHeight: iOSUIKit.bodyObject.lineHeight,
                 },
               }
             : {}
@@ -290,7 +292,7 @@ function Search({ navigation, route }: Props) {
         onCancel={Platform.OS === "ios" ? reinitialize : () => undefined}
       />
 
-      {((!isSearchTriggered && categoryIndex === 0) || categoryIndex === 1) && (
+      {((!debouncedSearch && categoryIndex === 0) || categoryIndex === 1) && (
         <View
           style={{
             marginHorizontal: 16,
@@ -316,7 +318,7 @@ function Search({ navigation, route }: Props) {
       {/* Hiding list while loading prevents crashing caused by scrollToIndex firing before data is loaded, especially for TV data */}
       {categoryIndex === 0 && (
         <>
-          {!isLoading ? (
+          {!isPreviousData ? (
             <FlatList
               data={filteredMovies()}
               renderItem={({ item }) => (
@@ -346,7 +348,7 @@ function Search({ navigation, route }: Props) {
               onEndReached={() => (hasNextPage ? fetchNextPage() : null)}
               onEndReachedThreshold={1.5}
               ListHeaderComponent={
-                isSearchTriggered && (
+                debouncedSearch && (
                   <>
                     {(movies as TMDB.Search.MultiSearchResult[]).filter(
                       (movie) => movie.media_type === "person"

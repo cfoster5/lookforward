@@ -190,7 +190,10 @@ function Actor({ route, navigation }: Props) {
               sliderWidth={Dimensions.get("window").width}
               itemWidth={width + horizontalMargin * 2}
               // removeClippedSubviews={true}
-              containerCustomStyle={{ marginVertical: 16 }}
+              containerCustomStyle={{
+                marginVertical: 16,
+                marginHorizontal: -16,
+              }}
             />
           )}
           <ThemedText style={iOSUIKit.largeTitleEmphasized}>

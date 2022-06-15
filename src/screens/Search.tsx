@@ -18,7 +18,7 @@ import {
 import { SearchBar } from "react-native-elements";
 import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import {
   BottomTabNavigationProp,
   useBottomTabBarHeight,
@@ -41,9 +41,8 @@ import SearchPerson from "../components/SearchPerson";
 import { Text as ThemedText } from "../components/Themed";
 import GameContext from "../contexts/GamePlatformPickerContexts";
 import TabStackContext from "../contexts/TabStackContext";
-import { convertReleasesToGames } from "../helpers/helpers";
-import { searchGames } from "../helpers/igdbRequests";
 import useDebounce from "../hooks/useDebounce";
+import getGames from "../hooks/useGetGames";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
 import {
@@ -56,8 +55,31 @@ import {
   UpcomingMovies,
 } from "../interfaces/tmdb";
 import { Search as SearchInterface } from "../interfaces/tmdb/search";
-import { reducer } from "./reducer";
-import { useGetUpcomingGameReleases } from "./useGetUpcomingGameReleases";
+
+function reducer(
+  state: any,
+  action: {
+    type: string;
+    categoryIndex?: number;
+    searchValue?: string;
+  }
+) {
+  switch (action.type) {
+    case "set-categoryIndex":
+      return {
+        ...state,
+        categoryIndex: action.categoryIndex,
+        searchValue: "",
+      };
+    case "set-searchValue":
+      return {
+        ...state,
+        searchValue: action.searchValue,
+      };
+    default:
+      return state;
+  }
+}
 
 interface Props {
   navigation: CompositeNavigationProp<
@@ -107,14 +129,10 @@ async function getMovies({ pageParam = 1, queryKey }) {
 
 function Search({ navigation, route }: Props) {
   const { width: windowWidth } = useWindowDimensions();
-  const [{ categoryIndex, searchValue, initGames, games, option }, dispatch] =
-    useReducer(reducer, {
-      categoryIndex: 0,
-      searchValue: "",
-      initGames: [],
-      games: [],
-      option: "Coming Soon",
-    });
+  const [{ categoryIndex, searchValue }, dispatch] = useReducer(reducer, {
+    categoryIndex: 0,
+    searchValue: "",
+  });
 
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
@@ -123,8 +141,10 @@ function Search({ navigation, route }: Props) {
   const [game, setGame] = useState();
   const tabBarheight = useBottomTabBarHeight();
   const filterModalRef = useRef<Modalize>(null);
-  const gameReleaseDates = useGetUpcomingGameReleases();
   const debouncedSearch = useDebounce(searchValue, 400);
+  const [option, setOption] = useState<
+    "Coming Soon" | "Now Playing" | "Popular" | "Trending"
+  >("Coming Soon");
 
   const {
     isLoading,
@@ -148,36 +168,16 @@ function Search({ navigation, route }: Props) {
     }
   );
 
-  const styles = StyleSheet.create({
-    flatlistContentContainer: {
-      marginHorizontal: 16,
-      paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
-    },
-    flatlistColumnWrapper: {
-      justifyContent: "space-between",
-      marginBottom: 16,
-    },
-  });
-
-  useEffect(() => {
-    const games = convertReleasesToGames(gameReleaseDates);
-    dispatch({ type: "set-initGames", initGames: games });
-  }, [gameReleaseDates]);
+  const { data: games, isPreviousData: isPreviousGamesData } = useQuery(
+    ["games", { searchValue: debouncedSearch }],
+    getGames,
+    { keepPreviousData: true }
+  );
 
   useEffect(() => {
     // Open GamePlatformPicker if game is changed
     modalizeRef.current?.open();
   }, [game]);
-
-  function reinitialize() {
-    console.log("reinit");
-    if (categoryIndex === 0) {
-      dispatch({ type: "set-isSearchTriggered", isSearchTriggered: false });
-    }
-    if (categoryIndex === 1) {
-      dispatch({ type: "set-games", games: initGames });
-    }
-  }
 
   useEffect(() => {
     filterModalRef.current?.close();
@@ -188,22 +188,6 @@ function Search({ navigation, route }: Props) {
 
   // const scrollIndicatorInsets =
   //   Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined;
-
-  async function handleSearch() {
-    if (debouncedSearch && categoryIndex === 0) {
-      dispatch({
-        type: "set-isSearchTriggered",
-        isSearchTriggered: true,
-      });
-    }
-    if (searchValue && categoryIndex === 1) {
-      dispatch({ type: "set-games", games: [] });
-      dispatch({
-        type: "set-games",
-        games: await searchGames(searchValue),
-      });
-    }
-  }
 
   function filteredMovies() {
     if (debouncedSearch) {
@@ -222,6 +206,17 @@ function Search({ navigation, route }: Props) {
       }
     }
   }
+
+  const styles = StyleSheet.create({
+    flatlistContentContainer: {
+      marginHorizontal: 16,
+      paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
+    },
+    flatlistColumnWrapper: {
+      justifyContent: "space-between",
+      marginBottom: 16,
+    },
+  });
 
   return (
     <>
@@ -282,17 +277,14 @@ function Search({ navigation, route }: Props) {
             : {}
         }
         placeholder={categoryIndex === 0 ? "Movies & People" : "Search"}
-        onChangeText={(value) =>
-          dispatch({ type: "set-searchValue", searchValue: value })
+        onChangeText={(text) =>
+          dispatch({ type: "set-searchValue", searchValue: text })
         }
         value={searchValue}
         platform={Platform.OS === "ios" ? "ios" : "android"}
-        onSubmitEditing={handleSearch}
-        onClear={reinitialize}
-        onCancel={Platform.OS === "ios" ? reinitialize : () => undefined}
       />
 
-      {((!debouncedSearch && categoryIndex === 0) || categoryIndex === 1) && (
+      {!debouncedSearch && (
         <View
           style={{
             marginHorizontal: 16,
@@ -341,14 +333,14 @@ function Search({ navigation, route }: Props) {
               contentContainerStyle={styles.flatlistContentContainer}
               columnWrapperStyle={styles.flatlistColumnWrapper}
               ref={scrollRef}
-              keyExtractor={(item, index) => item.id.toString()}
+              keyExtractor={(item) => item.id.toString()}
               initialNumToRender={6}
               // scrollIndicatorInsets={scrollIndicatorInsets}
               showsVerticalScrollIndicator={false}
               onEndReached={() => (hasNextPage ? fetchNextPage() : null)}
               onEndReachedThreshold={1.5}
               ListHeaderComponent={
-                debouncedSearch && (
+                debouncedSearch ? (
                   <>
                     {(movies as TMDB.Search.MultiSearchResult[]).filter(
                       (movie) => movie.media_type === "person"
@@ -382,7 +374,7 @@ function Search({ navigation, route }: Props) {
                     {movies.filter((movie) => movie.media_type === "movie")
                       .length > 0 && <ListLabel text="Movies" />}
                   </>
-                )
+                ) : null
               }
             />
           ) : (
@@ -392,14 +384,12 @@ function Search({ navigation, route }: Props) {
             navigation={navigation}
             filterModalRef={filterModalRef}
             selectedOption={option}
-            setSelectedOption={(option) =>
-              dispatch({ type: "set-option", option: option })
-            }
+            setSelectedOption={(option) => setOption(option)}
           />
         </>
       )}
       {categoryIndex === 1 &&
-        (games.length > 0 ? (
+        (!isPreviousGamesData ? (
           <GameContext.Provider value={{ game, setGame }}>
             <FlatList
               data={games}
@@ -414,10 +404,15 @@ function Search({ navigation, route }: Props) {
               contentContainerStyle={styles.flatlistContentContainer}
               columnWrapperStyle={styles.flatlistColumnWrapper}
               ref={scrollRef}
-              keyExtractor={(item, index) => item.id.toString()}
+              keyExtractor={(item) => item.id.toString()}
               initialNumToRender={6}
               // scrollIndicatorInsets={scrollIndicatorInsets}
               showsVerticalScrollIndicator={false}
+              ListHeaderComponent={
+                debouncedSearch ? (
+                  <ListLabel text="Games" style={{ marginBottom: 16 }} />
+                ) : null
+              }
             />
             <GameReleaseModal modalizeRef={modalizeRef} game={game} />
           </GameContext.Provider>

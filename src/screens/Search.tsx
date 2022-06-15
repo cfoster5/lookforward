@@ -16,6 +16,7 @@ import {
   View,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
+import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { useInfiniteQuery, useQuery } from "react-query";
@@ -147,7 +148,6 @@ function Search({ navigation, route }: Props) {
   >("Coming Soon");
 
   const {
-    isLoading,
     data: movies,
     fetchNextPage,
     hasNextPage,
@@ -210,7 +210,7 @@ function Search({ navigation, route }: Props) {
   const styles = StyleSheet.create({
     flatlistContentContainer: {
       marginHorizontal: 16,
-      paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
+      // paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
     },
     flatlistColumnWrapper: {
       justifyContent: "space-between",
@@ -311,7 +311,10 @@ function Search({ navigation, route }: Props) {
       {categoryIndex === 0 && (
         <>
           {!isPreviousData ? (
-            <FlatList
+            <KeyboardAwareFlatList
+              extraScrollHeight={tabBarheight}
+              viewIsInsideTabBar={true}
+              enableResetScrollToCoords={false}
               data={filteredMovies()}
               renderItem={({ item }) => (
                 <MoviePoster
@@ -391,7 +394,10 @@ function Search({ navigation, route }: Props) {
       {categoryIndex === 1 &&
         (!isPreviousGamesData ? (
           <GameContext.Provider value={{ game, setGame }}>
-            <FlatList
+            <KeyboardAwareFlatList
+              extraScrollHeight={tabBarheight}
+              viewIsInsideTabBar={true}
+              enableResetScrollToCoords={false}
               data={games}
               renderItem={({ item }: { item: IGDB.Game.Game }) => (
                 <Pressable

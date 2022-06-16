@@ -11,11 +11,11 @@ import Carousel from "react-native-snap-carousel";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { useGetHypedGames } from "../../hooks/useGetHypedGames";
-import { useGetTrendingMovies } from "../../hooks/useGetTrendingMovies";
-import { IGDB } from "../../interfaces/igdb";
-import { Movie } from "../../interfaces/tmdb";
-import { AuthStackParamList } from "../../navigation/AuthStack";
+import { useGetHypedGames } from "../../../hooks/useGetHypedGames";
+import { IGDB } from "../../../interfaces/igdb";
+import { Movie } from "../../../interfaces/tmdb";
+import { AuthStackParamList } from "../../../navigation/AuthStack";
+import { useTrendingMovies } from "./api/getTrendingMovies";
 
 interface Props {
   navigation: StackNavigationProp<AuthStackParamList, "Welcome">;
@@ -23,7 +23,7 @@ interface Props {
 }
 
 function Welcome({ navigation }: Props) {
-  const trendingMovies = useGetTrendingMovies().slice(0, 10);
+  const { data: trendingMovies, isLoading } = useTrendingMovies();
   const hypedGames: IGDB.Game.Game[] = useGetHypedGames();
   const ref = useRef<Carousel<any>>(null);
   const width = 200;
@@ -61,7 +61,7 @@ function Welcome({ navigation }: Props) {
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      {trendingMovies.length > 0 && hypedGames.length > 0 && (
+      {!isLoading && hypedGames.length > 0 && (
         <>
           <View style={{ alignItems: "center" }}>
             <Text style={iOSUIKit.title3EmphasizedWhite}>
@@ -72,6 +72,7 @@ function Welcome({ navigation }: Props) {
             ref={ref}
             // Merge two arrays so that the values alternate
             data={trendingMovies
+              .slice(0, 10)
               .map((movie, i) => [movie, hypedGames[i]])
               .reduce((a, b) => a.concat(b))}
             renderItem={RenderItem}

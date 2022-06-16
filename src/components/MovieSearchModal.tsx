@@ -10,9 +10,9 @@ import {
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+import { useMovieWatchProviders } from "../api/getMovieWatchProviders";
 import TabStackContext from "../contexts/TabStackContext";
 import { targetedProviders } from "../helpers/helpers";
-import { useGetMovieWatchProviders } from "../hooks/useGetMovieWatchProviders";
 import { Navigation } from "../interfaces/navigation";
 import ButtonMultiState from "./ButtonMultiState";
 import ButtonSingleState from "./ButtonSingleState";
@@ -35,7 +35,7 @@ export default function MovieSearchModal({
 }) {
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
-  const movieWatchProviders = useGetMovieWatchProviders();
+  const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
 
   const options = [
     "Coming Soon",
@@ -81,41 +81,43 @@ export default function MovieSearchModal({
       </Text>
       {/* Wrap FlatList in ScrollView with horizontal prop so that scrollEnabled within FlatList can be disabled  */}
       <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-        <FlatList
-          scrollEnabled={false}
-          contentContainerStyle={{
-            alignSelf: "flex-start",
-            paddingLeft: 16,
-            paddingRight: 8,
-          }}
-          numColumns={Math.ceil(targetedProviders.length / 3)}
-          showsVerticalScrollIndicator={false}
-          showsHorizontalScrollIndicator={false}
-          data={movieWatchProviders
-            .filter(
-              (provider) =>
-                targetedProviders.indexOf(provider.provider_name) > -1
-            )
-            .filter(
-              (v, i, a) =>
-                a.findIndex((t) => t.provider_name === v.provider_name) === i
-            )
-            .sort((a, b) =>
-              a.provider_name
-                .toLowerCase()
-                .localeCompare(b.provider_name.toLowerCase())
+        {!isLoading && (
+          <FlatList
+            scrollEnabled={false}
+            contentContainerStyle={{
+              alignSelf: "flex-start",
+              paddingLeft: 16,
+              paddingRight: 8,
+            }}
+            numColumns={Math.ceil(targetedProviders.length / 3)}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            data={movieWatchProviders
+              .filter(
+                (provider) =>
+                  targetedProviders.indexOf(provider.provider_name) > -1
+              )
+              .filter(
+                (v, i, a) =>
+                  a.findIndex((t) => t.provider_name === v.provider_name) === i
+              )
+              .sort((a, b) =>
+                a.provider_name
+                  .toLowerCase()
+                  .localeCompare(b.provider_name.toLowerCase())
+              )}
+            renderItem={({ item }) => (
+              <ButtonSingleState
+                key={item.provider_id}
+                text={item.provider_name}
+                onPress={() =>
+                  navigation.push("MovieDiscover", { provider: item })
+                }
+              />
             )}
-          renderItem={({ item }) => (
-            <ButtonSingleState
-              key={item.provider_id}
-              text={item.provider_name}
-              onPress={() =>
-                navigation.push("MovieDiscover", { provider: item })
-              }
-            />
-          )}
-          keyExtractor={(item) => item.provider_id.toString()}
-        />
+            keyExtractor={(item) => item.provider_id.toString()}
+          />
+        )}
       </ScrollView>
     </Modalize>
   );

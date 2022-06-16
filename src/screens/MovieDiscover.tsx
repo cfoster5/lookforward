@@ -21,6 +21,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
 
+import { useMovieWatchProviders } from "../api/getMovieWatchProviders";
 import ButtonMultiState from "../components/ButtonMultiState";
 import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
 import { LoadingScreen } from "../components/LoadingScreen";
@@ -29,7 +30,6 @@ import TabStackContext from "../contexts/TabStackContext";
 import { targetedProviders } from "../helpers/helpers";
 import { getDiscoverMovies } from "../helpers/tmdbRequests";
 // import { useDiscoverFilterCreation } from "../hooks/useDiscoverFilterCreation";
-import { useGetMovieWatchProviders } from "../hooks/useGetMovieWatchProviders";
 import { Movie } from "../interfaces/tmdb";
 
 function MovieDiscover({ route, navigation }: any) {
@@ -44,7 +44,8 @@ function MovieDiscover({ route, navigation }: any) {
   const [sortMethod, setSortMethod] = useState("popularity.desc");
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
     useState<number>(0);
-  const movieWatchProviders = useGetMovieWatchProviders(true);
+  const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
+
   // const discoverFilter = useDiscoverFilterCreation(
   //   genre,
   //   company,
@@ -253,7 +254,15 @@ function MovieDiscover({ route, navigation }: any) {
             numColumns={Math.ceil(targetedProviders.length / 3)}
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
-            data={movieWatchProviders
+            data={[
+              {
+                display_priority: 0,
+                logo_path: "",
+                provider_id: 0,
+                provider_name: "Any",
+              },
+              ...movieWatchProviders,
+            ]
               .filter(
                 (provider) =>
                   targetedProviders.indexOf(provider.provider_name) > -1

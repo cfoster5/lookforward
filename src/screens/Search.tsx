@@ -181,8 +181,11 @@ function Search({ navigation, route }: Props) {
 
   useEffect(() => {
     filterModalRef.current?.close();
-    if (movies) {
-      scrollRef.current?.scrollToIndex({ index: 0 });
+    // https://stackoverflow.com/a/64232399/5648619
+    if (scrollRef !== null && scrollRef.current !== null && movies) {
+      if (typeof scrollRef.current.scrollToIndex === "function") {
+        scrollRef.current?.scrollToIndex({ index: 0 });
+      }
     }
   }, [option]);
 

@@ -362,15 +362,16 @@ function Search({ navigation, route }: Props) {
                             />
                           )}
                           horizontal={true}
-                          contentContainerStyle={{
-                            marginBottom: 16,
-                            paddingRight: 16,
-                          }}
                           style={{
                             marginHorizontal: -16,
-                            paddingHorizontal: 16,
+                            marginBottom: 16,
                           }}
                           showsHorizontalScrollIndicator={false}
+                          ListHeaderComponent={<View style={{ width: 16 }} />}
+                          ItemSeparatorComponent={() => (
+                            <View style={{ width: 16 }} />
+                          )}
+                          ListFooterComponent={<View style={{ width: 16 }} />}
                         />
                       </>
                     )}

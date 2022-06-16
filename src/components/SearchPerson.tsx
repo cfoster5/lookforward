@@ -7,6 +7,7 @@ import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import TabStackContext from "../contexts/TabStackContext";
+import { calculateWidth } from "../helpers/helpers";
 import { reusableStyles } from "../helpers/styles";
 import { Navigation } from "../interfaces/navigation";
 import { TMDB } from "../interfaces/tmdb";
@@ -23,7 +24,6 @@ function SearchPerson({ navigation, person }: Props) {
   const { theme } = useContext(TabStackContext);
   return (
     <Pressable
-      style={{ marginRight: 16 }}
       onPress={() => navigation.push("Actor", { personId: person.id })}
     >
       {person.profile_path && (
@@ -76,8 +76,8 @@ function SearchPerson({ navigation, person }: Props) {
 const styles = StyleSheet.create({
   searchCredit: {
     // I don't know why 18 works here to center the right-most image but it works on every iOS device tested
-    width: Dimensions.get("window").width / 3.5 - 18,
-    height: (Dimensions.get("window").width / 3.5 - 18) * 1.5,
+    width: calculateWidth(16, 16, 3.5),
+    height: calculateWidth(16, 16, 3.5) * 1.5,
     borderRadius: 8,
     marginBottom: 8,
   },

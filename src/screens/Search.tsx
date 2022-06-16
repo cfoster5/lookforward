@@ -42,19 +42,12 @@ import SearchPerson from "../components/SearchPerson";
 import { Text as ThemedText } from "../components/Themed";
 import GameContext from "../contexts/GamePlatformPickerContexts";
 import TabStackContext from "../contexts/TabStackContext";
+import { getMovies } from "../hooks/getMovies";
 import useDebounce from "../hooks/useDebounce";
 import getGames from "../hooks/useGetGames";
 import { IGDB } from "../interfaces/igdb";
 import { Navigation } from "../interfaces/navigation";
-import {
-  Movie,
-  MoviesPlayingNow,
-  Person,
-  PopularMovies,
-  TMDB,
-  TV,
-  UpcomingMovies,
-} from "../interfaces/tmdb";
+import { Movie, Person, TMDB, TV } from "../interfaces/tmdb";
 import { Search as SearchInterface } from "../interfaces/tmdb/search";
 
 function reducer(
@@ -102,30 +95,6 @@ export function ListLabel({ text, style }: { text: string; style?: any }) {
       {text}
     </ThemedText>
   );
-}
-
-const key = "68991fbb0b75dba5ae0ecd8182e967b1";
-
-async function getMovies({ pageParam = 1, queryKey }) {
-  const { type, searchValue } = queryKey[1];
-
-  const endpoints = {
-    "Coming Soon": `https://api.themoviedb.org/3/movie/upcoming?api_key=${key}&language=en-US&page=${pageParam}&region=US`,
-    "Now Playing": `https://api.themoviedb.org/3/movie/now_playing?api_key=${key}&language=en-US&page=${pageParam}&region=US`,
-    Popular: `https://api.themoviedb.org/3/movie/popular?api_key=${key}&language=en-US&page=${pageParam}&region=US`,
-    Trending: `https://api.themoviedb.org/3/trending/movie/day?api_key=${key}&page=${pageParam}`,
-    Search: `https://api.themoviedb.org/3/search/multi?api_key=${key}&language=en-US&query=${searchValue}&page=${pageParam}&include_adult=false&region=US`,
-  };
-  const response = await fetch(
-    !searchValue ? endpoints[type] : endpoints.Search
-  );
-  const json: UpcomingMovies | MoviesPlayingNow | PopularMovies =
-    await response.json();
-  // return json;
-  return {
-    ...json,
-    nextPage: json.page !== json.total_pages ? json.page + 1 : undefined,
-  };
 }
 
 function Search({ navigation, route }: Props) {

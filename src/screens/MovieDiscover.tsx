@@ -45,16 +45,6 @@ function MovieDiscover({ route, navigation }: any) {
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
     useState<number>(0);
   const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
-
-  // const discoverFilter = useDiscoverFilterCreation(
-  //   genre,
-  //   company,
-  //   keyword,
-  //   provider,
-  //   selectedMovieWatchProvider,
-  //   sortMethod
-  // );
-  // const movies = useGetDiscoverMovies(discoverFilter, pageIndex);
   const modalRef = useRef<Modalize>(null);
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import {
   Dimensions,
   Image,
@@ -11,10 +11,10 @@ import Carousel from "react-native-snap-carousel";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { useGetHypedGames } from "../../../hooks/useGetHypedGames";
 import { IGDB } from "../../../interfaces/igdb";
 import { Movie } from "../../../interfaces/tmdb";
 import { AuthStackParamList } from "../../../navigation/AuthStack";
+import { useHypedGames } from "./api/getHypedGames";
 import { useTrendingMovies } from "./api/getTrendingMovies";
 
 interface Props {
@@ -24,7 +24,8 @@ interface Props {
 
 function Welcome({ navigation }: Props) {
   const { data: trendingMovies, isLoading } = useTrendingMovies();
-  const hypedGames: IGDB.Game.Game[] = useGetHypedGames();
+  // const hypedGames: IGDB.Game.Game[] = useGetHypedGames();
+  const { data: hypedGames } = useHypedGames();
   const ref = useRef<Carousel<any>>(null);
   const width = 200;
   const horizontalMargin = 4;
@@ -61,7 +62,7 @@ function Welcome({ navigation }: Props) {
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      {!isLoading && hypedGames.length > 0 && (
+      {!isLoading && hypedGames && (
         <>
           <View style={{ alignItems: "center" }}>
             <Text style={iOSUIKit.title3EmphasizedWhite}>

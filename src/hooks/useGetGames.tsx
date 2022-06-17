@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import { convertReleasesToGames } from "../helpers/helpers";
 import { IGDB } from "../interfaces/igdb";
 

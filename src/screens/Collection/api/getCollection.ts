@@ -11,5 +11,7 @@ async function getCollection(collectionId: number) {
 }
 
 export function useCollection(collectionId: number) {
-  return useQuery(["collection"], () => getCollection(collectionId));
+  return useQuery(["collection", collectionId], () =>
+    getCollection(collectionId)
+  );
 }

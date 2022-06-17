@@ -19,7 +19,7 @@ import { SearchBar } from "react-native-elements";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { useInfiniteQuery, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import {
   BottomTabNavigationProp,
   useBottomTabBarHeight,
@@ -32,23 +32,23 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
-import CategoryControl from "../components/CategoryControl/CategoryControl";
-import GameReleaseModal from "../components/GamePlatformPicker";
-import { LoadingScreen } from "../components/LoadingScreen";
-import MovieSearchModal from "../components/MovieSearchModal";
-import { GamePoster } from "../components/Posters/GamePoster";
-import { MoviePoster } from "../components/Posters/MoviePoster";
-import SearchPerson from "../components/SearchPerson";
-import { Text as ThemedText } from "../components/Themed";
-import GameContext from "../contexts/GamePlatformPickerContexts";
-import TabStackContext from "../contexts/TabStackContext";
-import { getMovies } from "../hooks/getMovies";
-import useDebounce from "../hooks/useDebounce";
-import getGames from "../hooks/useGetGames";
-import { IGDB } from "../interfaces/igdb";
-import { Navigation } from "../interfaces/navigation";
-import { Movie, Person, TMDB, TV } from "../interfaces/tmdb";
-import { Search as SearchInterface } from "../interfaces/tmdb/search";
+import CategoryControl from "../../components/CategoryControl/CategoryControl";
+import GameReleaseModal from "../../components/GamePlatformPicker";
+import { LoadingScreen } from "../../components/LoadingScreen";
+import MovieSearchModal from "../../components/MovieSearchModal";
+import { GamePoster } from "../../components/Posters/GamePoster";
+import { MoviePoster } from "../../components/Posters/MoviePoster";
+import SearchPerson from "../../components/SearchPerson";
+import { Text as ThemedText } from "../../components/Themed";
+import GameContext from "../../contexts/GamePlatformPickerContexts";
+import TabStackContext from "../../contexts/TabStackContext";
+import useDebounce from "../../hooks/useDebounce";
+import getGames from "../../hooks/useGetGames";
+import { IGDB } from "../../interfaces/igdb";
+import { Navigation } from "../../interfaces/navigation";
+import { Movie, Person, TMDB, TV } from "../../interfaces/tmdb";
+import { Search as SearchInterface } from "../../interfaces/tmdb/search";
+import { useMovieData } from "./api/getMovies";
 
 function reducer(
   state: any,
@@ -97,6 +97,12 @@ export function ListLabel({ text, style }: { text: string; style?: any }) {
   );
 }
 
+export type MovieOption =
+  | "Coming Soon"
+  | "Now Playing"
+  | "Popular"
+  | "Trending";
+
 function Search({ navigation, route }: Props) {
   const { width: windowWidth } = useWindowDimensions();
   const [{ categoryIndex, searchValue }, dispatch] = useReducer(reducer, {
@@ -112,30 +118,14 @@ function Search({ navigation, route }: Props) {
   const tabBarheight = useBottomTabBarHeight();
   const filterModalRef = useRef<Modalize>(null);
   const debouncedSearch = useDebounce(searchValue, 400);
-  const [option, setOption] = useState<
-    "Coming Soon" | "Now Playing" | "Popular" | "Trending"
-  >("Coming Soon");
+  const [option, setOption] = useState<MovieOption>("Coming Soon");
 
   const {
     data: movies,
     fetchNextPage,
     hasNextPage,
     isPreviousData,
-  } = useInfiniteQuery(
-    [
-      "movies",
-      {
-        type: option,
-        searchValue: debouncedSearch,
-      },
-    ],
-    getMovies,
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-      select: (movieData) => movieData.pages.flatMap((page) => page.results),
-      keepPreviousData: true,
-    }
-  );
+  } = useMovieData(option, debouncedSearch);
 
   const { data: games, isPreviousData: isPreviousGamesData } = useQuery(
     ["games", { searchValue: debouncedSearch }],

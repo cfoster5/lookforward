@@ -63,7 +63,7 @@ import { useGetMovie } from "../hooks/useGetMovie";
 import { FirestoreMovie } from "../interfaces/firebase";
 import { Navigation } from "../interfaces/navigation";
 import { ReleaseDate } from "../interfaces/tmdb";
-import { ListLabel } from "./Search";
+import { ListLabel } from "./Search/Search";
 
 function ScrollViewWithFlatList({
   data,

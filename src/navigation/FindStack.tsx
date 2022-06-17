@@ -11,7 +11,7 @@ import Game from "../screens/Game";
 import GameDiscover from "../screens/GameDiscover";
 import Movie from "../screens/Movie";
 import MovieDiscover from "../screens/MovieDiscover";
-import Search from "../screens/Search";
+import Search from "../screens/Search/Search";
 
 // type FindStackNavProp = CompositeNavigationProp<
 //   StackNavigationProp<Navigation.FindStackParamList, "Find">,

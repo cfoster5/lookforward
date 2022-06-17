@@ -16,7 +16,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import TabStackContext from "../../contexts/TabStackContext";
 import { calculateWidth } from "../../helpers/helpers";
 import { WatchLocale } from "../../interfaces/tmdb";
-import { horizontalListProps } from "../../screens/Movie";
+import { horizontalListProps } from "../../screens/Movie/Movie";
 
 function WatchProvidersModal({
   modalRef,

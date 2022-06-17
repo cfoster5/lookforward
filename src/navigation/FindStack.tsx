@@ -8,8 +8,8 @@ import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor/Actor";
 import { Collection } from "../screens/Collection/Collection";
 import Game from "../screens/Game";
-import GameDiscover from "../screens/GameDiscover";
-import Movie from "../screens/Movie";
+import GameDiscover from "../screens/GameDiscover/GameDiscover";
+import Movie from "../screens/Movie/Movie";
 import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 import Search from "../screens/Search/Search";
 

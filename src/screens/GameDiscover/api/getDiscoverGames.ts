@@ -1,17 +1,6 @@
-import { IGDB } from "../interfaces/igdb";
+import { useQuery } from "react-query";
 
-export async function discoverGames({
-  genreId,
-}: {
-  genreId?: number;
-  companyId?: number;
-  keywordId?: number;
-}): Promise<IGDB.ReleaseDate.ReleaseDate[]> {
-  let filter = `where date > ${Math.floor(Date.now() / 1000)} & region = (2,8)`;
-  filter += genreId ? ` & game.genres = (${genreId})` : ``;
-  // filter += companyId ? `&with_companies=${companyId}` : ``;
-  // filter += keywordId ? `&with_keywords=${keywordId}` : ``;
-  console.log(`filter`, filter);
+async function getReleases(filter: string) {
   const response = await fetch(
     "https://gou4rcsh6i.execute-api.us-east-1.amazonaws.com/prod/release_dates",
     {
@@ -24,4 +13,20 @@ export async function discoverGames({
   );
   const json = await response.json();
   return json;
+}
+
+export function useDiscoverGames({
+  genreId,
+}: {
+  genreId?: number;
+  companyId?: number;
+  keywordId?: number;
+}) {
+  let filter = `where date > ${Math.floor(Date.now() / 1000)} & region = (2,8)`;
+  filter += genreId ? ` & game.genres = (${genreId})` : ``;
+  // filter += companyId ? `&with_companies=${companyId}` : ``;
+  // filter += keywordId ? `&with_keywords=${keywordId}` : ``;
+  return useQuery(["discoverGames", { genreId: genreId }], () =>
+    getReleases(filter)
+  );
 }

@@ -35,35 +35,35 @@ import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
-import { AnimatedHeaderImage } from "../components/AnimatedHeaderImage";
-import { BlueBullet } from "../components/BlueBullet";
-import ButtonSingleState from "../components/ButtonSingleState";
-import CategoryControl from "../components/CategoryControl/CategoryControl";
-import WatchProvidersModal from "../components/Details/WatchProvidersModal";
-import { DiscoverListLabel } from "../components/DiscoverListLabel";
-import { ExpandableText } from "../components/ExpandableText";
-import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
-import { LoadingScreen } from "../components/LoadingScreen";
-import { MediaSelection } from "../components/MediaSelection";
-import Person from "../components/Person";
-import { MoviePoster } from "../components/Posters/MoviePoster";
-import { Text as ThemedText } from "../components/Themed";
-import Trailer from "../components/Trailer";
-import SubContext from "../contexts/SubContext";
-import TabStackContext from "../contexts/TabStackContext";
-import { dateToLocaleString, getRuntime } from "../helpers/formatting";
+import { AnimatedHeaderImage } from "../../components/AnimatedHeaderImage";
+import { BlueBullet } from "../../components/BlueBullet";
+import ButtonSingleState from "../../components/ButtonSingleState";
+import CategoryControl from "../../components/CategoryControl/CategoryControl";
+import WatchProvidersModal from "../../components/Details/WatchProvidersModal";
+import { DiscoverListLabel } from "../../components/DiscoverListLabel";
+import { ExpandableText } from "../../components/ExpandableText";
+import { IoniconsHeaderButton } from "../../components/IoniconsHeaderButton";
+import { LoadingScreen } from "../../components/LoadingScreen";
+import { MediaSelection } from "../../components/MediaSelection";
+import Person from "../../components/Person";
+import { MoviePoster } from "../../components/Posters/MoviePoster";
+import { Text as ThemedText } from "../../components/Themed";
+import Trailer from "../../components/Trailer";
+import SubContext from "../../contexts/SubContext";
+import TabStackContext from "../../contexts/TabStackContext";
+import { getRuntime } from "../../helpers/formatting";
 import {
   calculateWidth,
   removeSub,
   subToMovie,
   tmdbMovieGenres,
-} from "../helpers/helpers";
-import { reusableStyles } from "../helpers/styles";
-import { useGetMovie } from "../hooks/useGetMovie";
-import { FirestoreMovie } from "../interfaces/firebase";
-import { Navigation } from "../interfaces/navigation";
-import { ReleaseDate } from "../interfaces/tmdb";
-import { ListLabel } from "./Search/Search";
+} from "../../helpers/helpers";
+import { reusableStyles } from "../../helpers/styles";
+import { FirestoreMovie } from "../../interfaces/firebase";
+import { Navigation } from "../../interfaces/navigation";
+import { ReleaseDate } from "../../interfaces/tmdb";
+import { ListLabel } from "../Search/Search";
+import { useMovie } from "./api/getMovie";
 
 function ScrollViewWithFlatList({
   data,
@@ -156,8 +156,8 @@ function MovieScreen({ navigation, route }: Props) {
     useState<FirestoreMovie["documentID"]>();
   const { user, theme } = useContext(TabStackContext);
   const { movieSubs } = useContext(SubContext);
-
-  const { movieDetails, traktDetails, loading } = useGetMovie(movieId);
+  const { data: { movieDetails, traktDetails } = {}, isLoading } =
+    useMovie(movieId);
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
@@ -224,7 +224,7 @@ function MovieScreen({ navigation, route }: Props) {
     setMediaSelections(obj);
   }, [movieDetails?.videos.results, movieDetails?.images]);
 
-  if (loading) return <LoadingScreen />;
+  if (isLoading) return <LoadingScreen />;
 
   return (
     // <AnimatedBackground

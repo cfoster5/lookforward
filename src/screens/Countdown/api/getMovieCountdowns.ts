@@ -27,7 +27,7 @@ async function getMovie(movieId: FirestoreMovie["documentID"]) {
 }
 
 // Rename this function and this file
-export function useMoviesCountdowns(movieSubs) {
+export function useMovieCountdowns(movieSubs) {
   return useQueries(
     movieSubs.map((sub) => {
       return {

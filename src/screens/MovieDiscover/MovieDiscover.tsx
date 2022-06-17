@@ -21,29 +21,43 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-import { useMovieWatchProviders } from "../api/getMovieWatchProviders";
-import ButtonMultiState from "../components/ButtonMultiState";
-import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
-import { LoadingScreen } from "../components/LoadingScreen";
-import { MoviePoster } from "../components/Posters/MoviePoster";
-import TabStackContext from "../contexts/TabStackContext";
-import { targetedProviders } from "../helpers/helpers";
-import { getDiscoverMovies } from "../helpers/tmdbRequests";
+import { useMovieWatchProviders } from "../../api/getMovieWatchProviders";
+import ButtonMultiState from "../../components/ButtonMultiState";
+import { IoniconsHeaderButton } from "../../components/IoniconsHeaderButton";
+import { LoadingScreen } from "../../components/LoadingScreen";
+import { MoviePoster } from "../../components/Posters/MoviePoster";
+import TabStackContext from "../../contexts/TabStackContext";
+import { targetedProviders } from "../../helpers/helpers";
+import { getDiscoverMovies } from "../../helpers/tmdbRequests";
 // import { useDiscoverFilterCreation } from "../hooks/useDiscoverFilterCreation";
-import { Movie } from "../interfaces/tmdb";
+import { Movie } from "../../interfaces/tmdb";
+import { useDiscoverMovies } from "./api/getDiscoverMovies";
 
 function MovieDiscover({ route, navigation }: any) {
   const { width: windowWidth } = useWindowDimensions();
   const { genre, company, keyword, provider } = route.params;
-  const [movies, setMovies] = useState<Movie[]>([]);
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [pageIndex, setPageIndex] = useState(1);
   const { theme } = useContext(TabStackContext);
   const [sortMethod, setSortMethod] = useState("popularity.desc");
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
     useState<number>(0);
+  const {
+    data: movies,
+    fetchNextPage,
+    hasNextPage,
+    isPreviousData,
+  } = useDiscoverMovies({
+    genreId: genre?.id,
+    companyId: company?.id,
+    keywordId: keyword?.id,
+    watchProvider:
+      provider?.provider_id !== selectedMovieWatchProvider
+        ? selectedMovieWatchProvider
+        : provider.provider_id,
+    sortMethod: sortMethod,
+  });
   const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
   const modalRef = useRef<Modalize>(null);
 
@@ -98,75 +112,25 @@ function MovieDiscover({ route, navigation }: any) {
   }, [navigation]);
 
   useEffect(() => {
-    setMovies([]);
     let title = "";
-    let discoverBy = {
-      genreId: undefined,
-      companyId: undefined,
-      keywordId: undefined,
-      watchProvider: selectedMovieWatchProvider,
-      sortMethod: sortMethod,
-    };
     if (genre) {
       title = genre.name;
-      discoverBy.genreId = genre.id;
     } else if (company) {
       title = company.name;
-      discoverBy.companyId = company.id;
     } else if (keyword) {
       title = keyword.name;
-      discoverBy.keywordId = keyword.id;
     } else if (provider) {
       if (provider.provider_id !== selectedMovieWatchProvider) {
         title = movieWatchProviders.find(
           (provider, i) => provider.provider_id === selectedMovieWatchProvider
         )?.provider_name;
-        discoverBy.watchProvider = selectedMovieWatchProvider;
       } else {
         title = provider.provider_name;
-        discoverBy.watchProvider = provider.provider_id;
       }
     }
 
     navigation.setOptions({ title: title });
-    getDiscoverMovies(discoverBy).then((json) => {
-      setMovies(json.results);
-      scrollRef?.current?.scrollToIndex({
-        index: 0,
-        animated: false,
-      });
-    });
-  }, [genre, company, keyword, sortMethod, selectedMovieWatchProvider]);
-
-  useEffect(() => {
-    if (pageIndex > 1) {
-      let discoverBy = {
-        genreId: undefined,
-        companyId: undefined,
-        keywordId: undefined,
-        watchProvider: selectedMovieWatchProvider,
-        sortMethod: sortMethod,
-        pageIndex: 1,
-      };
-      if (genre) {
-        discoverBy.genreId = genre.id;
-      } else if (company) {
-        discoverBy.companyId = company.id;
-      } else if (keyword) {
-        discoverBy.keywordId = keyword.id;
-      } else if (provider) {
-        if (provider.provider_id !== selectedMovieWatchProvider) {
-          discoverBy.watchProvider = selectedMovieWatchProvider;
-        } else {
-          discoverBy.watchProvider = provider.provider_id;
-        }
-      }
-      discoverBy.pageIndex = pageIndex;
-      getDiscoverMovies(discoverBy).then((json) => {
-        setMovies([...movies, ...json.results]);
-      });
-    }
-  }, [pageIndex]);
+  }, [genre, company, keyword, selectedMovieWatchProvider]);
 
   function ModalListWrapper({
     text,
@@ -281,55 +245,52 @@ function MovieDiscover({ route, navigation }: any) {
     );
   }
 
+  if (isPreviousData) return <LoadingScreen />;
+
   return (
     <>
-      {movies.length > 0 ? (
-        <FlatList
-          contentContainerStyle={{
-            paddingTop: Platform.OS === "ios" ? headerHeight + 16 : 16,
-            paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
-            marginHorizontal: 16,
-          }}
-          scrollIndicatorInsets={
-            Platform.OS === "ios"
-              ? {
-                  top: 16,
-                  bottom: tabBarheight - 16,
-                }
-              : undefined
-          }
-          data={movies}
-          renderItem={({ item }: { item: Movie }) => (
-            <MoviePoster
-              pressHandler={() =>
-                navigation.push("Movie", {
-                  movieId: item.id,
-                  movieTitle: item.title,
-                })
+      <FlatList
+        contentContainerStyle={{
+          paddingTop: Platform.OS === "ios" ? headerHeight + 16 : 16,
+          paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
+          marginHorizontal: 16,
+        }}
+        scrollIndicatorInsets={
+          Platform.OS === "ios"
+            ? {
+                top: 16,
+                bottom: tabBarheight - 16,
               }
-              movie={item}
-              posterPath={item.poster_path}
-              style={{
-                width: windowWidth / 2 - 24,
-                height: (windowWidth / 2 - 24) * 1.5,
-              }}
-            />
-          )}
-          numColumns={2}
-          columnWrapperStyle={{
-            justifyContent: "space-between",
-            marginBottom: 16,
-          }}
-          ref={scrollRef}
-          keyExtractor={(item, index) => item.id.toString()}
-          initialNumToRender={6}
-          onEndReached={({ distanceFromEnd }) => setPageIndex(pageIndex + 1)}
-          // Fire onEndReached when 4 screen lengths away from bottom
-          onEndReachedThreshold={4}
-        />
-      ) : (
-        <LoadingScreen />
-      )}
+            : undefined
+        }
+        data={movies}
+        renderItem={({ item }: { item: Movie }) => (
+          <MoviePoster
+            pressHandler={() =>
+              navigation.push("Movie", {
+                movieId: item.id,
+                movieTitle: item.title,
+              })
+            }
+            movie={item}
+            posterPath={item.poster_path}
+            style={{
+              width: windowWidth / 2 - 24,
+              height: (windowWidth / 2 - 24) * 1.5,
+            }}
+          />
+        )}
+        numColumns={2}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          marginBottom: 16,
+        }}
+        ref={scrollRef}
+        keyExtractor={(item) => item.id.toString()}
+        initialNumToRender={6}
+        onEndReached={() => (hasNextPage ? fetchNextPage() : null)}
+        onEndReachedThreshold={1.5}
+      />
       <DiscoveryFilterModal />
     </>
   );

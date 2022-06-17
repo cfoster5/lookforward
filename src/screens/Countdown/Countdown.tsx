@@ -27,7 +27,7 @@ import { LoadingScreen } from "../../components/LoadingScreen";
 import SubContext from "../../contexts/SubContext";
 import TabStackContext from "../../contexts/TabStackContext";
 import { Navigation } from "../../interfaces/navigation";
-import { useMovies } from "./api/getMovieCountdowns";
+import { useMovieCountdowns } from "./api/getMovieCountdowns";
 
 export function reducer(
   state: any,
@@ -82,7 +82,7 @@ function Countdown({ route, navigation }: Props) {
   const { movieSubs, games } = useContext(SubContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const movies = useMovies(movieSubs);
+  const movies = useMovieCountdowns(movieSubs);
 
   useLayoutEffect(() => {
     navigation.setOptions({

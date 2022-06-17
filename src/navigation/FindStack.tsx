@@ -10,7 +10,7 @@ import { Collection } from "../screens/Collection/Collection";
 import Game from "../screens/Game";
 import GameDiscover from "../screens/GameDiscover";
 import Movie from "../screens/Movie";
-import MovieDiscover from "../screens/MovieDiscover";
+import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 import Search from "../screens/Search/Search";
 
 // type FindStackNavProp = CompositeNavigationProp<

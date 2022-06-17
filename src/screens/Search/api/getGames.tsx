@@ -1,9 +1,9 @@
-import { convertReleasesToGames } from "../helpers/helpers";
-import { IGDB } from "../interfaces/igdb";
+import { useQuery } from "react-query";
 
-export default async function getGames({ queryKey }) {
-  const { searchValue } = queryKey[1];
+import { convertReleasesToGames } from "../../../helpers/helpers";
+import { IGDB } from "../../../interfaces/igdb";
 
+async function getGames(searchValue: string) {
   if (!searchValue) {
     const fields =
       "fields *, game.name, game.summary, game.cover.*, game.genres.name, game.videos.name, game.videos.video_id, game.involved_companies.developer, game.involved_companies.porting, game.involved_companies.publisher, game.involved_companies.supporting, game.involved_companies.company.name, platform.abbreviation, platform.name";
@@ -32,4 +32,14 @@ export default async function getGames({ queryKey }) {
     const json = await response.json();
     return json;
   }
+}
+
+export function useGames(searchValue: string) {
+  return useQuery(
+    ["games", { searchValue: searchValue }],
+    () => getGames(searchValue),
+    {
+      keepPreviousData: true,
+    }
+  );
 }

@@ -19,7 +19,6 @@ import { SearchBar } from "react-native-elements";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { useQuery } from "react-query";
 import {
   BottomTabNavigationProp,
   useBottomTabBarHeight,
@@ -43,12 +42,13 @@ import { Text as ThemedText } from "../../components/Themed";
 import GameContext from "../../contexts/GamePlatformPickerContexts";
 import TabStackContext from "../../contexts/TabStackContext";
 import useDebounce from "../../hooks/useDebounce";
-import getGames from "../../hooks/useGetGames";
 import { IGDB } from "../../interfaces/igdb";
 import { Navigation } from "../../interfaces/navigation";
 import { Movie, Person, TMDB, TV } from "../../interfaces/tmdb";
 import { Search as SearchInterface } from "../../interfaces/tmdb/search";
+import { useGames } from "./api/getGames";
 import { useMovieData } from "./api/getMovies";
+import { MovieOption } from "./types";
 
 function reducer(
   state: any,
@@ -97,12 +97,6 @@ export function ListLabel({ text, style }: { text: string; style?: any }) {
   );
 }
 
-export type MovieOption =
-  | "Coming Soon"
-  | "Now Playing"
-  | "Popular"
-  | "Trending";
-
 function Search({ navigation, route }: Props) {
   const { width: windowWidth } = useWindowDimensions();
   const [{ categoryIndex, searchValue }, dispatch] = useReducer(reducer, {
@@ -127,11 +121,8 @@ function Search({ navigation, route }: Props) {
     isPreviousData,
   } = useMovieData(option, debouncedSearch);
 
-  const { data: games, isPreviousData: isPreviousGamesData } = useQuery(
-    ["games", { searchValue: debouncedSearch }],
-    getGames,
-    { keepPreviousData: true }
-  );
+  const { data: games, isPreviousData: isPreviousGamesData } =
+    useGames(debouncedSearch);
 
   useEffect(() => {
     // Open GamePlatformPicker if game is changed

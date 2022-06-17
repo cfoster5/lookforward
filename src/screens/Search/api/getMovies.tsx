@@ -6,7 +6,7 @@ import {
   PopularMovies,
   UpcomingMovies,
 } from "../../../interfaces/tmdb";
-import { MovieOption } from "../Search";
+import { MovieOption } from "../types";
 
 async function getMovies({ pageParam = 1, queryKey }) {
   const { option, searchValue } = queryKey[1];

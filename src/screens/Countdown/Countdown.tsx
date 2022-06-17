@@ -1,4 +1,10 @@
-import React, { useContext, useLayoutEffect, useReducer, useRef } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useReducer,
+  useRef,
+} from "react";
 import { Platform, SectionList, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -15,13 +21,13 @@ import {
 } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import CountdownItem from "../components/CountdownItem";
-import { IoniconsHeaderButton } from "../components/IoniconsHeaderButton";
-import { LoadingScreen } from "../components/LoadingScreen";
-import SubContext from "../contexts/SubContext";
-import TabStackContext from "../contexts/TabStackContext";
-import { useGetAllMovies } from "../hooks/useGetAllMovies";
-import { Navigation } from "../interfaces/navigation";
+import CountdownItem from "../../components/CountdownItem";
+import { IoniconsHeaderButton } from "../../components/IoniconsHeaderButton";
+import { LoadingScreen } from "../../components/LoadingScreen";
+import SubContext from "../../contexts/SubContext";
+import TabStackContext from "../../contexts/TabStackContext";
+import { Navigation } from "../../interfaces/navigation";
+import { useMovies } from "./api/getMovieCountdowns";
 
 export function reducer(
   state: any,
@@ -76,7 +82,7 @@ function Countdown({ route, navigation }: Props) {
   const { movieSubs, games } = useContext(SubContext);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const { movies, loading } = useGetAllMovies(movieSubs);
+  const movies = useMovies(movieSubs);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -189,7 +195,9 @@ function Countdown({ route, navigation }: Props) {
     dispatch({ type: "set-hideButtons" });
   }
 
-  return !loading ? (
+  if (movies.some((movie) => movie.isLoading)) return <LoadingScreen />;
+
+  return (
     <SectionList
       contentContainerStyle={
         Platform.OS == "ios"
@@ -212,9 +220,9 @@ function Countdown({ route, navigation }: Props) {
       // sections={listData}
       sections={[
         {
-          data: movies.sort((a, b) =>
-            a.releaseDate?.localeCompare(b.releaseDate)
-          ),
+          data: movies
+            .flatMap((movie) => movie.data)
+            .sort((a, b) => a.releaseDate?.localeCompare(b.releaseDate)),
           title: "Movies",
         },
         { data: games, title: "Games" },
@@ -264,8 +272,6 @@ function Countdown({ route, navigation }: Props) {
       }
       ref={scrollRef}
     />
-  ) : (
-    <LoadingScreen />
   );
 }
 

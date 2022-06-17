@@ -8,7 +8,7 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor/Actor";
 import { Collection } from "../screens/Collection/Collection";
-import Countdown from "../screens/Countdown";
+import Countdown from "../screens/Countdown/Countdown";
 import Movie from "../screens/Movie";
 import MovieDiscover from "../screens/MovieDiscover";
 

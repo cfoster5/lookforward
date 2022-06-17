@@ -38,17 +38,6 @@ export async function getMovieDetails(
   return response.json();
 }
 
-// export async function getMovieCredits(person: number): Promise<TMDB.MovieCredits.Credits> {
-//   const response = await fetch(`https://api.themoviedb.org/3/person/${person}/movie_credits?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US`);
-//   return response.json();
-// }
-// export async function getPerson(personId: number): Promise<TMDB.Person.Person> {
-//   const response = await fetch(
-//     `https://api.themoviedb.org/3/person/${personId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=movie_credits,images`
-//   );
-//   return response.json();
-// }
-
 export async function getTrendingMovies(
   pageIndex?: number
 ): Promise<TMDB.BaseResponse<TMDB.Trending.Movie>> {
@@ -81,12 +70,6 @@ export async function getPopularMovies(
   );
   return await response.json();
 }
-
-// export async function getTopRatedMovies(): Promise<TMDB.Movie.Movie[]> {
-//   const response = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=68991fbb0b75dba5ae0ecd8182e967b1&region=US`);
-//   const json: TMDB.Response = await response.json();
-//   return json.results;
-// }
 
 export async function getPopularPeople(): Promise<any[]> {
   const response = await fetch(

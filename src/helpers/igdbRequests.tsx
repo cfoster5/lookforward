@@ -1,24 +1,5 @@
 import { IGDB } from "../interfaces/igdb";
 
-export async function searchGames(
-  searchVal: string
-): Promise<IGDB.Game.Game[]> {
-  const response = await fetch(
-    "https://gou4rcsh6i.execute-api.us-east-1.amazonaws.com/prod/games",
-    {
-      method: "POST",
-      body: `fields name, summary, cover.*, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name, genres.name, videos.name, videos.video_id, involved_companies.developer, involved_companies.porting, involved_companies.publisher, involved_companies.supporting, involved_companies.company.name;
-    where release_dates.date > ${Math.floor(
-      Date.now() / 1000
-    )} & release_dates.region = (2,8);
-    search "${searchVal}";
-    limit 50;`,
-    }
-  );
-  const json = await response.json();
-  return json;
-}
-
 export async function discoverGames({
   genreId,
 }: {

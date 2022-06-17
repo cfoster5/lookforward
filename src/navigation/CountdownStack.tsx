@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import { Navigation } from "../interfaces/navigation";
-import Actor from "../screens/Actor";
+import Actor from "../screens/Actor/Actor";
 import { Collection } from "../screens/Collection/Collection";
 import Countdown from "../screens/Countdown";
 import Movie from "../screens/Movie";

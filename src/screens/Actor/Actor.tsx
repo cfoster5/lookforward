@@ -1,13 +1,5 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import {
-  Dimensions,
-  FlatList,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, FlatList, Platform, Text, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
@@ -18,18 +10,18 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { DateTime } from "luxon";
 
-import ButtonMultiState from "../components/ButtonMultiState";
-import { ExpandableText } from "../components/ExpandableText";
-import { LoadingScreen } from "../components/LoadingScreen";
-import { MoviePoster } from "../components/Posters/MoviePoster";
-import { Text as ThemedText } from "../components/Themed";
-import { dateToLocaleString } from "../helpers/formatting";
-import { calculateWidth } from "../helpers/helpers";
-import { reusableStyles } from "../helpers/styles";
-import { Navigation } from "../interfaces/navigation";
-import { TMDB } from "../interfaces/tmdb";
+import ButtonMultiState from "../../components/ButtonMultiState";
+import { ExpandableText } from "../../components/ExpandableText";
+import { LoadingScreen } from "../../components/LoadingScreen";
+import { MoviePoster } from "../../components/Posters/MoviePoster";
+import { Text as ThemedText } from "../../components/Themed";
+import { dateToLocaleString } from "../../helpers/formatting";
+import { calculateWidth } from "../../helpers/helpers";
+import { reusableStyles } from "../../helpers/styles";
+import { Navigation } from "../../interfaces/navigation";
+import { TMDB } from "../../interfaces/tmdb";
+import { usePerson } from "./api/getPerson";
 
 interface Props {
   // navigation:
@@ -52,25 +44,9 @@ interface Props {
     | RouteProp<Navigation.CountdownStackParamList, "Actor">;
 }
 
-function useGetPerson(personId: number) {
-  const [person, setPerson] = useState<TMDB.Person.Person>();
-
-  useEffect(() => {
-    async function getPerson() {
-      const response = await fetch(
-        `https://api.themoviedb.org/3/person/${personId}?api_key=68991fbb0b75dba5ae0ecd8182e967b1&language=en-US&append_to_response=movie_credits,images`
-      );
-      const json = await response.json();
-      setPerson(json);
-    }
-    getPerson();
-  }, [personId]);
-
-  return person;
-}
-
 function Actor({ route, navigation }: Props) {
-  const person = useGetPerson(route.params.personId);
+  // const person = useGetPerson(route.params.personId);
+  const { data: person, isLoading } = usePerson(route.params.personId);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const ref = useRef<Carousel<any>>(null);
@@ -134,7 +110,9 @@ function Actor({ route, navigation }: Props) {
     }
   }
 
-  return person ? (
+  if (isLoading) return <LoadingScreen />;
+
+  return (
     <FlatList
       data={returnData()}
       renderItem={({ item }) => (
@@ -244,8 +222,6 @@ function Actor({ route, navigation }: Props) {
         </>
       }
     />
-  ) : (
-    <LoadingScreen />
   );
 }
 

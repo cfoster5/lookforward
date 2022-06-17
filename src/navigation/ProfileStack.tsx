@@ -5,7 +5,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackNavigationProp } from "@react-navigation/stack";
 
 import { Navigation } from "../interfaces/navigation";
-import Profile from "../screens/Profile";
+import Profile from "../screens/Profile/Profile";
 
 type ProfileStackNavProp = CompositeNavigationProp<
   StackNavigationProp<Navigation.ProfileStackParamList, "Profile">,

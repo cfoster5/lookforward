@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor";
-import { Collection } from "../screens/Collection";
+import { Collection } from "../screens/Collection/Collection";
 import Game from "../screens/Game";
 import GameDiscover from "../screens/GameDiscover";
 import Movie from "../screens/Movie";

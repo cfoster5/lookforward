@@ -13,15 +13,16 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { AnimatedHeaderImage } from "../components/AnimatedHeaderImage";
-import { ExpandableText } from "../components/ExpandableText";
-import { LoadingScreen } from "../components/LoadingScreen";
-import { MoviePoster } from "../components/Posters/MoviePoster";
-import { Text as ThemedText } from "../components/Themed";
-import { calculateWidth } from "../helpers/helpers";
-import { useGetCollection } from "../hooks/useGetCollection";
-import { Navigation } from "../interfaces/navigation";
-import { CollectionDetails } from "../interfaces/tmdb";
+import { AnimatedHeaderImage } from "../../components/AnimatedHeaderImage";
+import { ExpandableText } from "../../components/ExpandableText";
+import { LoadingScreen } from "../../components/LoadingScreen";
+import { MoviePoster } from "../../components/Posters/MoviePoster";
+import { Text as ThemedText } from "../../components/Themed";
+import { calculateWidth } from "../../helpers/helpers";
+import { Navigation } from "../../interfaces/navigation";
+import { CollectionDetails } from "../../interfaces/tmdb";
+import { useCollection } from "./api/getCollection";
+// import { useGetCollection } from "./api/useGetCollection";
 
 interface Props {
   navigation:
@@ -44,7 +45,7 @@ interface Props {
 
 export function Collection({ navigation, route }: Props) {
   const { collectionId } = route.params;
-  const { collection, loading } = useGetCollection(collectionId);
+  const { data: collection, isLoading } = useCollection(collectionId);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const [showAllOverview, setShowAllOverview] = useState(false);
@@ -57,7 +58,7 @@ export function Collection({ navigation, route }: Props) {
     navigation.setOptions({ title: collection?.name });
   }, [collection]);
 
-  if (loading) return <LoadingScreen />;
+  if (isLoading) return <LoadingScreen />;
 
   return (
     <Animated.FlatList

@@ -23,12 +23,12 @@ import {
   purchaseItemAsync,
 } from "expo-in-app-purchases";
 
-import { LoadingScreen } from "../components/LoadingScreen";
-import TabStackContext from "../contexts/TabStackContext";
-import { reusableStyles } from "../helpers/styles";
-import { useFirstRender } from "../hooks/useFirstRender";
-import { useGetPurchaseOptions } from "../hooks/useGetPurchaseOptions";
-import { Navigation } from "../interfaces/navigation";
+import { LoadingScreen } from "../../components/LoadingScreen";
+import TabStackContext from "../../contexts/TabStackContext";
+import { reusableStyles } from "../../helpers/styles";
+import { useFirstRender } from "../../hooks/useFirstRender";
+import { Navigation } from "../../interfaces/navigation";
+import { useGetPurchaseOptions } from "./hooks/useGetPurchaseOptions";
 
 type ProfileScreenRouteProp = RouteProp<
   Navigation.ProfileStackParamList,

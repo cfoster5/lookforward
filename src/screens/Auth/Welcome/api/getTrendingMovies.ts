@@ -1,6 +1,5 @@
 import { useQuery } from "react-query";
-
-import { TmdbKey } from "../../../../constants/ApiKeys";
+import { TmdbKey } from "constants/ApiKeys";
 
 async function getMovies() {
   const response = await fetch(

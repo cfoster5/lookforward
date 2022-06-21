@@ -11,12 +11,11 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { reusableStyles } from "helpers/styles";
+import { IGDB } from "interfaces/igdb";
+import { Navigation } from "interfaces/navigation";
+import { Movie } from "interfaces/tmdb";
 import { DateTime } from "luxon";
-
-import { reusableStyles } from "../../../helpers/styles";
-import { IGDB } from "../../../interfaces/igdb";
-import { Navigation } from "../../../interfaces/navigation";
-import { Movie } from "../../../interfaces/tmdb";
 
 interface Props {
   navigation: CompositeNavigationProp<

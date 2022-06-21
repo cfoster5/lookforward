@@ -10,17 +10,17 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import ButtonMultiState from "components/ButtonMultiState";
+import { ExpandableText } from "components/ExpandableText";
+import { LoadingScreen } from "components/LoadingScreen";
+import { MoviePoster } from "components/Posters/MoviePoster";
+import { Text as ThemedText } from "components/Themed";
+import { dateToLocaleString } from "helpers/formatting";
+import { calculateWidth } from "helpers/helpers";
+import { reusableStyles } from "helpers/styles";
+import { Navigation } from "interfaces/navigation";
+import { TMDB } from "interfaces/tmdb";
 
-import ButtonMultiState from "../../components/ButtonMultiState";
-import { ExpandableText } from "../../components/ExpandableText";
-import { LoadingScreen } from "../../components/LoadingScreen";
-import { MoviePoster } from "../../components/Posters/MoviePoster";
-import { Text as ThemedText } from "../../components/Themed";
-import { dateToLocaleString } from "../../helpers/formatting";
-import { calculateWidth } from "../../helpers/helpers";
-import { reusableStyles } from "../../helpers/styles";
-import { Navigation } from "../../interfaces/navigation";
-import { TMDB } from "../../interfaces/tmdb";
 import { usePerson } from "./api/getPerson";
 
 interface Props {

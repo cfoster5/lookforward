@@ -29,20 +29,20 @@ import {
   useScrollToTop,
 } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import CategoryControl from "components/CategoryControl/CategoryControl";
+import GameReleaseModal from "components/GamePlatformPicker";
+import { LoadingScreen } from "components/LoadingScreen";
+import { GamePoster } from "components/Posters/GamePoster";
+import { MoviePoster } from "components/Posters/MoviePoster";
+import { Text as ThemedText } from "components/Themed";
+import GameContext from "contexts/GamePlatformPickerContexts";
+import TabStackContext from "contexts/TabStackContext";
+import { IGDB } from "interfaces/igdb";
+import { Navigation } from "interfaces/navigation";
+import { Movie, Person, TMDB, TV } from "interfaces/tmdb";
+import { Search as SearchInterface } from "interfaces/tmdb/search";
 import { DateTime } from "luxon";
 
-import CategoryControl from "../../components/CategoryControl/CategoryControl";
-import GameReleaseModal from "../../components/GamePlatformPicker";
-import { LoadingScreen } from "../../components/LoadingScreen";
-import { GamePoster } from "../../components/Posters/GamePoster";
-import { MoviePoster } from "../../components/Posters/MoviePoster";
-import { Text as ThemedText } from "../../components/Themed";
-import GameContext from "../../contexts/GamePlatformPickerContexts";
-import TabStackContext from "../../contexts/TabStackContext";
-import { IGDB } from "../../interfaces/igdb";
-import { Navigation } from "../../interfaces/navigation";
-import { Movie, Person, TMDB, TV } from "../../interfaces/tmdb";
-import { Search as SearchInterface } from "../../interfaces/tmdb/search";
 import { useGames } from "./api/getGames";
 import { useMovieData } from "./api/getMovies";
 import MovieSearchModal from "./components/MovieSearchModal";

@@ -20,12 +20,12 @@ import {
   useScrollToTop,
 } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
+import { LoadingScreen } from "components/LoadingScreen";
+import SubContext from "contexts/SubContext";
+import TabStackContext from "contexts/TabStackContext";
+import { Navigation } from "interfaces/navigation";
 
-import { IoniconsHeaderButton } from "../../components/IoniconsHeaderButton";
-import { LoadingScreen } from "../../components/LoadingScreen";
-import SubContext from "../../contexts/SubContext";
-import TabStackContext from "../../contexts/TabStackContext";
-import { Navigation } from "../../interfaces/navigation";
 import { useMovieCountdowns } from "./api/getMovieCountdowns";
 import CountdownItem from "./components/CountdownItem";
 

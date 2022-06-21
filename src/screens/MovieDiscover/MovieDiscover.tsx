@@ -20,17 +20,16 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
-
-import { useMovieWatchProviders } from "../../api/getMovieWatchProviders";
-import ButtonMultiState from "../../components/ButtonMultiState";
-import { IoniconsHeaderButton } from "../../components/IoniconsHeaderButton";
-import { LoadingScreen } from "../../components/LoadingScreen";
-import { MoviePoster } from "../../components/Posters/MoviePoster";
-import TabStackContext from "../../contexts/TabStackContext";
-import { targetedProviders } from "../../helpers/helpers";
-import { getDiscoverMovies } from "../../helpers/tmdbRequests";
+import { useMovieWatchProviders } from "api/getMovieWatchProviders";
+import ButtonMultiState from "components/ButtonMultiState";
+import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
+import { LoadingScreen } from "components/LoadingScreen";
+import { MoviePoster } from "components/Posters/MoviePoster";
+import TabStackContext from "contexts/TabStackContext";
+import { targetedProviders } from "helpers/helpers";
 // import { useDiscoverFilterCreation } from "../hooks/useDiscoverFilterCreation";
-import { Movie } from "../../interfaces/tmdb";
+import { Movie } from "interfaces/tmdb";
+
 import { useDiscoverMovies } from "./api/getDiscoverMovies";
 
 function MovieDiscover({ route, navigation }: any) {

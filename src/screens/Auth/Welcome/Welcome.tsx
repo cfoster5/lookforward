@@ -10,10 +10,10 @@ import {
 import Carousel from "react-native-snap-carousel";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { IGDB } from "interfaces/igdb";
+import { Movie } from "interfaces/tmdb";
+import { AuthStackParamList } from "navigation/AuthStack";
 
-import { IGDB } from "../../../interfaces/igdb";
-import { Movie } from "../../../interfaces/tmdb";
-import { AuthStackParamList } from "../../../navigation/AuthStack";
 import { useHypedGames } from "./api/getHypedGames";
 import { useTrendingMovies } from "./api/getTrendingMovies";
 

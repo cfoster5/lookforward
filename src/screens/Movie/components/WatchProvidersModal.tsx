@@ -12,10 +12,10 @@ import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
+import TabStackContext from "contexts/TabStackContext";
+import { calculateWidth } from "helpers/helpers";
+import { WatchLocale } from "interfaces/tmdb";
 
-import TabStackContext from "../../../contexts/TabStackContext";
-import { calculateWidth } from "../../../helpers/helpers";
-import { WatchLocale } from "../../../interfaces/tmdb";
 import { horizontalListProps } from "../Movie";
 
 function WatchProvidersModal({

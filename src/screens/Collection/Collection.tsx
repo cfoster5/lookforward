@@ -12,15 +12,15 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { AnimatedHeaderImage } from "components/AnimatedHeaderImage";
+import { ExpandableText } from "components/ExpandableText";
+import { LoadingScreen } from "components/LoadingScreen";
+import { MoviePoster } from "components/Posters/MoviePoster";
+import { Text as ThemedText } from "components/Themed";
+import { calculateWidth } from "helpers/helpers";
+import { Navigation } from "interfaces/navigation";
+import { CollectionDetails } from "interfaces/tmdb";
 
-import { AnimatedHeaderImage } from "../../components/AnimatedHeaderImage";
-import { ExpandableText } from "../../components/ExpandableText";
-import { LoadingScreen } from "../../components/LoadingScreen";
-import { MoviePoster } from "../../components/Posters/MoviePoster";
-import { Text as ThemedText } from "../../components/Themed";
-import { calculateWidth } from "../../helpers/helpers";
-import { Navigation } from "../../interfaces/navigation";
-import { CollectionDetails } from "../../interfaces/tmdb";
 import { useCollection } from "./api/getCollection";
 // import { useGetCollection } from "./api/useGetCollection";
 

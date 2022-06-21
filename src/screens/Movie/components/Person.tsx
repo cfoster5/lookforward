@@ -11,11 +11,10 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-
-import { TextPoster } from "../../../components/Posters/TextPoster";
-import TabStackContext from "../../../contexts/TabStackContext";
-import { Navigation } from "../../../interfaces/navigation";
-import { Cast, Crew } from "../../../interfaces/tmdb";
+import { TextPoster } from "components/Posters/TextPoster";
+import TabStackContext from "contexts/TabStackContext";
+import { Navigation } from "interfaces/navigation";
+import { Cast, Crew } from "interfaces/tmdb";
 
 interface Props {
   navigation:

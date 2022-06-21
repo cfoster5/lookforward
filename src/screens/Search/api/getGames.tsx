@@ -1,7 +1,6 @@
 import { useQuery } from "react-query";
-
-import { convertReleasesToGames } from "../../../helpers/helpers";
-import { IGDB } from "../../../interfaces/igdb";
+import { convertReleasesToGames } from "helpers/helpers";
+import { IGDB } from "interfaces/igdb";
 
 async function getGames(searchValue: string) {
   if (!searchValue) {

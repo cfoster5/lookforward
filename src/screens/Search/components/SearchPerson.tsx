@@ -5,12 +5,11 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-
-import TabStackContext from "../../../contexts/TabStackContext";
-import { calculateWidth } from "../../../helpers/helpers";
-import { reusableStyles } from "../../../helpers/styles";
-import { Navigation } from "../../../interfaces/navigation";
-import { TMDB } from "../../../interfaces/tmdb";
+import TabStackContext from "contexts/TabStackContext";
+import { calculateWidth } from "helpers/helpers";
+import { reusableStyles } from "helpers/styles";
+import { Navigation } from "interfaces/navigation";
+import { TMDB } from "interfaces/tmdb";
 
 interface Props {
   navigation: CompositeNavigationProp<

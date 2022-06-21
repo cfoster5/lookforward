@@ -1,8 +1,7 @@
 import { useQueries } from "react-query";
+import { TmdbKey } from "constants/ApiKeys";
+import { FirestoreMovie } from "interfaces/firebase";
 import { DateTime } from "luxon";
-
-import { TmdbKey } from "../../../constants/ApiKeys";
-import { FirestoreMovie } from "../../../interfaces/firebase";
 
 async function getMovie(movieId: FirestoreMovie["documentID"]) {
   const response = await fetch(

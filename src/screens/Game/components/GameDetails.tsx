@@ -9,17 +9,16 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { BlueBullet } from "components/BlueBullet";
+import ButtonSingleState from "components/ButtonSingleState";
+import CategoryControl from "components/CategoryControl/CategoryControl";
+import { ExpandableText } from "components/ExpandableText";
+import { Text as ThemedText } from "components/Themed";
+import Trailer from "components/Trailer";
+import { reusableStyles } from "helpers/styles";
+import { IGDB } from "interfaces/igdb";
+import { Navigation } from "interfaces/navigation";
 import { DateTime } from "luxon";
-
-import { BlueBullet } from "../../../components/BlueBullet";
-import ButtonSingleState from "../../../components/ButtonSingleState";
-import CategoryControl from "../../../components/CategoryControl/CategoryControl";
-import { ExpandableText } from "../../../components/ExpandableText";
-import { Text as ThemedText } from "../../../components/Themed";
-import Trailer from "../../../components/Trailer";
-import { reusableStyles } from "../../../helpers/styles";
-import { IGDB } from "../../../interfaces/igdb";
-import { Navigation } from "../../../interfaces/navigation";
 
 interface Props {
   navigation: CompositeNavigationProp<

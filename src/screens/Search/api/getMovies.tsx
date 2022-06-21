@@ -1,11 +1,11 @@
 import { useInfiniteQuery } from "react-query";
-
-import { TmdbKey } from "../../../constants/ApiKeys";
+import { TmdbKey } from "constants/ApiKeys";
 import {
   MoviesPlayingNow,
   PopularMovies,
   UpcomingMovies,
-} from "../../../interfaces/tmdb";
+} from "interfaces/tmdb";
+
 import { MovieOption } from "../types";
 
 async function getMovies({ pageParam = 1, queryKey }) {

@@ -115,11 +115,20 @@ function Search({ navigation, route }: Props) {
   const [option, setOption] = useState<MovieOption>("Coming Soon");
 
   const {
-    data: movies,
+    data: movieData,
     fetchNextPage,
     hasNextPage,
     isPreviousData,
   } = useMovieData(option, debouncedSearch);
+
+  const movies = movieData?.pages.flatMap((page) => page.results);
+
+  useEffect(() => {
+    // Manually get second page on load to fix cases where empty space is rendered before scrolling
+    if (movieData?.pages.filter((page) => page.page === 2).length === 0) {
+      fetchNextPage({ pageParam: 2 });
+    }
+  }, [movieData]);
 
   const { data: games, isPreviousData: isPreviousGamesData } =
     useGames(debouncedSearch);

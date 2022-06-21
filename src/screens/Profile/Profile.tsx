@@ -26,8 +26,8 @@ import {
 import { LoadingScreen } from "../../components/LoadingScreen";
 import TabStackContext from "../../contexts/TabStackContext";
 import { reusableStyles } from "../../helpers/styles";
-import { useFirstRender } from "../../hooks/useFirstRender";
 import { Navigation } from "../../interfaces/navigation";
+import { useFirstRender } from "./components/useFirstRender";
 import { useGetPurchaseOptions } from "./hooks/useGetPurchaseOptions";
 
 type ProfileScreenRouteProp = RouteProp<

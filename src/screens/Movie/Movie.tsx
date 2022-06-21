@@ -39,13 +39,9 @@ import { AnimatedHeaderImage } from "../../components/AnimatedHeaderImage";
 import { BlueBullet } from "../../components/BlueBullet";
 import ButtonSingleState from "../../components/ButtonSingleState";
 import CategoryControl from "../../components/CategoryControl/CategoryControl";
-import WatchProvidersModal from "../../components/Details/WatchProvidersModal";
-import { DiscoverListLabel } from "../../components/DiscoverListLabel";
 import { ExpandableText } from "../../components/ExpandableText";
 import { IoniconsHeaderButton } from "../../components/IoniconsHeaderButton";
 import { LoadingScreen } from "../../components/LoadingScreen";
-import { MediaSelection } from "../../components/MediaSelection";
-import Person from "../../components/Person";
 import { MoviePoster } from "../../components/Posters/MoviePoster";
 import { Text as ThemedText } from "../../components/Themed";
 import Trailer from "../../components/Trailer";
@@ -64,6 +60,10 @@ import { Navigation } from "../../interfaces/navigation";
 import { ReleaseDate } from "../../interfaces/tmdb";
 import { ListLabel } from "../Search/Search";
 import { useMovie } from "./api/getMovie";
+import { DiscoverListLabel } from "./components/DiscoverListLabel";
+import { MediaSelection } from "./components/MediaSelection";
+import Person from "./components/Person";
+import WatchProvidersModal from "./components/WatchProvidersModal";
 
 function ScrollViewWithFlatList({
   data,

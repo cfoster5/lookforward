@@ -13,10 +13,10 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
 
-import TabStackContext from "../../contexts/TabStackContext";
-import { calculateWidth } from "../../helpers/helpers";
-import { WatchLocale } from "../../interfaces/tmdb";
-import { horizontalListProps } from "../../screens/Movie/Movie";
+import TabStackContext from "../../../contexts/TabStackContext";
+import { calculateWidth } from "../../../helpers/helpers";
+import { WatchLocale } from "../../../interfaces/tmdb";
+import { horizontalListProps } from "../Movie";
 
 function WatchProvidersModal({
   modalRef,
@@ -149,7 +149,7 @@ function WatchProvidersModal({
           powered by
         </Text>
         <Image
-          source={require("../../../assets/JustWatch-logo-large.webp")}
+          source={require("../assets/JustWatch-logo-large.webp")}
           style={{
             height: iOSUIKit.footnoteObject.fontSize,
             width: iOSUIKit.footnoteObject.fontSize * (505 / 76),

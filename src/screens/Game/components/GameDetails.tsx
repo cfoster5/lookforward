@@ -11,15 +11,15 @@ import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
-import { reusableStyles } from "../../helpers/styles";
-import { IGDB } from "../../interfaces/igdb";
-import { Navigation } from "../../interfaces/navigation";
-import { BlueBullet } from "../BlueBullet";
-import ButtonSingleState from "../ButtonSingleState";
-import CategoryControl from "../CategoryControl/CategoryControl";
-import { ExpandableText } from "../ExpandableText";
-import { Text as ThemedText } from "../Themed";
-import Trailer from "../Trailer";
+import { BlueBullet } from "../../../components/BlueBullet";
+import ButtonSingleState from "../../../components/ButtonSingleState";
+import CategoryControl from "../../../components/CategoryControl/CategoryControl";
+import { ExpandableText } from "../../../components/ExpandableText";
+import { Text as ThemedText } from "../../../components/Themed";
+import Trailer from "../../../components/Trailer";
+import { reusableStyles } from "../../../helpers/styles";
+import { IGDB } from "../../../interfaces/igdb";
+import { Navigation } from "../../../interfaces/navigation";
 
 interface Props {
   navigation: CompositeNavigationProp<

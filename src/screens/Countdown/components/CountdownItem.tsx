@@ -13,10 +13,10 @@ import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { DateTime } from "luxon";
 
-import { reusableStyles } from "../helpers/styles";
-import { IGDB } from "../interfaces/igdb";
-import { Navigation } from "../interfaces/navigation";
-import { Movie } from "../interfaces/tmdb";
+import { reusableStyles } from "../../../helpers/styles";
+import { IGDB } from "../../../interfaces/igdb";
+import { Navigation } from "../../../interfaces/navigation";
+import { Movie } from "../../../interfaces/tmdb";
 
 interface Props {
   navigation: CompositeNavigationProp<

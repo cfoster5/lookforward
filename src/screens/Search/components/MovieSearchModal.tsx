@@ -10,12 +10,12 @@ import {
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 
-import { useMovieWatchProviders } from "../api/getMovieWatchProviders";
-import TabStackContext from "../contexts/TabStackContext";
-import { targetedProviders } from "../helpers/helpers";
-import { Navigation } from "../interfaces/navigation";
-import ButtonMultiState from "./ButtonMultiState";
-import ButtonSingleState from "./ButtonSingleState";
+import { useMovieWatchProviders } from "../../../api/getMovieWatchProviders";
+import ButtonMultiState from "../../../components/ButtonMultiState";
+import ButtonSingleState from "../../../components/ButtonSingleState";
+import TabStackContext from "../../../contexts/TabStackContext";
+import { targetedProviders } from "../../../helpers/helpers";
+import { Navigation } from "../../../interfaces/navigation";
 
 export default function MovieSearchModal({
   navigation,

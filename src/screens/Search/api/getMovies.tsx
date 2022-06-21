@@ -22,11 +22,7 @@ async function getMovies({ pageParam = 1, queryKey }) {
   );
   const json: UpcomingMovies | MoviesPlayingNow | PopularMovies =
     await response.json();
-  // return json;
-  return {
-    ...json,
-    nextPage: json.page !== json.total_pages ? json.page + 1 : undefined,
-  };
+  return json;
 }
 
 export function useMovieData(option: MovieOption, searchValue: string) {
@@ -40,8 +36,9 @@ export function useMovieData(option: MovieOption, searchValue: string) {
     ],
     getMovies,
     {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-      select: (movieData) => movieData.pages.flatMap((page) => page.results),
+      getNextPageParam: (lastPage) =>
+        lastPage.page !== lastPage.total_pages ? lastPage.page + 1 : undefined,
+      // select: (movieData) => movieData.pages.flatMap((page) => page.results),
       keepPreviousData: true,
     }
   );

@@ -850,9 +850,9 @@ PODS:
     - React-Core
   - RNImageColors (1.5.1):
     - React-Core
-  - RNReactNativeHapticFeedback (1.13.1):
+  - RNReactNativeHapticFeedback (1.14.0):
     - React-Core
-  - RNReanimated (2.3.1):
+  - RNReanimated (2.8.0):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
@@ -860,7 +860,6 @@ PODS:
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
-    - React
     - React-callinvoker
     - React-Core
     - React-Core/DevSupport
@@ -893,7 +892,7 @@ PODS:
   - SDWebImageWebPCoder (0.8.4):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.10)
-  - SRSRadialGradient (1.0.9):
+  - SRSRadialGradient (1.1.1):
     - React
   - UMAppLoader (2.2.0)
   - UMCore (7.1.2)
@@ -1220,14 +1219,14 @@ SPEC CHECKSUMS:
   RNFBMessaging: eb8d1b08795c8718706007ed0743732d00e1acc4
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNImageColors: fd9777591fc765780e035f4bec7a42edabc86eb4
-  RNReactNativeHapticFeedback: 4085973f5a38b40d3c6793a3ee5724773eae045e
-  RNReanimated: da3860204e5660c0dd66739936732197d359d753
+  RNReactNativeHapticFeedback: 1e3efeca9628ff9876ee7cdd9edec1b336913f8c
+  RNReanimated: 58b57be69a237fb02ec8099d25171057638cf41a
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d
   SDWebImageWebPCoder: f93010f3f6c031e2f8fb3081ca4ee6966c539815
-  SRSRadialGradient: 49ba49a7a8f257c3fe785c250867b07185d1d01e
+  SRSRadialGradient: 2bc6d83c5b5f44a46e908151430ac9e310087821
   UMAppLoader: 21af63390e55c82e037fb9752d93114a80ecf16e
   UMCore: ce3a4faa010239063b8343895b29a6d97b01069d
   UMReactNativeAdapter: d03cefd0e4e4179ab8c490408589f1c8a6c8b785

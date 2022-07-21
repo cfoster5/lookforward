@@ -1,10 +1,10 @@
-import { useInfiniteQuery } from "react-query";
 import { TmdbKey } from "constants/ApiKeys";
 import {
   MoviesPlayingNow,
   PopularMovies,
   UpcomingMovies,
 } from "interfaces/tmdb";
+import { useInfiniteQuery } from "react-query";
 
 import { MovieOption } from "../types";
 
@@ -30,8 +30,8 @@ export function useMovieData(option: MovieOption, searchValue: string) {
     [
       "movies",
       {
-        option: option,
-        searchValue: searchValue,
+        option,
+        searchValue,
       },
     ],
     getMovies,

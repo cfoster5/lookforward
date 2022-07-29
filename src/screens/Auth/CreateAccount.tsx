@@ -1,3 +1,5 @@
+import auth from "@react-native-firebase/auth";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import {
   Alert,
@@ -9,9 +11,12 @@ import {
   View,
 } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import auth from "@react-native-firebase/auth";
 
-function CreateAccount() {
+import { AuthStackParams } from "@/types";
+
+type Props = NativeStackScreenProps<AuthStackParams, "Create Account">;
+
+function CreateAccount({ navigation, route }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -72,8 +77,8 @@ function CreateAccount() {
             placeholder="Email"
             placeholderTextColor="#6e6f73"
             autoCapitalize="none"
-            keyboardType={"email-address"}
-            textContentType={"username"}
+            keyboardType="email-address"
+            textContentType="username"
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
@@ -88,8 +93,8 @@ function CreateAccount() {
             }}
             placeholder="Password"
             placeholderTextColor="#6e6f73"
-            secureTextEntry={true}
-            textContentType={"password"}
+            secureTextEntry
+            textContentType="password"
             value={password}
             onChangeText={(text) => setPassword(text)}
           />

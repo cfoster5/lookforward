@@ -1,14 +1,13 @@
-import React, { useContext, useRef } from "react";
+import firestore from "@react-native-firebase/firestore";
+import React, { useRef } from "react";
 import { Animated, Easing, Pressable, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { iOSColors } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import firestore from "@react-native-firebase/firestore";
 
-import GameContext from "../contexts/GamePlatformPickerContexts";
-import SubContext from "../contexts/SubContext";
-import TabStackContext from "../contexts/TabStackContext";
 import { IGDB } from "../interfaces/igdb";
+
+import { useStore } from "@/stores/store";
 
 interface Props {
   movieId?: string;
@@ -17,16 +16,14 @@ interface Props {
 }
 
 function PosterButton({ movieId, game, inCountdown }: Props) {
-  const { user } = useContext(TabStackContext);
-  const { setGame } = useContext(GameContext);
-  const { games } = useContext(SubContext);
+  const { user, setGame, gameSubs } = useStore();
 
   let docId = "";
   if (movieId) {
     docId = movieId;
   }
   if (game) {
-    docId = games.find(
+    docId = gameSubs.find(
       (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
         releaseDate.game.id === game.id
     )?.documentID;
@@ -46,7 +43,7 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
           .collection("movies")
           .doc(docId)
           .set(
-            { subscribers: firestore.FieldValue.arrayUnion(user) },
+            { subscribers: firestore.FieldValue.arrayUnion(user!.uid) },
             { merge: true }
           );
         Animated.timing(transformAnim, {
@@ -79,7 +76,7 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
           .collection(collection)
           .doc(docId)
           .update({
-            subscribers: firestore.FieldValue.arrayRemove(user),
+            subscribers: firestore.FieldValue.arrayRemove(user!.uid),
           });
         Animated.timing(transformAnim, {
           toValue: 1,

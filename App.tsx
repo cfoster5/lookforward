@@ -1,14 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Platform, StatusBar, View } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import SplashScreen from "react-native-splash-screen";
-import { OverflowMenuProvider } from "react-navigation-header-buttons";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faBomb,
   faChildren,
-  faExplosion,
   faFaceLaughSquint,
   faGhost,
   faHandcuffs,
@@ -26,25 +19,20 @@ import {
   faUserSecret,
   faVideoCamera,
 } from "@fortawesome/free-solid-svg-icons";
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-} from "@react-navigation/native";
 import {
   finishTransactionAsync,
   IAPResponseCode,
   setPurchaseListener,
 } from "expo-in-app-purchases";
+import React, { useEffect, useState } from "react";
+import { Platform, StatusBar, View } from "react-native";
+import SplashScreen from "react-native-splash-screen";
 
-import TabStackContext from "./src/contexts/TabStackContext";
-import { AuthStack } from "./src/navigation/AuthStack";
-import { TabStack } from "./src/navigation/TabStack";
-
-const queryClient = new QueryClient();
+import Navigation from "./src/navigation";
+import { AppProvider } from "./src/providers/app";
+import { useStore } from "./src/stores/store";
 
 library.add(
   faPersonHiking,
@@ -57,7 +45,6 @@ library.add(
   faHatCowboy,
   faRocket,
   faUserSecret,
-  // faExplosion,
   faBomb,
   faHandcuffs,
   faPersonRunning,
@@ -71,16 +58,8 @@ library.add(
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<FirebaseAuthTypes.User>();
-  const [colorScheme, setColorScheme] = useState("dark");
-
-  useEffect(() => {
-    // monitorTimeConsumingTask().then(result => setInitializing(false))
-    const subscriber = auth().onAuthStateChanged((user) => {
-      setUser(user ? user : undefined);
-    });
-    return subscriber; // unsubscribe on unmount
-  }, []);
+  const { user } = useStore();
+  const [colorScheme] = useState("dark");
 
   useEffect(() => {
     if (user) {
@@ -92,9 +71,7 @@ export default function App() {
   }, [user]);
 
   useEffect(() => {
-    if (!initializing) {
-      SplashScreen.hide();
-    }
+    if (!initializing) SplashScreen.hide();
   }, [initializing]);
 
   async function requestUserPermission() {
@@ -102,18 +79,18 @@ export default function App() {
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    const docRef = firestore()
+    const doc = await firestore()
       .collection("users")
-      .doc(user?.uid)
+      .doc(user!.uid)
       .collection("contentPreferences")
-      .doc("preferences");
-    const doc = await docRef.get();
+      .doc("preferences")
+      .get();
     if (enabled) {
       if (!doc.exists) {
         // Only set notification preferences to true if they haven't been set before
         await firestore()
           .collection("users")
-          .doc(user?.uid)
+          .doc(user!.uid)
           .collection("contentPreferences")
           .doc("preferences")
           .set({
@@ -134,7 +111,7 @@ export default function App() {
     // Add the token to the users datastore
     await firestore()
       .collection("users")
-      .doc(user?.uid)
+      .doc(user!.uid)
       .set({ deviceToken: token });
   }
 
@@ -164,31 +141,14 @@ export default function App() {
     });
   }
 
-  if (initializing) {
-    return <View />;
-  }
+  if (initializing) return <View />;
+
   return (
-    <SafeAreaProvider>
-      <NavigationContainer
-        theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-      >
-        <StatusBar
-          barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-        />
-        <QueryClientProvider client={queryClient}>
-          {user ? (
-            <OverflowMenuProvider>
-              <TabStackContext.Provider
-                value={{ user: user.uid, theme: colorScheme }}
-              >
-                <TabStack />
-              </TabStackContext.Provider>
-            </OverflowMenuProvider>
-          ) : (
-            <AuthStack />
-          )}
-        </QueryClientProvider>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <AppProvider>
+      <Navigation colorScheme={colorScheme} />
+      <StatusBar
+        barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+      />
+    </AppProvider>
   );
 }

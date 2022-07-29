@@ -1,3 +1,17 @@
+import {
+  BottomTabScreenProps,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { AnimatedHeaderImage } from "components/AnimatedHeaderImage";
+import { ExpandableText } from "components/ExpandableText";
+import { LoadingScreen } from "components/LoadingScreen";
+import { MoviePoster } from "components/Posters/MoviePoster";
+import { Text as ThemedText } from "components/Themed";
+import { calculateWidth } from "helpers/helpers";
+import { CollectionDetails } from "interfaces/tmdb";
 import React, { useLayoutEffect, useState } from "react";
 import { Platform, View } from "react-native";
 import Animated, {
@@ -5,45 +19,25 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
-import {
-  BottomTabNavigationProp,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/elements";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { AnimatedHeaderImage } from "components/AnimatedHeaderImage";
-import { ExpandableText } from "components/ExpandableText";
-import { LoadingScreen } from "components/LoadingScreen";
-import { MoviePoster } from "components/Posters/MoviePoster";
-import { Text as ThemedText } from "components/Themed";
-import { calculateWidth } from "helpers/helpers";
-import { Navigation } from "interfaces/navigation";
-import { CollectionDetails } from "interfaces/tmdb";
 
 import { useCollection } from "./api/getCollection";
+
+import { FindStackParams, BottomTabParams } from "@/types";
+
 // import { useGetCollection } from "./api/useGetCollection";
 
-interface Props {
-  navigation:
-    | CompositeNavigationProp<
-        StackNavigationProp<Navigation.FindStackParamList, "Collection">,
-        BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
-      >
-    | CompositeNavigationProp<
-        StackNavigationProp<Navigation.CountdownStackParamList, "Collection">,
-        BottomTabNavigationProp<
-          Navigation.TabNavigationParamList,
-          "CountdownTab"
-        >
-      >;
-  route: RouteProp<
-    Navigation.FindStackParamList | Navigation.CountdownStackParamList,
-    "Collection"
-  >;
-}
+type CollectionScreenNavigationProp = CompositeScreenProps<
+  NativeStackScreenProps<FindStackParams, "Collection">,
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
+    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
+  >
+>;
 
-export function Collection({ navigation, route }: Props) {
+export function Collection({
+  navigation,
+  route,
+}: CollectionScreenNavigationProp) {
   const { collectionId } = route.params;
   const { data: collection, isLoading } = useCollection(collectionId);
   const tabBarheight = useBottomTabBarHeight();

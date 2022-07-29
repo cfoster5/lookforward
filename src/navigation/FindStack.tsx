@@ -1,10 +1,7 @@
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { Platform } from "react-native";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { RouteProp } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor/Actor";
 import { Collection } from "../screens/Collection/Collection";
 import Game from "../screens/Game/Game";
@@ -13,22 +10,10 @@ import Movie from "../screens/Movie/Movie";
 import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 import Search from "../screens/Search/Search";
 
-// type FindStackNavProp = CompositeNavigationProp<
-//   StackNavigationProp<Navigation.FindStackParamList, "Find">,
-//   BottomTabNavigationProp<Navigation.TabNavigationParamList>
-// >;
-type FindStackNavProp = BottomTabNavigationProp<
-  Navigation.TabNavigationParamList,
-  "FindTab"
->;
-
-interface Props {
-  navigation: FindStackNavProp;
-  route: RouteProp<Navigation.TabNavigationParamList, "FindTab">;
-}
+import { FindStackParams } from "@/types";
 
 const Stack = createNativeStackNavigator();
-export function FindStack({ navigation, route }: Props) {
+export function FindStack({ navigation, route }: FindStackParams) {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -40,7 +25,7 @@ export function FindStack({ navigation, route }: Props) {
         name="Movie"
         component={Movie}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: "",
         }}
@@ -49,7 +34,7 @@ export function FindStack({ navigation, route }: Props) {
         name="Game"
         component={Game}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: "",
         }}
@@ -58,7 +43,7 @@ export function FindStack({ navigation, route }: Props) {
         name="MovieDiscover"
         component={MovieDiscover}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: "",
         }}
@@ -67,7 +52,7 @@ export function FindStack({ navigation, route }: Props) {
         name="GameDiscover"
         component={GameDiscover}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: "",
         }}
@@ -76,7 +61,7 @@ export function FindStack({ navigation, route }: Props) {
         name="Actor"
         component={Actor}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: "",
         }}
@@ -85,7 +70,7 @@ export function FindStack({ navigation, route }: Props) {
         name="Collection"
         component={Collection}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: "",
         }}

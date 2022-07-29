@@ -1,3 +1,24 @@
+import { BlurView } from "@react-native-community/blur";
+import {
+  BottomTabScreenProps,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { AnimatedHeaderImage } from "components/AnimatedHeaderImage";
+import { BlueBullet } from "components/BlueBullet";
+import ButtonSingleState from "components/ButtonSingleState";
+import CategoryControl from "components/CategoryControl/CategoryControl";
+import { ExpandableText } from "components/ExpandableText";
+import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
+import { LoadingScreen } from "components/LoadingScreen";
+import { MoviePoster } from "components/Posters/MoviePoster";
+import { Text as ThemedText } from "components/Themed";
+import Trailer from "components/Trailer";
+import TabStackContext from "contexts/TabStackContext";
+import { getRuntime } from "helpers/formatting";
+import { DateTime } from "luxon";
 import React, {
   useContext,
   useEffect,
@@ -25,28 +46,6 @@ import Animated, {
 } from "react-native-reanimated";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { BlurView } from "@react-native-community/blur";
-import {
-  BottomTabNavigationProp,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/elements";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { AnimatedHeaderImage } from "components/AnimatedHeaderImage";
-import { BlueBullet } from "components/BlueBullet";
-import ButtonSingleState from "components/ButtonSingleState";
-import CategoryControl from "components/CategoryControl/CategoryControl";
-import { ExpandableText } from "components/ExpandableText";
-import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
-import { LoadingScreen } from "components/LoadingScreen";
-import { MoviePoster } from "components/Posters/MoviePoster";
-import { Text as ThemedText } from "components/Themed";
-import Trailer from "components/Trailer";
-import SubContext from "contexts/SubContext";
-import TabStackContext from "contexts/TabStackContext";
-import { getRuntime } from "helpers/formatting";
-import { DateTime } from "luxon";
 
 import {
   calculateWidth,
@@ -56,7 +55,6 @@ import {
 } from "../../helpers/helpers";
 import { reusableStyles } from "../../helpers/styles";
 import { FirestoreMovie } from "../../interfaces/firebase";
-import { Navigation } from "../../interfaces/navigation";
 import { ReleaseDate } from "../../interfaces/tmdb";
 import { ListLabel } from "../Search/Search";
 import { useMovie } from "./api/getMovie";
@@ -64,6 +62,9 @@ import { DiscoverListLabel } from "./components/DiscoverListLabel";
 import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
 import WatchProvidersModal from "./components/WatchProvidersModal";
+
+import { useStore } from "@/stores/store";
+import { BottomTabParams, FindStackParams } from "@/types";
 
 function ScrollViewWithFlatList({
   data,
@@ -78,7 +79,7 @@ function ScrollViewWithFlatList({
 }) {
   return (
     <ScrollView
-      horizontal={true}
+      horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={{ paddingRight: 16 }}
       style={{ marginHorizontal: -16 }}
@@ -117,25 +118,6 @@ export const horizontalListProps = {
   showsHorizontalScrollIndicator: false,
 };
 
-interface Props {
-  navigation:
-    | CompositeNavigationProp<
-        StackNavigationProp<Navigation.FindStackParamList, "Movie">,
-        BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
-      >
-    | CompositeNavigationProp<
-        StackNavigationProp<Navigation.CountdownStackParamList, "Movie">,
-        BottomTabNavigationProp<
-          Navigation.TabNavigationParamList,
-          "CountdownTab"
-        >
-      >;
-  route: RouteProp<
-    Navigation.FindStackParamList | Navigation.CountdownStackParamList,
-    "Movie"
-  >;
-}
-
 export function getReleaseDate(releaseDates: ReleaseDate[]) {
   return DateTime.fromISO(
     releaseDates
@@ -150,12 +132,20 @@ export function getReleaseDate(releaseDates: ReleaseDate[]) {
     .toUpperCase();
 }
 
-function MovieScreen({ navigation, route }: Props) {
+type MovieScreenNavigationProp = CompositeScreenProps<
+  NativeStackScreenProps<FindStackParams, "Movie">,
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
+    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
+  >
+>;
+
+function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { movieId, movieTitle } = route.params;
   const [countdownId, setCountdownId] =
     useState<FirestoreMovie["documentID"]>();
-  const { user, theme } = useContext(TabStackContext);
-  const { movieSubs } = useContext(SubContext);
+  const { user, movieSubs } = useStore();
+  const { theme } = useContext(TabStackContext);
   const { data: { movieDetails, traktDetails } = {}, isLoading } =
     useMovie(movieId);
   const [detailIndex, setDetailIndex] = useState(0);
@@ -192,8 +182,8 @@ function MovieScreen({ navigation, route }: Props) {
             iconName={countdownId ? "checkmark-outline" : "add-outline"}
             onPress={() =>
               !countdownId
-                ? subToMovie(movieId.toString(), user)
-                : removeSub("movies", countdownId, user)
+                ? subToMovie(movieId.toString(), user!.uid)
+                : removeSub("movies", countdownId, user!.uid)
             }
           />
         </HeaderButtons>
@@ -202,7 +192,7 @@ function MovieScreen({ navigation, route }: Props) {
   }, [movieTitle, navigation, countdownId]);
 
   useEffect(() => {
-    let documentID = movieSubs.find(
+    const documentID = movieSubs.find(
       (sub) => sub.documentID == movieId.toString()
     )?.documentID;
 
@@ -310,9 +300,7 @@ function MovieScreen({ navigation, route }: Props) {
               <ButtonSingleState
                 key={index}
                 text={genre.name}
-                onPress={() =>
-                  navigation.push("MovieDiscover", { genre: genre })
-                }
+                onPress={() => navigation.push("MovieDiscover", { genre })}
                 buttonStyle={{ paddingHorizontal: 16, flexDirection: "row" }}
                 icon={tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon}
                 textStyle={{ alignSelf: "center" }}
@@ -423,7 +411,7 @@ function MovieScreen({ navigation, route }: Props) {
                       (result) => result.type === "Trailer"
                     ).length > 0 && (
                       <MediaSelection
-                        option={"Trailers"}
+                        option="Trailers"
                         action={() =>
                           setMediaSelections({
                             ...mediaSelections,
@@ -437,7 +425,7 @@ function MovieScreen({ navigation, route }: Props) {
                       (result) => result.type === "Teaser"
                     ).length > 0 && (
                       <MediaSelection
-                        option={"Teasers"}
+                        option="Teasers"
                         action={() =>
                           setMediaSelections({
                             ...mediaSelections,
@@ -466,7 +454,7 @@ function MovieScreen({ navigation, route }: Props) {
               <View style={{ flexDirection: "row" }}>
                 {movieDetails!.images.posters.length > 0 && (
                   <MediaSelection
-                    option={"Posters"}
+                    option="Posters"
                     action={() =>
                       setMediaSelections({
                         ...mediaSelections,
@@ -478,7 +466,7 @@ function MovieScreen({ navigation, route }: Props) {
                 )}
                 {movieDetails!.images.backdrops.length > 0 && (
                   <MediaSelection
-                    option={"Backdrops"}
+                    option="Backdrops"
                     action={() =>
                       setMediaSelections({
                         ...mediaSelections,
@@ -495,7 +483,7 @@ function MovieScreen({ navigation, route }: Props) {
                 renderItem={({ item, index }) => (
                   <MoviePoster
                     pressHandler={() =>
-                      setShowImageViewer({ isVisible: true, index: index })
+                      setShowImageViewer({ isVisible: true, index })
                     }
                     posterPath={
                       mediaSelections.images === "posters"
@@ -533,7 +521,7 @@ function MovieScreen({ navigation, route }: Props) {
                         : 2
                     }
                     navigation={navigation}
-                    navParamKey={"company"}
+                    navParamKey="company"
                   />
                 </>
               )}
@@ -546,7 +534,7 @@ function MovieScreen({ navigation, route }: Props) {
                       movieDetails!.keywords.keywords.length / 2
                     )}
                     navigation={navigation}
-                    navParamKey={"keyword"}
+                    navParamKey="keyword"
                   />
                 </>
               )}

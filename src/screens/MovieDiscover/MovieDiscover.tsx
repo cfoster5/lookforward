@@ -1,25 +1,10 @@
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
 import {
-  FlatList,
-  Platform,
-  Pressable,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { Modalize } from "react-native-modalize";
-import { iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+  BottomTabScreenProps,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMovieWatchProviders } from "api/getMovieWatchProviders";
 import ButtonMultiState from "components/ButtonMultiState";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
@@ -27,12 +12,38 @@ import { LoadingScreen } from "components/LoadingScreen";
 import { MoviePoster } from "components/Posters/MoviePoster";
 import TabStackContext from "contexts/TabStackContext";
 import { targetedProviders } from "helpers/helpers";
-// import { useDiscoverFilterCreation } from "../hooks/useDiscoverFilterCreation";
 import { Movie } from "interfaces/tmdb";
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { FlatList, Platform, Text, useWindowDimensions } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { Modalize } from "react-native-modalize";
+import { iOSUIKit } from "react-native-typography";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+// import { useDiscoverFilterCreation } from "../hooks/useDiscoverFilterCreation";
 
 import { useDiscoverMovies } from "./api/getDiscoverMovies";
 
-function MovieDiscover({ route, navigation }: any) {
+import { FindStackParams, BottomTabParams } from "@/types";
+
+type MovieDiscoverScreenNavigationProp = CompositeScreenProps<
+  NativeStackScreenProps<FindStackParams, "MovieDiscover">,
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
+    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
+  >
+>;
+
+function MovieDiscover({
+  route,
+  navigation,
+}: MovieDiscoverScreenNavigationProp) {
   const { width: windowWidth } = useWindowDimensions();
   const { genre, company, keyword, provider } = route.params;
   const scrollRef = useRef<FlatList>(null);
@@ -55,7 +66,7 @@ function MovieDiscover({ route, navigation }: any) {
       provider?.provider_id !== selectedMovieWatchProvider
         ? selectedMovieWatchProvider
         : provider.provider_id,
-    sortMethod: sortMethod,
+    sortMethod,
   });
   const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
   const modalRef = useRef<Modalize>(null);
@@ -102,7 +113,7 @@ function MovieDiscover({ route, navigation }: any) {
         >
           <Item
             title="search"
-            iconName={"funnel-outline"}
+            iconName="funnel-outline"
             onPress={() => modalRef.current?.open()}
           />
         </HeaderButtons>
@@ -128,7 +139,7 @@ function MovieDiscover({ route, navigation }: any) {
       }
     }
 
-    navigation.setOptions({ title: title });
+    navigation.setOptions({ title });
   }, [genre, company, keyword, selectedMovieWatchProvider]);
 
   function ModalListWrapper({
@@ -150,7 +161,7 @@ function MovieDiscover({ route, navigation }: any) {
           {text}
         </Text>
         {/* // Wrap FlatList in ScrollView with horizontal prop so that scrollEnabled within FlatList can be disabled */}
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           {children}
         </ScrollView>
       </>
@@ -161,7 +172,7 @@ function MovieDiscover({ route, navigation }: any) {
     return (
       <Modalize
         ref={modalRef}
-        adjustToContentHeight={true}
+        adjustToContentHeight
         childrenStyle={{
           marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
         }}

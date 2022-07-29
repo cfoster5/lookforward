@@ -1,3 +1,6 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { IGDB } from "interfaces/igdb";
+import { Movie } from "interfaces/tmdb";
 import React, { useRef } from "react";
 import {
   Dimensions,
@@ -9,18 +12,13 @@ import {
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { IGDB } from "interfaces/igdb";
-import { Movie } from "interfaces/tmdb";
-import { AuthStackParamList } from "navigation/AuthStack";
 
 import { useHypedGames } from "./api/getHypedGames";
 import { useTrendingMovies } from "./api/getTrendingMovies";
 
-interface Props {
-  navigation: StackNavigationProp<AuthStackParamList, "Welcome">;
-  route: any;
-}
+import { AuthStackParams } from "@/types";
+
+type Props = NativeStackScreenProps<AuthStackParams, "Welcome">;
 
 function Welcome({ navigation }: Props) {
   const { data: trendingMovies, isLoading } = useTrendingMovies();
@@ -52,7 +50,7 @@ function Welcome({ navigation }: Props) {
           borderRadius: 8,
           borderColor: "#1f1f1f",
           borderWidth: 1,
-          width: width,
+          width,
           height: width * 1.5,
           paddingHorizontal: horizontalMargin,
         }}
@@ -77,13 +75,13 @@ function Welcome({ navigation }: Props) {
               .map((movie, i) => [movie, hypedGames[i]])
               .reduce((a, b) => a.concat(b))}
             renderItem={RenderItem}
-            layout={"default"}
-            loop={true}
-            autoplay={true}
+            layout="default"
+            loop
+            autoplay
             scrollEnabled={false}
             sliderWidth={Dimensions.get("window").width}
             itemWidth={width + horizontalMargin * 2}
-            removeClippedSubviews={true}
+            removeClippedSubviews
             containerCustomStyle={{
               marginVertical: 24,
               flexGrow: 0,

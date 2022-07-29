@@ -1,15 +1,10 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Dimensions, FlatList, Platform, Text, View } from "react-native";
-import FastImage from "react-native-fast-image";
-import Carousel from "react-native-snap-carousel";
-import { iOSUIKit } from "react-native-typography";
 import {
-  BottomTabNavigationProp,
+  BottomTabScreenProps,
   useBottomTabBarHeight,
 } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import ButtonMultiState from "components/ButtonMultiState";
 import { ExpandableText } from "components/ExpandableText";
 import { LoadingScreen } from "components/LoadingScreen";
@@ -18,33 +13,25 @@ import { Text as ThemedText } from "components/Themed";
 import { dateToLocaleString } from "helpers/formatting";
 import { calculateWidth } from "helpers/helpers";
 import { reusableStyles } from "helpers/styles";
-import { Navigation } from "interfaces/navigation";
-import { TMDB } from "interfaces/tmdb";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import { Dimensions, FlatList, Platform, Text, View } from "react-native";
+import FastImage from "react-native-fast-image";
+import Carousel from "react-native-snap-carousel";
+import { iOSUIKit } from "react-native-typography";
 
 import { usePerson } from "./api/getPerson";
 
-interface Props {
-  // navigation:
-  //   | StackNavigationProp<Navigation.FindStackParamList, "Actor">
-  //   | StackNavigationProp<Navigation.CountdownStackParamList, "Actor">;
-  navigation:
-    | CompositeNavigationProp<
-        StackNavigationProp<Navigation.FindStackParamList, "Find" | "Movie">,
-        BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
-      >
-    | CompositeNavigationProp<
-        StackNavigationProp<Navigation.CountdownStackParamList, "Movie">,
-        BottomTabNavigationProp<
-          Navigation.TabNavigationParamList,
-          "CountdownTab"
-        >
-      >;
-  route:
-    | RouteProp<Navigation.FindStackParamList, "Actor">
-    | RouteProp<Navigation.CountdownStackParamList, "Actor">;
-}
+import { FindStackParams, BottomTabParams } from "@/types";
 
-function Actor({ route, navigation }: Props) {
+type ActorScreenNavigationProp = CompositeScreenProps<
+  NativeStackScreenProps<FindStackParams, "Actor">,
+  CompositeScreenProps<
+    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
+    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
+  >
+>;
+
+function Actor({ route, navigation }: ActorScreenNavigationProp) {
   // const person = useGetPerson(route.params.personId);
   const { data: person, isLoading } = usePerson(route.params.personId);
   const tabBarheight = useBottomTabBarHeight();
@@ -69,7 +56,7 @@ function Actor({ route, navigation }: Props) {
           borderRadius: 8,
           borderColor: "#1f1f1f",
           borderWidth: 1,
-          width: width,
+          width,
           height: width * 1.5,
           paddingHorizontal: horizontalMargin,
         }}
@@ -163,8 +150,8 @@ function Actor({ route, navigation }: Props) {
               ref={ref}
               data={person?.images?.profiles}
               renderItem={RenderItem}
-              layout={"default"}
-              loop={true}
+              layout="default"
+              loop
               sliderWidth={Dimensions.get("window").width}
               itemWidth={width + horizontalMargin * 2}
               // removeClippedSubviews={true}

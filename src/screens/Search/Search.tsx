@@ -1,3 +1,20 @@
+import {
+  BottomTabScreenProps,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
+import { CompositeScreenProps, useScrollToTop } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import CategoryControl from "components/CategoryControl/CategoryControl";
+import GameReleaseModal from "components/GamePlatformPicker";
+import { LoadingScreen } from "components/LoadingScreen";
+import { GamePoster } from "components/Posters/GamePoster";
+import { MoviePoster } from "components/Posters/MoviePoster";
+import { Text as ThemedText } from "components/Themed";
+import TabStackContext from "contexts/TabStackContext";
+import { IGDB } from "interfaces/igdb";
+import { Movie, Person, TMDB, TV } from "interfaces/tmdb";
+import { Search as SearchInterface } from "interfaces/tmdb/search";
+import { DateTime } from "luxon";
 import React, {
   useContext,
   useEffect,
@@ -19,29 +36,6 @@ import { SearchBar } from "react-native-elements";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import {
-  BottomTabNavigationProp,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
-import {
-  CompositeNavigationProp,
-  RouteProp,
-  useScrollToTop,
-} from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import CategoryControl from "components/CategoryControl/CategoryControl";
-import GameReleaseModal from "components/GamePlatformPicker";
-import { LoadingScreen } from "components/LoadingScreen";
-import { GamePoster } from "components/Posters/GamePoster";
-import { MoviePoster } from "components/Posters/MoviePoster";
-import { Text as ThemedText } from "components/Themed";
-import GameContext from "contexts/GamePlatformPickerContexts";
-import TabStackContext from "contexts/TabStackContext";
-import { IGDB } from "interfaces/igdb";
-import { Navigation } from "interfaces/navigation";
-import { Movie, Person, TMDB, TV } from "interfaces/tmdb";
-import { Search as SearchInterface } from "interfaces/tmdb/search";
-import { DateTime } from "luxon";
 
 import { useGames } from "./api/getGames";
 import { useMovieData } from "./api/getMovies";
@@ -49,6 +43,9 @@ import MovieSearchModal from "./components/MovieSearchModal";
 import SearchPerson from "./components/SearchPerson";
 import useDebounce from "./hooks/useDebounce";
 import { MovieOption } from "./types";
+
+import { useStore } from "@/stores/store";
+import { BottomTabParams, FindStackParams } from "@/types";
 
 function reducer(
   state: any,
@@ -75,14 +72,6 @@ function reducer(
   }
 }
 
-interface Props {
-  navigation: CompositeNavigationProp<
-    StackNavigationProp<Navigation.FindStackParamList, "Find">,
-    BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
-  >;
-  route: RouteProp<Navigation.FindStackParamList, "Find">;
-}
-
 export function ListLabel({ text, style }: { text: string; style?: any }) {
   return (
     <ThemedText
@@ -97,7 +86,12 @@ export function ListLabel({ text, style }: { text: string; style?: any }) {
   );
 }
 
-function Search({ navigation, route }: Props) {
+type FindScreenNavigationProp = CompositeScreenProps<
+  NativeStackScreenProps<FindStackParams, "Find">,
+  BottomTabScreenProps<BottomTabParams, "FindTabStack">
+>;
+
+function Search({ navigation, route }: FindScreenNavigationProp) {
   const { width: windowWidth } = useWindowDimensions();
   const [{ categoryIndex, searchValue }, dispatch] = useReducer(reducer, {
     categoryIndex: 0,
@@ -108,7 +102,7 @@ function Search({ navigation, route }: Props) {
   useScrollToTop(scrollRef);
   const { theme } = useContext(TabStackContext);
   const modalizeRef = useRef<Modalize>(null);
-  const [game, setGame] = useState();
+  const { game } = useStore();
   const tabBarheight = useBottomTabBarHeight();
   const filterModalRef = useRef<Modalize>(null);
   const debouncedSearch = useDebounce(searchValue, 400);
@@ -275,7 +269,7 @@ function Search({ navigation, route }: Props) {
           {!isPreviousData ? (
             <KeyboardAwareFlatList
               extraScrollHeight={tabBarheight}
-              viewIsInsideTabBar={true}
+              viewIsInsideTabBar
               enableResetScrollToCoords={false}
               data={filteredMovies()}
               renderItem={({ item }) => (
@@ -323,7 +317,7 @@ function Search({ navigation, route }: Props) {
                               person={person.item}
                             />
                           )}
-                          horizontal={true}
+                          horizontal
                           style={{
                             marginHorizontal: -16,
                             marginBottom: 16,
@@ -356,10 +350,10 @@ function Search({ navigation, route }: Props) {
       )}
       {categoryIndex === 1 &&
         (!isPreviousGamesData ? (
-          <GameContext.Provider value={{ game, setGame }}>
+          <>
             <KeyboardAwareFlatList
               extraScrollHeight={tabBarheight}
-              viewIsInsideTabBar={true}
+              viewIsInsideTabBar
               enableResetScrollToCoords={false}
               data={games}
               renderItem={({ item }: { item: IGDB.Game.Game }) => (
@@ -384,7 +378,7 @@ function Search({ navigation, route }: Props) {
               }
             />
             <GameReleaseModal modalizeRef={modalizeRef} game={game} />
-          </GameContext.Provider>
+          </>
         ) : (
           <LoadingScreen />
         ))}

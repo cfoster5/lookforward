@@ -1,3 +1,15 @@
+import auth from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+import messaging from "@react-native-firebase/messaging";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { LoadingScreen } from "components/LoadingScreen";
+import TabStackContext from "contexts/TabStackContext";
+import {
+  connectAsync,
+  IAPItemDetails,
+  purchaseItemAsync,
+} from "expo-in-app-purchases";
+import { reusableStyles } from "helpers/styles";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -11,42 +23,14 @@ import {
 import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import auth from "@react-native-firebase/auth";
-import firestore from "@react-native-firebase/firestore";
-import messaging from "@react-native-firebase/messaging";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { LoadingScreen } from "components/LoadingScreen";
-import TabStackContext from "contexts/TabStackContext";
-import {
-  connectAsync,
-  IAPItemDetails,
-  purchaseItemAsync,
-} from "expo-in-app-purchases";
-import { reusableStyles } from "helpers/styles";
-import { Navigation } from "interfaces/navigation";
 
 import { useFirstRender } from "./hooks/useFirstRender";
 import { useGetPurchaseOptions } from "./hooks/useGetPurchaseOptions";
 
-type ProfileScreenRouteProp = RouteProp<
-  Navigation.ProfileStackParamList,
-  "Profile"
->;
-type ProfileScreenNavigationProp = StackNavigationProp<
-  Navigation.ProfileStackParamList,
-  "Profile"
->;
-type ProfileScreenProps = {
-  route: ProfileScreenRouteProp;
-  navigation: ProfileScreenNavigationProp;
-  dayNotifications: boolean;
-  weekNotifications: boolean;
-};
+import { useStore } from "@/stores/store";
 
-function Profile({ route, navigation }: ProfileScreenProps) {
-  const { user } = useContext(TabStackContext);
+function Profile() {
+  const { user } = useStore();
   const [hasPermissions, setHasPermissions] = useState(true);
 
   const [notifications, setNotifications] = useState({
@@ -62,8 +46,8 @@ function Profile({ route, navigation }: ProfileScreenProps) {
   const firstRender = useFirstRender();
 
   useEffect(() => {
-    if (Platform.OS === "ios") {
-      async function connect() {
+    async function connect() {
+      if (Platform.OS === "ios") {
         try {
           await connectAsync();
           setConnected(true);
@@ -71,8 +55,8 @@ function Profile({ route, navigation }: ProfileScreenProps) {
           console.log(`connection error`);
         }
       }
-      connect();
     }
+    connect();
   }, []);
 
   useEffect(() => {
@@ -80,15 +64,15 @@ function Profile({ route, navigation }: ProfileScreenProps) {
       getNotificationPermissions();
       const preferenceSubscription = firestore()
         .collection("users")
-        .doc(user)
+        .doc(user!.uid)
         .collection("contentPreferences")
         .doc("preferences")
         .onSnapshot(
           (querySnapshot) => {
-            let preferences = querySnapshot.data();
+            const preferences = querySnapshot.data();
             setNotifications({
-              dayNotifications: preferences?.dayNotifications ? true : false,
-              weekNotifications: preferences?.weekNotifications ? true : false,
+              dayNotifications: !!preferences?.dayNotifications,
+              weekNotifications: !!preferences?.weekNotifications,
             });
           },
           (error) => console.log(error)
@@ -105,7 +89,7 @@ function Profile({ route, navigation }: ProfileScreenProps) {
       getNotificationPermissions();
       firestore()
         .collection("users")
-        .doc(user)
+        .doc(user!.uid)
         .collection("contentPreferences")
         .doc("preferences")
         .set(notifications, { merge: true });
@@ -171,7 +155,7 @@ function Profile({ route, navigation }: ProfileScreenProps) {
     return (
       <Modalize
         ref={modalizeRef}
-        adjustToContentHeight={true}
+        adjustToContentHeight
         childrenStyle={{
           marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
         }}

@@ -1,16 +1,17 @@
+import firestore from "@react-native-firebase/firestore";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { DateTime } from "luxon";
 import React, { RefObject, useContext } from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { Modalize } from "react-native-modalize";
 import { iOSUIKit } from "react-native-typography";
-import firestore from "@react-native-firebase/firestore";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { DateTime } from "luxon";
 
-import GameContext from "../contexts/GamePlatformPickerContexts";
 import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 import { IGDB } from "../interfaces/igdb";
+
+import { useStore } from "@/stores/store";
 
 function GamePlatformPicker({
   modalizeRef,
@@ -19,13 +20,13 @@ function GamePlatformPicker({
   modalizeRef: RefObject<Modalize>;
   game: IGDB.Game.Game;
 }) {
-  const { user, theme } = useContext(TabStackContext);
-  const { setGame } = useContext(GameContext);
+  const { user, setGame } = useStore();
+  const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
 
   async function addGameRelease(releaseDate: IGDB.Game.ReleaseDate) {
     // console.log("releaseDate", releaseDate);
-    let tempGame = {
+    const tempGame = {
       cover: game.cover,
       id: game.id,
       name: game.name,
@@ -42,7 +43,7 @@ function GamePlatformPicker({
         .collection("gameReleases")
         .doc(releaseDate.id.toString())
         .update({
-          subscribers: firestore.FieldValue.arrayUnion(user),
+          subscribers: firestore.FieldValue.arrayUnion(user!.uid),
         });
       ReactNativeHapticFeedback.trigger("impactLight", {
         enableVibrateFallback: true,
@@ -57,7 +58,7 @@ function GamePlatformPicker({
   return (
     <Modalize
       ref={modalizeRef}
-      adjustToContentHeight={true}
+      adjustToContentHeight
       childrenStyle={{
         marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
       }}

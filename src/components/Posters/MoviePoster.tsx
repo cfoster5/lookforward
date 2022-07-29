@@ -2,12 +2,13 @@ import React, { useContext } from "react";
 import { Pressable, StyleProp, StyleSheet, ViewStyle } from "react-native";
 import FastImage, { ImageStyle } from "react-native-fast-image";
 
-import SubContext from "../../contexts/SubContext";
 import TabStackContext from "../../contexts/TabStackContext";
 import { reusableStyles } from "../../helpers/styles";
 import { Movie, Recommendation } from "../../interfaces/tmdb";
 import PosterButton from "../PosterButton";
 import { TextPoster } from "./TextPoster";
+
+import { useStore } from "@/stores/store";
 
 export function MoviePoster({
   pressHandler,
@@ -22,7 +23,7 @@ export function MoviePoster({
   style?: StyleProp<ImageStyle>;
   buttonStyle?: StyleProp<ViewStyle>;
 }) {
-  const { movieSubs } = useContext(SubContext);
+  const { movieSubs } = useStore();
   const inCountdown = movie
     ? movieSubs.some((sub) => sub?.documentID == movie.id.toString())
     : null;

@@ -1,29 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
-import { Platform, StyleSheet } from "react-native";
-import { iOSColors } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { BlurView } from "@react-native-community/blur";
 import firestore from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useEffect } from "react";
+import { Platform, StyleSheet } from "react-native";
+import { iOSColors } from "react-native-typography";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
-import SubContext from "../contexts/SubContext";
-import TabStackContext from "../contexts/TabStackContext";
 import { FirestoreGame, FirestoreMovie } from "../interfaces/firebase";
-import { Navigation } from "../interfaces/navigation";
+import Profile from "../screens/Profile/Profile";
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
-import { ProfileStack } from "./ProfileStack";
 
-const Tab = createBottomTabNavigator<Navigation.TabNavigationParamList>();
+import { useStore } from "@/stores/store";
+import { BottomTabParams } from "@/types";
+
+const Tab = createBottomTabNavigator<BottomTabParams>();
 export function TabStack() {
-  const [movieSubs, setMovieSubs] = useState<FirestoreMovie[]>([]);
-  const [gameSubs, setGameSubs] = useState<FirestoreGame[]>([]);
-  const { user } = useContext(TabStackContext);
+  const { user, setMovieSubs, setGameSubs } = useStore();
 
   useEffect(() => {
     const movieSubscription = firestore()
       .collection("movies")
-      .where("subscribers", "array-contains", user)
+      .where("subscribers", "array-contains", user!.uid)
       .onSnapshot((documentSnapshot) => {
         const movieSubsData = documentSnapshot.docs.map((doc) => ({
           ...doc.data(),
@@ -35,7 +33,7 @@ export function TabStack() {
     const gameSubscription = firestore()
       .collection("gameReleases")
       .orderBy("date")
-      .where("subscribers", "array-contains", user)
+      .where("subscribers", "array-contains", user!.uid)
       .onSnapshot((documentSnapshot) => {
         const gameSubsData = documentSnapshot.docs.map((doc) => ({
           ...doc.data(),
@@ -53,51 +51,49 @@ export function TabStack() {
   }, []);
 
   return (
-    <SubContext.Provider value={{ movieSubs: movieSubs, games: gameSubs }}>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName = "";
-            if (route.name === "FindTab") {
-              iconName = "search";
-            } else if (route.name === "CountdownTab") {
-              iconName = "timer-outline";
-            } else if (route.name === "ProfileTab") {
-              iconName = "person-circle-outline";
-            }
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: iOSColors.blue,
-          tabBarInactiveTintColor: "gray",
-          tabBarStyle:
-            Platform.OS === "ios"
-              ? {
-                  position: "absolute",
-                }
-              : undefined,
-          tabBarBackground: () =>
-            Platform.OS === "ios" ? (
-              <BlurView style={StyleSheet.absoluteFill} />
-            ) : undefined,
-        })}
-      >
-        {/* Is setting headerShown to false the best method? */}
-        <Tab.Screen
-          name="FindTab"
-          component={FindStack}
-          options={{ headerShown: false, tabBarLabel: "Find" }}
-        />
-        <Tab.Screen
-          name="CountdownTab"
-          component={CountdownStack}
-          options={{ headerShown: false, tabBarLabel: "Countdown" }}
-        />
-        <Tab.Screen
-          name="ProfileTab"
-          component={ProfileStack}
-          options={{ headerShown: false, tabBarLabel: "Profile" }}
-        />
-      </Tab.Navigator>
-    </SubContext.Provider>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName = "";
+          if (route.name === "FindTabStack") {
+            iconName = "search";
+          } else if (route.name === "CountdownTabStack") {
+            iconName = "timer-outline";
+          } else if (route.name === "ProfileTab") {
+            iconName = "person-circle-outline";
+          }
+          return <Ionicons name={iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: iOSColors.blue,
+        tabBarInactiveTintColor: "gray",
+        tabBarStyle:
+          Platform.OS === "ios"
+            ? {
+                position: "absolute",
+              }
+            : undefined,
+        tabBarBackground: () =>
+          Platform.OS === "ios" ? (
+            <BlurView style={StyleSheet.absoluteFill} />
+          ) : undefined,
+      })}
+    >
+      {/* Is setting headerShown to false the best method? */}
+      <Tab.Screen
+        name="FindTabStack"
+        component={FindStack}
+        options={{ headerShown: false, tabBarLabel: "Find" }}
+      />
+      <Tab.Screen
+        name="CountdownTabStack"
+        component={CountdownStack}
+        options={{ headerShown: false, tabBarLabel: "Countdown" }}
+      />
+      <Tab.Screen
+        name="ProfileTab"
+        component={Profile}
+        options={{ tabBarLabel: "Profile", title: "Profile" }}
+      />
+    </Tab.Navigator>
   );
 }

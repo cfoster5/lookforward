@@ -1,33 +1,23 @@
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useReducer,
-  useRef,
-} from "react";
-import { Platform, SectionList, Text, View } from "react-native";
-import { iOSColors, iOSUIKit } from "react-native-typography";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import firestore from "@react-native-firebase/firestore";
 import {
-  BottomTabNavigationProp,
+  BottomTabScreenProps,
   useBottomTabBarHeight,
 } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
-import {
-  CompositeNavigationProp,
-  RouteProp,
-  useScrollToTop,
-} from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { CompositeScreenProps, useScrollToTop } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
 import { LoadingScreen } from "components/LoadingScreen";
-import SubContext from "contexts/SubContext";
-import TabStackContext from "contexts/TabStackContext";
-import { Navigation } from "interfaces/navigation";
+import React, { useLayoutEffect, useReducer, useRef } from "react";
+import { Platform, SectionList, Text, View } from "react-native";
+import { iOSColors, iOSUIKit } from "react-native-typography";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useMovieCountdowns } from "./api/getMovieCountdowns";
 import CountdownItem from "./components/CountdownItem";
+
+import { useStore } from "@/stores/store";
+import { CountdownStackParams, BottomTabParams } from "@/types";
 
 export function reducer(
   state: any,
@@ -59,27 +49,19 @@ export function reducer(
   }
 }
 
-interface Props {
-  route: RouteProp<Navigation.CountdownStackParamList, "Countdown">;
-  // navigation: StackNavigationProp<
-  //   Navigation.CountdownStackParamList,
-  //   "Countdown"
-  // >;
-  navigation: CompositeNavigationProp<
-    StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
-    BottomTabNavigationProp<Navigation.TabNavigationParamList, "CountdownTab">
-  >;
-}
+type CountdownScreenNavigationProp = CompositeScreenProps<
+  NativeStackScreenProps<CountdownStackParams, "Countdown">,
+  BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
+>;
 
-function Countdown({ route, navigation }: Props) {
+function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
   const [{ showButtons, selections }, dispatch] = useReducer(reducer, {
     showButtons: false,
     selections: [],
   });
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
-  const { user } = useContext(TabStackContext);
-  const { movieSubs, games } = useContext(SubContext);
+  const { user, movieSubs, gameSubs } = useStore();
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const movies = useMovieCountdowns(movieSubs);
@@ -167,12 +149,12 @@ function Countdown({ route, navigation }: Props) {
   );
 
   function updateSelections(documentID: string, sectionName: string) {
-    let tempSelections = selections.slice();
-    let selectionIndex = tempSelections.findIndex(
+    const tempSelections = selections.slice();
+    const selectionIndex = tempSelections.findIndex(
       (obj) => obj.documentID === documentID
     );
     if (selectionIndex === -1) {
-      tempSelections.push({ documentID: documentID, sectionName: sectionName });
+      tempSelections.push({ documentID, sectionName });
     } else {
       tempSelections.splice(selectionIndex, 1);
     }
@@ -182,13 +164,13 @@ function Countdown({ route, navigation }: Props) {
   async function deleteItems() {
     const collectionMap = { Movies: "movies", Games: "gameReleases" };
 
-    let batch = firestore().batch();
+    const batch = firestore().batch();
     selections.map((selection) => {
       const docRef = firestore()
         .collection(collectionMap[selection.sectionName])
         .doc(selection.documentID);
       batch.update(docRef, {
-        subscribers: firestore.FieldValue.arrayRemove(user),
+        subscribers: firestore.FieldValue.arrayRemove(user!.uid),
       });
     });
     await batch.commit();
@@ -225,7 +207,7 @@ function Countdown({ route, navigation }: Props) {
             .sort((a, b) => a.releaseDate?.localeCompare(b.releaseDate)),
           title: "Movies",
         },
-        { data: games, title: "Games" },
+        { data: gameSubs, title: "Games" },
       ]}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}
@@ -237,7 +219,7 @@ function Countdown({ route, navigation }: Props) {
           isLastInSection={
             section.title === "Movies"
               ? index + 1 === movieSubs.length
-              : index + 1 === games.length
+              : index + 1 === gameSubs.length
           }
           showButtons={showButtons}
           selected={

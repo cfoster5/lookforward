@@ -1,40 +1,30 @@
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
-import { Modalize } from "react-native-modalize";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import { CompositeScreenProps } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import GameReleaseModal from "components/GamePlatformPicker";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
-import SubContext from "contexts/SubContext";
-import TabStackContext from "contexts/TabStackContext";
 import { removeSub } from "helpers/helpers";
 import { FirestoreGame } from "interfaces/firebase";
 import { IGDB } from "interfaces/igdb";
-import { Navigation } from "interfaces/navigation";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Modalize } from "react-native-modalize";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import GameDetails from "./components/GameDetails";
 
-interface Props {
-  navigation: CompositeNavigationProp<
-    StackNavigationProp<Navigation.FindStackParamList, "Game">,
-    BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
-  >;
-  route: RouteProp<Navigation.FindStackParamList, "Game">;
-}
+import { useStore } from "@/stores/store";
+import { BottomTabParams, FindStackParams } from "@/types";
 
-function Game({ navigation, route }: Props) {
+type GameScreenNavigationProp = CompositeScreenProps<
+  NativeStackScreenProps<FindStackParams, "Game">,
+  BottomTabScreenProps<BottomTabParams, "FindTabStack">
+>;
+
+function Game({ navigation, route }: GameScreenNavigationProp) {
   const { game } = route.params;
   const modalizeRef = useRef<Modalize>(null);
   const [countdownId, setCountdownId] = useState<FirestoreGame["documentID"]>();
-  const { user } = useContext(TabStackContext);
-  const { games } = useContext(SubContext);
+  const { user, gameSubs } = useStore();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -47,7 +37,7 @@ function Game({ navigation, route }: Props) {
             onPress={() =>
               !countdownId
                 ? modalizeRef.current?.open()
-                : removeSub("gameReleases", countdownId, user)
+                : removeSub("gameReleases", countdownId, user!.uid)
             }
           />
         </HeaderButtons>
@@ -56,13 +46,13 @@ function Game({ navigation, route }: Props) {
   }, [game, navigation, countdownId]);
 
   useEffect(() => {
-    let documentID = games.find(
+    const documentID = gameSubs.find(
       (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
         releaseDate.game.id === game.id
     )?.documentID;
 
     setCountdownId(documentID);
-  }, [games]);
+  }, [gameSubs]);
 
   return (
     <>

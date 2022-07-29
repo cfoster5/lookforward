@@ -1,21 +1,22 @@
-import React, { useContext } from "react";
-import FastImage from "react-native-fast-image";
 import { DateTime } from "luxon";
+import React from "react";
+import FastImage from "react-native-fast-image";
 
-import SubContext from "../../contexts/SubContext";
 import { reusableStyles } from "../../helpers/styles";
 import { IGDB } from "../../interfaces/igdb";
 import PosterButton from "../PosterButton";
 import { TextPoster } from "./TextPoster";
 
+import { useStore } from "@/stores/store";
+
 export function GamePoster({ item }: { item: IGDB.Game.Game }) {
-  const { games } = useContext(SubContext);
+  const { gameSubs } = useStore();
   let inCountdown = false;
-  inCountdown = games.find(
+  inCountdown = gameSubs.find(
     (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
       releaseDate.game.id === item.id
   )?.documentID;
-  let hasUpcomingRelease =
+  const hasUpcomingRelease =
     item.release_dates.filter(
       (releaseDate) => DateTime.fromISO(releaseDate.date) >= DateTime.now()
     ).length === 0;

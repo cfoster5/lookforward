@@ -1,3 +1,5 @@
+import auth from "@react-native-firebase/auth";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 import {
   Alert,
@@ -10,15 +12,10 @@ import {
   View,
 } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import auth from "@react-native-firebase/auth";
-import { StackNavigationProp } from "@react-navigation/stack";
 
-import { AuthStackParamList } from "../../navigation/AuthStack";
+import { AuthStackParams } from "@/types";
 
-interface Props {
-  navigation: StackNavigationProp<AuthStackParamList, "Password Reset">;
-  route: any;
-}
+type Props = NativeStackScreenProps<AuthStackParams, "Password Reset">;
 
 function PasswordReset({ navigation }: Props) {
   const [email, setEmail] = useState("");
@@ -26,7 +23,7 @@ function PasswordReset({ navigation }: Props) {
   async function signIn() {
     try {
       await auth().sendPasswordResetEmail(email);
-      navigation.navigate("Sign In", { emailSent: true, email: email });
+      navigation.navigate("Sign In", { emailSent: true, email });
     } catch (error) {
       if (error.code === "auth/invalid-email") {
         Alert.alert("Invalid Email", "That email address is invalid!");
@@ -69,8 +66,8 @@ function PasswordReset({ navigation }: Props) {
             placeholder="Email"
             placeholderTextColor="#6e6f73"
             autoCapitalize="none"
-            keyboardType={"email-address"}
-            textContentType={"username"}
+            keyboardType="email-address"
+            textContentType="username"
             value={email}
             onChangeText={(text) => setEmail(text)}
           />

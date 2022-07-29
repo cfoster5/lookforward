@@ -1,9 +1,9 @@
-import React from "react";
-import { Platform } from "react-native";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackNavigationProp } from "@react-navigation/stack";
+import React from "react";
+import { Platform } from "react-native";
 
 import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor/Actor";
@@ -30,7 +30,7 @@ export function CountdownStack({ navigation, route }: Props) {
         name="Countdown"
         component={Countdown}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
         }}
       />
@@ -38,7 +38,7 @@ export function CountdownStack({ navigation, route }: Props) {
         name="Movie"
         component={Movie}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: "",
         }}
@@ -47,7 +47,7 @@ export function CountdownStack({ navigation, route }: Props) {
         name="MovieDiscover"
         component={MovieDiscover}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "regular",
           title: "",
         }}
@@ -56,7 +56,7 @@ export function CountdownStack({ navigation, route }: Props) {
         name="Actor"
         component={Actor}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: "",
         }}
@@ -65,7 +65,7 @@ export function CountdownStack({ navigation, route }: Props) {
         name="Collection"
         component={Collection}
         options={{
-          headerTransparent: Platform.OS === "ios" ? true : false,
+          headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: "",
         }}

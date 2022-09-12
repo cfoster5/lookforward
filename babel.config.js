@@ -9,6 +9,7 @@ module.exports = {
           api: "./src/api",
           assets: "./assets",
           components: "./src/components",
+          "@/config": "./src/config",
           constants: "./src/constants",
           contexts: "./src/contexts",
           helpers: "./src/helpers",

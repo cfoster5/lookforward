@@ -1,7 +1,3 @@
-import React, { Fragment, useState } from "react";
-import { Dimensions, Platform, ScrollView, Text, View } from "react-native";
-import { Image } from "react-native-elements";
-import { iOSUIKit } from "react-native-typography";
 import {
   BottomTabNavigationProp,
   useBottomTabBarHeight,
@@ -19,6 +15,19 @@ import { reusableStyles } from "helpers/styles";
 import { IGDB } from "interfaces/igdb";
 import { Navigation } from "interfaces/navigation";
 import { DateTime } from "luxon";
+import React, { Fragment, useState } from "react";
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
+import { Image } from "react-native-elements";
+import { iOSUIKit } from "react-native-typography";
+
+import { horizontalListProps } from "../../Movie/Movie";
 
 interface Props {
   navigation: CompositeNavigationProp<
@@ -35,10 +44,10 @@ function GameDetails({ navigation, game }: Props) {
   const [showAllOverview, setShowAllOverview] = useState(false);
 
   function getReleaseDate(): string {
-    let filteredDates = game.release_dates.filter(
+    const filteredDates = game.release_dates.filter(
       (releaseDate) => releaseDate.region === 2 || releaseDate.region === 8
     );
-    let uniqueDates = [...new Set(filteredDates.map((date) => date.date))];
+    const uniqueDates = [...new Set(filteredDates.map((date) => date.date))];
     if (uniqueDates.length === 1) {
       return DateTime.fromSeconds(uniqueDates[0])
         .toUTC()
@@ -94,7 +103,7 @@ function GameDetails({ navigation, game }: Props) {
             <ButtonSingleState
               key={i}
               text={genre.name}
-              onPress={() => navigation.push("GameDiscover", { genre: genre })}
+              onPress={() => navigation.push("GameDiscover", { genre })}
             />
           ))}
         </View>
@@ -160,9 +169,12 @@ function GameDetails({ navigation, game }: Props) {
         )}
         {detailIndex === 1 &&
           (game.videos ? (
-            game.videos.map((video, i) => (
-              <Trailer key={i} video={video} index={i} />
-            ))
+            <FlatList
+              keyExtractor={(item) => item.id}
+              data={game!.videos}
+              renderItem={({ item }) => <Trailer video={item} />}
+              {...horizontalListProps}
+            />
           ) : (
             <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
               No trailers yet! Come back later!

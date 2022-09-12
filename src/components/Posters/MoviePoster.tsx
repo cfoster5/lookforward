@@ -52,7 +52,7 @@ export function MoviePoster({
           }}
         />
       ) : (
-        <TextPoster text={movie.title} />
+        <TextPoster text={movie.title} style={style} />
       )}
     </Pressable>
   );

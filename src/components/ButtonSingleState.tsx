@@ -1,7 +1,7 @@
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import React, { useContext } from "react";
 import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import TabStackContext from "../contexts/TabStackContext";
 
@@ -42,7 +42,7 @@ export default function ButtonSingleState({
       {icon && (
         <FontAwesomeIcon
           icon={icon}
-          color={"white"}
+          color="white"
           style={{ marginRight: 8, alignSelf: "center" }}
           size={iOSUIKit.footnoteEmphasizedObject.lineHeight}
         />

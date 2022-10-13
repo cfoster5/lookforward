@@ -19,6 +19,7 @@ import {
   Switch,
   Text,
   View,
+  ViewStyle,
 } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
@@ -29,7 +30,7 @@ import { useGetPurchaseOptions } from "./hooks/useGetPurchaseOptions";
 
 import { useStore } from "@/stores/store";
 
-function Profile() {
+function Settings({ navigation }) {
   const { user } = useStore();
   const [hasPermissions, setHasPermissions] = useState(true);
 
@@ -115,14 +116,16 @@ function Profile() {
     title,
     onValueChange,
     value,
+    style,
   }: {
     title: string;
     onValueChange: (value: boolean) => void;
     value: boolean;
+    style?: ViewStyle;
   }) {
     return (
       <View style={styles.itemContainer}>
-        <View style={styles.item}>
+        <View style={[styles.item, style]}>
           <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{title}</Text>
           <Switch
             trackColor={{ false: "red", true: iOSColors.blue }}
@@ -255,6 +258,7 @@ function Profile() {
             setNotifications({ ...notifications, weekNotifications: value })
           }
           value={notifications.weekNotifications}
+          style={{ borderBottomWidth: 0 }}
         />
         {!hasPermissions && (
           <Text
@@ -265,30 +269,65 @@ function Profile() {
         )}
         {Platform.OS === "ios" && (
           <Pressable
-            style={{ ...styles.buttonContainer }}
+            style={({ pressed }) => [
+              styles.buttonContainer,
+              pressed ? { backgroundColor: "#2c2c2e" } : null,
+            ]}
             onPress={() => modalizeRef.current?.open()}
           >
-            <View style={styles.button}>
-              <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.blue }}>
-                Tip Jar
-              </Text>
+            {/* <View
+              style={{
+                backgroundColor: iOSColors.green,
+                // padding: 2,
+                borderRadius: 8,
+                marginLeft: 16,
+              }}
+            >
+              <Ionicons
+                name="wallet"
+                color="white"
+                size={iOSUIKit.bodyObject.lineHeight}
+                style={{
+                  textAlign: "center",
+                  margin: 4,
+                }}
+              />
+            </View> */}
+            {/* <View style={styles.button}>
+              <Text style={iOSUIKit.bodyWhite}>Tip Jar</Text>
+            </View> */}
+            <View style={[styles.button, { justifyContent: "space-between" }]}>
+              <Text style={iOSUIKit.bodyWhite}>Tip Jar</Text>
+              <Ionicons
+                name="chevron-forward"
+                color={iOSColors.gray}
+                size={iOSUIKit.bodyObject.fontSize}
+                style={{ alignSelf: "center" }}
+              />
             </View>
           </Pressable>
         )}
         <Pressable
-          style={{ ...styles.buttonContainer }}
-          // onPress={() => signOut()}
-          onPress={() =>
-            Alert.alert("Sign out?", undefined, [
-              { text: "Cancel", style: "cancel" },
-              { text: "Sign Out", style: "destructive", onPress: signOut },
-            ])
-          }
+          style={({ pressed }) => [
+            styles.buttonContainer,
+            pressed ? { backgroundColor: "#2c2c2e" } : null,
+          ]}
+          onPress={() => navigation.navigate("Account")}
+          // onPress={() =>
+          //   Alert.alert("Sign out?", undefined, [
+          //     { text: "Cancel", style: "cancel" },
+          //     { text: "Sign Out", style: "destructive", onPress: signOut },
+          //   ])
+          // }
         >
-          <View style={styles.button}>
-            <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.red }}>
-              Sign Out
-            </Text>
+          <View style={[styles.button, { justifyContent: "space-between" }]}>
+            <Text style={iOSUIKit.bodyWhite}>Account</Text>
+            <Ionicons
+              name="chevron-forward"
+              color={iOSColors.gray}
+              size={iOSUIKit.bodyObject.fontSize}
+              style={{ alignSelf: "center" }}
+            />
           </View>
         </Pressable>
       </View>
@@ -302,7 +341,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    backgroundColor: "#1f1f1f",
+    backgroundColor: "#1c1c1e",
     paddingLeft: 16,
     alignItems: "center",
   },
@@ -320,7 +359,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    backgroundColor: "#1f1f1f",
+    backgroundColor: "#1c1c1e",
     alignItems: "center",
     marginTop: 32,
   },
@@ -336,4 +375,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile;
+export default Settings;

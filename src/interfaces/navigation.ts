@@ -6,7 +6,7 @@ export namespace Navigation {
   export type TabNavigationParamList = {
     FindTab: undefined;
     CountdownTab: undefined;
-    ProfileTab: undefined;
+    SettingsTab: undefined;
   };
 
   type MovieScreens = {
@@ -31,7 +31,8 @@ export namespace Navigation {
     Countdown: undefined;
   } & MovieScreens;
 
-  export type ProfileStackParamList = {
-    Profile: undefined;
+  export type SettingsStackParamList = {
+    Settings: undefined;
+    Account: undefined;
   };
 }

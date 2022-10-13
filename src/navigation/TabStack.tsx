@@ -7,9 +7,9 @@ import { iOSColors } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { FirestoreGame, FirestoreMovie } from "../interfaces/firebase";
-import Profile from "../screens/Profile/Profile";
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
+import { SettingsStack } from "./SettingsStack";
 
 import { useStore } from "@/stores/store";
 import { BottomTabParams } from "@/types";
@@ -59,8 +59,8 @@ export function TabStack() {
             iconName = "search";
           } else if (route.name === "CountdownTabStack") {
             iconName = "timer-outline";
-          } else if (route.name === "ProfileTab") {
-            iconName = "person-circle-outline";
+          } else if (route.name === "SettingsTabStack") {
+            iconName = "cog";
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -90,9 +90,9 @@ export function TabStack() {
         options={{ headerShown: false, tabBarLabel: "Countdown" }}
       />
       <Tab.Screen
-        name="ProfileTab"
-        component={Profile}
-        options={{ tabBarLabel: "Profile", title: "Profile" }}
+        name="SettingsTabStack"
+        component={SettingsStack}
+        options={{ headerShown: false, tabBarLabel: "Settings" }}
       />
     </Tab.Navigator>
   );

@@ -10,7 +10,7 @@ export type AuthStackParams = {
 export type BottomTabParams = {
   FindTabStack: NavigatorScreenParams<FindStackParams>;
   CountdownTabStack: NavigatorScreenParams<CountdownStackParams>;
-  ProfileTab: undefined;
+  SettingsTabStack: NavigatorScreenParams<SettingsStackParams>;
 };
 
 export type FindStackParams = {
@@ -31,4 +31,9 @@ export type CountdownStackParams = {
   Actor: { personId: any };
   Collection: { collectionId: any };
   // Movie: { ids: AnticipatedMovie["movie"]["ids"] };
+};
+
+export type SettingsStackParams = {
+  Settings: undefined;
+  Account: undefined;
 };

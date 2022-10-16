@@ -14,7 +14,14 @@ import { dateToLocaleString } from "helpers/formatting";
 import { calculateWidth } from "helpers/helpers";
 import { reusableStyles } from "helpers/styles";
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { Dimensions, FlatList, Platform, Text, View } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  PlatformColor,
+  Text,
+  View,
+} from "react-native";
 import FastImage from "react-native-fast-image";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
@@ -54,7 +61,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
         }}
         style={{
           borderRadius: 8,
-          borderColor: "#1f1f1f",
+          borderColor: PlatformColor("systemGray6"),
           borderWidth: 1,
           width,
           height: width * 1.5,

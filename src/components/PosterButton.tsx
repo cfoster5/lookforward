@@ -1,6 +1,6 @@
 import firestore from "@react-native-firebase/firestore";
 import React, { useRef } from "react";
-import { Animated, Easing, Pressable, View } from "react-native";
+import { Animated, Easing, PlatformColor, Pressable, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { iOSColors } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -97,6 +97,7 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
     if (game) {
       console.log(`data`, game);
       inCountdown ? deleteItem("gameReleases") : setGame(game);
+      // Open platform modal directly here
     }
   }
 
@@ -111,7 +112,7 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
           width: 36,
           borderRadius: 18,
           borderWidth: 1,
-          borderColor: "#222",
+          borderColor: PlatformColor("systemGray6"),
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -121,7 +122,7 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
             height: 36,
             width: 36,
             borderRadius: 18,
-            backgroundColor: "#333",
+            backgroundColor: PlatformColor("systemGray5"),
             alignItems: "center",
             justifyContent: "center",
           }}

@@ -1,20 +1,21 @@
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useHeaderHeight } from "@react-navigation/elements";
+import TabStackContext from "contexts/TabStackContext";
+import { calculateWidth } from "helpers/helpers";
+import { WatchLocale } from "interfaces/tmdb";
 import React, { useContext } from "react";
 import {
   FlatList,
   Image,
   Linking,
   Platform,
+  PlatformColor,
   Pressable,
   Text,
   View,
 } from "react-native";
 import { Modalize } from "react-native-modalize";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/elements";
-import TabStackContext from "contexts/TabStackContext";
-import { calculateWidth } from "helpers/helpers";
-import { WatchLocale } from "interfaces/tmdb";
 
 import { horizontalListProps } from "../Movie";
 
@@ -36,13 +37,17 @@ function WatchProvidersModal({
   return (
     <Modalize
       ref={modalRef}
-      adjustToContentHeight={true}
+      adjustToContentHeight
       modalTopOffset={headerHeight}
       childrenStyle={{
         // marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
         marginBottom: Platform.OS === "ios" ? tabBarheight : 16,
       }}
-      modalStyle={theme === "dark" ? { backgroundColor: "#121212" } : {}}
+      modalStyle={
+        theme === "dark"
+          ? { backgroundColor: PlatformColor("secondarySystemBackground") }
+          : {}
+      }
     >
       <View
         style={{
@@ -68,7 +73,7 @@ function WatchProvidersModal({
           <Text
             style={{
               ...iOSUIKit.bodyEmphasizedObject,
-              color: iOSColors.blue,
+              color: PlatformColor("systemBlue"),
             }}
           >
             More Info
@@ -104,7 +109,10 @@ function WatchProvidersModal({
                         height: calculateWidth(16, 8, 4.5),
                         width: calculateWidth(16, 8, 4.5),
                         borderWidth: 1,
-                        borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
+                        borderColor:
+                          theme === "dark"
+                            ? PlatformColor("systemGray6")
+                            : "#e0e0e0",
                         borderRadius: 8,
                       }}
                     />
@@ -142,7 +150,7 @@ function WatchProvidersModal({
         <Text
           style={{
             ...iOSUIKit.footnoteObject,
-            color: iOSColors.gray,
+            color: PlatformColor("systemGray"),
             marginRight: 8,
           }}
         >

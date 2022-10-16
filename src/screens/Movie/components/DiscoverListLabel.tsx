@@ -1,6 +1,6 @@
 import React from "react";
-import { Text } from "react-native";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { PlatformColor, Text } from "react-native";
+import { iOSUIKit } from "react-native-typography";
 
 export function DiscoverListLabel({ text }: { text: string }) {
   return (
@@ -8,7 +8,7 @@ export function DiscoverListLabel({ text }: { text: string }) {
       style={[
         iOSUIKit.subheadEmphasized,
         {
-          color: iOSColors.gray,
+          color: PlatformColor("systemGray"),
           textAlign: "center",
           marginTop: 16,
         },

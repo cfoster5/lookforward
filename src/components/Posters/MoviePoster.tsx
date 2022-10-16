@@ -1,5 +1,11 @@
 import React, { useContext } from "react";
-import { Pressable, StyleProp, StyleSheet, ViewStyle } from "react-native";
+import {
+  PlatformColor,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+} from "react-native";
 import FastImage, { ImageStyle } from "react-native-fast-image";
 
 import TabStackContext from "../../contexts/TabStackContext";
@@ -43,7 +49,8 @@ export function MoviePoster({
             {
               borderRadius: 8,
               borderWidth: 1,
-              borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
+              borderColor:
+                theme === "dark" ? PlatformColor("systemGray6") : "#e0e0e0",
             },
             style,
           ]}

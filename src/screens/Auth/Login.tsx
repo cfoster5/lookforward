@@ -5,12 +5,13 @@ import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
+  PlatformColor,
   Pressable,
   Text,
   TextInput,
   View,
 } from "react-native";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 
 import { AuthStackParams } from "@/types";
 
@@ -59,7 +60,7 @@ function Login({ navigation, route }: Props) {
           <Text
             style={{
               ...iOSUIKit.bodyObject,
-              color: iOSColors.gray,
+              color: PlatformColor("systemGray"),
               marginBottom: 8,
             }}
           >
@@ -70,14 +71,14 @@ function Login({ navigation, route }: Props) {
           <TextInput
             style={{
               ...iOSUIKit.bodyObject,
-              backgroundColor: "#3a3a3c",
+              backgroundColor: PlatformColor("systemGray6"),
               color: "white",
               padding: 16,
               borderRadius: 8,
               marginVertical: 8,
             }}
             placeholder="Email"
-            placeholderTextColor="#6e6f73"
+            placeholderTextColor={PlatformColor("systemGray")}
             autoCapitalize="none"
             keyboardType="email-address"
             textContentType="username"
@@ -87,14 +88,14 @@ function Login({ navigation, route }: Props) {
           <TextInput
             style={{
               ...iOSUIKit.bodyObject,
-              backgroundColor: "#3a3a3c",
+              backgroundColor: PlatformColor("systemGray6"),
               color: "white",
               padding: 16,
               borderRadius: 8,
               marginVertical: 8,
             }}
             placeholder="Password"
-            placeholderTextColor="#6e6f73"
+            placeholderTextColor={PlatformColor("systemGray")}
             secureTextEntry
             textContentType="password"
             value={password}
@@ -108,7 +109,7 @@ function Login({ navigation, route }: Props) {
               <Text
                 style={{
                   ...iOSUIKit.bodyObject,
-                  color: iOSColors.gray,
+                  color: PlatformColor("systemGray"),
                   marginVertical: 8,
                 }}
               >
@@ -118,7 +119,7 @@ function Login({ navigation, route }: Props) {
           )}
           <Pressable
             style={{
-              backgroundColor: iOSColors.blue,
+              backgroundColor: PlatformColor("systemBlue"),
               width: "100%",
               marginTop: route.params.emailSent ? 16 : 8,
               paddingVertical: 16,

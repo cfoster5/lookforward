@@ -1,13 +1,3 @@
-import React, { useEffect } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import Animated, {
-  interpolate,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
-import { iOSColors, iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -16,6 +6,23 @@ import { IGDB } from "interfaces/igdb";
 import { Navigation } from "interfaces/navigation";
 import { Movie } from "interfaces/tmdb";
 import { DateTime } from "luxon";
+import React, { useEffect } from "react";
+import {
+  Image,
+  PlatformColor,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
+import { iOSColors, iOSUIKit } from "react-native-typography";
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 interface Props {
   navigation: CompositeNavigationProp<
@@ -95,7 +102,7 @@ function CountdownItem({
             width: 24,
             borderRadius: 12,
             borderWidth: 1,
-            borderColor: iOSColors.gray,
+            borderColor: PlatformColor("systemGray"),
             alignItems: "center",
             justifyContent: "center",
           },
@@ -108,7 +115,7 @@ function CountdownItem({
               height: 24,
               width: 24,
               borderRadius: 12,
-              backgroundColor: iOSColors.blue,
+              backgroundColor: PlatformColor("systemBlue"),
               justifyContent: "center",
             }}
           >
@@ -127,8 +134,9 @@ function CountdownItem({
   const styles = StyleSheet.create({
     rowFront: {
       overflow: "hidden",
-      // backgroundColor: "#1f1f1f",
-      backgroundColor: selected ? "#3a3a3c" : "#1f1f1f",
+      backgroundColor: selected
+        ? PlatformColor("systemGray4")
+        : PlatformColor("systemGray6"),
     },
     slide: {
       flex: 1,
@@ -145,7 +153,7 @@ function CountdownItem({
       marginBottom: 8,
     },
     middle: {
-      borderColor: "#3c3d41",
+      borderColor: PlatformColor("separator"),
       borderBottomWidth:
         sectionName === "Games" && isLastInSection
           ? 0
@@ -157,7 +165,7 @@ function CountdownItem({
       paddingBottom: 8,
     },
     countdown: {
-      borderColor: "#3c3d41",
+      borderColor: PlatformColor("separator"),
       borderBottomWidth:
         sectionName === "Games" && isLastInSection
           ? 0
@@ -230,13 +238,16 @@ function CountdownItem({
             <Text
               style={{
                 ...iOSUIKit.title3EmphasizedWhiteObject,
-                color: iOSColors.blue,
+                color: PlatformColor("systemBlue"),
               }}
             >
               {getCountdownDays()}
             </Text>
             <Text
-              style={{ ...iOSUIKit.bodyWhiteObject, color: iOSColors.blue }}
+              style={{
+                ...iOSUIKit.bodyWhiteObject,
+                color: PlatformColor("systemBlue"),
+              }}
             >
               days
             </Text>

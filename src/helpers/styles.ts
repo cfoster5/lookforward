@@ -1,4 +1,9 @@
-import { Appearance, Dimensions, StyleSheet } from "react-native";
+import {
+  Appearance,
+  Dimensions,
+  PlatformColor,
+  StyleSheet,
+} from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
 // const colorScheme = Appearance.getColorScheme();
@@ -11,7 +16,8 @@ export const reusableStyles = StyleSheet.create({
     borderRadius: 8,
     resizeMode: "cover",
     borderWidth: 1,
-    borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0",
+    borderColor:
+      colorScheme === "dark" ? PlatformColor("systemGray6") : "#e0e0e0",
   },
   gamePoster: {
     // Setting flex zooms in width and stretches height to fit remaining space
@@ -20,10 +26,11 @@ export const reusableStyles = StyleSheet.create({
     borderRadius: 8,
     resizeMode: "cover",
     borderWidth: 1,
-    borderColor: colorScheme === "dark" ? "#1f1f1f" : "#e0e0e0",
+    borderColor:
+      colorScheme === "dark" ? PlatformColor("systemGray6") : "#e0e0e0",
   },
   date: {
     ...iOSUIKit.footnoteEmphasizedObject,
-    color: iOSColors.gray,
+    color: PlatformColor("systemGray"),
   },
 });

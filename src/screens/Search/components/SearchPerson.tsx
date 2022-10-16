@@ -1,7 +1,3 @@
-import React, { useContext, useEffect } from "react";
-import { Dimensions, Pressable, StyleSheet, Text, View } from "react-native";
-import FastImage from "react-native-fast-image";
-import { iOSColors, iOSUIKit } from "react-native-typography";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -10,6 +6,17 @@ import { calculateWidth } from "helpers/helpers";
 import { reusableStyles } from "helpers/styles";
 import { Navigation } from "interfaces/navigation";
 import { TMDB } from "interfaces/tmdb";
+import React, { useContext, useEffect } from "react";
+import {
+  Dimensions,
+  PlatformColor,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import FastImage from "react-native-fast-image";
+import { iOSColors, iOSUIKit } from "react-native-typography";
 
 interface Props {
   navigation: CompositeNavigationProp<
@@ -38,7 +45,8 @@ function SearchPerson({ navigation, person }: Props) {
           style={{
             ...styles.searchCredit,
             borderWidth: 1,
-            borderColor: theme === "dark" ? "#1f1f1f" : "white",
+            borderColor:
+              theme === "dark" ? PlatformColor("systemGray6") : "white",
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "center",
@@ -48,7 +56,10 @@ function SearchPerson({ navigation, person }: Props) {
             style={
               theme === "dark"
                 ? { ...iOSUIKit.title3EmphasizedWhiteObject }
-                : { ...iOSUIKit.title3EmphasizedObject, color: iOSColors.gray }
+                : {
+                    ...iOSUIKit.title3EmphasizedObject,
+                    color: PlatformColor("systemGray"),
+                  }
             }
           >
             {person.name.split(" ").map((i: string) => i.charAt(0))}

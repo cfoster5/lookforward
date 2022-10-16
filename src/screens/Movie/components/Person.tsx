@@ -1,5 +1,13 @@
+import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
+import { CompositeNavigationProp } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { TextPoster } from "components/Posters/TextPoster";
+import TabStackContext from "contexts/TabStackContext";
+import { Navigation } from "interfaces/navigation";
+import { Cast, Crew } from "interfaces/tmdb";
 import React, { useContext } from "react";
 import {
+  PlatformColor,
   Pressable,
   StyleSheet,
   Text,
@@ -8,13 +16,6 @@ import {
 } from "react-native";
 import FastImage from "react-native-fast-image";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { TextPoster } from "components/Posters/TextPoster";
-import TabStackContext from "contexts/TabStackContext";
-import { Navigation } from "interfaces/navigation";
-import { Cast, Crew } from "interfaces/tmdb";
 
 interface Props {
   navigation:
@@ -42,7 +43,7 @@ function Person({ navigation, person }: Props) {
       height: (windowWidth / 3.5 - 16) * 1.5,
       borderRadius: 8,
       borderWidth: 1,
-      borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
+      borderColor: theme === "dark" ? PlatformColor("systemGray6") : "#e0e0e0",
     },
   });
 
@@ -76,7 +77,9 @@ function Person({ navigation, person }: Props) {
         <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>
           {person.name}
         </Text>
-        <Text style={[iOSUIKit.callout, { color: iOSColors.gray }]}>
+        <Text
+          style={[iOSUIKit.callout, { color: PlatformColor("systemGray") }]}
+        >
           {"character" in person ? person.character : person.job}
         </Text>
       </View>

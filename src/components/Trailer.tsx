@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Image, Linking, Pressable, Text } from "react-native";
+import { Image, Linking, PlatformColor, Pressable, Text } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
 import TabStackContext from "../contexts/TabStackContext";
@@ -29,7 +29,8 @@ function Trailer({ video }: { video: Video | IGDB.Game.Video }) {
           resizeMode: "cover",
           borderRadius: 8,
           borderWidth: 1,
-          borderColor: theme === "dark" ? "#1f1f1f" : "#e0e0e0",
+          borderColor:
+            theme === "dark" ? PlatformColor("systemGray6") : "#e0e0e0",
         }}
         source={{
           uri: (video as Video).key
@@ -42,7 +43,7 @@ function Trailer({ video }: { video: Video | IGDB.Game.Video }) {
       <Text
         style={{
           ...iOSUIKit.subheadEmphasizedObject,
-          color: iOSColors.gray,
+          color: PlatformColor("systemGray"),
           marginTop: 8,
         }}
       >

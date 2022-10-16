@@ -25,6 +25,7 @@ import React, {
 import {
   FlatList,
   Platform,
+  PlatformColor,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -35,7 +36,7 @@ import {
 import { SearchBar } from "react-native-elements";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { Modalize } from "react-native-modalize";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 
 import { useGames } from "./api/getGames";
 import { useMovieData } from "./api/getMovies";
@@ -189,7 +190,11 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
       </SafeAreaView>
       <SearchBar
         cancelIcon={{ color: "white" }}
-        clearIcon={Platform.OS === "android" ? { color: "white" } : undefined}
+        clearIcon={
+          Platform.OS === "android"
+            ? { color: "white" }
+            : { color: PlatformColor("systemGray") }
+        }
         containerStyle={
           theme === "dark"
             ? {
@@ -207,15 +212,20 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
                   height: 36,
                   borderRadius: 8,
                 }
-              : { backgroundColor: "rgb(28, 28, 31)", height: 36 }
+              : {
+                  backgroundColor: PlatformColor("secondarySystemBackground"),
+                  height: 36,
+                }
             : {}
         }
         // placeholderTextColor={theme === "dark" ? "#999999" : undefined}
         placeholderTextColor={
-          theme === "dark" ? "rgb(141, 142, 146)" : undefined
+          theme === "dark" ? PlatformColor("systemGray") : undefined
         }
         // searchIcon={theme === "dark" ? { color: "#999999" } : {}}
-        searchIcon={theme === "dark" ? { color: "rgb(149, 153, 162)" } : {}}
+        searchIcon={
+          theme === "dark" ? { color: PlatformColor("systemGray") } : {}
+        }
         // inputStyle={theme === "dark" ? { color: "white" } : {}}
         leftIconContainerStyle={{ marginLeft: 6 }}
         inputStyle={
@@ -225,7 +235,7 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
           theme === "dark"
             ? {
                 buttonTextStyle: {
-                  color: iOSColors.blue,
+                  color: PlatformColor("systemBlue"),
                   fontSize: iOSUIKit.bodyObject.fontSize,
                   lineHeight: iOSUIKit.bodyObject.lineHeight,
                 },
@@ -255,7 +265,9 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
           />
           {categoryIndex === 0 && (
             <Pressable onPress={() => filterModalRef.current?.open()}>
-              <Text style={[iOSUIKit.body, { color: iOSColors.blue }]}>
+              <Text
+                style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}
+              >
                 More
               </Text>
             </Pressable>

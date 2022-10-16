@@ -6,6 +6,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
+  PlatformColor,
   Pressable,
   Text,
   TextInput,
@@ -48,7 +49,7 @@ function PasswordReset({ navigation }: Props) {
           <Text
             style={{
               ...iOSUIKit.bodyObject,
-              color: iOSColors.gray,
+              color: PlatformColor("systemGray"),
               marginBottom: 8,
             }}
           >
@@ -57,14 +58,14 @@ function PasswordReset({ navigation }: Props) {
           <TextInput
             style={{
               ...iOSUIKit.bodyObject,
-              backgroundColor: "#3a3a3c",
+              backgroundColor: PlatformColor("systemGray6"),
               color: "white",
               padding: 16,
               borderRadius: 8,
               marginVertical: 8,
             }}
             placeholder="Email"
-            placeholderTextColor="#6e6f73"
+            placeholderTextColor={PlatformColor("systemGray")}
             autoCapitalize="none"
             keyboardType="email-address"
             textContentType="username"
@@ -73,7 +74,7 @@ function PasswordReset({ navigation }: Props) {
           />
           <Pressable
             style={{
-              backgroundColor: iOSColors.blue,
+              backgroundColor: PlatformColor("systemBlue"),
               width: "100%",
               marginTop: 8,
               paddingVertical: 16,

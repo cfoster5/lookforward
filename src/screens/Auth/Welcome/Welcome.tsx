@@ -5,13 +5,14 @@ import React, { useRef } from "react";
 import {
   Dimensions,
   Image,
+  PlatformColor,
   Pressable,
   SafeAreaView,
   Text,
   View,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 
 import { useHypedGames } from "./api/getHypedGames";
 import { useTrendingMovies } from "./api/getTrendingMovies";
@@ -48,7 +49,7 @@ function Welcome({ navigation }: Props) {
         }}
         style={{
           borderRadius: 8,
-          borderColor: "#1f1f1f",
+          borderColor: PlatformColor("systemGray6"),
           borderWidth: 1,
           width,
           height: width * 1.5,
@@ -91,7 +92,7 @@ function Welcome({ navigation }: Props) {
           <View style={{ marginHorizontal: 24 }}>
             <Pressable
               style={{
-                backgroundColor: iOSColors.blue,
+                backgroundColor: PlatformColor("systemBlue"),
                 width: "100%",
                 paddingVertical: 16,
                 borderRadius: 8,
@@ -111,7 +112,7 @@ function Welcome({ navigation }: Props) {
               <Text
                 style={{
                   ...iOSUIKit.bodyObject,
-                  color: iOSColors.gray,
+                  color: PlatformColor("systemGray"),
                   alignSelf: "center",
                 }}
               >
@@ -123,7 +124,12 @@ function Welcome({ navigation }: Props) {
                   navigation.navigate("Sign In", { emailSent: false })
                 }
               >
-                <Text style={{ ...iOSUIKit.bodyObject, color: iOSColors.blue }}>
+                <Text
+                  style={{
+                    ...iOSUIKit.bodyObject,
+                    color: PlatformColor("systemBlue"),
+                  }}
+                >
                   Sign In
                 </Text>
               </Pressable>

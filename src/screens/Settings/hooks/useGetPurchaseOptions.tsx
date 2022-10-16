@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { Platform } from "react-native";
 import {
   getProductsAsync,
   IAPItemDetails,
   IAPResponseCode,
 } from "expo-in-app-purchases";
+import { useEffect, useState } from "react";
+import { Platform } from "react-native";
 
 export function useGetPurchaseOptions(connected: boolean) {
   const [state, setState] = useState<{
@@ -16,26 +16,24 @@ export function useGetPurchaseOptions(connected: boolean) {
   });
 
   useEffect(() => {
-    if (Platform.OS === "ios" && connected) {
-      async function getProducts() {
-        try {
-          const response = await getProductsAsync([
-            "com.lookforward.tip1",
-            "com.lookforward.tip3",
-            "com.lookforward.tip5",
-          ]);
-          if (response.responseCode === IAPResponseCode.OK) {
-            setState({
-              purchaseOptions: response.results,
-              loadingOptions: false,
-            });
-          }
-        } catch {
-          console.log("connection error");
+    async function getProducts() {
+      try {
+        const response = await getProductsAsync([
+          "com.lookforward.tip1",
+          "com.lookforward.tip3",
+          "com.lookforward.tip5",
+        ]);
+        if (response.responseCode === IAPResponseCode.OK) {
+          setState({
+            purchaseOptions: response.results,
+            loadingOptions: false,
+          });
         }
+      } catch {
+        console.log("connection error");
       }
-      getProducts();
     }
+    if (Platform.OS === "ios" && connected) getProducts();
   }, [connected]);
 
   return state;

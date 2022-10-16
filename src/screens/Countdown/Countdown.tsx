@@ -9,7 +9,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
 import { LoadingScreen } from "components/LoadingScreen";
 import React, { useLayoutEffect, useReducer, useRef } from "react";
-import { Platform, SectionList, Text, View } from "react-native";
+import { Platform, PlatformColor, SectionList, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -76,7 +76,10 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
                 title="Delete"
                 buttonStyle={{
                   ...iOSUIKit.bodyEmphasizedObject,
-                  color: selections.length === 0 ? "#48494a" : iOSColors.red,
+                  color:
+                    selections.length === 0
+                      ? PlatformColor("systemGray3")
+                      : PlatformColor("systemRed"),
                 }}
                 onPress={() => {
                   if (selections.length > 0) {
@@ -93,6 +96,9 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
           HeaderRight = (
             <Item
               title="Edit"
+              buttonStyle={{
+                color: PlatformColor("systemBlue"),
+              }}
               onPress={() =>
                 dispatch({ type: "set-showButtons", showButtons: true })
               }
@@ -108,7 +114,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
                 title="Done"
                 buttonStyle={{
                   ...iOSUIKit.bodyEmphasizedObject,
-                  color: iOSColors.blue,
+                  color: PlatformColor("systemBlue"),
                 }}
                 onPress={() => dispatch({ type: "set-hideButtons" })}
               />
@@ -135,7 +141,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
   }, [navigation, showButtons, selections]);
 
   const renderSectionHeader = ({ section }) => (
-    <View style={{ backgroundColor: "#1f1f1f" }}>
+    <View style={{ backgroundColor: PlatformColor("systemGray6") }}>
       <Text
         style={{
           ...iOSUIKit.title3EmphasizedWhiteObject,
@@ -236,7 +242,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
         <View
           style={{
             height: 16,
-            backgroundColor: "#1f1f1f",
+            backgroundColor: PlatformColor("systemGray6"),
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
           }}
@@ -246,7 +252,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
         <View
           style={{
             height: 16,
-            backgroundColor: "#1f1f1f",
+            backgroundColor: PlatformColor("systemGray6"),
             borderBottomLeftRadius: 8,
             borderBottomRightRadius: 8,
           }}

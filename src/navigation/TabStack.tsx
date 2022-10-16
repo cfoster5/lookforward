@@ -2,8 +2,7 @@ import { BlurView } from "@react-native-community/blur";
 import firestore from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import React, { useEffect } from "react";
-import { Platform, StyleSheet } from "react-native";
-import { iOSColors } from "react-native-typography";
+import { Platform, PlatformColor, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { FirestoreGame, FirestoreMovie } from "../interfaces/firebase";
@@ -64,8 +63,8 @@ export function TabStack() {
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: iOSColors.blue,
-        tabBarInactiveTintColor: "gray",
+        // tabBarActiveTintColor: PlatformColor("systemBlue"),
+        // tabBarInactiveTintColor: "gray",
         tabBarStyle:
           Platform.OS === "ios"
             ? {

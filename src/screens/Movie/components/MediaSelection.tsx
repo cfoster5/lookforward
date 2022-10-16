@@ -1,5 +1,5 @@
 import React from "react";
-import { Pressable, Text } from "react-native";
+import { PlatformColor, Pressable, Text } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
 export function MediaSelection({
@@ -28,7 +28,7 @@ export function MediaSelection({
             .includes(mediaSelections?.videos.toLowerCase()) ||
           option.toLowerCase().includes(creditsSelection?.toLowerCase())
             ? iOSUIKit.bodyEmphasizedWhite
-            : { ...iOSUIKit.bodyObject, color: iOSColors.gray },
+            : { ...iOSUIKit.bodyObject, color: PlatformColor("systemGray") },
           {
             marginTop: 16,
           },

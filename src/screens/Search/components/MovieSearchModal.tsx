@@ -1,8 +1,3 @@
-import React, { useContext } from "react";
-import { FlatList, Platform, Text } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import { Modalize } from "react-native-modalize";
-import { iOSUIKit } from "react-native-typography";
 import {
   BottomTabNavigationProp,
   useBottomTabBarHeight,
@@ -15,6 +10,11 @@ import ButtonSingleState from "components/ButtonSingleState";
 import TabStackContext from "contexts/TabStackContext";
 import { targetedProviders } from "helpers/helpers";
 import { Navigation } from "interfaces/navigation";
+import React, { useContext } from "react";
+import { FlatList, Platform, PlatformColor, Text } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { Modalize } from "react-native-modalize";
+import { iOSUIKit } from "react-native-typography";
 
 export default function MovieSearchModal({
   navigation,
@@ -47,14 +47,18 @@ export default function MovieSearchModal({
   return (
     <Modalize
       ref={filterModalRef}
-      adjustToContentHeight={true}
+      adjustToContentHeight
       childrenStyle={{
         marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
       }}
-      modalStyle={theme === "dark" ? { backgroundColor: "#121212" } : {}}
+      modalStyle={
+        theme === "dark"
+          ? { backgroundColor: PlatformColor("secondarySystemBackground") }
+          : {}
+      }
     >
       <FlatList
-        horizontal={true}
+        horizontal
         contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
         showsHorizontalScrollIndicator={false}
         data={options}
@@ -79,7 +83,7 @@ export default function MovieSearchModal({
         Providers
       </Text>
       {/* Wrap FlatList in ScrollView with horizontal prop so that scrollEnabled within FlatList can be disabled  */}
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {!isLoading && (
           <FlatList
             scrollEnabled={false}

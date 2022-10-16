@@ -20,7 +20,13 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { FlatList, Platform, Text, useWindowDimensions } from "react-native";
+import {
+  FlatList,
+  Platform,
+  PlatformColor,
+  Text,
+  useWindowDimensions,
+} from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { iOSUIKit } from "react-native-typography";
@@ -176,7 +182,11 @@ function MovieDiscover({
         childrenStyle={{
           marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
         }}
-        modalStyle={theme === "dark" ? { backgroundColor: "#121212" } : {}}
+        modalStyle={
+          theme === "dark"
+            ? { backgroundColor: PlatformColor("secondarySystemBackground") }
+            : {}
+        }
       >
         <ModalListWrapper text="Sort By">
           <FlatList

@@ -20,6 +20,7 @@ import {
   Dimensions,
   FlatList,
   Platform,
+  PlatformColor,
   ScrollView,
   Text,
   View,
@@ -104,6 +105,10 @@ function GameDetails({ navigation, game }: Props) {
               key={i}
               text={genre.name}
               onPress={() => navigation.push("GameDiscover", { genre })}
+              buttonStyle={{
+                backgroundColor: PlatformColor("systemGray5"),
+                borderColor: PlatformColor("systemGray5"),
+              }}
             />
           ))}
         </View>

@@ -1,6 +1,5 @@
 import React from "react";
-import { View } from "react-native";
-import { iOSColors } from "react-native-typography";
+import { PlatformColor, View } from "react-native";
 
 export function BlueBullet() {
   return (
@@ -10,7 +9,7 @@ export function BlueBullet() {
         height: 5,
         borderRadius: 5,
         marginHorizontal: 5,
-        backgroundColor: iOSColors.blue,
+        backgroundColor: PlatformColor("systemBlue"),
         alignSelf: "center",
       }}
     />

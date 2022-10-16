@@ -1,8 +1,8 @@
 import auth from "@react-native-firebase/auth";
-import { reusableStyles } from "helpers/styles";
 import React from "react";
 import {
   Alert,
+  PlatformColor,
   Pressable,
   StyleSheet,
   Text,
@@ -12,7 +12,7 @@ import {
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-const SettingsItem = ({
+export const SettingsItem = ({
   handlePress,
   text,
   style,
@@ -24,7 +24,7 @@ const SettingsItem = ({
   <Pressable
     style={({ pressed }) => [
       styles.itemContainer,
-      pressed ? { backgroundColor: "#2c2c2e" } : null,
+      pressed ? { backgroundColor: PlatformColor("systemGray5") } : null,
     ]}
     // style={styles.itemContainer}
     onPress={handlePress}
@@ -33,7 +33,7 @@ const SettingsItem = ({
       <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{text}</Text>
       <Ionicons
         name="chevron-forward"
-        color={iOSColors.gray}
+        color={PlatformColor("systemGray")}
         size={iOSUIKit.bodyObject.fontSize}
         style={{ alignSelf: "center", marginRight: 16 }}
       />
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    backgroundColor: "#1c1c1e",
+    backgroundColor: PlatformColor("systemGray6"),
     paddingLeft: 16,
     alignItems: "center",
   },
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    borderColor: "#3c3d41",
+    borderColor: PlatformColor("separator"),
     borderBottomWidth: StyleSheet.hairlineWidth,
     alignItems: "center",
     paddingVertical: 16,

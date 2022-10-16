@@ -3,6 +3,7 @@ import { reusableStyles } from "helpers/styles";
 import React, { useState } from "react";
 import {
   Alert,
+  PlatformColor,
   Pressable,
   StyleSheet,
   Text,
@@ -27,7 +28,7 @@ const SettingsItem = ({
       <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{text}</Text>
       <Ionicons
         name="chevron-forward"
-        color={iOSColors.gray}
+        color={PlatformColor("systemGray")}
         size={iOSUIKit.bodyObject.fontSize}
         style={{ alignSelf: "center", marginRight: 16 }}
       />
@@ -51,7 +52,7 @@ export const DeleteAccountScreen = ({ navigation }) => {
       <Text
         style={{
           ...iOSUIKit.bodyObject,
-          color: iOSColors.gray,
+          color: PlatformColor("systemGray"),
           marginBottom: 8,
         }}
       >
@@ -60,21 +61,18 @@ export const DeleteAccountScreen = ({ navigation }) => {
       <TextInput
         style={{
           ...iOSUIKit.bodyObject,
-          backgroundColor: "#1c1c1e",
+          backgroundColor: PlatformColor("systemGray6"),
           color: "white",
           padding: 16,
           borderRadius: 8,
           marginVertical: 8,
         }}
-        // placeholder="Password"
-        // placeholderTextColor="#9898a1"
-        // textContentType=""
         value={password}
         onChangeText={(text) => setPassword(text)}
       />
       <Pressable
         style={{
-          backgroundColor: iOSColors.red,
+          backgroundColor: PlatformColor("systemRed"),
           width: "100%",
           marginTop: 16,
           paddingVertical: 16,
@@ -116,7 +114,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    backgroundColor: "#1c1c1e",
+    backgroundColor: PlatformColor("systemGray6"),
     paddingLeft: 16,
     alignItems: "center",
   },
@@ -125,7 +123,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    borderColor: "#3c3d41",
+    borderColor: PlatformColor("separator"),
     borderBottomWidth: StyleSheet.hairlineWidth,
     alignItems: "center",
     paddingVertical: 16,

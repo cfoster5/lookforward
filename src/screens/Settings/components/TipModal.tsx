@@ -42,7 +42,9 @@ export const TipModal = ({ modalizeRef }: Props) => {
     <Modalize
       ref={modalizeRef}
       flatListProps={{
-        data: purchaseOptions,
+        data: purchaseOptions?.sort(
+          ({ priceAmountMicros: a, priceAmountMicros: b }) => a - b
+        ),
         ListHeaderComponent: (
           <Text
             style={[

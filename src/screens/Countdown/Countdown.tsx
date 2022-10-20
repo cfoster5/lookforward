@@ -187,15 +187,15 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
 
   return (
     <SectionList
-      contentContainerStyle={
-        Platform.OS == "ios"
+      contentContainerStyle={[
+        { marginHorizontal: 16 },
+        Platform.OS === "ios"
           ? {
               paddingTop: headerHeight + 16,
               paddingBottom: tabBarheight + 16,
-              marginHorizontal: 16,
             }
-          : { paddingVertical: 16, marginHorizontal: 16 }
-      }
+          : { paddingVertical: 16 },
+      ]}
       // contentContainerStyle={{ paddingTop: 16, paddingBottom: tabBarheight + 16, marginHorizontal: 16 }}
       scrollIndicatorInsets={
         Platform.OS == "ios"

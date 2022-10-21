@@ -26,6 +26,7 @@
     "@react-navigation/stack": "^6.0.11",
     "@types/react": "^17",
     "expo-in-app-purchases": "11.0.1",
+    "immer": "^9.0.15",
     "intl": "^1.2.5",
     "luxon": "^2.4.0",
     "react": "17.0.2",
@@ -51,6 +52,7 @@
     "react-native-vector-icons": "^9.0.0",
     "react-navigation-header-buttons": "^9.0.1",
     "react-query": "^3.39.1",
+    "use-immer": "^0.7.0",
     "zustand": "^4.0.0-rc.4"
   },
   "devDependencies": {

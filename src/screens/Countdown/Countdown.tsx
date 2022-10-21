@@ -8,44 +8,46 @@ import { CompositeScreenProps, useScrollToTop } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
 import { LoadingScreen } from "components/LoadingScreen";
-import React, { useLayoutEffect, useReducer, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 import { Platform, PlatformColor, SectionList, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useImmerReducer } from "use-immer";
 
 import { useMovieCountdowns } from "./api/getMovieCountdowns";
 import CountdownItem from "./components/CountdownItem";
+import { MyHeaderRight } from "./components/MyHeaderRight";
+import { SectionHeader } from "./components/SectionHeader";
 
 import { useStore } from "@/stores/store";
 import { CountdownStackParams, BottomTabParams } from "@/types";
 
-export function reducer(
-  state: any,
+function reducer(
+  draft: any,
   action: {
     type: string;
     showButtons?: boolean;
     selections?: { documentID: string; sectionName: string }[];
+    selection: { documentID: number; sectionName: string };
+    selectionIndex: number;
   }
 ) {
   switch (action.type) {
     case "set-showButtons":
-      return {
-        ...state,
-        showButtons: action.showButtons,
-      };
+      draft.showButtons = true;
+      break;
     case "set-hideButtons":
-      return {
-        ...state,
-        showButtons: false,
-        selections: [],
-      };
-    case "set-selections":
-      return {
-        ...state,
-        selections: action.selections,
-      };
+      draft.showButtons = false;
+      draft.selections = [];
+      break;
+    case "add-selection":
+      draft.selections.push(action.selection);
+      break;
+    case "remove-selection":
+      draft.selections.splice(action.selectionIndex, 1);
+      break;
     default:
-      return state;
+      break;
   }
 }
 
@@ -55,6 +57,10 @@ type CountdownScreenNavigationProp = CompositeScreenProps<
 >;
 
 function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
+  const [{ showButtons, selections }, dispatch] = useImmerReducer(
+    (draft, action) => reducer(draft, action),
+    { showButtons: false, selections: [] }
+  );
   const [{ showButtons, selections }, dispatch] = useReducer(reducer, {
     showButtons: false,
     selections: [],
@@ -69,39 +75,37 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () =>
-        Platform.OS === "ios" ? (
+        Platform.OS === "ios" &&
+        showButtons && (
           <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton} left>
-            {showButtons && (
-              <Item
-                title="Delete"
-                buttonStyle={{
-                  ...iOSUIKit.bodyEmphasizedObject,
-                  color:
-                    selections.length === 0
-                      ? PlatformColor("systemGray3")
-                      : PlatformColor("systemRed"),
-                }}
-                onPress={() => {
-                  if (selections.length > 0) {
-                    deleteItems();
-                  }
-                }}
-              />
-            )}
-          </HeaderButtons>
-        ) : null,
-      headerRight: () => {
-        let HeaderRight = null;
-        if (!showButtons) {
-          HeaderRight = (
             <Item
-              title="Edit"
+              title="Delete"
               buttonStyle={{
-                color: PlatformColor("systemBlue"),
+                ...iOSUIKit.bodyEmphasizedObject,
+                color:
+                  selections.length === 0
+                    ? PlatformColor("systemGray3")
+                    : PlatformColor("systemRed"),
               }}
-              onPress={() =>
-                dispatch({ type: "set-showButtons", showButtons: true })
-              }
+              onPress={() => {
+                if (selections.length > 0) {
+                  deleteItems();
+                }
+              }}
+            />
+          </HeaderButtons>
+        ),
+      headerRight: () => (
+        <MyHeaderRight
+          text={showButtons ? "Done" : "Edit"}
+          handlePress={() =>
+            dispatch(
+              showButtons
+                ? { type: "set-hideButtons" }
+                : { type: "set-showButtons" }
+            )
+          }
+          style={showButtons ? iOSUIKit.bodyEmphasized : null}
             />
           );
         } else {
@@ -154,17 +158,28 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
     </View>
   );
 
-  function updateSelections(documentID: string, sectionName: string) {
-    const tempSelections = selections.slice();
-    const selectionIndex = tempSelections.findIndex(
-      (obj) => obj.documentID === documentID
-    );
-    if (selectionIndex === -1) {
-      tempSelections.push({ documentID, sectionName });
-    } else {
-      tempSelections.splice(selectionIndex, 1);
+  function handlePress(item, sectionName: string) {
+    if (showButtons) {
+      const selectionIndex = selections.findIndex(
+        (obj) => obj.documentID === item.documentID
+      );
+      if (selectionIndex === -1) {
+        dispatch({
+          type: "add-selection",
+          selection: { documentID: item.documentID, sectionName },
+        });
+      } else {
+        dispatch({
+          type: "remove-selection",
+          selectionIndex,
+        });
+      }
+    } else if (sectionName === "Movies") {
+      navigation.navigate("Movie", {
+        movieId: item.id,
+        movieTitle: item.title,
+      });
     }
-    dispatch({ type: "set-selections", selections: tempSelections });
   }
 
   async function deleteItems() {
@@ -219,7 +234,6 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
       keyExtractor={(item, index) => item + index}
       renderItem={({ item, section, index }) => (
         <CountdownItem
-          navigation={navigation}
           item={item}
           sectionName={section.title}
           isLastInSection={
@@ -228,16 +242,14 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
               : index + 1 === gameSubs.length
           }
           showButtons={showButtons}
-          selected={
+          isSelected={
             selections.findIndex((obj) => obj.documentID === item.documentID) >
             -1
           }
-          updateSelections={(documentID) =>
-            updateSelections(documentID, section.title)
-          }
+          handlePress={() => handlePress(item, section.title)}
         />
       )}
-      renderSectionHeader={renderSectionHeader}
+      renderSectionHeader={SectionHeader}
       ListHeaderComponent={
         <View
           style={{

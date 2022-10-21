@@ -1,10 +1,5 @@
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { reusableStyles } from "helpers/styles";
 import { IGDB } from "interfaces/igdb";
-import { Navigation } from "interfaces/navigation";
-import { Movie } from "interfaces/tmdb";
 import { DateTime } from "luxon";
 import React, { useEffect } from "react";
 import {
@@ -21,30 +16,26 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { iOSColors, iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { iOSUIKit } from "react-native-typography";
+
+import { RadioButton } from "./RadioButton";
 
 interface Props {
-  navigation: CompositeNavigationProp<
-    StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
-    BottomTabNavigationProp<Navigation.TabNavigationParamList, "CountdownTab">
-  >;
   item: any;
   sectionName: "Movies" | "Games";
   isLastInSection: boolean;
   showButtons: boolean;
-  selected: boolean;
-  updateSelections: (documentID: string) => void;
+  isSelected: boolean;
+  handlePress: () => void;
 }
 
 function CountdownItem({
-  navigation,
   item,
   sectionName,
   isLastInSection,
   showButtons,
-  selected,
-  updateSelections,
+  isSelected,
+  handlePress,
 }: Props) {
   const transformAmount = useSharedValue(-24);
 
@@ -93,48 +84,10 @@ function CountdownItem({
     }
   }
 
-  function RadioButton(props: any) {
-    return (
-      <View
-        style={[
-          {
-            height: 24,
-            width: 24,
-            borderRadius: 12,
-            borderWidth: 1,
-            borderColor: PlatformColor("systemGray"),
-            alignItems: "center",
-            justifyContent: "center",
-          },
-          props.style,
-        ]}
-      >
-        {props.selected ? (
-          <View
-            style={{
-              height: 24,
-              width: 24,
-              borderRadius: 12,
-              backgroundColor: PlatformColor("systemBlue"),
-              justifyContent: "center",
-            }}
-          >
-            <Ionicons
-              name="checkmark-outline"
-              color={iOSColors.white}
-              size={20}
-              style={{ textAlign: "center" }}
-            />
-          </View>
-        ) : null}
-      </View>
-    );
-  }
-
   const styles = StyleSheet.create({
     rowFront: {
       overflow: "hidden",
-      backgroundColor: selected
+      backgroundColor: isSelected
         ? PlatformColor("systemGray4")
         : PlatformColor("systemGray6"),
     },
@@ -154,10 +107,7 @@ function CountdownItem({
     },
     middle: {
       borderColor: PlatformColor("separator"),
-      borderBottomWidth:
-        sectionName === "Games" && isLastInSection
-          ? 0
-          : StyleSheet.hairlineWidth,
+      borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
       flex: 1,
       justifyContent: "center",
       marginLeft: 16,
@@ -166,10 +116,7 @@ function CountdownItem({
     },
     countdown: {
       borderColor: PlatformColor("separator"),
-      borderBottomWidth:
-        sectionName === "Games" && isLastInSection
-          ? 0
-          : StyleSheet.hairlineWidth,
+      borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
@@ -189,43 +136,29 @@ function CountdownItem({
     title = item.game.name;
   }
 
-  const slideStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          // translateX: transformAmount.value,
-          translateX: interpolate(transformAmount.value, [-24, 16], [-24, 16]),
-        },
-      ],
-    };
-  });
+  const slideStyle = useAnimatedStyle(() => ({
+    transform: [
+      {
+        // translateX: transformAmount.value,
+        translateX: interpolate(transformAmount.value, [-24, 16], [-24, 16]),
+      },
+    ],
+  }));
 
-  const radioButtonStyle = useAnimatedStyle(() => {
-    return {
-      opacity: interpolate(transformAmount.value, [-24, 16], [0, 1]),
-    };
-  });
+  const radioButtonStyle = useAnimatedStyle(() => ({
+    // when value is -24, opacity is 0
+    // when value is 16, opacity is 1
+    opacity: interpolate(transformAmount.value, [-24, 16], [0, 1]),
+  }));
 
   return (
-    // <Pressable onPress={() => showButtons ? updateSelections(item.documentID) : navigation.navigate('Details', { type: sectionName === "Movies" ? "movie" : "game", data: item })}>
-    <Pressable
-      onPress={() =>
-        showButtons
-          ? updateSelections(item.documentID)
-          : sectionName === "Movies"
-          ? navigation.navigate("Movie", {
-              movieId: item.id,
-              movieTitle: item.title,
-            })
-          : undefined
-      }
-    >
+    <Pressable onPress={handlePress}>
       <View style={styles.rowFront}>
         <Animated.View style={[styles.slide, slideStyle]}>
           <Animated.View
             style={[{ justifyContent: "center" }, radioButtonStyle]}
           >
-            <RadioButton selected={selected} />
+            <RadioButton isSelected={isSelected} />
           </Animated.View>
           <View style={{ justifyContent: "center" }}>
             <Image style={styles.image} source={{ uri: imageSrc }} />

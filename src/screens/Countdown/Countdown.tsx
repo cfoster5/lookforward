@@ -9,8 +9,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
 import { LoadingScreen } from "components/LoadingScreen";
 import React, { useLayoutEffect, useRef } from "react";
-import { Platform, PlatformColor, SectionList, Text, View } from "react-native";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { Platform, PlatformColor, SectionList, View } from "react-native";
+import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { useImmerReducer } from "use-immer";
 
@@ -61,10 +61,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
     (draft, action) => reducer(draft, action),
     { showButtons: false, selections: [] }
   );
-  const [{ showButtons, selections }, dispatch] = useReducer(reducer, {
-    showButtons: false,
-    selections: [],
-  });
+
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
   const { user, movieSubs, gameSubs } = useStore();
@@ -106,57 +103,10 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
             )
           }
           style={showButtons ? iOSUIKit.bodyEmphasized : null}
-            />
-          );
-        } else {
-          if (
-            Platform.OS === "ios" ||
-            (Platform.OS === "android" && selections.length)
-          ) {
-            HeaderRight = (
-              <Item
-                title="Done"
-                buttonStyle={{
-                  ...iOSUIKit.bodyEmphasizedObject,
-                  color: PlatformColor("systemBlue"),
-                }}
-                onPress={() => dispatch({ type: "set-hideButtons" })}
-              />
-            );
-          }
-        }
-        return (
-          <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-            {HeaderRight}
-            {Platform.OS === "android" && showButtons && selections.length > 0 && (
-              <Item
-                title="Delete"
-                buttonStyle={{
-                  ...iOSUIKit.bodyEmphasizedObject,
-                  color: selections.length === 0 ? "#48494a" : iOSColors.red,
-                }}
-                onPress={() => deleteItems()}
-              />
-            )}
-          </HeaderButtons>
-        );
-      },
+        />
+      ),
     });
   }, [navigation, showButtons, selections]);
-
-  const renderSectionHeader = ({ section }) => (
-    <View style={{ backgroundColor: PlatformColor("systemGray6") }}>
-      <Text
-        style={{
-          ...iOSUIKit.title3EmphasizedWhiteObject,
-          marginLeft: 16,
-          marginVertical: 8,
-        }}
-      >
-        {section.title}
-      </Text>
-    </View>
-  );
 
   function handlePress(item, sectionName: string) {
     if (showButtons) {

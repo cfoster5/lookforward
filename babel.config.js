@@ -13,6 +13,7 @@ module.exports = {
           constants: "./src/constants",
           contexts: "./src/contexts",
           helpers: "./src/helpers",
+          "@/hooks": "./src/hooks",
           "@/providers": "./src/providers",
           "@/stores": "./src/stores",
           "@/types": "./src/types",

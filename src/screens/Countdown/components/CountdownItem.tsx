@@ -38,14 +38,7 @@ function CountdownItem({
   handlePress,
 }: Props) {
   const transformAmount = useSharedValue(-24);
-
-  useEffect(() => {
-    if (showButtons) {
-      transformAmount.value = withTiming(16);
-    } else if (!showButtons) {
-      transformAmount.value = withTiming(-24);
-    }
-  }, [showButtons]);
+  transformAmount.value = withTiming(!showButtons ? -24 : 16);
 
   function getReleaseDate(): string {
     if (sectionName === "Movies") {

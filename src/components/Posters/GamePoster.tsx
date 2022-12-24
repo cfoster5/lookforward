@@ -11,8 +11,7 @@ import { useStore } from "@/stores/store";
 
 export function GamePoster({ item }: { item: IGDB.Game.Game }) {
   const { gameSubs } = useStore();
-  let inCountdown = false;
-  inCountdown = gameSubs.find(
+  const inCountdown = gameSubs.find(
     (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
       releaseDate.game.id === item.id
   )?.documentID;

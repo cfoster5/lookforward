@@ -5,16 +5,16 @@ import { iOSUIKit } from "react-native-typography";
 import { Text as ThemedText } from "./Themed";
 
 export function ExpandableText({
-  pressHandler,
+  handlePress,
   isExpanded,
   text,
 }: {
-  pressHandler: any;
+  handlePress: () => void;
   isExpanded: boolean;
   text: string;
 }) {
   return (
-    <Pressable onPress={pressHandler}>
+    <Pressable onPress={handlePress}>
       <ThemedText
         style={[iOSUIKit.body, { paddingTop: 16 }]}
         numberOfLines={isExpanded ? undefined : 4}

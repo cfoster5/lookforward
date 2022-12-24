@@ -178,7 +178,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
           )}
           <ExpandableText
             isExpanded={showBio}
-            pressHandler={() => setShowBio(!showBio)}
+            handlePress={() => setShowBio(!showBio)}
             text={person.biography}
           />
           <View

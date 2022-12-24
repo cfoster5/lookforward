@@ -299,7 +299,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
           ) : null}
 
           <ExpandableText
-            pressHandler={() => setShowAllOverview(!showAllOverview)}
+            handlePress={() => setShowAllOverview(!showAllOverview)}
             isExpanded={showAllOverview}
             text={movieDetails!.overview}
           />

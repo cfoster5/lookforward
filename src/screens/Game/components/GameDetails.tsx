@@ -89,7 +89,7 @@ function GameDetails({ navigation, game }: Props) {
 
         <ExpandableText
           isExpanded={showAllOverview}
-          pressHandler={() => setShowAllOverview(!showAllOverview)}
+          handlePress={() => setShowAllOverview(!showAllOverview)}
           text={game.summary}
         />
 

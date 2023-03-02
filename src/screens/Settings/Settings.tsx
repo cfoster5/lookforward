@@ -17,8 +17,8 @@ function Settings({ navigation }) {
   const [hasPermissions, setHasPermissions] = useState(true);
 
   const [notifications, setNotifications] = useState({
-    dayNotifications: false,
-    weekNotifications: false,
+    day: false,
+    week: false,
   });
 
   const modalizeRef = useRef<Modalize>(null);
@@ -29,13 +29,8 @@ function Settings({ navigation }) {
     const preferenceSubscription = firestore()
       .collection("users")
       .doc(user!.uid)
-      .collection("contentPreferences")
-      .doc("preferences")
       .onSnapshot(
-        (querySnapshot) => {
-          const preferences = querySnapshot.data();
-          setNotifications(preferences);
-        },
+        (docSnapshot) => setNotifications(docSnapshot.data()?.notifications),
         (error) => console.log(error)
       );
     // Stop listening for updates when no longer required
@@ -46,12 +41,7 @@ function Settings({ navigation }) {
     if (!firstRender) {
       console.log("notifications update", notifications);
       getNotificationPermissions();
-      firestore()
-        .collection("users")
-        .doc(user!.uid)
-        .collection("contentPreferences")
-        .doc("preferences")
-        .set(notifications, { merge: true });
+      firestore().collection("users").doc(user!.uid).update({ notifications });
     }
   }, [notifications]);
 
@@ -81,16 +71,16 @@ function Settings({ navigation }) {
         <NotificationSetting
           title="Day Before"
           onValueChange={(value) =>
-            setNotifications({ ...notifications, dayNotifications: value })
+            setNotifications({ ...notifications, day: value })
           }
-          value={notifications.dayNotifications}
+          value={notifications.day}
         />
         <NotificationSetting
           title="Week Before"
           onValueChange={(value) =>
-            setNotifications({ ...notifications, weekNotifications: value })
+            setNotifications({ ...notifications, week: value })
           }
-          value={notifications.weekNotifications}
+          value={notifications.week}
           style={{ borderBottomWidth: 0 }}
         />
         {!hasPermissions && (

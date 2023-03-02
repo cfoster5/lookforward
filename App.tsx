@@ -79,24 +79,17 @@ export default function App() {
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    const doc = await firestore()
+    const docSnapshot = await firestore()
       .collection("users")
       .doc(user!.uid)
-      .collection("contentPreferences")
-      .doc("preferences")
       .get();
     if (enabled) {
-      if (!doc.exists) {
+      if (!docSnapshot.data()?.notifications) {
         // Only set notification preferences to true if they haven't been set before
         await firestore()
           .collection("users")
           .doc(user!.uid)
-          .collection("contentPreferences")
-          .doc("preferences")
-          .set({
-            weekNotifications: true,
-            dayNotifications: true,
-          });
+          .update({ notifications: { day: true, week: true } });
       }
       const token = await messaging().getToken();
       await saveTokenToDatabase(token);
@@ -112,7 +105,7 @@ export default function App() {
     await firestore()
       .collection("users")
       .doc(user!.uid)
-      .set({ deviceToken: token });
+      .update({ deviceToken: token });
   }
 
   if (Platform.OS === "ios") {

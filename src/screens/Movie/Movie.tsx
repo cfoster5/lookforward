@@ -222,9 +222,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   if (isLoading) return <LoadingScreen />;
 
   return (
-    // <AnimatedBackground
-    //   uri={movie.backdrop_path ? movie.backdrop_path : movie.poster_path}
-    // >
     <>
       <Animated.ScrollView
         onScroll={scrollHandler}
@@ -663,7 +660,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         providers={movieDetails!["watch/providers"].results.US}
       />
     </>
-    // </AnimatedBackground>
   );
 }
 

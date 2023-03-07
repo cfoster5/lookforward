@@ -92,11 +92,12 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
 
   function handlePress() {
     if (movieId) {
-      inCountdown ? deleteItem("movies") : addMovieToList();
-    }
-    if (game) {
-      console.log(`data`, game);
-      inCountdown ? deleteItem("gameReleases") : setGame(game);
+      if (inCountdown) deleteItem("movies");
+      else addMovieToList();
+    } else if (game) {
+      if (inCountdown) deleteItem("gameReleases");
+      else setGame(game);
+      // inCountdown ? deleteItem("gameReleases") : openModal(game);
       // Open platform modal directly here
     }
   }

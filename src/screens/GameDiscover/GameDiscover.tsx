@@ -5,7 +5,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import GameReleaseModal from "components/GamePlatformPicker";
+import { GamePlatformPicker } from "components/GamePlatformPicker";
 import { LoadingScreen } from "components/LoadingScreen";
 import { GamePoster } from "components/Posters/GamePoster";
 import { IGDB } from "interfaces/igdb";
@@ -81,7 +81,7 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
         keyExtractor={(item, index) => item.id.toString()}
         initialNumToRender={6}
       />
-      <GameReleaseModal modalizeRef={modalizeRef} game={game} />
+      <GamePlatformPicker modalizeRef={modalizeRef} game={game} />
     </>
   ) : (
     <LoadingScreen />

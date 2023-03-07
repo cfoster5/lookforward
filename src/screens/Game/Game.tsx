@@ -1,7 +1,7 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import GameReleaseModal from "components/GamePlatformPicker";
+import { GamePlatformPicker } from "components/GamePlatformPicker";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
 import { removeSub } from "helpers/helpers";
 import { FirestoreGame } from "interfaces/firebase";
@@ -57,7 +57,7 @@ function Game({ navigation, route }: GameScreenNavigationProp) {
   return (
     <>
       <GameDetails navigation={navigation} game={game} />
-      <GameReleaseModal modalizeRef={modalizeRef} game={game} />
+      <GamePlatformPicker modalizeRef={modalizeRef} game={game} />
     </>
   );
 }

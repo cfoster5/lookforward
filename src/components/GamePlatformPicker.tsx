@@ -42,7 +42,7 @@ const RenderItem = ({ handlePress, releaseDate }: Props) => (
   </Pressable>
 );
 
-function GamePlatformPicker({
+export function GamePlatformPicker({
   modalizeRef,
   game,
 }: {
@@ -123,5 +123,3 @@ function GamePlatformPicker({
     />
   );
 }
-
-export default GamePlatformPicker;

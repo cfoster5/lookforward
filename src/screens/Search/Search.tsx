@@ -5,7 +5,7 @@ import {
 import { CompositeScreenProps, useScrollToTop } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import CategoryControl from "components/CategoryControl/CategoryControl";
-import GameReleaseModal from "components/GamePlatformPicker";
+import { GamePlatformPicker } from "components/GamePlatformPicker";
 import { LoadingScreen } from "components/LoadingScreen";
 import { GamePoster } from "components/Posters/GamePoster";
 import { MoviePoster } from "components/Posters/MoviePoster";
@@ -389,7 +389,7 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
                 ) : null
               }
             />
-            <GameReleaseModal modalizeRef={modalizeRef} game={game} />
+            <GamePlatformPicker modalizeRef={modalizeRef} game={game} />
           </>
         ) : (
           <LoadingScreen />

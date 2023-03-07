@@ -1,6 +1,6 @@
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { ColorSchemeName } from "react-native";
-import create from "zustand";
+import { create } from "zustand";
 
 type Store = {
   user: FirebaseAuthTypes.User | null;

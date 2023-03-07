@@ -1,3 +1,4 @@
+import { composeReleasesToGames } from "helpers/helpers";
 import { useQuery } from "react-query";
 
 import { igdbProxyKey } from "@/config";
@@ -15,7 +16,7 @@ async function getReleases(filter: string) {
     }
   );
   const json = await response.json();
-  return json;
+  return composeReleasesToGames(json);
 }
 
 export function useDiscoverGames({

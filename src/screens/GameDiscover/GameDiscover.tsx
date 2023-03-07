@@ -8,9 +8,8 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import GameReleaseModal from "components/GamePlatformPicker";
 import { LoadingScreen } from "components/LoadingScreen";
 import { GamePoster } from "components/Posters/GamePoster";
-import { convertReleasesToGames } from "helpers/helpers";
 import { IGDB } from "interfaces/igdb";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { FlatList, Platform, Pressable } from "react-native";
 import { Modalize } from "react-native-modalize";
 
@@ -26,12 +25,11 @@ type GameDiscoverScreenNavigationProp = CompositeScreenProps<
 
 function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
   const { genre, company, keyword } = route.params;
-  const [games, setGames] = useState<IGDB.Game.Game[]>([]);
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const modalizeRef = useRef<Modalize>(null);
-  const { data: releaseDates } = useDiscoverGames({ genreId: genre.id });
+  const { data: games, isLoading } = useDiscoverGames({ genreId: genre.id });
   const { game } = useStore();
 
   useLayoutEffect(() => {
@@ -47,16 +45,11 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
   }, [route.params]);
 
   useEffect(() => {
-    const games = releaseDates ? convertReleasesToGames(releaseDates) : [];
-    setGames(games);
-  }, [releaseDates]);
-
-  useEffect(() => {
     // Open GamePlatformPicker if game is changed
     modalizeRef.current?.open();
   }, [game]);
 
-  return games?.length > 0 ? (
+  return !isLoading ? (
     <>
       <FlatList
         contentContainerStyle={{

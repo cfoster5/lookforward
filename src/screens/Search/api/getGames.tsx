@@ -1,4 +1,4 @@
-import { convertReleasesToGames } from "helpers/helpers";
+import { composeReleasesToGames } from "helpers/helpers";
 import { IGDB } from "interfaces/igdb";
 import { useQuery } from "react-query";
 
@@ -18,7 +18,7 @@ async function getGames(searchValue: string) {
       }
     );
     const json: IGDB.ReleaseDate.ReleaseDate[] = await response.json();
-    return convertReleasesToGames(json);
+    return composeReleasesToGames(json);
   } else {
     const response = await fetch(
       "https://k0o7ncaic1.execute-api.us-east-2.amazonaws.com/production/v4/games",

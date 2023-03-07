@@ -47,22 +47,22 @@ export const tmdbMovieGenres = [
   { id: 37, name: "Western", icon: "hat-cowboy" },
 ];
 
-export function convertReleasesToGames(
+// Converts releases into one game with many releases
+export function composeReleasesToGames(
   releaseDates: IGDB.ReleaseDate.ReleaseDate[]
 ): IGDB.Game.Game[] {
-  // Converts releases into one game with many releases
-  // console.log(releaseDates)
   const games: IGDB.Game.Game[] = [];
-  releaseDates.map((releaseDate) => {
-    if (releaseDate.game) {
+  releaseDates.forEach((releaseDate) => {
+    if (releaseDate.hasOwnProperty("game")) {
       const game = { ...releaseDate.game, release_dates: [releaseDate] };
-      const foundGame = games.find(
-        (game) => game.name === releaseDate.game.name
-      );
       // check if game has already been added to games array
+      const existingGame = games.find(
+        (game) => game.id === releaseDate.game.id
+      );
       // if so, add tempReleaseDate to foundGame.release_dates
+      if (existingGame) existingGame.release_dates.push(releaseDate);
       // if not, add game to games array
-      foundGame ? foundGame.release_dates.push(releaseDate) : games.push(game);
+      else games.push(game);
     }
   });
   return games;

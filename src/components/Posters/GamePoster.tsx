@@ -10,24 +10,24 @@ import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
 
 export function GamePoster({
-  item,
+  game,
 }: {
-  item: Game & { release_dates: ReleaseDate[] };
+  game: Game & { release_dates: ReleaseDate[] };
 }) {
   const { gameSubs } = useStore();
   const inCountdown = gameSubs.find(
-    (releaseDate) => releaseDate.game.id === item.id
+    (releaseDate) => releaseDate.game.id === game.id
   )?.documentID;
   const hasUpcomingRelease =
-    item.release_dates.filter(
+    game.release_dates.filter(
       (releaseDate) => DateTime.fromISO(releaseDate.date) >= DateTime.now()
     ).length === 0;
   return (
     <>
       {hasUpcomingRelease && (
-        <PosterButton game={item} inCountdown={inCountdown} />
+        <PosterButton game={game} inCountdown={inCountdown} />
       )}
-      {item.cover?.url ? (
+      {game.cover?.url ? (
         <FastImage
           style={{
             ...reusableStyles.gamePoster,
@@ -37,11 +37,11 @@ export function GamePoster({
           }}
           // source={{ uri: `https:${(data as IGDB.ReleaseDate.ReleaseDate)?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}
           source={{
-            uri: `https:${item.cover?.url.replace("thumb", "cover_big_2x")}`,
+            uri: `https:${game.cover?.url.replace("thumb", "cover_big_2x")}`,
           }}
         />
       ) : (
-        <TextPoster text={item.name} />
+        <TextPoster text={game.name} />
       )}
     </>
   );

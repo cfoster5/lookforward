@@ -72,12 +72,12 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
         indicatorStyle="white"
         data={games}
         renderItem={({
-          item,
+          item: game,
         }: {
           item: Game & { release_dates: ReleaseDate[] };
         }) => (
-          <Pressable onPress={() => navigation.push("Game", { game: item })}>
-            <GamePoster item={item} />
+          <Pressable onPress={() => navigation.push("Game", { game })}>
+            <GamePoster game={game} />
           </Pressable>
         )}
         numColumns={2}

@@ -378,7 +378,7 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
                 item: Game & { release_dates: ReleaseDate[] };
               }) => (
                 <Pressable onPress={() => navigation.push("Game", { game })}>
-                  <GamePoster item={game} />
+                  <GamePoster game={game} />
                 </Pressable>
               )}
               numColumns={2}

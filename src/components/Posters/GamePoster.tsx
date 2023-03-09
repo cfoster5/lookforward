@@ -2,18 +2,21 @@ import { DateTime } from "luxon";
 import React from "react";
 import FastImage from "react-native-fast-image";
 
-import { reusableStyles } from "../../helpers/styles";
-import { IGDB } from "../../interfaces/igdb";
-import PosterButton from "../PosterButton";
 import { TextPoster } from "./TextPoster";
+import { reusableStyles } from "../../helpers/styles";
+import PosterButton from "../PosterButton";
 
 import { useStore } from "@/stores/store";
+import { Game, ReleaseDate } from "@/types";
 
-export function GamePoster({ item }: { item: IGDB.Game.Game }) {
+export function GamePoster({
+  item,
+}: {
+  item: Game & { release_dates: ReleaseDate[] };
+}) {
   const { gameSubs } = useStore();
   const inCountdown = gameSubs.find(
-    (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
-      releaseDate.game.id === item.id
+    (releaseDate) => releaseDate.game.id === item.id
   )?.documentID;
   const hasUpcomingRelease =
     item.release_dates.filter(

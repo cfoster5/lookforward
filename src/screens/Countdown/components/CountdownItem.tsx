@@ -1,7 +1,7 @@
 import { reusableStyles } from "helpers/styles";
 import { IGDB } from "interfaces/igdb";
 import { DateTime } from "luxon";
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Image,
   PlatformColor,

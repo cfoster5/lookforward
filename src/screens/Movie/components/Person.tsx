@@ -3,7 +3,6 @@ import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { TextPoster } from "components/Posters/TextPoster";
 import TabStackContext from "contexts/TabStackContext";
-import { Navigation } from "interfaces/navigation";
 import { Cast, Crew } from "interfaces/tmdb";
 import React, { useContext } from "react";
 import {
@@ -17,18 +16,21 @@ import {
 import FastImage from "react-native-fast-image";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
+import {
+  CountdownStackParamList,
+  FindStackParamList,
+  TabNavigationParamList,
+} from "@/types";
+
 interface Props {
   navigation:
     | CompositeNavigationProp<
-        StackNavigationProp<Navigation.FindStackParamList, "Movie">,
-        BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+        StackNavigationProp<FindStackParamList, "Movie">,
+        BottomTabNavigationProp<TabNavigationParamList, "FindTab">
       >
     | CompositeNavigationProp<
-        StackNavigationProp<Navigation.CountdownStackParamList, "Movie">,
-        BottomTabNavigationProp<
-          Navigation.TabNavigationParamList,
-          "CountdownTab"
-        >
+        StackNavigationProp<CountdownStackParamList, "Movie">,
+        BottomTabNavigationProp<TabNavigationParamList, "CountdownTab">
       >;
   person: Cast | Crew;
 }

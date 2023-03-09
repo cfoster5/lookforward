@@ -4,10 +4,11 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 
 import TabStackContext from "../contexts/TabStackContext";
 import { calculateWidth } from "../helpers/helpers";
-import { IGDB } from "../interfaces/igdb";
 import { Video } from "../interfaces/tmdb";
 
-function Trailer({ video }: { video: Video | IGDB.Game.Video }) {
+import { Video as GameVideo } from "@/types";
+
+function Trailer({ video }: { video: Video | GameVideo }) {
   const { theme } = useContext(TabStackContext);
   return (
     <Pressable
@@ -15,9 +16,7 @@ function Trailer({ video }: { video: Video | IGDB.Game.Video }) {
         Linking.openURL(
           (video as Video).key
             ? `https://www.youtube.com/watch?v=${(video as Video).key}`
-            : `https://www.youtube.com/watch?v=${
-                (video as IGDB.Game.Video).video_id
-              }`
+            : `https://www.youtube.com/watch?v=${(video as GameVideo).video_id}`
         )
       }
       style={{ width: calculateWidth(16, 8, 1.5) }}
@@ -36,7 +35,7 @@ function Trailer({ video }: { video: Video | IGDB.Game.Video }) {
           uri: (video as Video).key
             ? `https://img.youtube.com/vi/${(video as Video).key}/hqdefault.jpg`
             : `https://img.youtube.com/vi/${
-                (video as IGDB.Game.Video).video_id
+                (video as GameVideo).video_id
               }/mqdefault.jpg`,
         }}
       />

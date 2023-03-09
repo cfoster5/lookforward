@@ -5,21 +5,22 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 import { Platform } from "react-native";
 
-import { Navigation } from "../interfaces/navigation";
 import Actor from "../screens/Actor/Actor";
 import { Collection } from "../screens/Collection/Collection";
 import Countdown from "../screens/Countdown/Countdown";
 import Movie from "../screens/Movie/Movie";
 import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 
+import { CountdownStackParamList, TabNavigationParamList } from "@/types";
+
 type CountdownStackNavProp = CompositeNavigationProp<
-  StackNavigationProp<Navigation.CountdownStackParamList, "Countdown">,
-  BottomTabNavigationProp<Navigation.TabNavigationParamList>
+  StackNavigationProp<CountdownStackParamList, "Countdown">,
+  BottomTabNavigationProp<TabNavigationParamList>
 >;
 
 interface Props {
   navigation: CountdownStackNavProp;
-  route: RouteProp<Navigation.TabNavigationParamList, "CountdownTab">;
+  route: RouteProp<TabNavigationParamList, "CountdownTab">;
 }
 
 const Stack = createNativeStackNavigator();

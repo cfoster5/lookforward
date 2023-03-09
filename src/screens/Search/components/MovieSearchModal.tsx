@@ -9,12 +9,13 @@ import ButtonMultiState from "components/ButtonMultiState";
 import ButtonSingleState from "components/ButtonSingleState";
 import TabStackContext from "contexts/TabStackContext";
 import { targetedProviders } from "helpers/helpers";
-import { Navigation } from "interfaces/navigation";
 import React, { useContext } from "react";
 import { FlatList, Platform, PlatformColor, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Modalize } from "react-native-modalize";
 import { iOSUIKit } from "react-native-typography";
+
+import { FindStackParamList, TabNavigationParamList } from "@/types";
 
 export default function MovieSearchModal({
   navigation,
@@ -23,8 +24,8 @@ export default function MovieSearchModal({
   setSelectedOption,
 }: {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<Navigation.FindStackParamList, "Find">,
-    BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+    StackNavigationProp<FindStackParamList, "Find">,
+    BottomTabNavigationProp<TabNavigationParamList, "FindTab">
   >;
   filterModalRef: React.RefObject<Modalize>;
   selectedOption: string;

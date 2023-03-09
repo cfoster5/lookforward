@@ -3,7 +3,8 @@ import { Dimensions } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import { FirestoreMovie } from "../interfaces/firebase";
-import { IGDB } from "../interfaces/igdb";
+
+import { ReleaseDate } from "@/types";
 
 export const targetedProviders = [
   "Any",
@@ -48,10 +49,8 @@ export const tmdbMovieGenres = [
 ];
 
 // Converts releases into one game with many releases
-export function composeReleasesToGames(
-  releaseDates: IGDB.ReleaseDate.ReleaseDate[]
-): IGDB.Game.Game[] {
-  const games: IGDB.Game.Game[] = [];
+export function composeReleasesToGames(releaseDates: ReleaseDate[]) {
+  const games: (ReleaseDate["game"] & { release_dates: ReleaseDate[] })[] = [];
   releaseDates.forEach((releaseDate) => {
     if (releaseDate.hasOwnProperty("game")) {
       const game = { ...releaseDate.game, release_dates: [releaseDate] };
@@ -91,7 +90,7 @@ export async function subToMovie(
 
 export async function removeSub(
   collection: string,
-  countdownId?: string,
+  countdownId: string,
   user: string
 ) {
   try {

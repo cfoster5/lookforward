@@ -16,13 +16,13 @@ import { iOSUIKit } from "react-native-typography";
 
 import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
-import { IGDB } from "../interfaces/igdb";
 
 import { useStore } from "@/stores/store";
+import { Game, ReleaseDate } from "@/types";
 
 type Props = {
   handlePress: () => void;
-  releaseDate: IGDB.Game.ReleaseDate;
+  releaseDate: ReleaseDate;
 };
 
 const RenderItem = ({ handlePress, releaseDate }: Props) => (
@@ -47,13 +47,15 @@ export function GamePlatformPicker({
   game,
 }: {
   modalizeRef: RefObject<Modalize>;
-  game: IGDB.Game.Game;
+  game: Game & {
+    release_dates: ReleaseDate[];
+  };
 }) {
   const { user, setGame } = useStore();
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
 
-  async function addGameRelease(releaseDate: IGDB.Game.ReleaseDate) {
+  async function addGameRelease(releaseDate: ReleaseDate) {
     // console.log("releaseDate", releaseDate);
     const tempGame = {
       cover: game.cover,
@@ -93,7 +95,7 @@ export function GamePlatformPicker({
           (release_date) =>
             release_date.region === 2 || release_date.region === 8
         ),
-        renderItem: ({ item }: { item: IGDB.Game.ReleaseDate }) => (
+        renderItem: ({ item }: { item: ReleaseDate }) => (
           <RenderItem
             handlePress={() => addGameRelease(item)}
             releaseDate={item}
@@ -108,7 +110,7 @@ export function GamePlatformPicker({
             }}
           />
         ),
-        keyExtractor: (item: IGDB.Game.ReleaseDate) => item.id.toString(),
+        keyExtractor: (item: ReleaseDate) => item.id.toString(),
         showsVerticalScrollIndicator: false,
       }}
       childrenStyle={{

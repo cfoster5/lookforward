@@ -12,8 +12,6 @@ import { ExpandableText } from "components/ExpandableText";
 import { Text as ThemedText } from "components/Themed";
 import Trailer from "components/Trailer";
 import { reusableStyles } from "helpers/styles";
-import { IGDB } from "interfaces/igdb";
-import { Navigation } from "interfaces/navigation";
 import { DateTime } from "luxon";
 import React, { Fragment, useState } from "react";
 import {
@@ -30,12 +28,21 @@ import { iOSUIKit } from "react-native-typography";
 
 import { horizontalListProps } from "../../Movie/Movie";
 
+import {
+  FindStackParamList,
+  Game,
+  ReleaseDate,
+  TabNavigationParamList,
+} from "@/types";
+
 interface Props {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<Navigation.FindStackParamList, "Game">,
-    BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+    StackNavigationProp<FindStackParamList, "Game">,
+    BottomTabNavigationProp<TabNavigationParamList, "FindTab">
   >;
-  game: IGDB.Game.Game;
+  game: Game & {
+    release_dates: ReleaseDate[];
+  };
 }
 
 function GameDetails({ navigation, game }: Props) {

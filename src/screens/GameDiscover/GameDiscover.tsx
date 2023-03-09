@@ -8,7 +8,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { GamePlatformPicker } from "components/GamePlatformPicker";
 import { LoadingScreen } from "components/LoadingScreen";
 import { GamePoster } from "components/Posters/GamePoster";
-import { IGDB } from "interfaces/igdb";
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import { FlatList, Platform, Pressable } from "react-native";
 import { Modalize } from "react-native-modalize";
@@ -16,11 +15,16 @@ import { Modalize } from "react-native-modalize";
 import { useDiscoverGames } from "./api/getDiscoverGames";
 
 import { useStore } from "@/stores/store";
-import { FindStackParams, BottomTabParams } from "@/types";
+import {
+  FindStackParamList,
+  Game,
+  ReleaseDate,
+  TabNavigationParamList,
+} from "@/types";
 
 type GameDiscoverScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "GameDiscover">,
-  BottomTabScreenProps<BottomTabParams, "FindTabStack">
+  NativeStackScreenProps<FindStackParamList, "GameDiscover">,
+  BottomTabScreenProps<TabNavigationParamList, "FindTab">
 >;
 
 function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
@@ -67,7 +71,11 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
         }
         indicatorStyle="white"
         data={games}
-        renderItem={({ item }: { item: IGDB.Game.Game }) => (
+        renderItem={({
+          item,
+        }: {
+          item: Game & { release_dates: ReleaseDate[] };
+        }) => (
           <Pressable onPress={() => navigation.push("Game", { game: item })}>
             <GamePoster item={item} />
           </Pressable>

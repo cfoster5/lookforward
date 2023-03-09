@@ -4,7 +4,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import TabStackContext from "contexts/TabStackContext";
 import { calculateWidth } from "helpers/helpers";
 import { reusableStyles } from "helpers/styles";
-import { Navigation } from "interfaces/navigation";
 import { TMDB } from "interfaces/tmdb";
 import React, { useContext, useEffect } from "react";
 import {
@@ -18,10 +17,12 @@ import {
 import FastImage from "react-native-fast-image";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
+import { FindStackParamList, TabNavigationParamList } from "@/types";
+
 interface Props {
   navigation: CompositeNavigationProp<
-    StackNavigationProp<Navigation.FindStackParamList, "Find">,
-    BottomTabNavigationProp<Navigation.TabNavigationParamList, "FindTab">
+    StackNavigationProp<FindStackParamList, "Find">,
+    BottomTabNavigationProp<TabNavigationParamList, "FindTab">
   >;
   person: TMDB.Crew | TMDB.Cast;
 }

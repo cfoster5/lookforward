@@ -11,7 +11,6 @@ import { GamePoster } from "components/Posters/GamePoster";
 import { MoviePoster } from "components/Posters/MoviePoster";
 import { Text as ThemedText } from "components/Themed";
 import TabStackContext from "contexts/TabStackContext";
-import { IGDB } from "interfaces/igdb";
 import { Movie, Person, TMDB, TV } from "interfaces/tmdb";
 import { Search as SearchInterface } from "interfaces/tmdb/search";
 import { DateTime } from "luxon";
@@ -46,7 +45,12 @@ import useDebounce from "./hooks/useDebounce";
 import { MovieOption } from "./types";
 
 import { useStore } from "@/stores/store";
-import { BottomTabParams, FindStackParams } from "@/types";
+import {
+  FindStackParamList,
+  Game,
+  ReleaseDate,
+  TabNavigationParamList,
+} from "@/types";
 
 function reducer(
   state: any,
@@ -88,8 +92,8 @@ export function ListLabel({ text, style }: { text: string; style?: any }) {
 }
 
 type FindScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "Find">,
-  BottomTabScreenProps<BottomTabParams, "FindTabStack">
+  NativeStackScreenProps<FindStackParamList, "Find">,
+  BottomTabScreenProps<TabNavigationParamList, "FindTab">
 >;
 
 function Search({ navigation, route }: FindScreenNavigationProp) {
@@ -368,11 +372,13 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
               viewIsInsideTabBar
               enableResetScrollToCoords={false}
               data={games}
-              renderItem={({ item }: { item: IGDB.Game.Game }) => (
-                <Pressable
-                  onPress={() => navigation.push("Game", { game: item })}
-                >
-                  <GamePoster item={item} />
+              renderItem={({
+                item: game,
+              }: {
+                item: Game & { release_dates: ReleaseDate[] };
+              }) => (
+                <Pressable onPress={() => navigation.push("Game", { game })}>
+                  <GamePoster item={game} />
                 </Pressable>
               )}
               numColumns={2}

@@ -5,13 +5,12 @@ import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { iOSColors } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { IGDB } from "../interfaces/igdb";
-
 import { useStore } from "@/stores/store";
+import { Game, ReleaseDate } from "@/types";
 
 interface Props {
   movieId?: string;
-  game?: IGDB.Game.Game;
+  game?: Game & { release_dates: ReleaseDate[] };
   inCountdown: boolean;
 }
 
@@ -24,8 +23,7 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
   }
   if (game) {
     docId = gameSubs.find(
-      (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
-        releaseDate.game.id === game.id
+      (releaseDate) => releaseDate.game.id === game.id
     )?.documentID;
   }
 

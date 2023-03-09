@@ -5,7 +5,6 @@ import { GamePlatformPicker } from "components/GamePlatformPicker";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
 import { removeSub } from "helpers/helpers";
 import { FirestoreGame } from "interfaces/firebase";
-import { IGDB } from "interfaces/igdb";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Modalize } from "react-native-modalize";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -13,11 +12,11 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import GameDetails from "./components/GameDetails";
 
 import { useStore } from "@/stores/store";
-import { BottomTabParams, FindStackParams } from "@/types";
+import { FindStackParamList, TabNavigationParamList } from "@/types";
 
 type GameScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "Game">,
-  BottomTabScreenProps<BottomTabParams, "FindTabStack">
+  NativeStackScreenProps<FindStackParamList, "Game">,
+  BottomTabScreenProps<TabNavigationParamList, "FindTab">
 >;
 
 function Game({ navigation, route }: GameScreenNavigationProp) {
@@ -47,8 +46,7 @@ function Game({ navigation, route }: GameScreenNavigationProp) {
 
   useEffect(() => {
     const documentID = gameSubs.find(
-      (releaseDate: IGDB.ReleaseDate.ReleaseDate) =>
-        releaseDate.game.id === game.id
+      (releaseDate) => releaseDate.game.id === game.id
     )?.documentID;
 
     setCountdownId(documentID);

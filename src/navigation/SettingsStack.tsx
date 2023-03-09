@@ -4,19 +4,20 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackNavigationProp } from "@react-navigation/stack";
 import React from "react";
 
-import { Navigation } from "../interfaces/navigation";
 import AccountScreen from "../screens/AccountScreen/AccountScreen";
 import DeleteAccountScreen from "../screens/DeleteAccountScreen/DeleteAccountScreen";
 import Settings from "../screens/Settings/Settings";
 
+import { SettingsStackParamList, TabNavigationParamList } from "@/types";
+
 type SettingsStackNavProp = CompositeNavigationProp<
-  StackNavigationProp<Navigation.SettingsStackParamList, "Settings">,
-  BottomTabNavigationProp<Navigation.TabNavigationParamList>
+  StackNavigationProp<SettingsStackParamList, "Settings">,
+  BottomTabNavigationProp<TabNavigationParamList>
 >;
 
 interface Props {
   navigation: SettingsStackNavProp;
-  route: RouteProp<Navigation.TabNavigationParamList, "SettingsTab">;
+  route: RouteProp<TabNavigationParamList, "SettingsTab">;
 }
 
 const Stack = createNativeStackNavigator();

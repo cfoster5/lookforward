@@ -1,8 +1,8 @@
 import { composeReleasesToGames } from "helpers/helpers";
-import { IGDB } from "interfaces/igdb";
 import { useQuery } from "react-query";
 
 import { igdbProxyKey } from "@/config";
+import { Game, ReleaseDate } from "@/types";
 
 async function getGames(searchValue: string) {
   if (!searchValue) {
@@ -17,7 +17,7 @@ async function getGames(searchValue: string) {
         body: `${fields}; where date > ${unixTime} & region = (2,8); limit 100; sort date;`,
       }
     );
-    const json: IGDB.ReleaseDate.ReleaseDate[] = await response.json();
+    const json: ReleaseDate[] = await response.json();
     return composeReleasesToGames(json);
   } else {
     const response = await fetch(
@@ -31,7 +31,8 @@ async function getGames(searchValue: string) {
       limit 50;`,
       }
     );
-    const json = await response.json();
+    const json: (Game & { release_dates: ReleaseDate[] })[] =
+      await response.json();
     return json;
   }
 }

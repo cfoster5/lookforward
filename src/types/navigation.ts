@@ -1,39 +1,36 @@
-import { NavigatorScreenParams } from "@react-navigation/native";
+import { Game, ReleaseDate } from "./igdb";
+import { Movie, MovieWatchProvider, TMDB } from "./tmdb";
+import { Trakt } from "./trakt";
 
-export type AuthStackParams = {
-  Welcome: undefined;
-  "Create Account": undefined;
-  "Sign In": { emailSent: boolean; email: string } | undefined;
-  "Password Reset": undefined;
+export type TabNavigationParamList = {
+  FindTab: undefined;
+  CountdownTab: undefined;
+  SettingsTab: undefined;
 };
 
-export type BottomTabParams = {
-  FindTabStack: NavigatorScreenParams<FindStackParams>;
-  CountdownTabStack: NavigatorScreenParams<CountdownStackParams>;
-  SettingsTabStack: NavigatorScreenParams<SettingsStackParams>;
+type MovieScreens = {
+  Movie: { movieId: Movie["id"]; movieTitle: Movie["title"] };
+  MovieDiscover: {
+    genre?: TMDB.Genre;
+    company?: TMDB.ProductionCompany;
+    keyword?: TMDB.Movie.Keywords;
+    provider?: MovieWatchProvider;
+  };
+  Actor: { personId: number };
+  Collection: { collectionId: number };
 };
 
-export type FindStackParams = {
+export type FindStackParamList = {
   Find: undefined;
-  Movie: { movieId: any; movieTitle: string };
-  Game: { game: any };
-  MovieDiscover: { genre: any; company: any; keyword: any; provider: any };
-  GameDiscover: { genre: any };
-  Actor: { personId: any };
-  Collection: { collectionId: any };
-  // Movie: { ids: AnticipatedMovie["movie"]["ids"] };
-};
+  Game: { game: Game & { release_dates: ReleaseDate[] } };
+  GameDiscover: { genre?: any; company?: any; keyword?: any };
+} & MovieScreens;
 
-export type CountdownStackParams = {
+export type CountdownStackParamList = {
   Countdown: undefined;
-  Movie: { movieId: any; movieTitle: string };
-  MovieDiscover: { genre: any; company: any; keyword: any; provider: any };
-  Actor: { personId: any };
-  Collection: { collectionId: any };
-  // Movie: { ids: AnticipatedMovie["movie"]["ids"] };
-};
+} & MovieScreens;
 
-export type SettingsStackParams = {
+export type SettingsStackParamList = {
   Settings: undefined;
   Account: undefined;
 };

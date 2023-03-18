@@ -43,9 +43,14 @@ export interface Genre {
   name: string;
 }
 
+export interface Company {
+  id: number;
+  name: string;
+}
+
 export interface InvolvedCompany {
   id: number;
-  company: Genre;
+  company: Company;
   developer: boolean;
   porting: boolean;
   publisher: boolean;

@@ -168,17 +168,6 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
     }
   }
 
-  const styles = StyleSheet.create({
-    flatlistContentContainer: {
-      marginHorizontal: 16,
-      // paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
-    },
-    flatlistColumnWrapper: {
-      justifyContent: "space-between",
-      marginBottom: 16,
-    },
-  });
-
   return (
     <>
       <SafeAreaView
@@ -403,5 +392,16 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  flatlistContentContainer: {
+    marginHorizontal: 16,
+    // paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
+  },
+  flatlistColumnWrapper: {
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+});
 
 export default Search;

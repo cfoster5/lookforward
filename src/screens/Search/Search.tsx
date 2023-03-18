@@ -7,9 +7,9 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import CategoryControl from "components/CategoryControl/CategoryControl";
 import { GamePlatformPicker } from "components/GamePlatformPicker";
 import { LoadingScreen } from "components/LoadingScreen";
+import { Poster } from "components/Poster";
 import { GamePoster } from "components/Posters/GamePoster";
 import { MoviePoster } from "components/Posters/MoviePoster";
-import { Text as ThemedText } from "components/Themed";
 import TabStackContext from "contexts/TabStackContext";
 import { Movie, Person, TMDB, TV } from "interfaces/tmdb";
 import { Search as SearchInterface } from "interfaces/tmdb/search";
@@ -43,6 +43,7 @@ import MovieSearchModal from "./components/MovieSearchModal";
 import SearchPerson from "./components/SearchPerson";
 import useDebounce from "./hooks/useDebounce";
 import { MovieOption } from "./types";
+import { ListLabel } from "../../components/ListLabel";
 
 import { useStore } from "@/stores/store";
 import {
@@ -75,20 +76,6 @@ function reducer(
     default:
       return state;
   }
-}
-
-export function ListLabel({ text, style }: { text: string; style?: any }) {
-  return (
-    <ThemedText
-      style={{
-        ...iOSUIKit.bodyEmphasizedObject,
-        marginBottom: 8,
-        ...style,
-      }}
-    >
-      {text}
-    </ThemedText>
-  );
 }
 
 type FindScreenNavigationProp = CompositeScreenProps<
@@ -167,17 +154,6 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
       }
     }
   }
-
-  const styles = StyleSheet.create({
-    flatlistContentContainer: {
-      marginHorizontal: 16,
-      // paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
-    },
-    flatlistColumnWrapper: {
-      justifyContent: "space-between",
-      marginBottom: 16,
-    },
-  });
 
   return (
     <>
@@ -288,20 +264,36 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
               viewIsInsideTabBar
               enableResetScrollToCoords={false}
               data={filteredMovies()}
-              renderItem={({ item }) => (
-                <MoviePoster
-                  pressHandler={() =>
+              renderItem={({ item: movie }) => (
+                // <MoviePoster
+                //   pressHandler={() =>
+                //     navigation.push("Movie", {
+                //       movieId: item.id,
+                //       movieTitle: item.title,
+                //     })
+                //   }
+                //   movie={item}
+                //   posterPath={item.poster_path}
+                //   style={{
+                //     width: windowWidth / 2 - 24,
+                //     height: (windowWidth / 2 - 24) * 1.5,
+                //   }}
+                // />
+                <Poster
+                  handlePress={() =>
                     navigation.push("Movie", {
-                      movieId: item.id,
-                      movieTitle: item.title,
+                      movieId: movie.id,
+                      movieTitle: movie.title,
                     })
                   }
-                  movie={item}
-                  posterPath={item.poster_path}
-                  style={{
-                    width: windowWidth / 2 - 24,
-                    height: (windowWidth / 2 - 24) * 1.5,
-                  }}
+                  id={movie.id}
+                  imageUrl={
+                    movie.poster_path
+                      ? `https://image.tmdb.org/t/p/w300${movie.poster_path}`
+                      : undefined
+                  }
+                  title={movie.title}
+                  style={{ width: windowWidth / 2 - 24, aspectRatio: 2 / 3 }}
                 />
               )}
               numColumns={2}
@@ -377,9 +369,23 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
               }: {
                 item: Game & { release_dates: ReleaseDate[] };
               }) => (
-                <Pressable onPress={() => navigation.push("Game", { game })}>
-                  <GamePoster game={game} />
-                </Pressable>
+                // <Pressable onPress={() => navigation.push("Game", { game })}>
+                //   <GamePoster game={game} />
+                // </Pressable>
+                <Poster
+                  handlePress={() => navigation.push("Game", { game })}
+                  id={game.id}
+                  imageUrl={
+                    game.cover?.url
+                      ? `https:${game.cover.url.replace(
+                          "thumb",
+                          "cover_big_2x"
+                        )}`
+                      : undefined
+                  }
+                  title={game.name}
+                  style={{ width: windowWidth / 2 - 24, aspectRatio: 3 / 4 }}
+                />
               )}
               numColumns={2}
               contentContainerStyle={styles.flatlistContentContainer}
@@ -403,5 +409,16 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  flatlistContentContainer: {
+    marginHorizontal: 16,
+    // paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
+  },
+  flatlistColumnWrapper: {
+    justifyContent: "space-between",
+    marginBottom: 16,
+  },
+});
 
 export default Search;

@@ -32,7 +32,7 @@ export function GamePoster({
           style={{
             ...reusableStyles.gamePoster,
             height:
-              (item.cover.height / item.cover.width) *
+              (game.cover.height / game.cover.width) *
               reusableStyles.gamePoster.width,
           }}
           // source={{ uri: `https:${(data as IGDB.ReleaseDate.ReleaseDate)?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}

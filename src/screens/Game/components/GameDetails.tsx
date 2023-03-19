@@ -17,13 +17,13 @@ import React, { Fragment, useState } from "react";
 import {
   Dimensions,
   FlatList,
+  Image,
   Platform,
   PlatformColor,
   ScrollView,
   Text,
   View,
 } from "react-native";
-import { Image } from "react-native-elements";
 import { iOSUIKit } from "react-native-typography";
 
 import { horizontalListProps } from "../../Movie/Movie";

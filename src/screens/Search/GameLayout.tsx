@@ -13,6 +13,7 @@ import Searchbar from "./components/Searchbar/Searchbar";
 import useDebounce from "./hooks/useDebounce";
 
 import { useStore } from "@/stores/store";
+import { Game, ReleaseDate } from "@/types";
 
 export function GameLayout({ navigation }) {
   const tabBarheight = useBottomTabBarHeight();

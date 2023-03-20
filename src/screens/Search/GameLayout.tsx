@@ -21,12 +21,11 @@ export function GameLayout({ navigation }) {
   const { game } = useStore();
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
-  const { data: games, isPreviousData: isPreviousGamesData } =
-    useGames(debouncedSearch);
+  const { data, isPreviousData } = useGames(debouncedSearch);
 
   useEffect(() => {
     // Open GamePlatformPicker if game is changed
-    modalizeRef.current?.open();
+    if (game) modalizeRef.current?.open();
   }, [game]);
 
   return (
@@ -48,13 +47,13 @@ export function GameLayout({ navigation }) {
           <ListLabel text="Coming Soon" style={{ marginBottom: 0 }} />
         </View>
       )}
-      {!isPreviousGamesData ? (
+      {!isPreviousData ? (
         <>
           <KeyboardAwareFlatList
             extraScrollHeight={tabBarheight}
             viewIsInsideTabBar
             enableResetScrollToCoords={false}
-            data={games}
+            data={data}
             renderItem={({
               item: game,
             }: {

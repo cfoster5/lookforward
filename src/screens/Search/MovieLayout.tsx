@@ -34,21 +34,19 @@ export function MovieLayout({ navigation }) {
   const [option, setOption] = useState<MovieOption>("Coming Soon");
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
-  const {
-    data: movieData,
-    fetchNextPage,
-    hasNextPage,
-    isPreviousData,
-  } = useMovieData(option, debouncedSearch);
+  const { data, fetchNextPage, hasNextPage, isPreviousData } = useMovieData(
+    option,
+    debouncedSearch
+  );
 
-  const movies = movieData?.pages.flatMap((page) => page.results);
+  const movies = data?.pages.flatMap((page) => page.results);
 
   useEffect(() => {
     // Manually get second page on load to fix cases where empty space is rendered before scrolling
-    if (movieData?.pages.filter((page) => page.page === 2).length === 0) {
+    if (data?.pages.filter((page) => page.page === 2).length === 0) {
       fetchNextPage({ pageParam: 2 });
     }
-  }, [movieData]);
+  }, [data]);
 
   useEffect(() => {
     filterModalRef.current?.close();

@@ -34,7 +34,7 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
   const headerHeight = useHeaderHeight();
   const modalizeRef = useRef<Modalize>(null);
   const { data: games, isLoading } = useDiscoverGames({ genreId: genre.id });
-  const { game } = useStore();
+  const { game, setGame } = useStore();
 
   useLayoutEffect(() => {
     let title = "";
@@ -52,6 +52,14 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
     // Open GamePlatformPicker if game is changed
     if (game) modalizeRef.current?.open();
   }, [game]);
+
+  useEffect(() => {
+    // runs on unmount
+    // set game to null so modal is closed as side effect in GamePlatformPicker
+    return () => {
+      setGame(null);
+    };
+  }, []);
 
   return !isLoading ? (
     <>

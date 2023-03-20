@@ -1,7 +1,7 @@
 import firestore from "@react-native-firebase/firestore";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { DateTime } from "luxon";
-import React, { RefObject, useContext } from "react";
+import React, { RefObject, useContext, useEffect } from "react";
 import {
   Platform,
   PlatformColor,
@@ -54,6 +54,10 @@ export function GamePlatformPicker({
   const { user, setGame } = useStore();
   const { theme } = useContext(TabStackContext);
   const tabBarheight = useBottomTabBarHeight();
+
+  useEffect(() => {
+    if (!game) modalizeRef.current?.close();
+  }, [game]);
 
   async function addGameRelease(releaseDate: ReleaseDate) {
     // console.log("releaseDate", releaseDate);

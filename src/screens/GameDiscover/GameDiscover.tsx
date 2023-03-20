@@ -50,7 +50,7 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
 
   useEffect(() => {
     // Open GamePlatformPicker if game is changed
-    modalizeRef.current?.open();
+    if (game) modalizeRef.current?.open();
   }, [game]);
 
   return !isLoading ? (

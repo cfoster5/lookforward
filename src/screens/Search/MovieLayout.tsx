@@ -60,9 +60,9 @@ export function MovieLayout({ navigation }) {
 
   function filteredMovies() {
     if (debouncedSearch) {
-      return movies.filter((movie) => movie.media_type === "movie");
+      return movies?.filter((movie) => movie.media_type === "movie");
     } else {
-      if (option == "Coming Soon") {
+      if (option === "Coming Soon") {
         return movies?.filter((movie) => {
           return movie.release_date
             ? DateTime.fromFormat(movie?.release_date, "yyyy-MM-dd") >=

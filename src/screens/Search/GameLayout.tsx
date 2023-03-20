@@ -22,7 +22,7 @@ export function GameLayout({ navigation }) {
   const { game } = useStore();
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
-  const { data, isPreviousData } = useGames(debouncedSearch);
+  const { data, isLoading } = useGames(debouncedSearch);
 
   useEffect(() => {
     // Open GamePlatformPicker if game is changed
@@ -48,7 +48,7 @@ export function GameLayout({ navigation }) {
           <ListLabel text="Coming Soon" style={{ marginBottom: 0 }} />
         </View>
       )}
-      {!isPreviousData ? (
+      {!isLoading ? (
         <>
           <KeyboardAwareFlatList
             extraScrollHeight={tabBarheight}

@@ -34,7 +34,7 @@ export function MovieLayout({ navigation }) {
   const [option, setOption] = useState<MovieOption>("Coming Soon");
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
-  const { data, fetchNextPage, hasNextPage, isPreviousData } = useMovieData(
+  const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(
     option,
     debouncedSearch
   );
@@ -103,7 +103,7 @@ export function MovieLayout({ navigation }) {
         </View>
       )}
 
-      {!isPreviousData ? (
+      {!isLoading ? (
         <KeyboardAwareFlatList
           extraScrollHeight={tabBarheight}
           viewIsInsideTabBar
@@ -138,7 +138,7 @@ export function MovieLayout({ navigation }) {
           ListHeaderComponent={
             debouncedSearch ? (
               <>
-                {(movies as TMDB.Search.MultiSearchResult[]).filter(
+                {(movies as TMDB.Search.MultiSearchResult[])?.filter(
                   (movie) => movie.media_type === "person"
                 ).length > 0 && (
                   <>
@@ -168,8 +168,8 @@ export function MovieLayout({ navigation }) {
                     />
                   </>
                 )}
-                {movies.filter((movie) => movie.media_type === "movie").length >
-                  0 && <ListLabel text="Movies" />}
+                {movies?.filter((movie) => movie.media_type === "movie")
+                  .length > 0 && <ListLabel text="Movies" />}
               </>
             ) : null
           }

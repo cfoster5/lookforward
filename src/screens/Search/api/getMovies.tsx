@@ -39,7 +39,6 @@ export function useMovieData(option: MovieOption, searchValue: string) {
       getNextPageParam: (lastPage) =>
         lastPage.page !== lastPage.total_pages ? lastPage.page + 1 : undefined,
       // select: (movieData) => movieData.pages.flatMap((page) => page.results),
-      keepPreviousData: true,
     }
   );
 }

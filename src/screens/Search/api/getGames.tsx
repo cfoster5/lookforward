@@ -38,7 +38,5 @@ async function getGames(searchValue: string) {
 }
 
 export function useGames(searchValue: string) {
-  return useQuery(["games", { searchValue }], () => getGames(searchValue), {
-    keepPreviousData: true,
-  });
+  return useQuery(["games", { searchValue }], () => getGames(searchValue));
 }

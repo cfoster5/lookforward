@@ -1,4 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { GamePlatformPicker } from "components/GamePlatformPicker";
 import React from "react";
 import { Platform } from "react-native";
 
@@ -10,10 +11,10 @@ import Movie from "../screens/Movie/Movie";
 import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 import Search from "../screens/Search/Search";
 
-import { FindStackParams } from "@/types";
+import { FindStackParamList } from "@/types";
 
 const Stack = createNativeStackNavigator();
-export function FindStack({ navigation, route }: FindStackParams) {
+export function FindStack({ navigation, route }: FindStackParamList) {
   return (
     <Stack.Navigator>
       <Stack.Screen

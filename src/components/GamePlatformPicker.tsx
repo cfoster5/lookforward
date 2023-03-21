@@ -61,25 +61,20 @@ export function GamePlatformPicker({
 
   async function addGameRelease(releaseDate: ReleaseDate) {
     // console.log("releaseDate", releaseDate);
-    const tempGame = {
-      cover: game.cover,
-      id: game.id,
-      name: game.name,
-      summary: game.summary,
-    };
     // console.log(game);
-    releaseDate.game = tempGame;
+    const { id, name, cover, summary } = game;
     try {
       await firestore()
         .collection("gameReleases")
         .doc(releaseDate.id.toString())
-        .set(releaseDate, { merge: true });
-      await firestore()
-        .collection("gameReleases")
-        .doc(releaseDate.id.toString())
-        .update({
-          subscribers: firestore.FieldValue.arrayUnion(user!.uid),
-        });
+        .set(
+          {
+            ...releaseDate,
+            game: { cover, id, name, summary },
+            subscribers: firestore.FieldValue.arrayUnion(user!.uid),
+          },
+          { merge: true }
+        );
       ReactNativeHapticFeedback.trigger("impactLight", {
         enableVibrateFallback: true,
         ignoreAndroidSystemSettings: false,

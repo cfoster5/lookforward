@@ -7,7 +7,7 @@ import {
 } from "@gorhom/bottom-sheet";
 import firestore from "@react-native-firebase/firestore";
 import { DateTime } from "luxon";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,12 +18,16 @@ import { reusableStyles } from "../helpers/styles";
 import { useStore } from "@/stores/store";
 import { ReleaseDate } from "@/types";
 
-type Props = {
+const RenderBackdrop = (props: BottomSheetBackdropProps) => (
+  <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
+);
+
+type RenderItemProps = {
   handlePress: () => void;
   releaseDate: ReleaseDate;
 };
 
-const RenderItem = ({ handlePress, releaseDate }: Props) => (
+const RenderItem = ({ handlePress, releaseDate }: RenderItemProps) => (
   <Pressable
     onPress={handlePress}
     style={{
@@ -84,25 +88,13 @@ export function GamePlatformPicker() {
     }
   }
 
-  // renders
-  const renderBackdrop = useCallback(
-    (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop
-        {...props}
-        appearsOnIndex={0}
-        disappearsOnIndex={-1}
-      />
-    ),
-    []
-  );
-
   return (
     <BottomSheetModal
       ref={bottomSheetModalRef}
       snapPoints={animatedSnapPoints}
       handleHeight={animatedHandleHeight}
       contentHeight={animatedContentHeight}
-      backdropComponent={renderBackdrop}
+      backdropComponent={RenderBackdrop}
       backgroundStyle={{
         backgroundColor: PlatformColor("secondarySystemBackground"),
       }}

@@ -2,32 +2,23 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { GamePlatformPicker } from "components/GamePlatformPicker";
 import { LoadingScreen } from "components/LoadingScreen";
 import { GamePoster } from "components/Posters/GamePoster";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
-import { Modalize } from "react-native-modalize";
 
 import { ListLabel } from "./Search";
 import { useGames } from "./api/getGames";
 import Searchbar from "./components/Searchbar/Searchbar";
 import useDebounce from "./hooks/useDebounce";
 
-import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
 
 export function GameLayout({ navigation }) {
   const tabBarheight = useBottomTabBarHeight();
   const scrollRef = useRef<FlatList>(null);
-  const modalizeRef = useRef<Modalize>(null);
-  const { game } = useStore();
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
   const { data, isLoading } = useGames(debouncedSearch);
-
-  useEffect(() => {
-    // Open GamePlatformPicker if game is changed
-    if (game) modalizeRef.current?.open();
-  }, [game]);
 
   return (
     <>
@@ -78,7 +69,7 @@ export function GameLayout({ navigation }) {
               ) : null
             }
           />
-          <GamePlatformPicker modalizeRef={modalizeRef} game={game} />
+          <GamePlatformPicker />
         </>
       ) : (
         <LoadingScreen />

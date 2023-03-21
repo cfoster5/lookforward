@@ -1,3 +1,4 @@
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import React, { createContext, useEffect, useState } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -34,7 +35,9 @@ export function AppProvider({ children }: AppProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
       {/* <AuthProviderContext.Provider value={{ user }}> */}
-      <SafeAreaProvider>{children}</SafeAreaProvider>
+      <SafeAreaProvider>
+        <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+      </SafeAreaProvider>
       {/* </AuthProviderContext.Provider> */}
     </QueryClientProvider>
   );

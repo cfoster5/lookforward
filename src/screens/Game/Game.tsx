@@ -1,12 +1,10 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { GamePlatformPicker } from "components/GamePlatformPicker";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
 import { removeSub } from "helpers/helpers";
 import { FirestoreGame } from "interfaces/firebase";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Modalize } from "react-native-modalize";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import GameDetails from "./components/GameDetails";
@@ -21,9 +19,8 @@ type GameScreenNavigationProp = CompositeScreenProps<
 
 function Game({ navigation, route }: GameScreenNavigationProp) {
   const { game } = route.params;
-  const modalizeRef = useRef<Modalize>(null);
   const [countdownId, setCountdownId] = useState<FirestoreGame["documentID"]>();
-  const { user, gameSubs } = useStore();
+  const { user, gameSubs, bottomSheetModalRef, setGame } = useStore();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,11 +30,14 @@ function Game({ navigation, route }: GameScreenNavigationProp) {
           <Item
             title="search"
             iconName={countdownId ? "checkmark-outline" : "add-outline"}
-            onPress={() =>
-              !countdownId
-                ? modalizeRef.current?.open()
-                : removeSub("gameReleases", countdownId, user!.uid)
-            }
+            onPress={() => {
+              if (!countdownId) {
+                setGame(game);
+                bottomSheetModalRef.current?.present();
+              } else {
+                removeSub("gameReleases", countdownId, user!.uid);
+              }
+            }}
           />
         </HeaderButtons>
       ),
@@ -52,12 +52,7 @@ function Game({ navigation, route }: GameScreenNavigationProp) {
     setCountdownId(documentID);
   }, [gameSubs]);
 
-  return (
-    <>
-      <GameDetails navigation={navigation} game={game} />
-      <GamePlatformPicker modalizeRef={modalizeRef} game={game} />
-    </>
-  );
+  return <GameDetails navigation={navigation} game={game} />;
 }
 
 export default Game;

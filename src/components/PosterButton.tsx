@@ -15,7 +15,7 @@ interface Props {
 }
 
 function PosterButton({ movieId, game, inCountdown }: Props) {
-  const { user, setGame, gameSubs } = useStore();
+  const { user, setGame, gameSubs, bottomSheetModalRef } = useStore();
 
   let docId = "";
   if (movieId) {
@@ -94,7 +94,11 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
       else addMovieToList();
     } else if (game) {
       if (inCountdown) deleteItem("gameReleases");
-      else setGame(game);
+      // else setGame(game);
+      else {
+        setGame(game);
+        bottomSheetModalRef.current?.present();
+      }
       // inCountdown ? deleteItem("gameReleases") : openModal(game);
       // Open platform modal directly here
     }

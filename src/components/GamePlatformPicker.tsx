@@ -1,24 +1,22 @@
-import firestore from "@react-native-firebase/firestore";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { DateTime } from "luxon";
-import React, { RefObject, useContext, useEffect } from "react";
 import {
-  Platform,
-  PlatformColor,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetFlatList,
+  BottomSheetModal,
+  useBottomSheetDynamicSnapPoints,
+} from "@gorhom/bottom-sheet";
+import firestore from "@react-native-firebase/firestore";
+import { DateTime } from "luxon";
+import React, { useCallback, useMemo } from "react";
+import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
-import { Modalize } from "react-native-modalize";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import TabStackContext from "../contexts/TabStackContext";
 import { reusableStyles } from "../helpers/styles";
 
 import { useStore } from "@/stores/store";
-import { Game, ReleaseDate } from "@/types";
+import { ReleaseDate } from "@/types";
 
 type Props = {
   handlePress: () => void;
@@ -32,6 +30,8 @@ const RenderItem = ({ handlePress, releaseDate }: Props) => (
       flex: 1,
       flexDirection: "row",
       justifyContent: "space-between",
+      minHeight: 44,
+      alignItems: "center",
     }}
   >
     {/* <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}> */}
@@ -42,22 +42,9 @@ const RenderItem = ({ handlePress, releaseDate }: Props) => (
   </Pressable>
 );
 
-export function GamePlatformPicker({
-  modalizeRef,
-  game,
-}: {
-  modalizeRef: RefObject<Modalize>;
-  game: Game & {
-    release_dates: ReleaseDate[];
-  };
-}) {
-  const { user, setGame } = useStore();
-  const { theme } = useContext(TabStackContext);
-  const tabBarheight = useBottomTabBarHeight();
-
-  useEffect(() => {
-    if (!game) modalizeRef.current?.close();
-  }, [game]);
+export function GamePlatformPicker() {
+  const { user, bottomSheetModalRef, game } = useStore();
+  const { bottom: safeBottomArea } = useSafeAreaInsets();
 
   async function addGameRelease(releaseDate: ReleaseDate) {
     // console.log("releaseDate", releaseDate);
@@ -84,48 +71,108 @@ export function GamePlatformPicker({
         enableVibrateFallback: true,
         ignoreAndroidSystemSettings: false,
       });
-      modalizeRef.current?.close();
+      bottomSheetModalRef.current?.dismiss();
     } catch (error) {
       console.error("Error writing document: ", error);
     }
   }
 
+  // const snapPoints = useMemo(() => ["25%", "50%"], []);
+
+  const snapPoints = useMemo(() => ["CONTENT_HEIGHT"], []);
+
+  const {
+    animatedHandleHeight,
+    animatedSnapPoints,
+    animatedContentHeight,
+    handleContentLayout,
+  } = useBottomSheetDynamicSnapPoints(snapPoints); // <— this is the hook
+
+  // renders
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop {...props} pressBehavior="close" />
+    ),
+    []
+  );
+
   return (
-    <Modalize
-      ref={modalizeRef}
-      adjustToContentHeight
-      flatListProps={{
-        data: game?.release_dates.filter(
+    <BottomSheetModal
+      ref={bottomSheetModalRef}
+      snapPoints={animatedSnapPoints}
+      handleHeight={animatedHandleHeight}
+      contentHeight={animatedContentHeight}
+      // snapPoints={snapPoints}
+      backdropComponent={renderBackdrop}
+      backgroundStyle={{
+        backgroundColor: PlatformColor("secondarySystemBackground"),
+      }}
+      handleIndicatorStyle={{
+        backgroundColor: PlatformColor("systemGray"),
+      }}
+      style={{ paddingHorizontal: 16 }}
+    >
+      <BottomSheetFlatList
+        data={game?.release_dates.filter(
           (release_date) =>
             release_date.region === 2 || release_date.region === 8
-        ),
-        renderItem: ({ item }: { item: ReleaseDate }) => (
+        )}
+        renderItem={({ item: releaseDate }) => (
           <RenderItem
-            handlePress={() => addGameRelease(item)}
-            releaseDate={item}
+            key={releaseDate.id}
+            handlePress={() => addGameRelease(releaseDate)}
+            releaseDate={releaseDate}
           />
-        ),
-        ItemSeparatorComponent: () => (
+        )}
+        ItemSeparatorComponent={() => (
           <View
             style={{
-              marginVertical: 16,
               borderBottomWidth: StyleSheet.hairlineWidth,
               borderColor: PlatformColor("separator"),
             }}
           />
-        ),
-        keyExtractor: (item: ReleaseDate) => item.id.toString(),
-        showsVerticalScrollIndicator: false,
-      }}
-      childrenStyle={{
-        marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
-      }}
-      modalStyle={{
-        backgroundColor: PlatformColor("secondarySystemBackground"),
-        paddingHorizontal: 16,
-        paddingVertical: 16,
-      }}
-      onClosed={() => setGame(null)}
-    />
+        )}
+        onLayout={handleContentLayout}
+        scrollEnabled={false}
+        style={{ paddingBottom: safeBottomArea }}
+      />
+    </BottomSheetModal>
+
+    // <Modalize
+    //   ref={modalizeRef}
+    //   adjustToContentHeight
+    //   flatListProps={{
+    //     data: game?.release_dates.filter(
+    //       (release_date) =>
+    //         release_date.region === 2 || release_date.region === 8
+    //     ),
+    //     renderItem: ({ item }: { item: ReleaseDate }) => (
+    //       <RenderItem
+    //         handlePress={() => addGameRelease(item)}
+    //         releaseDate={item}
+    //       />
+    //     ),
+    //     ItemSeparatorComponent: () => (
+    //       <View
+    //         style={{
+    //           marginVertical: 16,
+    //           borderBottomWidth: StyleSheet.hairlineWidth,
+    //           borderColor: PlatformColor("separator"),
+    //         }}
+    //       />
+    //     ),
+    //     keyExtractor: (item: ReleaseDate) => item.id.toString(),
+    //     showsVerticalScrollIndicator: false,
+    //   }}
+    //   childrenStyle={{
+    //     marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
+    //   }}
+    //   modalStyle={{
+    //     backgroundColor: PlatformColor("secondarySystemBackground"),
+    //     paddingHorizontal: 16,
+    //     paddingVertical: 16,
+    //   }}
+    //   onClosed={() => setGame(null)}
+    // />
   );
 }

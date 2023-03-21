@@ -45,6 +45,13 @@ const RenderItem = ({ handlePress, releaseDate }: Props) => (
 export function GamePlatformPicker() {
   const { user, bottomSheetModalRef, game } = useStore();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
+  const snapPoints = useMemo(() => ["CONTENT_HEIGHT"], []);
+  const {
+    animatedHandleHeight,
+    animatedSnapPoints,
+    animatedContentHeight,
+    handleContentLayout,
+  } = useBottomSheetDynamicSnapPoints(snapPoints);
 
   async function addGameRelease(releaseDate: ReleaseDate) {
     // console.log("releaseDate", releaseDate);
@@ -77,21 +84,14 @@ export function GamePlatformPicker() {
     }
   }
 
-  // const snapPoints = useMemo(() => ["25%", "50%"], []);
-
-  const snapPoints = useMemo(() => ["CONTENT_HEIGHT"], []);
-
-  const {
-    animatedHandleHeight,
-    animatedSnapPoints,
-    animatedContentHeight,
-    handleContentLayout,
-  } = useBottomSheetDynamicSnapPoints(snapPoints); // <— this is the hook
-
   // renders
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
-      <BottomSheetBackdrop {...props} pressBehavior="close" />
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+      />
     ),
     []
   );
@@ -102,7 +102,6 @@ export function GamePlatformPicker() {
       snapPoints={animatedSnapPoints}
       handleHeight={animatedHandleHeight}
       contentHeight={animatedContentHeight}
-      // snapPoints={snapPoints}
       backdropComponent={renderBackdrop}
       backgroundStyle={{
         backgroundColor: PlatformColor("secondarySystemBackground"),
@@ -137,42 +136,5 @@ export function GamePlatformPicker() {
         style={{ paddingBottom: safeBottomArea }}
       />
     </BottomSheetModal>
-
-    // <Modalize
-    //   ref={modalizeRef}
-    //   adjustToContentHeight
-    //   flatListProps={{
-    //     data: game?.release_dates.filter(
-    //       (release_date) =>
-    //         release_date.region === 2 || release_date.region === 8
-    //     ),
-    //     renderItem: ({ item }: { item: ReleaseDate }) => (
-    //       <RenderItem
-    //         handlePress={() => addGameRelease(item)}
-    //         releaseDate={item}
-    //       />
-    //     ),
-    //     ItemSeparatorComponent: () => (
-    //       <View
-    //         style={{
-    //           marginVertical: 16,
-    //           borderBottomWidth: StyleSheet.hairlineWidth,
-    //           borderColor: PlatformColor("separator"),
-    //         }}
-    //       />
-    //     ),
-    //     keyExtractor: (item: ReleaseDate) => item.id.toString(),
-    //     showsVerticalScrollIndicator: false,
-    //   }}
-    //   childrenStyle={{
-    //     marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
-    //   }}
-    //   modalStyle={{
-    //     backgroundColor: PlatformColor("secondarySystemBackground"),
-    //     paddingHorizontal: 16,
-    //     paddingVertical: 16,
-    //   }}
-    //   onClosed={() => setGame(null)}
-    // />
   );
 }

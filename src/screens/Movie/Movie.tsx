@@ -1,3 +1,4 @@
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { BlurView } from "@react-native-community/blur";
 import {
   BottomTabScreenProps,
@@ -40,14 +41,18 @@ import {
 } from "react-native";
 import FastImage from "react-native-fast-image";
 import ImageView from "react-native-image-viewing";
-import { Modalize } from "react-native-modalize";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
+import { useMovie } from "./api/getMovie";
+import { DiscoverListLabel } from "./components/DiscoverListLabel";
+import { MediaSelection } from "./components/MediaSelection";
+import Person from "./components/Person";
+import WatchProvidersModal from "./components/WatchProvidersModal";
 import {
   calculateWidth,
   removeSub,
@@ -58,11 +63,6 @@ import { reusableStyles } from "../../helpers/styles";
 import { FirestoreMovie } from "../../interfaces/firebase";
 import { ReleaseDate } from "../../interfaces/tmdb";
 import { ListLabel } from "../Search/Search";
-import { useMovie } from "./api/getMovie";
-import { DiscoverListLabel } from "./components/DiscoverListLabel";
-import { MediaSelection } from "./components/MediaSelection";
-import Person from "./components/Person";
-import WatchProvidersModal from "./components/WatchProvidersModal";
 
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams } from "@/types";
@@ -175,7 +175,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
   const [creditsSelection, setCreditsSelection] = useState("Cast");
 
-  const providersModalRef = useRef<Modalize>(null);
+  const modalRef = useRef<BottomSheetModal>();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -332,7 +332,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 }}
               >
                 <ListLabel text="Watch on" style={{ marginBottom: 0 }} />
-                <Pressable onPress={() => providersModalRef.current?.open()}>
+                <Pressable onPress={() => modalRef.current?.present()}>
                   <Text
                     style={[
                       iOSUIKit.body,
@@ -656,7 +656,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         }
       />
       <WatchProvidersModal
-        modalRef={providersModalRef}
+        modalRef={modalRef}
         providers={movieDetails!["watch/providers"].results.US}
       />
     </>

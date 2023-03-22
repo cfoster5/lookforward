@@ -31,6 +31,7 @@ export const PurchaseOption = ({ item }: Props) => (
       flexDirection: "row",
       justifyContent: "space-between",
       alignItems: "center",
+      minHeight: 44,
     })}
   >
     <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>

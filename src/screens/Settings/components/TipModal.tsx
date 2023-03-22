@@ -1,28 +1,29 @@
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { DynamicHeightModal } from "components/DynamicHeightModal";
 import TabStackContext from "contexts/TabStackContext";
 import { connectAsync, IAPItemDetails } from "expo-in-app-purchases";
 import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  FlatList,
   Platform,
   PlatformColor,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { Modalize } from "react-native-modalize";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { useGetPurchaseOptions } from "../hooks/useGetPurchaseOptions";
 import { PurchaseOption } from "./PurchaseOption";
+import { useGetPurchaseOptions } from "../hooks/useGetPurchaseOptions";
 
-type Props = { modalizeRef: any };
+type Props = { modalRef: any };
 
-export const TipModal = ({ modalizeRef }: Props) => {
-  const tabBarheight = useBottomTabBarHeight();
+export const TipModal = ({ modalRef }: Props) => {
+  const { bottom: safeBottomArea } = useSafeAreaInsets();
   const { theme } = useContext(TabStackContext);
   const [connected, setConnected] = useState(false);
-  const { purchaseOptions, loadingOptions } = useGetPurchaseOptions(connected);
+  const { purchaseOptions } = useGetPurchaseOptions(connected);
 
   useEffect(() => {
     async function connect() {
@@ -39,13 +40,12 @@ export const TipModal = ({ modalizeRef }: Props) => {
   }, []);
 
   return (
-    <Modalize
-      ref={modalizeRef}
-      flatListProps={{
-        data: purchaseOptions?.sort(
+    <DynamicHeightModal modalRef={modalRef}>
+      <FlatList
+        data={purchaseOptions?.sort(
           ({ priceAmountMicros: a, priceAmountMicros: b }) => a - b
-        ),
-        ListHeaderComponent: (
+        )}
+        ListHeaderComponent={
           <Text
             style={[
               { paddingBottom: 32 },
@@ -55,30 +55,23 @@ export const TipModal = ({ modalizeRef }: Props) => {
             If you're feeling generous and would like to support LookForward's
             development further, any tip helps!
           </Text>
-        ),
-        renderItem: PurchaseOption,
-        ItemSeparatorComponent: () => (
+        }
+        renderItem={PurchaseOption}
+        ItemSeparatorComponent={() => (
           <View
             style={{
-              marginVertical: 16,
+              marginVertical: 4,
               borderBottomWidth: StyleSheet.hairlineWidth,
               borderColor: PlatformColor("separator"),
             }}
           />
-        ),
-        keyExtractor: (item: IAPItemDetails) => item.productId,
-        ListEmptyComponent: <ActivityIndicator />,
-        showsVerticalScrollIndicator: false,
-      }}
-      adjustToContentHeight
-      childrenStyle={{
-        marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
-      }}
-      modalStyle={{
-        backgroundColor: PlatformColor("systemGray6"),
-        paddingHorizontal: 16,
-        paddingVertical: 16,
-      }}
-    />
+        )}
+        keyExtractor={(item: IAPItemDetails) => item.productId}
+        ListEmptyComponent={ActivityIndicator}
+        showsVerticalScrollIndicator={false}
+        scrollEnabled={false}
+        style={{ paddingBottom: safeBottomArea, paddingHorizontal: 16 }}
+      />
+    </DynamicHeightModal>
   );
 };

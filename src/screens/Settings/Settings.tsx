@@ -1,9 +1,9 @@
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 import { reusableStyles } from "helpers/styles";
 import React, { useEffect, useRef, useState } from "react";
 import { Platform, Text, View } from "react-native";
-import { Modalize } from "react-native-modalize";
 
 import { NotificationSetting } from "./components/NotificationSetting";
 import { SettingNavButton } from "./components/SettingNavButton";
@@ -21,7 +21,7 @@ function Settings({ navigation }) {
     week: false,
   });
 
-  const modalizeRef = useRef<Modalize>(null);
+  const modalRef = useRef<BottomSheetModal>();
   const firstRender = useFirstRender();
 
   useEffect(() => {
@@ -92,7 +92,7 @@ function Settings({ navigation }) {
         )}
         {Platform.OS === "ios" && (
           <SettingNavButton
-            handlePress={() => modalizeRef.current?.open()}
+            handlePress={() => modalRef.current?.present()}
             text="Tip Jar"
           />
         )}
@@ -101,7 +101,7 @@ function Settings({ navigation }) {
           text="Account"
         />
       </View>
-      {Platform.OS === "ios" && <TipModal modalizeRef={modalizeRef} />}
+      {Platform.OS === "ios" && <TipModal modalRef={modalRef} />}
     </>
   );
 }

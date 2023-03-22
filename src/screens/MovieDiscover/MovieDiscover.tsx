@@ -1,3 +1,4 @@
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   BottomTabScreenProps,
   useBottomTabBarHeight,
@@ -7,28 +8,22 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMovieWatchProviders } from "api/getMovieWatchProviders";
 import ButtonMultiState from "components/ButtonMultiState";
+import { DynamicHeightModal } from "components/DynamicHeightModal";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
 import { LoadingScreen } from "components/LoadingScreen";
 import { MoviePoster } from "components/Posters/MoviePoster";
-import TabStackContext from "contexts/TabStackContext";
 import { targetedProviders } from "helpers/helpers";
 import { Movie } from "interfaces/tmdb";
-import React, {
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   FlatList,
   Platform,
-  PlatformColor,
   Text,
   useWindowDimensions,
+  View,
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import { Modalize } from "react-native-modalize";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -50,12 +45,12 @@ function MovieDiscover({
   route,
   navigation,
 }: MovieDiscoverScreenNavigationProp) {
+  const { bottom: safeBottomArea } = useSafeAreaInsets();
   const { width: windowWidth } = useWindowDimensions();
   const { genre, company, keyword, provider } = route.params;
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const { theme } = useContext(TabStackContext);
   const [sortMethod, setSortMethod] = useState("popularity.desc");
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
     useState<number>(0);
@@ -75,7 +70,7 @@ function MovieDiscover({
     sortMethod,
   });
   const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
-  const modalRef = useRef<Modalize>(null);
+  const modalRef = useRef<BottomSheetModal>();
 
   useEffect(() => {
     if (provider) {
@@ -120,7 +115,7 @@ function MovieDiscover({
           <Item
             title="search"
             iconName="funnel-outline"
-            onPress={() => modalRef.current?.open()}
+            onPress={() => modalRef.current?.present()}
           />
         </HeaderButtons>
       ),
@@ -174,94 +169,88 @@ function MovieDiscover({
     );
   }
 
-  function DiscoveryFilterModal() {
+  function DiscoveryFilterModal({ modalRef }) {
     return (
-      <Modalize
-        ref={modalRef}
-        adjustToContentHeight
-        childrenStyle={{
-          marginBottom: Platform.OS === "ios" ? tabBarheight + 16 : 16,
-        }}
-        modalStyle={
-          theme === "dark"
-            ? { backgroundColor: PlatformColor("secondarySystemBackground") }
-            : {}
-        }
-      >
-        <ModalListWrapper text="Sort By">
-          <FlatList
-            scrollEnabled={false}
-            contentContainerStyle={{
-              alignSelf: "flex-start",
-              paddingLeft: 16,
-              paddingRight: 8,
-            }}
-            numColumns={Math.ceil(sortOptions.length / 2)}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            data={sortOptions}
-            renderItem={({ item }) => (
-              <ButtonMultiState
-                text={item.friendly}
-                selectedVal={sortMethod}
-                onPress={() => setSortMethod(item.actual)}
-                test={item.actual}
-                children={
-                  <Ionicons
-                    name={item.direction === "Up" ? "arrow-up" : "arrow-down"}
-                    color="white"
-                  />
-                }
-              />
-            )}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </ModalListWrapper>
-        <ModalListWrapper text="Provider">
-          <FlatList
-            scrollEnabled={false}
-            contentContainerStyle={{
-              alignSelf: "flex-start",
-              paddingLeft: 16,
-              paddingRight: 8,
-            }}
-            numColumns={Math.ceil(targetedProviders.length / 3)}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            data={[
-              {
-                display_priority: 0,
-                logo_path: "",
-                provider_id: 0,
-                provider_name: "Any",
-              },
-              ...movieWatchProviders,
-            ]
-              .filter(
-                (provider) =>
-                  targetedProviders.indexOf(provider.provider_name) > -1
-              )
-              .filter(
-                (v, i, a) =>
-                  a.findIndex((t) => t.provider_name === v.provider_name) === i
-              )
-              .sort((a, b) =>
-                a.provider_name
-                  .toLowerCase()
-                  .localeCompare(b.provider_name.toLowerCase())
+      <DynamicHeightModal modalRef={modalRef}>
+        <View style={{ paddingBottom: safeBottomArea }}>
+          <ModalListWrapper text="Sort By">
+            <FlatList
+              scrollEnabled={false}
+              contentContainerStyle={{
+                alignSelf: "flex-start",
+                paddingLeft: 16,
+                paddingRight: 8,
+              }}
+              numColumns={Math.ceil(sortOptions.length / 2)}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              data={sortOptions}
+              renderItem={({ item }) => (
+                <ButtonMultiState
+                  text={item.friendly}
+                  selectedVal={sortMethod}
+                  onPress={() => setSortMethod(item.actual)}
+                  test={item.actual}
+                  children={
+                    <Ionicons
+                      name={item.direction === "Up" ? "arrow-up" : "arrow-down"}
+                      color="white"
+                    />
+                  }
+                />
               )}
-            renderItem={({ item }) => (
-              <ButtonMultiState
-                text={item.provider_name}
-                selectedVal={selectedMovieWatchProvider}
-                onPress={() => setSelectedMovieWatchProvider(item.provider_id)}
-                test={item.provider_id}
-              />
-            )}
-            keyExtractor={(item) => item.provider_id.toString()}
-          />
-        </ModalListWrapper>
-      </Modalize>
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </ModalListWrapper>
+          <ModalListWrapper text="Provider">
+            <FlatList
+              scrollEnabled={false}
+              contentContainerStyle={{
+                alignSelf: "flex-start",
+                paddingLeft: 16,
+                paddingRight: 8,
+              }}
+              numColumns={Math.ceil(targetedProviders.length / 3)}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              data={[
+                {
+                  display_priority: 0,
+                  logo_path: "",
+                  provider_id: 0,
+                  provider_name: "Any",
+                },
+                ...movieWatchProviders,
+              ]
+                .filter(
+                  (provider) =>
+                    targetedProviders.indexOf(provider.provider_name) > -1
+                )
+                .filter(
+                  (v, i, a) =>
+                    a.findIndex((t) => t.provider_name === v.provider_name) ===
+                    i
+                )
+                .sort((a, b) =>
+                  a.provider_name
+                    .toLowerCase()
+                    .localeCompare(b.provider_name.toLowerCase())
+                )}
+              renderItem={({ item }) => (
+                <ButtonMultiState
+                  text={item.provider_name}
+                  selectedVal={selectedMovieWatchProvider}
+                  onPress={() =>
+                    setSelectedMovieWatchProvider(item.provider_id)
+                  }
+                  test={item.provider_id}
+                />
+              )}
+              keyExtractor={(item) => item.provider_id.toString()}
+            />
+          </ModalListWrapper>
+        </View>
+      </DynamicHeightModal>
     );
   }
 
@@ -311,7 +300,7 @@ function MovieDiscover({
         onEndReached={() => (hasNextPage ? fetchNextPage() : null)}
         onEndReachedThreshold={1.5}
       />
-      <DiscoveryFilterModal />
+      <DiscoveryFilterModal modalRef={modalRef} />
     </>
   );
 }

@@ -1,3 +1,4 @@
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useScrollToTop } from "@react-navigation/native";
 import { LoadingScreen } from "components/LoadingScreen";
@@ -14,12 +15,11 @@ import {
   View,
 } from "react-native";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
-import { Modalize } from "react-native-modalize";
 import { iOSUIKit } from "react-native-typography";
 
 import { ListLabel } from "./Search";
 import { useMovieData } from "./api/getMovies";
-import MovieSearchModal from "./components/MovieSearchModal";
+import { MovieSearchModal } from "./components/MovieSearchModal";
 import SearchPerson from "./components/SearchPerson";
 import Searchbar from "./components/Searchbar/Searchbar";
 import useDebounce from "./hooks/useDebounce";
@@ -28,7 +28,7 @@ import { MovieOption } from "./types";
 export function MovieLayout({ navigation }) {
   const tabBarheight = useBottomTabBarHeight();
   const { width: windowWidth } = useWindowDimensions();
-  const filterModalRef = useRef<Modalize>(null);
+  const modalRef = useRef<BottomSheetModal>();
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
   const [option, setOption] = useState<MovieOption>("Coming Soon");
@@ -49,7 +49,7 @@ export function MovieLayout({ navigation }) {
   }, [data]);
 
   useEffect(() => {
-    filterModalRef.current?.close();
+    modalRef.current?.dismiss();
     // https://stackoverflow.com/a/64232399/5648619
     if (scrollRef !== null && scrollRef.current !== null && movies) {
       if (typeof scrollRef.current.scrollToIndex === "function") {
@@ -93,7 +93,7 @@ export function MovieLayout({ navigation }) {
           }}
         >
           <ListLabel text={option} style={{ marginBottom: 0 }} />
-          <Pressable onPress={() => filterModalRef.current?.open()}>
+          <Pressable onPress={() => modalRef.current?.present()}>
             <Text
               style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}
             >
@@ -179,7 +179,7 @@ export function MovieLayout({ navigation }) {
       )}
       <MovieSearchModal
         navigation={navigation}
-        filterModalRef={filterModalRef}
+        modalRef={modalRef}
         selectedOption={option}
         setSelectedOption={(option) => setOption(option)}
       />

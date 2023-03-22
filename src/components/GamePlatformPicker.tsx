@@ -1,26 +1,23 @@
-import {
-  BottomSheetBackdrop,
-  BottomSheetBackdropProps,
-  BottomSheetFlatList,
-  BottomSheetModal,
-  useBottomSheetDynamicSnapPoints,
-} from "@gorhom/bottom-sheet";
 import firestore from "@react-native-firebase/firestore";
 import { DateTime } from "luxon";
-import React, { useMemo } from "react";
-import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
+import React from "react";
+import {
+  FlatList,
+  PlatformColor,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
+import { DynamicHeightModal } from "./DynamicHeightModal";
 import { reusableStyles } from "../helpers/styles";
 
 import { useStore } from "@/stores/store";
 import { ReleaseDate } from "@/types";
-
-const RenderBackdrop = (props: BottomSheetBackdropProps) => (
-  <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
-);
 
 type RenderItemProps = {
   handlePress: () => void;
@@ -49,13 +46,6 @@ const RenderItem = ({ handlePress, releaseDate }: RenderItemProps) => (
 export function GamePlatformPicker() {
   const { user, bottomSheetModalRef, game } = useStore();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const snapPoints = useMemo(() => ["CONTENT_HEIGHT"], []);
-  const {
-    animatedHandleHeight,
-    animatedSnapPoints,
-    animatedContentHeight,
-    handleContentLayout,
-  } = useBottomSheetDynamicSnapPoints(snapPoints);
 
   async function addGameRelease(releaseDate: ReleaseDate) {
     // console.log("releaseDate", releaseDate);
@@ -84,21 +74,8 @@ export function GamePlatformPicker() {
   }
 
   return (
-    <BottomSheetModal
-      ref={bottomSheetModalRef}
-      snapPoints={animatedSnapPoints}
-      handleHeight={animatedHandleHeight}
-      contentHeight={animatedContentHeight}
-      backdropComponent={RenderBackdrop}
-      backgroundStyle={{
-        backgroundColor: PlatformColor("secondarySystemBackground"),
-      }}
-      handleIndicatorStyle={{
-        backgroundColor: PlatformColor("systemGray"),
-      }}
-      style={{ paddingHorizontal: 16 }}
-    >
-      <BottomSheetFlatList
+    <DynamicHeightModal modalRef={bottomSheetModalRef}>
+      <FlatList
         data={game?.release_dates.filter(
           (release_date) =>
             release_date.region === 2 || release_date.region === 8
@@ -113,15 +90,15 @@ export function GamePlatformPicker() {
         ItemSeparatorComponent={() => (
           <View
             style={{
+              marginVertical: 4,
               borderBottomWidth: StyleSheet.hairlineWidth,
               borderColor: PlatformColor("separator"),
             }}
           />
         )}
-        onLayout={handleContentLayout}
         scrollEnabled={false}
-        style={{ paddingBottom: safeBottomArea }}
+        style={{ paddingBottom: safeBottomArea, paddingHorizontal: 16 }}
       />
-    </BottomSheetModal>
+    </DynamicHeightModal>
   );
 }

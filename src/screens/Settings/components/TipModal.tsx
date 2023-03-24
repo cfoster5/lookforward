@@ -1,50 +1,54 @@
 import { DynamicHeightModal } from "components/DynamicHeightModal";
 import TabStackContext from "contexts/TabStackContext";
-import { connectAsync, IAPItemDetails } from "expo-in-app-purchases";
 import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
-  Platform,
   PlatformColor,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { PurchaseOption } from "./PurchaseOption";
-import { useGetPurchaseOptions } from "../hooks/useGetPurchaseOptions";
 
 type Props = { modalRef: any };
 
 export const TipModal = ({ modalRef }: Props) => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
   const { theme } = useContext(TabStackContext);
-  const [connected, setConnected] = useState(false);
-  const { purchaseOptions } = useGetPurchaseOptions(connected);
+  const [packages, setPackages] = useState<PurchasesPackage[]>([]);
+  const [isPurchasing, setIsPurchasing] = useState<
+    PurchasesPackage["identifier"] | null
+  >(null);
 
   useEffect(() => {
-    async function connect() {
-      if (Platform.OS === "ios") {
-        try {
-          await connectAsync();
-          setConnected(true);
-        } catch {
-          console.log(`connection error`);
+    // Get current available packages
+    const getPackages = async () => {
+      try {
+        const offerings = await Purchases.getOfferings();
+        if (
+          offerings.current !== null &&
+          offerings.current.availablePackages.length !== 0
+        ) {
+          setPackages(offerings.current.availablePackages);
         }
+      } catch (e) {
+        Alert.alert("Error getting offers", e.message);
       }
-    }
-    connect();
+    };
+
+    getPackages();
   }, []);
 
   return (
     <DynamicHeightModal modalRef={modalRef}>
       <FlatList
-        data={purchaseOptions?.sort(
-          ({ priceAmountMicros: a, priceAmountMicros: b }) => a - b
-        )}
+        data={packages?.sort(({ product: a, product: b }) => a.price - b.price)}
         ListHeaderComponent={
           <Text
             style={[
@@ -56,7 +60,13 @@ export const TipModal = ({ modalRef }: Props) => {
             development further, any tip helps!
           </Text>
         }
-        renderItem={PurchaseOption}
+        renderItem={({ item }) => (
+          <PurchaseOption
+            item={item}
+            isPurchasing={isPurchasing}
+            setIsPurchasing={setIsPurchasing}
+          />
+        )}
         ItemSeparatorComponent={() => (
           <View
             style={{
@@ -66,7 +76,7 @@ export const TipModal = ({ modalRef }: Props) => {
             }}
           />
         )}
-        keyExtractor={(item: IAPItemDetails) => item.productId}
+        keyExtractor={(item) => item.identifier}
         ListEmptyComponent={ActivityIndicator}
         showsVerticalScrollIndicator={false}
         scrollEnabled={false}

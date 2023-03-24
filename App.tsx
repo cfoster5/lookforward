@@ -21,13 +21,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
-import {
-  finishTransactionAsync,
-  IAPResponseCode,
-  setPurchaseListener,
-} from "expo-in-app-purchases";
 import React, { useEffect, useState } from "react";
-import { Platform, StatusBar, View } from "react-native";
+import { StatusBar, View } from "react-native";
+import Purchases from "react-native-purchases";
 import SplashScreen from "react-native-splash-screen";
 
 import Navigation from "./src/navigation";
@@ -60,6 +56,24 @@ export default function App() {
   const [initializing, setInitializing] = useState(true);
   const { user } = useStore();
   const [colorScheme] = useState("dark");
+
+  useEffect(() => {
+    /* Enable debug logs before calling `setup`. */
+    Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
+
+    /*
+      Initialize the RevenueCat Purchases SDK.
+      - appUserID is nil, so an anonymous ID will be generated automatically by the Purchases SDK. Read more about Identifying Users here: https://docs.revenuecat.com/docs/user-ids
+      - observerMode is false, so Purchases will automatically handle finishing transactions. Read more about Observer Mode here: https://docs.revenuecat.com/docs/observer-mode
+      - useAmazon is false, so it will use the Play Store in Android and App Store in iOS by default.
+      */
+    Purchases.configure({
+      apiKey: "appl_qxPtMlTGjvHkhlNlnKlOenNikGN",
+      appUserID: null,
+      observerMode: false,
+      useAmazon: false,
+    });
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -106,32 +120,6 @@ export default function App() {
       .collection("users")
       .doc(user!.uid)
       .update({ deviceToken: token });
-  }
-
-  if (Platform.OS === "ios") {
-    setPurchaseListener(({ responseCode, results, errorCode }) => {
-      // Purchase was successful
-      if (responseCode === IAPResponseCode.OK) {
-        results?.forEach((purchase) => {
-          if (!purchase.acknowledged) {
-            console.log(`Successfully purchased ${purchase.productId}`);
-            // Process transaction here and unlock content...
-            // Then when you're done
-            finishTransactionAsync(purchase, true);
-          }
-        });
-      } else if (responseCode === IAPResponseCode.USER_CANCELED) {
-        console.log("User canceled the transaction");
-      } else if (responseCode === IAPResponseCode.DEFERRED) {
-        console.log(
-          "User does not have permissions to buy but requested parental approval (iOS only)"
-        );
-      } else {
-        console.warn(
-          `Something went wrong with the purchase. Received errorCode ${errorCode}`
-        );
-      }
-    });
   }
 
   if (initializing) return <View />;

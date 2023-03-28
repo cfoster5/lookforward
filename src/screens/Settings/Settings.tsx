@@ -8,21 +8,18 @@ import { Platform, Text, View } from "react-native";
 import { NotificationSetting } from "./components/NotificationSetting";
 import { SettingNavButton } from "./components/SettingNavButton";
 import { TipModal } from "./components/TipModal";
-import { useFirstRender } from "./hooks/useFirstRender";
 
 import { useStore } from "@/stores/store";
 
 function Settings({ navigation }) {
   const { user } = useStore();
   const [hasPermissions, setHasPermissions] = useState(true);
-
   const [notifications, setNotifications] = useState({
     day: false,
     week: false,
   });
 
   const modalRef = useRef<BottomSheetModal>();
-  const firstRender = useFirstRender();
 
   useEffect(() => {
     getNotificationPermissions();
@@ -36,14 +33,6 @@ function Settings({ navigation }) {
     // Stop listening for updates when no longer required
     return preferenceSubscription;
   }, [user]);
-
-  useEffect(() => {
-    if (!firstRender) {
-      console.log("notifications update", notifications);
-      getNotificationPermissions();
-      firestore().collection("users").doc(user!.uid).update({ notifications });
-    }
-  }, [notifications]);
 
   async function getNotificationPermissions() {
     const res = await messaging().hasPermission();
@@ -70,16 +59,26 @@ function Settings({ navigation }) {
         </Text>
         <NotificationSetting
           title="Day Before"
-          onValueChange={(value) =>
-            setNotifications({ ...notifications, day: value })
-          }
+          onValueChange={async (value) => {
+            // setNotifications({ ...notifications, day: value })
+            await firestore()
+              .collection("users")
+              .doc(user!.uid)
+              .update({ "notifications.day": value });
+            await getNotificationPermissions();
+          }}
           value={notifications.day}
         />
         <NotificationSetting
           title="Week Before"
-          onValueChange={(value) =>
-            setNotifications({ ...notifications, week: value })
-          }
+          onValueChange={async (value) => {
+            // setNotifications({ ...notifications, week: value })
+            await firestore()
+              .collection("users")
+              .doc(user!.uid)
+              .update({ "notifications.week": value });
+            await getNotificationPermissions();
+          }}
           value={notifications.week}
           style={{ borderBottomWidth: 0 }}
         />

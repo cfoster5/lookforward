@@ -2,6 +2,7 @@ import { composeReleasesToGames } from "helpers/helpers";
 import { useQuery } from "react-query";
 
 import { igdbProxyKey } from "@/config";
+import { timestamp } from "@/utils/dates";
 
 async function getReleases(filter: string) {
   const response = await fetch(
@@ -26,8 +27,7 @@ export function useDiscoverGames({
   companyId?: number;
   keywordId?: number;
 }) {
-  const unixTime = Math.floor(Date.now() / 1000);
-  let filter = `where date > ${unixTime} & region = (2,8)`;
+  let filter = `where date > ${Math.floor(timestamp)} & region = (2,8)`;
   filter += genreId ? ` & game.genres = (${genreId})` : ``;
   // filter += companyId ? `&with_companies=${companyId}` : ``;
   // filter += keywordId ? `&with_keywords=${keywordId}` : ``;

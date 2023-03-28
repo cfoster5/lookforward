@@ -1,7 +1,8 @@
-import { useQueries } from "react-query";
 import { TmdbKey } from "constants/ApiKeys";
 import { FirestoreMovie } from "interfaces/firebase";
-import { DateTime } from "luxon";
+import { useQueries } from "react-query";
+
+import { isoToUTC } from "@/utils/dates";
 
 async function getMovie(movieId: FirestoreMovie["documentID"]) {
   const response = await fetch(
@@ -9,13 +10,16 @@ async function getMovie(movieId: FirestoreMovie["documentID"]) {
   );
   const json = await response.json();
 
-  let date = json.release_dates.results
-    .find((result) => result.iso_3166_1 === "US")
-    ?.release_dates.filter((release) => release.type !== 1)
-    .sort(
-      ({ release_date: a }, { release_date: b }) =>
-        DateTime.fromISO(a) > DateTime.fromISO(b)
-    )[0].release_date;
+  const usRelease = json.release_dates.results.find(
+    (result) => result.iso_3166_1 === "US"
+  );
+  const filteredReleases = usRelease?.release_dates.filter(
+    (release) => release.type !== 1
+  );
+  const sortedReleases = filteredReleases?.sort(
+    (a, b) => isoToUTC(a.release_date) > isoToUTC(b.release_date)
+  );
+  const date = sortedReleases?.[0]?.release_date;
 
   return {
     ...json,

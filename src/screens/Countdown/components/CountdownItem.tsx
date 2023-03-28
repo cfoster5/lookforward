@@ -1,6 +1,5 @@
 import { reusableStyles } from "helpers/styles";
 import { IGDB } from "interfaces/igdb";
-import { DateTime } from "luxon";
 import React from "react";
 import {
   Image,
@@ -19,6 +18,8 @@ import Animated, {
 import { iOSUIKit } from "react-native-typography";
 
 import { RadioButton } from "./RadioButton";
+
+import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
 
 interface Props {
   item: any;
@@ -43,37 +44,30 @@ function CountdownItem({
   function getReleaseDate(): string {
     if (sectionName === "Movies") {
       if (item.releaseDate) {
-        return DateTime.fromISO(item.releaseDate)
-          .toUTC()
-          .toFormat("MM/dd/yyyy");
+        return isoToUTC(item.releaseDate).toFormat("MM/dd/yyyy");
       } else {
         return "No release date yet";
       }
     } else {
-      return DateTime.fromSeconds((item as IGDB.ReleaseDate.ReleaseDate).date)
-        .toUTC()
-        .toFormat("MM/dd/yyyy");
+      return timestampToUTC(
+        (item as IGDB.ReleaseDate.ReleaseDate).date
+      ).toFormat("MM/dd/yyyy");
     }
   }
 
   function getCountdownDays(): number {
     if (sectionName === "Movies") {
       if (item.releaseDate) {
-        const diff = DateTime.fromISO(item.releaseDate)
-          .diff(DateTime.now(), ["days"])
-          .toObject();
-        return Math.ceil(diff.days);
+        const diff = isoToUTC(item.releaseDate).diff(now);
+        return Math.ceil(diff.as("days"));
       } else {
         return "∞";
       }
     } else {
-      const diff = DateTime.fromSeconds(
+      const diff = timestampToUTC(
         (item as IGDB.ReleaseDate.ReleaseDate).date
-      )
-        .diff(DateTime.now(), ["days"])
-        .toObject();
-
-      return Math.ceil(diff.days);
+      ).diff(now);
+      return Math.ceil(diff.as("days"));
     }
   }
 

@@ -1,5 +1,4 @@
 import firestore from "@react-native-firebase/firestore";
-import { DateTime } from "luxon";
 import React from "react";
 import {
   FlatList,
@@ -18,6 +17,7 @@ import { reusableStyles } from "../helpers/styles";
 
 import { useStore } from "@/stores/store";
 import { ReleaseDate } from "@/types";
+import { timestampToUTC } from "@/utils/dates";
 
 type RenderItemProps = {
   handlePress: () => void;
@@ -38,7 +38,7 @@ const RenderItem = ({ handlePress, releaseDate }: RenderItemProps) => (
     {/* <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}> */}
     <Text style={iOSUIKit.bodyWhite}>{releaseDate.platform.name}</Text>
     <Text style={reusableStyles.date}>
-      {DateTime.fromSeconds(releaseDate.date).toUTC().toFormat("MM/dd/yyyy")}
+      {timestampToUTC(releaseDate.date).toFormat("MM/dd/yyyy")}
     </Text>
   </Pressable>
 );

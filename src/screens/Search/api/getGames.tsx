@@ -3,6 +3,7 @@ import { useQuery } from "react-query";
 
 import { igdbProxyKey } from "@/config";
 import { Game, ReleaseDate } from "@/types";
+import { timestamp } from "@/utils/dates";
 
 async function getGames(searchValue: string) {
   if (!searchValue) {
@@ -14,7 +15,9 @@ async function getGames(searchValue: string) {
       {
         method: "POST",
         headers: { "x-api-key": igdbProxyKey },
-        body: `${fields}; where date > ${unixTime} & region = (2,8); limit 100; sort date;`,
+        body: `${fields}; where date > ${Math.floor(
+          timestamp
+        )} & region = (2,8); limit 100; sort date;`,
       }
     );
     const json: ReleaseDate[] = await response.json();

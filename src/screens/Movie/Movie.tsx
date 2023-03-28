@@ -19,7 +19,6 @@ import { Text as ThemedText } from "components/Themed";
 import Trailer from "components/Trailer";
 import TabStackContext from "contexts/TabStackContext";
 import { getRuntime } from "helpers/formatting";
-import { DateTime } from "luxon";
 import React, {
   useContext,
   useEffect,
@@ -66,6 +65,7 @@ import { ListLabel } from "../Search/Search";
 
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams } from "@/types";
+import { isoToUTC, compareDates } from "@/utils/dates";
 
 function ScrollViewWithFlatList({
   data,
@@ -124,15 +124,12 @@ export const horizontalListProps = {
 };
 
 export function getReleaseDate(releaseDates: ReleaseDate[]) {
-  return DateTime.fromISO(
-    releaseDates
-      .filter((release) => release.type !== 1)
-      .sort(
-        ({ release_date: a }, { release_date: b }) =>
-          DateTime.fromISO(a) > DateTime.fromISO(b)
-      )[0].release_date
-  )
-    .toUTC()
+  const nonPremiereDates = releaseDates.filter((release) => release.type !== 1);
+  const sortedNonPremiereDates = nonPremiereDates.sort(
+    ({ release_date: a }, { release_date: b }) =>
+      compareDates(isoToUTC(a), isoToUTC(b))
+  );
+  return isoToUTC(sortedNonPremiereDates[0].release_date)
     .toFormat("MMMM d, yyyy")
     .toUpperCase();
 }

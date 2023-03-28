@@ -1,4 +1,3 @@
-import { DateTime } from "luxon";
 import React from "react";
 import FastImage from "react-native-fast-image";
 
@@ -8,6 +7,7 @@ import PosterButton from "../PosterButton";
 
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
+import { timestamp } from "@/utils/dates";
 
 export function GamePoster({
   game,
@@ -19,9 +19,8 @@ export function GamePoster({
     (releaseDate) => releaseDate.game.id === game.id
   )?.documentID;
   const hasUpcomingRelease =
-    game.release_dates.filter(
-      (releaseDate) => DateTime.fromISO(releaseDate.date) >= DateTime.now()
-    ).length === 0;
+    game.release_dates.filter((releaseDate) => releaseDate.date >= timestamp)
+      .length !== 0;
   return (
     <>
       {hasUpcomingRelease && (

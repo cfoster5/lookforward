@@ -12,7 +12,6 @@ import { ExpandableText } from "components/ExpandableText";
 import { Text as ThemedText } from "components/Themed";
 import Trailer from "components/Trailer";
 import { reusableStyles } from "helpers/styles";
-import { DateTime } from "luxon";
 import React, { Fragment, useState } from "react";
 import {
   Dimensions,
@@ -34,6 +33,7 @@ import {
   ReleaseDate,
   TabNavigationParamList,
 } from "@/types";
+import { timestampToUTC } from "@/utils/dates";
 
 interface Props {
   navigation: CompositeNavigationProp<
@@ -57,8 +57,7 @@ function GameDetails({ navigation, game }: Props) {
     );
     const uniqueDates = [...new Set(filteredDates.map((date) => date.date))];
     if (uniqueDates.length === 1) {
-      return DateTime.fromSeconds(uniqueDates[0])
-        .toUTC()
+      return timestampToUTC(uniqueDates[0])
         .toFormat("MMMM d, yyyy")
         .toUpperCase();
     } else {

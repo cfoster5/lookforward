@@ -12,6 +12,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
+import { MovieOption } from "../types";
+
 import { FindStackParamList, TabNavigationParamList } from "@/types";
 
 export function MovieSearchModal({
@@ -25,21 +27,11 @@ export function MovieSearchModal({
     BottomTabNavigationProp<TabNavigationParamList, "FindTab">
   >;
   modalRef;
-  selectedOption: string;
-  setSelectedOption: (
-    option: "Coming Soon" | "Now Playing" | "Popular" | "Trending"
-  ) => void;
+  selectedOption: MovieOption;
+  setSelectedOption: (option: MovieOption) => void;
 }) {
   const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-
-  const options = [
-    "Coming Soon",
-    "Now Playing",
-    "Popular",
-    // "Top Rated",
-    "Trending",
-  ];
 
   return (
     <DynamicHeightModal modalRef={modalRef}>
@@ -48,7 +40,7 @@ export function MovieSearchModal({
           horizontal
           contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
           showsHorizontalScrollIndicator={false}
-          data={options}
+          data={Object.values(MovieOption)}
           // renderItem={({ item }) => <Option option={item} />}
           renderItem={({ item }) => (
             <ButtonMultiState

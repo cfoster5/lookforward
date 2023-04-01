@@ -31,7 +31,7 @@ export function MovieLayout({ navigation }) {
   const modalRef = useRef<BottomSheetModal>();
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
-  const [option, setOption] = useState<MovieOption>("Coming Soon");
+  const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
   const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(

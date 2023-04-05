@@ -50,7 +50,7 @@ export function GamePlatformPicker() {
   async function addGameRelease(releaseDate: ReleaseDate) {
     // console.log("releaseDate", releaseDate);
     // console.log(game);
-    const { id, name, cover, summary } = game;
+    const { id, name, cover } = game;
     try {
       await firestore()
         .collection("gameReleases")
@@ -58,7 +58,7 @@ export function GamePlatformPicker() {
         .set(
           {
             ...releaseDate,
-            game: { cover, id, name, summary },
+            game: { cover, id, name },
             subscribers: firestore.FieldValue.arrayUnion(user!.uid),
           },
           { merge: true }
@@ -76,6 +76,7 @@ export function GamePlatformPicker() {
   return (
     <DynamicHeightModal modalRef={bottomSheetModalRef}>
       <FlatList
+        // need to filter client-side since combining search and filter on API is not working
         data={game?.release_dates.filter(
           (release_date) =>
             release_date.region === 2 || release_date.region === 8

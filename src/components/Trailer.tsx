@@ -23,8 +23,7 @@ function Trailer({ video }: { video: Video | GameVideo }) {
     >
       <Image
         style={{
-          width: calculateWidth(16, 8, 1.5),
-          height: calculateWidth(16, 8, 1.5) / 1.78,
+          aspectRatio: 16 / 9,
           resizeMode: "cover",
           borderRadius: 8,
           borderWidth: 1,

@@ -26,6 +26,7 @@ import {
 import { iOSUIKit } from "react-native-typography";
 
 import { horizontalListProps } from "../../Movie/Movie";
+import { useGame } from "../api/getGame";
 
 import {
   FindStackParamList,
@@ -47,11 +48,13 @@ interface Props {
 
 function GameDetails({ navigation, game }: Props) {
   const [detailIndex, setDetailIndex] = useState(0);
+  const { data, isLoading } = useGame(game.id);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const [showAllOverview, setShowAllOverview] = useState(false);
 
   function getReleaseDate(): string {
+    // need to filter client-side since combining search and filter on API is not working
     const filteredDates = game.release_dates.filter(
       (releaseDate) => releaseDate.region === 2 || releaseDate.region === 8
     );
@@ -78,10 +81,7 @@ function GameDetails({ navigation, game }: Props) {
     >
       {game?.cover?.url && (
         <Image
-          style={{
-            width: Dimensions.get("window").width,
-            height: (720 / 1280) * Dimensions.get("window").width,
-          }}
+          style={{ aspectRatio: 889 / 500 }}
           source={{
             uri: `https:${game.cover.url.replace("thumb", "screenshot_big")}`,
           }}
@@ -96,7 +96,7 @@ function GameDetails({ navigation, game }: Props) {
         <ExpandableText
           isExpanded={showAllOverview}
           handlePress={() => setShowAllOverview(!showAllOverview)}
-          text={game.summary}
+          text={data?.summary}
         />
 
         <View
@@ -106,7 +106,7 @@ function GameDetails({ navigation, game }: Props) {
             flexWrap: "wrap",
           }}
         >
-          {game?.genres?.map((genre, i) => (
+          {data?.genres?.map((genre, i) => (
             <ButtonSingleState
               key={i}
               text={genre.name}
@@ -125,12 +125,12 @@ function GameDetails({ navigation, game }: Props) {
         handleCategoryChange={(index: number) => setDetailIndex(index)}
       />
       <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-        {detailIndex === 0 && (
+        {detailIndex === 0 && !isLoading && (
           <>
-            {game.involved_companies?.find((company) => company.publisher) && (
+            {data.involved_companies?.find((company) => company.publisher) && (
               <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
                 Published by:
-                {game.involved_companies
+                {data.involved_companies
                   .filter((company) => company.publisher)
                   .map((company, i) => (
                     <Fragment key={i}>
@@ -141,10 +141,10 @@ function GameDetails({ navigation, game }: Props) {
                   ))}
               </ThemedText>
             )}
-            {game.involved_companies?.find((company) => company.developer) && (
+            {data.involved_companies?.find((company) => company.developer) && (
               <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
                 Developed by:
-                {game.involved_companies
+                {data.involved_companies
                   .filter((company) => company.developer)
                   .map((company, i) => (
                     <Fragment key={i}>
@@ -155,7 +155,7 @@ function GameDetails({ navigation, game }: Props) {
                   ))}
               </ThemedText>
             )}
-            {game.involved_companies?.find((company) => company.supporting) && (
+            {data.involved_companies?.find((company) => company.supporting) && (
               <View
                 style={{
                   flexDirection: "row",
@@ -164,7 +164,7 @@ function GameDetails({ navigation, game }: Props) {
                 }}
               >
                 <ThemedText style={iOSUIKit.body}>Supported by: </ThemedText>
-                {game.involved_companies
+                {data.involved_companies
                   .filter((company) => company.supporting)
                   .map((company, i) => (
                     <View style={{ flexDirection: "row" }} key={i}>
@@ -179,10 +179,11 @@ function GameDetails({ navigation, game }: Props) {
           </>
         )}
         {detailIndex === 1 &&
-          (game.videos ? (
+          !isLoading &&
+          (data.videos ? (
             <FlatList
               keyExtractor={(item) => item.id}
-              data={game!.videos}
+              data={data!.videos}
               renderItem={({ item }) => <Trailer video={item} />}
               {...horizontalListProps}
             />

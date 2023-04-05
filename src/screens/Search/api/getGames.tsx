@@ -7,9 +7,8 @@ import { timestamp } from "@/utils/dates";
 
 async function getGames(searchValue: string) {
   if (!searchValue) {
-    const unixTime = Math.floor(Date.now() / 1000);
     const fields =
-      "fields *, game.name, game.summary, game.cover.*, game.genres.name, game.videos.name, game.videos.video_id, game.involved_companies.developer, game.involved_companies.porting, game.involved_companies.publisher, game.involved_companies.supporting, game.involved_companies.company.name, platform.abbreviation, platform.name";
+      "fields *, game.name, game.cover.*, platform.abbreviation, platform.name";
     const response = await fetch(
       "https://k0o7ncaic1.execute-api.us-east-2.amazonaws.com/production/v4/release_dates",
       {
@@ -28,7 +27,7 @@ async function getGames(searchValue: string) {
       {
         method: "POST",
         headers: { "x-api-key": igdbProxyKey },
-        body: `fields name, summary, cover.*, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name, genres.name, videos.name, videos.video_id, involved_companies.developer, involved_companies.porting, involved_companies.publisher, involved_companies.supporting, involved_companies.company.name;
+        body: `fields name, cover.*, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name;
       where release_dates.region = (2,8);
       search "${searchValue}";
       limit 50;`,

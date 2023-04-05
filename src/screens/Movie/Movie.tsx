@@ -60,7 +60,11 @@ import {
 } from "../../helpers/helpers";
 import { reusableStyles } from "../../helpers/styles";
 import { FirestoreMovie } from "../../interfaces/firebase";
-import { ReleaseDate } from "../../interfaces/tmdb";
+import { ReleaseDate, ReleaseDateType } from "../../interfaces/tmdb";
+import {
+  BackdropSizes,
+  PosterSizes,
+} from "../../interfaces/tmdb/configuration";
 import { ListLabel } from "../Search/Search";
 
 import { useStore } from "@/stores/store";
@@ -124,7 +128,9 @@ export const horizontalListProps = {
 };
 
 export function getReleaseDate(releaseDates: ReleaseDate[]) {
-  const nonPremiereDates = releaseDates.filter((release) => release.type !== 1);
+  const nonPremiereDates = releaseDates.filter(
+    (release) => release.type !== ReleaseDateType.Premiere
+  );
   const sortedNonPremiereDates = nonPremiereDates.sort(
     ({ release_date: a }, { release_date: b }) =>
       compareDates(isoToUTC(a), isoToUTC(b))

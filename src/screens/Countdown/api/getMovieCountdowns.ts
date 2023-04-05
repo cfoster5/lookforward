@@ -2,6 +2,8 @@ import { TmdbKey } from "constants/ApiKeys";
 import { FirestoreMovie } from "interfaces/firebase";
 import { useQueries } from "react-query";
 
+import { ReleaseDateType } from "../../../interfaces/tmdb";
+
 import { isoToUTC } from "@/utils/dates";
 
 async function getMovie(movieId: FirestoreMovie["documentID"]) {
@@ -14,7 +16,7 @@ async function getMovie(movieId: FirestoreMovie["documentID"]) {
     (result) => result.iso_3166_1 === "US"
   );
   const filteredReleases = usRelease?.release_dates.filter(
-    (release) => release.type !== 1
+    (release) => release.type !== ReleaseDateType.Premiere
   );
   const sortedReleases = filteredReleases?.sort(
     (a, b) => isoToUTC(a.release_date) > isoToUTC(b.release_date)

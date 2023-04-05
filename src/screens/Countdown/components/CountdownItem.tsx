@@ -18,6 +18,7 @@ import Animated, {
 import { iOSUIKit } from "react-native-typography";
 
 import { RadioButton } from "./RadioButton";
+import { PosterSizes } from "../../../interfaces/tmdb/configuration";
 
 import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
 
@@ -115,7 +116,7 @@ function CountdownItem({
   let imageSrc = "";
   let title = "";
   if (sectionName === "Movies") {
-    imageSrc = `https://image.tmdb.org/t/p/w92${item.poster_path}`;
+    imageSrc = `https://image.tmdb.org/t/p/${PosterSizes.W92}${item.poster_path}`;
     title = item.title;
   }
   if (sectionName === "Games") {

@@ -8,11 +8,12 @@ import {
 } from "react-native";
 import FastImage, { ImageStyle } from "react-native-fast-image";
 
+import { TextPoster } from "./TextPoster";
 import TabStackContext from "../../contexts/TabStackContext";
 import { reusableStyles } from "../../helpers/styles";
 import { Movie, Recommendation } from "../../interfaces/tmdb";
+import { PosterSizes } from "../../interfaces/tmdb/configuration";
 import PosterButton from "../PosterButton";
-import { TextPoster } from "./TextPoster";
 
 import { useStore } from "@/stores/store";
 
@@ -55,7 +56,7 @@ export function MoviePoster({
             style,
           ]}
           source={{
-            uri: `https://image.tmdb.org/t/p/w300${posterPath}`,
+            uri: `https://image.tmdb.org/t/p/${PosterSizes.W300}${posterPath}`,
           }}
         />
       ) : (

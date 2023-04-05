@@ -27,6 +27,7 @@ import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
 
 import { usePerson } from "./api/getPerson";
+import { PosterSizes } from "../../interfaces/tmdb/configuration";
 
 import { FindStackParams, BottomTabParams } from "@/types";
 
@@ -57,7 +58,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
     return (
       <FastImage
         source={{
-          uri: `https://image.tmdb.org/t/p/w300${item.file_path}`,
+          uri: `https://image.tmdb.org/t/p/${PosterSizes.W300}${item.file_path}`,
         }}
         style={{
           borderRadius: 8,

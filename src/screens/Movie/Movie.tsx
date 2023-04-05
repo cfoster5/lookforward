@@ -361,7 +361,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 renderItem={({ item }) => (
                   <Image
                     source={{
-                      uri: `https://image.tmdb.org/t/p/w154${item.logo_path}`,
+                      uri: `https://image.tmdb.org/t/p/${PosterSizes.W154}${item.logo_path}`,
                     }}
                     style={{
                       height: calculateWidth(16, 8, 6),
@@ -504,7 +504,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     posterPath={
                       mediaSelections.images === "posters"
                         ? item.file_path
-                        : `https://image.tmdb.org/t/p/w780${item.file_path}`
+                        : `https://image.tmdb.org/t/p/${PosterSizes.W780}${item.file_path}`
                     }
                     style={{
                       width:
@@ -583,7 +583,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         borderRadius: 8,
                       }}
                       source={{
-                        uri: `https://image.tmdb.org/t/p/w780${
+                        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${
                           movieDetails!.belongs_to_collection.backdrop_path
                         }`,
                       }}
@@ -644,7 +644,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
       </Animated.ScrollView>
       <ImageView
         images={movieDetails!.images[mediaSelections.images].map((image) => ({
-          uri: `https://image.tmdb.org/t/p/w780${image.file_path}`,
+          uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${image.file_path}`,
         }))}
         imageIndex={showImageViewer.index}
         visible={showImageViewer.isVisible}

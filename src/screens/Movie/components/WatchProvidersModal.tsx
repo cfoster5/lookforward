@@ -15,6 +15,7 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
+import { LogoSizes } from "../../../interfaces/tmdb/configuration";
 import { horizontalListProps } from "../Movie";
 
 function WatchProvidersModal({
@@ -88,7 +89,7 @@ function WatchProvidersModal({
                     <View style={{ width: calculateWidth(16, 8, 4.5) }}>
                       <Image
                         source={{
-                          uri: `https://image.tmdb.org/t/p/w154${item.logo_path}`,
+                          uri: `https://image.tmdb.org/t/p/${LogoSizes.W154}${item.logo_path}`,
                         }}
                         style={{
                           height: calculateWidth(16, 8, 4.5),

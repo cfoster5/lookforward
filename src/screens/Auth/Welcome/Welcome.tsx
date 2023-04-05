@@ -16,6 +16,7 @@ import { iOSUIKit } from "react-native-typography";
 
 import { useHypedGames } from "./api/getHypedGames";
 import { useTrendingMovies } from "./api/getTrendingMovies";
+import { PosterSizes } from "../../../interfaces/tmdb/configuration";
 
 import { AuthStackParams } from "@/types";
 
@@ -41,7 +42,9 @@ function Welcome({ navigation }: Props) {
         source={{
           uri:
             index % 2
-              ? `https://image.tmdb.org/t/p/w500${(item as Movie).poster_path}`
+              ? `https://image.tmdb.org/t/p/${PosterSizes.W500}${
+                  (item as Movie).poster_path
+                }`
               : `https:${(item as IGDB.Game.Game)?.cover?.url.replace(
                   "thumb",
                   "cover_big_2x"

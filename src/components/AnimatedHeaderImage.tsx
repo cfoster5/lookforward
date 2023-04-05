@@ -7,6 +7,8 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
+import { BackdropSizes } from "../interfaces/tmdb/configuration";
+
 const AnimatedImageBackground =
   Animated.createAnimatedComponent(ImageBackground);
 
@@ -65,7 +67,7 @@ export function AnimatedHeaderImage({
     <AnimatedImageBackground
       style={[styles.backdrop, headerStyle]}
       source={{
-        uri: `https://image.tmdb.org/t/p/w780${path}`,
+        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}{path}`,
       }}
     >
       <LinearGradient

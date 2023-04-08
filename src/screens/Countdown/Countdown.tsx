@@ -8,48 +8,18 @@ import { CompositeScreenProps, useScrollToTop } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
 import { LoadingScreen } from "components/LoadingScreen";
-import React, { useLayoutEffect, useRef } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { Platform, PlatformColor, SectionList, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { useImmerReducer } from "use-immer";
 
 import { useMovieCountdowns } from "./api/getMovieCountdowns";
 import CountdownItem from "./components/CountdownItem";
 import { MyHeaderRight } from "./components/MyHeaderRight";
 import { SectionHeader } from "./components/SectionHeader";
 
-import { useStore } from "@/stores/store";
+import { Subs, useStore } from "@/stores/store";
 import { CountdownStackParams, BottomTabParams } from "@/types";
-
-function reducer(
-  draft: any,
-  action: {
-    type: string;
-    showButtons?: boolean;
-    selections?: { documentID: string; sectionName: string }[];
-    selection: { documentID: number; sectionName: string };
-    selectionIndex: number;
-  }
-) {
-  switch (action.type) {
-    case "set-showButtons":
-      draft.showButtons = true;
-      break;
-    case "set-hideButtons":
-      draft.showButtons = false;
-      draft.selections = [];
-      break;
-    case "add-selection":
-      draft.selections.push(action.selection);
-      break;
-    case "remove-selection":
-      draft.selections.splice(action.selectionIndex, 1);
-      break;
-    default:
-      break;
-  }
-}
 
 type CountdownScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<CountdownStackParams, "Countdown">,
@@ -57,17 +27,17 @@ type CountdownScreenNavigationProp = CompositeScreenProps<
 >;
 
 function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
-  const [{ showButtons, selections }, dispatch] = useImmerReducer(
-    (draft, action) => reducer(draft, action),
-    { showButtons: false, selections: [] }
-  );
+  const [showButtons, setShowButtons] = useState(false);
 
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
-  const { user, movieSubs, gameSubs } = useStore();
+  const { user, movieSubs, gameSubs, updateSubs } = useStore();
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const movies = useMovieCountdowns(movieSubs);
+
+  const selectedMovies: any[] = movieSubs.filter((sub) => sub.isSelected);
+  const selectedGames: any[] = gameSubs.filter((sub) => sub.isSelected);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -80,12 +50,12 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
               buttonStyle={{
                 ...iOSUIKit.bodyEmphasizedObject,
                 color:
-                  selections.length === 0
+                  selectedMovies.concat(selectedGames).length === 0
                     ? PlatformColor("systemGray3")
                     : PlatformColor("systemRed"),
               }}
               onPress={() => {
-                if (selections.length > 0) {
+                if (selectedMovies.concat(selectedGames).length > 0) {
                   deleteItems();
                 }
               }}
@@ -95,34 +65,19 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
       headerRight: () => (
         <MyHeaderRight
           text={showButtons ? "Done" : "Edit"}
-          handlePress={() =>
-            dispatch(
-              showButtons
-                ? { type: "set-hideButtons" }
-                : { type: "set-showButtons" }
-            )
-          }
+          handlePress={() => setShowButtons((prevValue) => !prevValue)}
           style={showButtons ? iOSUIKit.bodyEmphasized : null}
         />
       ),
     });
-  }, [navigation, showButtons, selections]);
+  }, [navigation, showButtons, movieSubs, gameSubs]);
 
   function handlePress(item, sectionName: string) {
     if (showButtons) {
-      const selectionIndex = selections.findIndex(
-        (obj) => obj.documentID === item.documentID
-      );
-      if (selectionIndex === -1) {
-        dispatch({
-          type: "add-selection",
-          selection: { documentID: item.documentID, sectionName },
-        });
+      if (sectionName === "Movies") {
+        updateSubs(Subs.movieSubs, item.documentID);
       } else {
-        dispatch({
-          type: "remove-selection",
-          selectionIndex,
-        });
+        updateSubs(Subs.gameSubs, item.documentID);
       }
     } else if (sectionName === "Movies") {
       navigation.navigate("Movie", {
@@ -133,19 +88,23 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
   }
 
   async function deleteItems() {
-    const collectionMap = { Movies: "movies", Games: "gameReleases" };
-
     const batch = firestore().batch();
-    selections.map((selection) => {
+    selectedMovies.map((selection) => {
+      const docRef = firestore().collection("movies").doc(selection.documentID);
+      batch.update(docRef, {
+        subscribers: firestore.FieldValue.arrayRemove(user!.uid),
+      });
+    });
+    selectedGames.map((selection) => {
       const docRef = firestore()
-        .collection(collectionMap[selection.sectionName])
+        .collection("gameReleases")
         .doc(selection.documentID);
       batch.update(docRef, {
         subscribers: firestore.FieldValue.arrayRemove(user!.uid),
       });
     });
     await batch.commit();
-    dispatch({ type: "set-hideButtons" });
+    setShowButtons(false);
   }
 
   if (movies.some((movie) => movie.isLoading)) return <LoadingScreen />;
@@ -193,8 +152,10 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
           }
           showButtons={showButtons}
           isSelected={
-            selections.findIndex((obj) => obj.documentID === item.documentID) >
-            -1
+            section.title === "Movies"
+              ? movieSubs.find((sub) => sub.documentID === item.documentID)
+                  .isSelected
+              : item.isSelected
           }
           handlePress={() => handlePress(item, section.title)}
         />

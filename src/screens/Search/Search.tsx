@@ -1,9 +1,9 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import CategoryControl from "components/CategoryControl/CategoryControl";
-import { Text as ThemedText } from "components/Themed";
-import TabStackContext from "contexts/TabStackContext";
+import CategoryControl from "@/components/CategoryControl/CategoryControl";
+import { Text as ThemedText } from "@/components/Themed";
+import TabStackContext from "@/contexts/TabStackContext";
 import React, { useContext, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { iOSUIKit } from "react-native-typography";

@@ -1,7 +1,7 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { GamePlatformPicker } from "components/GamePlatformPicker";
-import { LoadingScreen } from "components/LoadingScreen";
-import { GamePoster } from "components/Posters/GamePoster";
+import { GamePlatformPicker } from "@/components/GamePlatformPicker";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { GamePoster } from "@/components/Posters/GamePoster";
 import React, { useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";

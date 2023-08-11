@@ -1,9 +1,9 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import TabStackContext from "contexts/TabStackContext";
-import { calculateWidth } from "helpers/helpers";
-import { reusableStyles } from "helpers/styles";
+import TabStackContext from "@/contexts/TabStackContext";
+import { calculateWidth } from "@/helpers/helpers";
+import { reusableStyles } from "@/helpers/styles";
 import { TMDB } from "interfaces/tmdb";
 import React, { useContext, useEffect } from "react";
 import {

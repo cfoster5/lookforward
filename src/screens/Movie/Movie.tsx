@@ -7,18 +7,18 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { AnimatedHeaderImage } from "components/AnimatedHeaderImage";
-import { BlueBullet } from "components/BlueBullet";
-import ButtonSingleState from "components/ButtonSingleState";
-import CategoryControl from "components/CategoryControl/CategoryControl";
-import { ExpandableText } from "components/ExpandableText";
-import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
-import { LoadingScreen } from "components/LoadingScreen";
-import { MoviePoster } from "components/Posters/MoviePoster";
-import { Text as ThemedText } from "components/Themed";
-import Trailer from "components/Trailer";
-import TabStackContext from "contexts/TabStackContext";
-import { getRuntime } from "helpers/formatting";
+import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
+import { BlueBullet } from "@/components/BlueBullet";
+import ButtonSingleState from "@/components/ButtonSingleState";
+import CategoryControl from "@/components/CategoryControl/CategoryControl";
+import { ExpandableText } from "@/components/ExpandableText";
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { Text as ThemedText } from "@/components/Themed";
+import Trailer from "@/components/Trailer";
+import TabStackContext from "@/contexts/TabStackContext";
+import { getRuntime } from "@/helpers/formatting";
 import React, {
   useContext,
   useEffect,

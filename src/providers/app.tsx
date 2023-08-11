@@ -5,6 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import { useStore } from "@/stores/store";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ export function AppProvider({ children }: AppProviderProps) {
   }, []);
 
   return (
+    // <GestureHandlerRootView style={{ flex: 1 }}>
     <QueryClientProvider client={queryClient}>
       {/* <AuthProviderContext.Provider value={{ user }}> */}
       <SafeAreaProvider>
@@ -40,5 +42,6 @@ export function AppProvider({ children }: AppProviderProps) {
       </SafeAreaProvider>
       {/* </AuthProviderContext.Provider> */}
     </QueryClientProvider>
+    // </GestureHandlerRootView>
   );
 }

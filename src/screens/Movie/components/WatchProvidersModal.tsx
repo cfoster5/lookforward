@@ -1,6 +1,6 @@
-import { DynamicHeightModal } from "components/DynamicHeightModal";
-import TabStackContext from "contexts/TabStackContext";
-import { calculateWidth } from "helpers/helpers";
+import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import TabStackContext from "@/contexts/TabStackContext";
+import { calculateWidth } from "@/helpers/helpers";
 import { WatchLocale } from "interfaces/tmdb";
 import React, { useContext } from "react";
 import {

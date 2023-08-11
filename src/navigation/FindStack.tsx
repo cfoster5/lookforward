@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { GamePlatformPicker } from "components/GamePlatformPicker";
+import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import React from "react";
 import { Platform } from "react-native";
 

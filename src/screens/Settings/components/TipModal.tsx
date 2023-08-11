@@ -1,5 +1,5 @@
-import { DynamicHeightModal } from "components/DynamicHeightModal";
-import TabStackContext from "contexts/TabStackContext";
+import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import TabStackContext from "@/contexts/TabStackContext";
 import React, { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,

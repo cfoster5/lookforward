@@ -5,12 +5,12 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { AnimatedHeaderImage } from "components/AnimatedHeaderImage";
-import { ExpandableText } from "components/ExpandableText";
-import { LoadingScreen } from "components/LoadingScreen";
-import { MoviePoster } from "components/Posters/MoviePoster";
-import { Text as ThemedText } from "components/Themed";
-import { calculateWidth } from "helpers/helpers";
+import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
+import { ExpandableText } from "@/components/ExpandableText";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { Text as ThemedText } from "@/components/Themed";
+import { calculateWidth } from "@/helpers/helpers";
 import { CollectionDetails } from "interfaces/tmdb";
 import React, { useLayoutEffect, useState } from "react";
 import { Platform, View } from "react-native";

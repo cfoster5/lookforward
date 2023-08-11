@@ -5,13 +5,13 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { BlueBullet } from "components/BlueBullet";
-import ButtonSingleState from "components/ButtonSingleState";
-import CategoryControl from "components/CategoryControl/CategoryControl";
-import { ExpandableText } from "components/ExpandableText";
-import { Text as ThemedText } from "components/Themed";
-import Trailer from "components/Trailer";
-import { reusableStyles } from "helpers/styles";
+import { BlueBullet } from "@/components/BlueBullet";
+import ButtonSingleState from "@/components/ButtonSingleState";
+import CategoryControl from "@/components/CategoryControl/CategoryControl";
+import { ExpandableText } from "@/components/ExpandableText";
+import { Text as ThemedText } from "@/components/Themed";
+import Trailer from "@/components/Trailer";
+import { reusableStyles } from "@/helpers/styles";
 import React, { Fragment, useState } from "react";
 import {
   Dimensions,

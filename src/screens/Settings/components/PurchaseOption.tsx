@@ -1,4 +1,4 @@
-import { reusableStyles } from "helpers/styles";
+import { reusableStyles } from "@/helpers/styles";
 import React from "react";
 import {
   ActivityIndicator,

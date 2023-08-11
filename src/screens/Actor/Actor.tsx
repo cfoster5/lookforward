@@ -5,14 +5,14 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import ButtonMultiState from "components/ButtonMultiState";
-import { ExpandableText } from "components/ExpandableText";
-import { LoadingScreen } from "components/LoadingScreen";
-import { MoviePoster } from "components/Posters/MoviePoster";
-import { Text as ThemedText } from "components/Themed";
-import { dateToLocaleString } from "helpers/formatting";
-import { calculateWidth } from "helpers/helpers";
-import { reusableStyles } from "helpers/styles";
+import ButtonMultiState from "@/components/ButtonMultiState";
+import { ExpandableText } from "@/components/ExpandableText";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { Text as ThemedText } from "@/components/Themed";
+import { dateToLocaleString } from "@/helpers/formatting";
+import { calculateWidth } from "@/helpers/helpers";
+import { reusableStyles } from "@/helpers/styles";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import {
   Dimensions,

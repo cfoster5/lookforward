@@ -1,4 +1,4 @@
-import TabStackContext from "contexts/TabStackContext";
+import TabStackContext from "@/contexts/TabStackContext";
 import React, { useContext } from "react";
 import { PlatformColor } from "react-native";
 import { SearchBar } from "react-native-elements";

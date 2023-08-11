@@ -6,8 +6,8 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps, useScrollToTop } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
-import { LoadingScreen } from "components/LoadingScreen";
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { Platform, PlatformColor, SectionList, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";

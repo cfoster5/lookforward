@@ -1,7 +1,7 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
-import { reusableStyles } from "helpers/styles";
+import { reusableStyles } from "@/helpers/styles";
 import React, { useEffect, useRef, useState } from "react";
 import { Platform, Text, View } from "react-native";
 

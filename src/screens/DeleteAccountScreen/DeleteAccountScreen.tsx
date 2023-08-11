@@ -1,5 +1,5 @@
 import auth from "@react-native-firebase/auth";
-import { reusableStyles } from "helpers/styles";
+import { reusableStyles } from "@/helpers/styles";
 import React, { useState } from "react";
 import {
   Alert,

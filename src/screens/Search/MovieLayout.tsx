@@ -1,8 +1,8 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useScrollToTop } from "@react-navigation/native";
-import { LoadingScreen } from "components/LoadingScreen";
-import { MoviePoster } from "components/Posters/MoviePoster";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { DateTime } from "luxon";
 import React, { useEffect, useRef, useState } from "react";
 import {

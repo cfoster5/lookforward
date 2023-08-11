@@ -66,7 +66,7 @@ export function AnimatedHeaderImage({
     <AnimatedImageBackground
       style={[styles.backdrop, headerStyle]}
       source={{
-        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}{path}`,
+        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${path}`,
       }}
     >
       <LinearGradient

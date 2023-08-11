@@ -72,9 +72,7 @@ export function TabStack() {
               }
             : undefined,
         tabBarBackground: () =>
-          Platform.OS === "ios" ? (
-            <BlurView style={StyleSheet.absoluteFill} />
-          ) : undefined,
+          Platform.OS === "ios" && <BlurView style={StyleSheet.absoluteFill} />,
       })}
     >
       {/* Is setting headerShown to false the best method? */}

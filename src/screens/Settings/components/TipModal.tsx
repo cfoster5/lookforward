@@ -1,6 +1,4 @@
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
-import TabStackContext from "@/contexts/TabStackContext";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -15,6 +13,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { PurchaseOption } from "./PurchaseOption";
+
+import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import TabStackContext from "@/contexts/TabStackContext";
 
 type Props = { modalRef: any };
 

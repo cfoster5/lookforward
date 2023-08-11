@@ -6,7 +6,7 @@ import ButtonMultiState from "@/components/ButtonMultiState";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { targetedProviders } from "@/helpers/helpers";
-import React from "react";
+
 import { FlatList, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

@@ -1,14 +1,14 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
-import { reusableStyles } from "@/helpers/styles";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Platform, Text, View } from "react-native";
 
 import { NotificationSetting } from "./components/NotificationSetting";
 import { SettingNavButton } from "./components/SettingNavButton";
 import { TipModal } from "./components/TipModal";
 
+import { reusableStyles } from "@/helpers/styles";
 import { useStore } from "@/stores/store";
 
 function Settings({ navigation }) {

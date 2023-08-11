@@ -1,4 +1,3 @@
-import React from "react";
 import { ActivityIndicator, useWindowDimensions, View } from "react-native";
 
 export function LoadingScreen() {

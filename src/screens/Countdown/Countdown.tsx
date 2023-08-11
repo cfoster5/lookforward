@@ -6,9 +6,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps, useScrollToTop } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-import { LoadingScreen } from "@/components/LoadingScreen";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Platform, PlatformColor, SectionList, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -18,6 +16,8 @@ import CountdownItem from "./components/CountdownItem";
 import { MyHeaderRight } from "./components/MyHeaderRight";
 import { SectionHeader } from "./components/SectionHeader";
 
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { Subs, useStore } from "@/stores/store";
 import { CountdownStackParams, BottomTabParams } from "@/types";
 

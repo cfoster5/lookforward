@@ -1,4 +1,3 @@
-import React from "react";
 import { PlatformColor, View } from "react-native";
 
 export function BlueBullet() {

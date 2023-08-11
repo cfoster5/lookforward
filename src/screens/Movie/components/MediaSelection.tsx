@@ -1,4 +1,3 @@
-import React from "react";
 import { PlatformColor, Pressable, Text } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 

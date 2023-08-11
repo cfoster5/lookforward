@@ -5,15 +5,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import ButtonMultiState from "@/components/ButtonMultiState";
-import { ExpandableText } from "@/components/ExpandableText";
-import { LoadingScreen } from "@/components/LoadingScreen";
-import { MoviePoster } from "@/components/Posters/MoviePoster";
-import { Text as ThemedText } from "@/components/Themed";
-import { dateToLocaleString } from "@/helpers/formatting";
-import { calculateWidth } from "@/helpers/helpers";
-import { reusableStyles } from "@/helpers/styles";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -29,6 +21,14 @@ import { iOSUIKit } from "react-native-typography";
 import { usePerson } from "./api/getPerson";
 import { PosterSizes } from "../../interfaces/tmdb/configuration";
 
+import ButtonMultiState from "@/components/ButtonMultiState";
+import { ExpandableText } from "@/components/ExpandableText";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { Text as ThemedText } from "@/components/Themed";
+import { dateToLocaleString } from "@/helpers/formatting";
+import { calculateWidth } from "@/helpers/helpers";
+import { reusableStyles } from "@/helpers/styles";
 import { FindStackParams, BottomTabParams } from "@/types";
 
 type ActorScreenNavigationProp = CompositeScreenProps<

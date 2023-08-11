@@ -1,4 +1,3 @@
-import React from "react";
 import SegmentedControl from "@react-native-community/segmented-control";
 
 interface Props {

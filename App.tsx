@@ -21,7 +21,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { StatusBar, View } from "react-native";
 import Purchases from "react-native-purchases";
 import SplashScreen from "react-native-splash-screen";

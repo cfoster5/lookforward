@@ -1,14 +1,14 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-import { removeSub } from "@/helpers/helpers";
 import { FirestoreGame } from "interfaces/firebase";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import GameDetails from "./components/GameDetails";
 
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { removeSub } from "@/helpers/helpers";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
 

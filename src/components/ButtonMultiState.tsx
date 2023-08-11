@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { PlatformColor, Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";

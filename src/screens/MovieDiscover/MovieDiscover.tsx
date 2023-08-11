@@ -6,15 +6,8 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
-import ButtonMultiState from "@/components/ButtonMultiState";
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-import { LoadingScreen } from "@/components/LoadingScreen";
-import { MoviePoster } from "@/components/Posters/MoviePoster";
-import { targetedProviders } from "@/helpers/helpers";
 import { Movie } from "interfaces/tmdb";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   FlatList,
   Platform,
@@ -31,6 +24,13 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useDiscoverMovies } from "./api/getDiscoverMovies";
 
+import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
+import ButtonMultiState from "@/components/ButtonMultiState";
+import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { targetedProviders } from "@/helpers/helpers";
 import { FindStackParams, BottomTabParams } from "@/types";
 
 type MovieDiscoverScreenNavigationProp = CompositeScreenProps<

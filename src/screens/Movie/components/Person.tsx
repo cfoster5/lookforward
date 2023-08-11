@@ -1,10 +1,8 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { TextPoster } from "@/components/Posters/TextPoster";
-import TabStackContext from "@/contexts/TabStackContext";
 import { Cast, Crew } from "interfaces/tmdb";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import {
   PlatformColor,
   Pressable,
@@ -16,6 +14,8 @@ import {
 import FastImage from "react-native-fast-image";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
+import { TextPoster } from "@/components/Posters/TextPoster";
+import TabStackContext from "@/contexts/TabStackContext";
 import {
   CountdownStackParamList,
   FindStackParamList,

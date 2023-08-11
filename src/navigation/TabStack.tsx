@@ -1,14 +1,14 @@
 import { BlurView } from "@react-native-community/blur";
 import firestore from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Platform, PlatformColor, StyleSheet } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-import { FirestoreGame, FirestoreMovie } from "../interfaces/firebase";
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
 import { SettingsStack } from "./SettingsStack";
+import { FirestoreGame, FirestoreMovie } from "../interfaces/firebase";
 
 import { useStore } from "@/stores/store";
 import { BottomTabParams } from "@/types";

@@ -1,4 +1,3 @@
-import React from "react";
 import { PlatformColor } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { HeaderButton } from "react-navigation-header-buttons";

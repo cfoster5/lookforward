@@ -3,13 +3,12 @@ import {
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
-import React from "react";
 import { ColorSchemeName } from "react-native";
 import { OverflowMenuProvider } from "react-navigation-header-buttons";
 
-import TabStackContext from "../contexts/TabStackContext";
 import { AuthStack } from "./AuthStack";
 import { TabStack } from "./TabStack";
+import TabStackContext from "../contexts/TabStackContext";
 
 import { useStore } from "@/stores/store";
 

@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { IGDB } from "interfaces/igdb";
 import { Movie } from "interfaces/tmdb";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import {
   Dimensions,
   Image,

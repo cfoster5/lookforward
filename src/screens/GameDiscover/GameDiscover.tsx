@@ -5,13 +5,13 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { LoadingScreen } from "@/components/LoadingScreen";
-import { GamePoster } from "@/components/Posters/GamePoster";
-import React, { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { FlatList, Platform, Pressable } from "react-native";
 
 import { useDiscoverGames } from "./api/getDiscoverGames";
 
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { GamePoster } from "@/components/Posters/GamePoster";
 import {
   FindStackParamList,
   Game,

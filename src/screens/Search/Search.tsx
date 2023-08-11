@@ -1,16 +1,16 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import CategoryControl from "@/components/CategoryControl/CategoryControl";
-import { Text as ThemedText } from "@/components/Themed";
-import TabStackContext from "@/contexts/TabStackContext";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { GameLayout } from "./GameLayout";
 import { MovieLayout } from "./MovieLayout";
 
+import CategoryControl from "@/components/CategoryControl/CategoryControl";
+import { Text as ThemedText } from "@/components/Themed";
+import TabStackContext from "@/contexts/TabStackContext";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
 
 export function ListLabel({ text, style }: { text: string; style?: any }) {

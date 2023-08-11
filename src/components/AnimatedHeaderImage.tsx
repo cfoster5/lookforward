@@ -1,4 +1,3 @@
-import React from "react";
 import { ImageBackground, StyleSheet, useWindowDimensions } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import Animated, {

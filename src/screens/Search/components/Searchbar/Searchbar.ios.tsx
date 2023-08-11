@@ -1,8 +1,9 @@
-import TabStackContext from "@/contexts/TabStackContext";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { PlatformColor } from "react-native";
 import { SearchBar } from "react-native-elements";
 import { iOSUIKit } from "react-native-typography";
+
+import TabStackContext from "@/contexts/TabStackContext";
 
 interface Props {
   categoryIndex: number;

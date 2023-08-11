@@ -1,4 +1,3 @@
-import React from "react";
 import { PlatformColor, View } from "react-native";
 import { iOSColors } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";

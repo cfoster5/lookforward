@@ -15,7 +15,6 @@ import {
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { iOSUIKit } from "react-native-typography";
 
-import { ListLabel } from "./Search";
 import { useMovieData } from "./api/getMovies";
 import { MovieSearchModal } from "./components/MovieSearchModal";
 import SearchPerson from "./components/SearchPerson";
@@ -23,6 +22,7 @@ import Searchbar from "./components/Searchbar/Searchbar";
 import useDebounce from "./hooks/useDebounce";
 import { MovieOption } from "./types";
 
+import { ListLabel } from "@/components/ListLabel";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 

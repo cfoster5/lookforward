@@ -13,7 +13,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
 import { LogoSizes } from "../../../interfaces/tmdb/configuration";
-import { horizontalListProps } from "../Movie";
+import { horizontalListProps } from "../constants/horizontalListProps";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import TabStackContext from "@/contexts/TabStackContext";

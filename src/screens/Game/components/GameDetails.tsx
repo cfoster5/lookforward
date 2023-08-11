@@ -18,7 +18,6 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import { horizontalListProps } from "../../Movie/Movie";
 import { useGame } from "../api/getGame";
 
 import { BlueBullet } from "@/components/BlueBullet";
@@ -28,6 +27,7 @@ import { ExpandableText } from "@/components/ExpandableText";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { reusableStyles } from "@/helpers/styles";
+import { horizontalListProps } from "@/screens/Movie/constants/horizontalListProps";
 import {
   FindStackParamList,
   Game,

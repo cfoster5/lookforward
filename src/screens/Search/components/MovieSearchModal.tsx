@@ -1,12 +1,12 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useMovieWatchProviders } from "api/getMovieWatchProviders";
-import ButtonMultiState from "components/ButtonMultiState";
-import ButtonSingleState from "components/ButtonSingleState";
-import { DynamicHeightModal } from "components/DynamicHeightModal";
-import { targetedProviders } from "helpers/helpers";
-import React from "react";
+import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
+import ButtonMultiState from "@/components/ButtonMultiState";
+import ButtonSingleState from "@/components/ButtonSingleState";
+import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { targetedProviders } from "@/helpers/helpers";
+
 import { FlatList, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

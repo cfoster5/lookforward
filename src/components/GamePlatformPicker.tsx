@@ -1,5 +1,5 @@
 import firestore from "@react-native-firebase/firestore";
-import React from "react";
+
 import {
   FlatList,
   PlatformColor,

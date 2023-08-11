@@ -1,10 +1,8 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useScrollToTop } from "@react-navigation/native";
-import { LoadingScreen } from "components/LoadingScreen";
-import { MoviePoster } from "components/Posters/MoviePoster";
 import { DateTime } from "luxon";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   PlatformColor,
@@ -17,13 +15,16 @@ import {
 import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { iOSUIKit } from "react-native-typography";
 
-import { ListLabel } from "./Search";
 import { useMovieData } from "./api/getMovies";
 import { MovieSearchModal } from "./components/MovieSearchModal";
 import SearchPerson from "./components/SearchPerson";
 import Searchbar from "./components/Searchbar/Searchbar";
 import useDebounce from "./hooks/useDebounce";
 import { MovieOption } from "./types";
+
+import { ListLabel } from "@/components/ListLabel";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
 
 export function MovieLayout({ navigation }) {
   const tabBarheight = useBottomTabBarHeight();
@@ -46,7 +47,7 @@ export function MovieLayout({ navigation }) {
     if (data?.pages.filter((page) => page.page === 2).length === 0) {
       fetchNextPage({ pageParam: 2 });
     }
-  }, [data]);
+  }, [data, fetchNextPage]);
 
   useEffect(() => {
     modalRef.current?.dismiss();
@@ -56,7 +57,7 @@ export function MovieLayout({ navigation }) {
         scrollRef.current?.scrollToIndex({ index: 0 });
       }
     }
-  }, [option]);
+  }, [movies, option]);
 
   function filteredMovies() {
     if (debouncedSearch) {

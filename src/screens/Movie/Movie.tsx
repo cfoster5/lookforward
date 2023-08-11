@@ -7,19 +7,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { AnimatedHeaderImage } from "components/AnimatedHeaderImage";
-import { BlueBullet } from "components/BlueBullet";
-import ButtonSingleState from "components/ButtonSingleState";
-import CategoryControl from "components/CategoryControl/CategoryControl";
-import { ExpandableText } from "components/ExpandableText";
-import { IoniconsHeaderButton } from "components/IoniconsHeaderButton";
-import { LoadingScreen } from "components/LoadingScreen";
-import { MoviePoster } from "components/Posters/MoviePoster";
-import { Text as ThemedText } from "components/Themed";
-import Trailer from "components/Trailer";
-import TabStackContext from "contexts/TabStackContext";
-import { getRuntime } from "helpers/formatting";
-import React, {
+import {
   useContext,
   useEffect,
   useLayoutEffect,
@@ -52,6 +40,7 @@ import { DiscoverListLabel } from "./components/DiscoverListLabel";
 import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
 import WatchProvidersModal from "./components/WatchProvidersModal";
+import { horizontalListProps } from "./constants/horizontalListProps";
 import {
   calculateWidth,
   removeSub,
@@ -65,8 +54,20 @@ import {
   BackdropSizes,
   PosterSizes,
 } from "../../interfaces/tmdb/configuration";
-import { ListLabel } from "../Search/Search";
 
+import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
+import { BlueBullet } from "@/components/BlueBullet";
+import ButtonSingleState from "@/components/ButtonSingleState";
+import CategoryControl from "@/components/CategoryControl/CategoryControl";
+import { ExpandableText } from "@/components/ExpandableText";
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { ListLabel } from "@/components/ListLabel";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { Text as ThemedText } from "@/components/Themed";
+import Trailer from "@/components/Trailer";
+import TabStackContext from "@/contexts/TabStackContext";
+import { getRuntime } from "@/helpers/formatting";
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams } from "@/types";
 import { isoToUTC, compareDates } from "@/utils/dates";
@@ -117,15 +118,6 @@ function ScrollViewWithFlatList({
     </ScrollView>
   );
 }
-
-export const horizontalListProps = {
-  horizontal: true,
-  style: { marginHorizontal: -16, marginTop: 16 },
-  ListHeaderComponent: () => <View style={{ width: 16 }} />,
-  ItemSeparatorComponent: () => <View style={{ width: 8 }} />,
-  ListFooterComponent: () => <View style={{ width: 16 }} />,
-  showsHorizontalScrollIndicator: false,
-};
 
 export function getReleaseDate(releaseDates: ReleaseDate[]) {
   const nonPremiereDates = releaseDates.filter(

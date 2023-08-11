@@ -1,6 +1,6 @@
-import { reusableStyles } from "helpers/styles";
+import { reusableStyles } from "@/helpers/styles";
 import { IGDB } from "interfaces/igdb";
-import React from "react";
+
 import {
   Image,
   PlatformColor,

@@ -21,7 +21,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { StatusBar, View } from "react-native";
 import Purchases from "react-native-purchases";
 import SplashScreen from "react-native-splash-screen";
@@ -76,6 +76,40 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    async function requestUserPermission() {
+      const authStatus = await messaging().requestPermission();
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+      const docSnapshot = await firestore()
+        .collection("users")
+        .doc(user!.uid)
+        .get();
+      if (enabled) {
+        if (!docSnapshot.data()?.notifications) {
+          // Only set notification preferences to true if they haven't been set before
+          await firestore()
+            .collection("users")
+            .doc(user!.uid)
+            .update({ notifications: { day: true, week: true } });
+        }
+        const token = await messaging().getToken();
+        await saveTokenToDatabase(token);
+        // Listen to whether the token changes
+        return messaging().onTokenRefresh(
+          async (token) => await saveTokenToDatabase(token)
+        );
+      }
+    }
+
+    async function saveTokenToDatabase(token: string) {
+      // Add the token to the users datastore
+      await firestore()
+        .collection("users")
+        .doc(user!.uid)
+        .update({ deviceToken: token });
+    }
+
     if (user) {
       requestUserPermission();
       setInitializing(false);
@@ -87,40 +121,6 @@ export default function App() {
   useEffect(() => {
     if (!initializing) SplashScreen.hide();
   }, [initializing]);
-
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    const docSnapshot = await firestore()
-      .collection("users")
-      .doc(user!.uid)
-      .get();
-    if (enabled) {
-      if (!docSnapshot.data()?.notifications) {
-        // Only set notification preferences to true if they haven't been set before
-        await firestore()
-          .collection("users")
-          .doc(user!.uid)
-          .update({ notifications: { day: true, week: true } });
-      }
-      const token = await messaging().getToken();
-      await saveTokenToDatabase(token);
-      // Listen to whether the token changes
-      return messaging().onTokenRefresh(
-        async (token) => await saveTokenToDatabase(token)
-      );
-    }
-  }
-
-  async function saveTokenToDatabase(token: string) {
-    // Add the token to the users datastore
-    await firestore()
-      .collection("users")
-      .doc(user!.uid)
-      .update({ deviceToken: token });
-  }
 
   if (initializing) return <View />;
 

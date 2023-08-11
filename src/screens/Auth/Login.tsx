@@ -1,6 +1,6 @@
 import auth from "@react-native-firebase/auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Keyboard,

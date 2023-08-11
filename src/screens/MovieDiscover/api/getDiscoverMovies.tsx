@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "react-query";
-import { TmdbKey } from "constants/ApiKeys";
+import { TMDB_KEY } from "@/constants/ApiKeys";
 import {
   MoviesPlayingNow,
   PopularMovies,
@@ -9,7 +9,7 @@ import {
 async function getMovies({ pageParam = 1, queryKey }) {
   const { filter, sortMethod } = queryKey[1];
   const response = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${TmdbKey}${filter}&region=US&watch_region=US&sort_by=${sortMethod}&page=${pageParam}`
+    `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}${filter}&region=US&watch_region=US&sort_by=${sortMethod}&page=${pageParam}`
   );
   const json = await response.json();
   return {

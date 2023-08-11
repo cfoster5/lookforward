@@ -1,5 +1,5 @@
 import auth from "@react-native-firebase/auth";
-import React from "react";
+
 import {
   Alert,
   PlatformColor,

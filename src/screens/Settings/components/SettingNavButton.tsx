@@ -1,4 +1,3 @@
-import React from "react";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";

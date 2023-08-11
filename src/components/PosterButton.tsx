@@ -1,5 +1,5 @@
 import firestore from "@react-native-firebase/firestore";
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { Animated, Easing, PlatformColor, Pressable, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { iOSColors } from "react-native-typography";

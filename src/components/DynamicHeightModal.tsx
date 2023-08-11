@@ -5,7 +5,7 @@ import {
   BottomSheetModalProps,
   useBottomSheetDynamicSnapPoints,
 } from "@gorhom/bottom-sheet";
-import React, { cloneElement, useMemo } from "react";
+import { cloneElement, useMemo } from "react";
 import { PlatformColor } from "react-native";
 
 const RenderBackdrop = (props: BottomSheetBackdropProps) => (

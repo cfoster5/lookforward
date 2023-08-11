@@ -1,6 +1,5 @@
 import auth from "@react-native-firebase/auth";
-import { reusableStyles } from "helpers/styles";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   PlatformColor,
@@ -13,6 +12,8 @@ import {
 } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
+
+import { reusableStyles } from "@/helpers/styles";
 
 const SettingsItem = ({
   handlePress,

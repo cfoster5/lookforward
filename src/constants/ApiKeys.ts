@@ -1,1 +1,4 @@
-export const TmdbKey = "68991fbb0b75dba5ae0ecd8182e967b1";
+import Constants from "expo-constants";
+
+export const TMDB_KEY = Constants.expoConfig?.extra?.TMDB_KEY;
+export const IGDB_AWS_KEY = Constants.expoConfig?.extra?.IGDB_AWS_KEY;

@@ -2,7 +2,6 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackNavigationProp } from "@react-navigation/stack";
-import React from "react";
 import { Platform } from "react-native";
 
 import Actor from "../screens/Actor/Actor";

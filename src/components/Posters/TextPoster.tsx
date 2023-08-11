@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { PlatformColor, Text, View } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 

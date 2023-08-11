@@ -1,11 +1,8 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import TabStackContext from "contexts/TabStackContext";
-import { calculateWidth } from "helpers/helpers";
-import { reusableStyles } from "helpers/styles";
 import { TMDB } from "interfaces/tmdb";
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   Dimensions,
   PlatformColor,
@@ -17,6 +14,9 @@ import {
 import FastImage from "react-native-fast-image";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
+import TabStackContext from "@/contexts/TabStackContext";
+import { calculateWidth } from "@/helpers/helpers";
+import { reusableStyles } from "@/helpers/styles";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
 
 interface Props {

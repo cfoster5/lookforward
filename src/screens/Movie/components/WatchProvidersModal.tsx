@@ -1,8 +1,5 @@
-import { DynamicHeightModal } from "components/DynamicHeightModal";
-import TabStackContext from "contexts/TabStackContext";
-import { calculateWidth } from "helpers/helpers";
 import { WatchLocale } from "interfaces/tmdb";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import {
   FlatList,
   Image,
@@ -16,7 +13,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
 import { LogoSizes } from "../../../interfaces/tmdb/configuration";
-import { horizontalListProps } from "../Movie";
+import { horizontalListProps } from "../constants/horizontalListProps";
+
+import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import TabStackContext from "@/contexts/TabStackContext";
+import { calculateWidth } from "@/helpers/helpers";
 
 function WatchProvidersModal({
   modalRef,

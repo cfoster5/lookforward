@@ -1,6 +1,7 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import React, { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -33,12 +34,14 @@ export function AppProvider({ children }: AppProviderProps) {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      {/* <AuthProviderContext.Provider value={{ user }}> */}
-      <SafeAreaProvider>
-        <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
-      </SafeAreaProvider>
-      {/* </AuthProviderContext.Provider> */}
-    </QueryClientProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <QueryClientProvider client={queryClient}>
+        {/* <AuthProviderContext.Provider value={{ user }}> */}
+        <SafeAreaProvider>
+          <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+        </SafeAreaProvider>
+        {/* </AuthProviderContext.Provider> */}
+      </QueryClientProvider>
+    </GestureHandlerRootView>
   );
 }

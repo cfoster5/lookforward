@@ -5,14 +5,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { BlueBullet } from "components/BlueBullet";
-import ButtonSingleState from "components/ButtonSingleState";
-import CategoryControl from "components/CategoryControl/CategoryControl";
-import { ExpandableText } from "components/ExpandableText";
-import { Text as ThemedText } from "components/Themed";
-import Trailer from "components/Trailer";
-import { reusableStyles } from "helpers/styles";
-import React, { Fragment, useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -25,9 +18,16 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import { horizontalListProps } from "../../Movie/Movie";
 import { useGame } from "../api/getGame";
 
+import { BlueBullet } from "@/components/BlueBullet";
+import ButtonSingleState from "@/components/ButtonSingleState";
+import CategoryControl from "@/components/CategoryControl/CategoryControl";
+import { ExpandableText } from "@/components/ExpandableText";
+import { Text as ThemedText } from "@/components/Themed";
+import Trailer from "@/components/Trailer";
+import { reusableStyles } from "@/helpers/styles";
+import { horizontalListProps } from "@/screens/Movie/constants/horizontalListProps";
 import {
   FindStackParamList,
   Game,

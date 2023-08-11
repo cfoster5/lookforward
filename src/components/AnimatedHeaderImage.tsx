@@ -1,4 +1,3 @@
-import React from "react";
 import { ImageBackground, StyleSheet, useWindowDimensions } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import Animated, {
@@ -67,7 +66,7 @@ export function AnimatedHeaderImage({
     <AnimatedImageBackground
       style={[styles.backdrop, headerStyle]}
       source={{
-        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}{path}`,
+        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${path}`,
       }}
     >
       <LinearGradient

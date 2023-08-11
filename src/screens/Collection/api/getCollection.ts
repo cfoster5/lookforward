@@ -1,9 +1,9 @@
 import { useQuery } from "react-query";
-import { TmdbKey } from "constants/ApiKeys";
+import { TMDB_KEY } from "@/constants/ApiKeys";
 
 async function getCollection(collectionId: number) {
   const response = await fetch(
-    `https://api.themoviedb.org/3/collection/${collectionId}?api_key=${TmdbKey}&language=en-US`
+    `https://api.themoviedb.org/3/collection/${collectionId}?api_key=${TMDB_KEY}&language=en-US`
   );
   const json = await response.json();
   return json;

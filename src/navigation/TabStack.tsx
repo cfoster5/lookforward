@@ -47,7 +47,7 @@ export function TabStack() {
       movieSubscription();
       gameSubscription();
     };
-  }, []);
+  }, [setGameSubs, setMovieSubs, user]);
 
   return (
     <Tab.Navigator

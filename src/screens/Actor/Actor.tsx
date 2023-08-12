@@ -47,7 +47,6 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
   const ref = useRef<Carousel<any>>(null);
   const width = 200;
   const horizontalMargin = 4;
-  const [showBio, setShowBio] = useState(false);
   const [selectedJob, setSelectedJob] = useState("Actor");
 
   useLayoutEffect(() => {
@@ -177,11 +176,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
               {dateToLocaleString(person?.birthday)}
             </Text>
           )}
-          <ExpandableText
-            isExpanded={showBio}
-            handlePress={() => setShowBio(!showBio)}
-            text={person.biography}
-          />
+          <ExpandableText text={person.biography} />
           <View
             style={{
               flexDirection: "row",

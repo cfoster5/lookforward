@@ -1,19 +1,13 @@
+import { useState } from "react";
 import { Pressable } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { Text as ThemedText } from "./Themed";
 
-export function ExpandableText({
-  handlePress,
-  isExpanded,
-  text,
-}: {
-  handlePress: () => void;
-  isExpanded: boolean;
-  text: string;
-}) {
+export function ExpandableText({ text }: { text: string }) {
+  const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <Pressable onPress={handlePress}>
+    <Pressable onPress={() => setIsExpanded(!isExpanded)}>
       <ThemedText
         style={[iOSUIKit.body, { paddingTop: 16 }]}
         numberOfLines={isExpanded ? undefined : 4}

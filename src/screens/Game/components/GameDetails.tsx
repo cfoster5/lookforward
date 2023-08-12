@@ -51,7 +51,6 @@ function GameDetails({ navigation, game }: Props) {
   const { data, isLoading } = useGame(game.id);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [showAllOverview, setShowAllOverview] = useState(false);
 
   function getReleaseDate(): string {
     // need to filter client-side since combining search and filter on API is not working
@@ -93,11 +92,7 @@ function GameDetails({ navigation, game }: Props) {
         </ThemedText>
         <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
 
-        <ExpandableText
-          isExpanded={showAllOverview}
-          handlePress={() => setShowAllOverview(!showAllOverview)}
-          text={data?.summary}
-        />
+        <ExpandableText text={data?.summary} />
 
         <View
           style={{

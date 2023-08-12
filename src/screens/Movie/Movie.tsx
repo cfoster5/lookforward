@@ -151,7 +151,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [showAllOverview, setShowAllOverview] = useState(false);
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
     (e) => (scrollOffset.value = e.contentOffset.y)
@@ -290,11 +289,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             </Text>
           ) : null}
 
-          <ExpandableText
-            handlePress={() => setShowAllOverview(!showAllOverview)}
-            isExpanded={showAllOverview}
-            text={movieDetails!.overview}
-          />
+          <ExpandableText text={movieDetails!.overview} />
 
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {movieDetails!.genres.map((genre, index) => (

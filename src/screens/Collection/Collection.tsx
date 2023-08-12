@@ -42,7 +42,6 @@ export function Collection({
   const { data: collection, isLoading } = useCollection(collectionId);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [showAllOverview, setShowAllOverview] = useState(false);
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
     (e) => (scrollOffset.value = e.contentOffset.y)
@@ -71,11 +70,7 @@ export function Collection({
           >
             {collection!.name}
           </ThemedText>
-          <ExpandableText
-            isExpanded={showAllOverview}
-            handlePress={() => setShowAllOverview(!showAllOverview)}
-            text={collection!.overview}
-          />
+          <ExpandableText text={collection!.overview} />
           <View style={{ height: 16 }} />
         </>
       }

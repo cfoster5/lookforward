@@ -142,9 +142,10 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { movieId, movieTitle } = route.params;
-  const [countdownId, setCountdownId] =
-    useState<FirestoreMovie["documentID"]>();
   const { user, movieSubs } = useStore();
+  const isSubbed = movieSubs.find(
+    (sub) => sub.documentID === movieId.toString()
+  );
   const { theme } = useContext(TabStackContext);
   const { data: { movieDetails, traktDetails } = {}, isLoading } =
     useMovie(movieId);
@@ -178,25 +179,17 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           <Item
             title="search"
-            iconName={countdownId ? "checkmark-outline" : "add-outline"}
+            iconName={isSubbed ? "checkmark-outline" : "add-outline"}
             onPress={() =>
-              !countdownId
+              !isSubbed
                 ? subToMovie(movieId.toString(), user!.uid)
-                : removeSub("movies", countdownId, user!.uid)
+                : removeSub("movies", movieId.toString(), user!.uid)
             }
           />
         </HeaderButtons>
       ),
     });
-  }, [movieTitle, navigation, countdownId]);
-
-  useEffect(() => {
-    const documentID = movieSubs.find(
-      (sub) => sub.documentID == movieId.toString()
-    )?.documentID;
-
-    setCountdownId(documentID);
-  }, [movieSubs, movieId]);
+  }, [movieTitle, navigation, movieId, user, isSubbed]);
 
   useEffect(() => {
     const obj = {

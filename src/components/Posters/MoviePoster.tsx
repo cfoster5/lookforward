@@ -15,8 +15,6 @@ import { Movie, Recommendation } from "../../interfaces/tmdb";
 import { PosterSizes } from "../../interfaces/tmdb/configuration";
 import PosterButton from "../PosterButton";
 
-import { useStore } from "@/stores/store";
-
 export function MoviePoster({
   pressHandler,
   movie,
@@ -30,20 +28,11 @@ export function MoviePoster({
   style?: StyleProp<ImageStyle>;
   buttonStyle?: StyleProp<ViewStyle>;
 }) {
-  const { movieSubs } = useStore();
-  const inCountdown = movie
-    ? movieSubs.some((sub) => sub?.documentID == movie.id.toString())
-    : null;
   const { theme } = useContext(TabStackContext);
 
   return (
     <Pressable onPress={pressHandler} style={buttonStyle}>
-      {movie && (
-        <PosterButton
-          movieId={movie.id.toString()}
-          inCountdown={inCountdown as boolean}
-        />
-      )}
+      {movie && <PosterButton movieId={movie.id.toString()} />}
       {posterPath ? (
         <FastImage
           style={[

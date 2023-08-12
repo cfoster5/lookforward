@@ -11,11 +11,11 @@ import { Game, ReleaseDate } from "@/types";
 interface Props {
   movieId?: string;
   game?: Game & { release_dates: ReleaseDate[] };
-  inCountdown: boolean;
 }
 
-function PosterButton({ movieId, game, inCountdown }: Props) {
-  const { user, setGame, gameSubs, bottomSheetModalRef } = useStore();
+function PosterButton({ movieId, game }: Props) {
+  const { user, movieSubs, setGame, gameSubs, bottomSheetModalRef } =
+    useStore();
 
   let docId = "";
   if (movieId) {
@@ -25,6 +25,15 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
     docId = gameSubs.find(
       (releaseDate) => releaseDate.game.id === game.id
     )?.documentID;
+  }
+
+  function isSubbed(): boolean {
+    if (movieId) {
+      return movieSubs.some((sub) => sub.documentID === movieId?.toString());
+    } else if (game) {
+      return gameSubs.some((releaseDate) => releaseDate.game.id === game.id);
+    }
+    return false;
   }
 
   const transformAnim = useRef(new Animated.Value(1)).current;
@@ -90,10 +99,10 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
 
   function handlePress() {
     if (movieId) {
-      if (inCountdown) deleteItem("movies");
+      if (isSubbed()) deleteItem("movies");
       else addMovieToList();
     } else if (game) {
-      if (inCountdown) deleteItem("gameReleases");
+      if (isSubbed()) deleteItem("gameReleases");
       else {
         setGame(game);
         bottomSheetModalRef.current?.present();
@@ -129,7 +138,7 @@ function PosterButton({ movieId, game, inCountdown }: Props) {
         >
           <Animated.View style={{ transform: [{ scale: transformAnim }] }}>
             <Ionicons
-              name={inCountdown ? "checkmark-outline" : "add-outline"}
+              name={isSubbed() ? "checkmark-outline" : "add-outline"}
               color={iOSColors.white}
               size={28}
               style={{ textAlign: "center" }}

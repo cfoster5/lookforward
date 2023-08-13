@@ -3290,7 +3290,7 @@ cosmiconfig@^5.0.5, cosmiconfig@^5.1.0:
     js-yaml "^3.13.1"
     parse-json "^4.0.0"
 
-cross-fetch@^3.1.5:
+cross-fetch@^3.1.4, cross-fetch@^3.1.5:
   version "3.1.8"
   resolved "https://registry.yarnpkg.com/cross-fetch/-/cross-fetch-3.1.8.tgz#0327eba65fd68a7d119f8fb2bf9334a1a7956f82"
   integrity sha512-cvA+JwZoU0Xq+h6WkMvAUqPEYy92Obet6UdKLfW60qn99ftItKjB5T+BkyWOFWe2pUyfQ+IJHmpOTznqk1M6Kg==
@@ -7888,6 +7888,13 @@ through@2:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
+
+tmdb-ts@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/tmdb-ts/-/tmdb-ts-1.4.0.tgz#f20b44e1a7f724da00b57fbd02c40cc1c4a93b04"
+  integrity sha512-fJLJnOtJ1qd7qTBbvl7ooJYD5Xj9DxWzYVLO/2De1ExKokMSTe57huc0jHR4vK6lD9RsAoGNgVHxp289S8aHEg==
+  dependencies:
+    cross-fetch "^3.1.4"
 
 tmp@^0.0.33:
   version "0.0.33"

@@ -9,6 +9,7 @@ import { create } from "zustand";
 import { Game, ReleaseDate } from "@/types";
 
 const bottomSheetModalRef = createRef<BottomSheetModal>();
+const onboardingModalRef = createRef<BottomSheetModal>();
 
 export enum Subs {
   movieSubs = "movieSubs",
@@ -34,6 +35,7 @@ type Store = {
   gameSubs: any;
   setGameSubs: (games: any) => void;
   bottomSheetModalRef: typeof bottomSheetModalRef;
+  onboardingModalRef: typeof onboardingModalRef;
   updateSubs: (
     key: Subs,
     documentId: FirebaseFirestoreTypes.QueryDocumentSnapshot<FirebaseFirestoreTypes.DocumentData>["id"]
@@ -52,6 +54,7 @@ export const useStore = create<Store>((set) => ({
   gameSubs: [],
   setGameSubs: (gameSubs) => set(() => ({ gameSubs })),
   bottomSheetModalRef,
+  onboardingModalRef,
   updateSubs: (key, documentId) =>
     set(
       produce((draft) => {

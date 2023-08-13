@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { useStore } from "@/stores/store";
 import { AuthStackParams } from "@/types";
 
 type Props = NativeStackScreenProps<AuthStackParams, "Sign In">;
@@ -20,6 +21,7 @@ type Props = NativeStackScreenProps<AuthStackParams, "Sign In">;
 function Login({ navigation, route }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { onboardingModalRef } = useStore();
 
   useEffect(() => {
     if (route.params.email) {
@@ -31,6 +33,7 @@ function Login({ navigation, route }: Props) {
     try {
       await auth().signInWithEmailAndPassword(email, password);
       // console.log('User account created & signed in!');
+      onboardingModalRef.current?.present();
     } catch (error) {
       if (error.code === "auth/invalid-email") {
         Alert.alert("Invalid Email", "That email address is invalid!");

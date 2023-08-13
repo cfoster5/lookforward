@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { useStore } from "@/stores/store";
 import { AuthStackParams } from "@/types";
 
 type Props = NativeStackScreenProps<AuthStackParams, "Create Account">;
@@ -20,11 +21,12 @@ type Props = NativeStackScreenProps<AuthStackParams, "Create Account">;
 function CreateAccount({ navigation, route }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { onboardingModalRef } = useStore();
 
   async function createAccount() {
     try {
       await auth().createUserWithEmailAndPassword(email, password);
-      console.log("User account created & signed in!");
+      onboardingModalRef.current?.present();
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         Alert.alert(

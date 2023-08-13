@@ -1,17 +1,26 @@
-import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  PlatformColor,
+  Pressable,
+  PressableProps,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 type Props = {
   handlePress: () => void;
   text: string;
+  buttonStyle?: PressableProps["style"];
 };
 
-export const SettingNavButton = ({ handlePress, text }: Props) => (
+export const SettingNavButton = ({ handlePress, text, buttonStyle }: Props) => (
   <Pressable
     style={({ pressed }) => [
       styles.buttonContainer,
       pressed ? { backgroundColor: PlatformColor("systemGray5") } : null,
+      buttonStyle,
     ]}
     onPress={handlePress}
   >

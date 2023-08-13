@@ -12,7 +12,7 @@ import { reusableStyles } from "@/helpers/styles";
 import { useStore } from "@/stores/store";
 
 function Settings({ navigation }) {
-  const { user } = useStore();
+  const { user, onboardingModalRef, proModalRef } = useStore();
   const [hasPermissions, setHasPermissions] = useState(true);
   const [notifications, setNotifications] = useState({
     day: false,
@@ -90,10 +90,21 @@ function Settings({ navigation }) {
           </Text>
         )}
         {Platform.OS === "ios" && (
-          <SettingNavButton
-            handlePress={() => modalRef.current?.present()}
-            text="Tip Jar"
-          />
+          <>
+            <SettingNavButton
+              handlePress={() => proModalRef.current?.present()}
+              text="Explore Pro Features"
+            />
+            <SettingNavButton
+              handlePress={() => modalRef.current?.present()}
+              text="Tip Jar"
+              buttonStyle={{ marginTop: 0 }}
+            />
+            <SettingNavButton
+              handlePress={() => onboardingModalRef.current?.present()}
+              text="Show Getting Started"
+            />
+          </>
         )}
         <SettingNavButton
           handlePress={() => navigation.navigate("Account")}

@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native";
 
 import { GameLayout } from "./GameLayout";
 import { MovieLayout } from "./MovieLayout";
+import { SearchBottomSheet } from "./components/SearchBottomSheet/SearchBottomSheet";
 
 import CategoryControl from "@/components/CategoryControl/CategoryControl";
 import TabStackContext from "@/contexts/TabStackContext";
@@ -39,6 +40,7 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
       ) : (
         <GameLayout navigation={navigation} />
       )}
+      <SearchBottomSheet />
     </>
   );
 }

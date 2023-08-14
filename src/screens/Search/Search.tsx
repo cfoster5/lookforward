@@ -1,8 +1,11 @@
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
+import {
+  BottomTabScreenProps,
+  useBottomTabBarHeight,
+} from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useContext, useState } from "react";
-import { SafeAreaView } from "react-native";
+import { PlatformColor, SafeAreaView, View } from "react-native";
 
 import { GameLayout } from "./GameLayout";
 import { MovieLayout } from "./MovieLayout";
@@ -20,6 +23,7 @@ type FindScreenNavigationProp = CompositeScreenProps<
 function Search({ navigation, route }: FindScreenNavigationProp) {
   const [categoryIndex, setCategoryIndex] = useState(0);
   const { theme } = useContext(TabStackContext);
+  const tabBarHeight = useBottomTabBarHeight();
 
   // const scrollIndicatorInsets =
   //   Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined;
@@ -41,6 +45,14 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
         <GameLayout navigation={navigation} />
       )}
       <SearchBottomSheet />
+      {/* Create View under bottom sheet to remove blur effect for this screen */}
+      {/* Keeps effect for other screens in stack */}
+      <View
+        style={{
+          height: tabBarHeight,
+          backgroundColor: PlatformColor("secondarySystemBackground"),
+        }}
+      />
     </>
   );
 }

@@ -18,6 +18,7 @@ export default {
       googleServicesFile:
         process.env.GOOGLE_SERVICE_PLIST ?? "./GoogleService-Info.secret.plist",
       bundleIdentifier: "com.lookforward.app",
+      buildNumber: "6",
     },
     android: {
       adaptiveIcon: {
@@ -46,6 +47,8 @@ export default {
       },
       TMDB_KEY: process.env.TMDB_KEY || null,
       IGDB_AWS_KEY: process.env.IGDB_AWS_KEY || null,
+      TRAKT_KEY: process.env.TRAKT_KEY || null,
+      OMDB_KEY: process.env.OMDB_KEY || null,
     },
   },
 };

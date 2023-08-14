@@ -7,6 +7,10 @@
         "simulator": true
       }
     },
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
     "production": {}
   }
 }

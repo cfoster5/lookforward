@@ -75,20 +75,18 @@ export function MovieLayout({ navigation }) {
         return movies;
       }
     }
-  }
 
   return (
     <>
-      <Searchbar
+      {/* <Searchbar
         categoryIndex={0}
         handleChange={(text) => setSearchValue(text)}
         value={searchValue}
-      />
-      {!debouncedSearch && (
+      /> */}
+
         <View
           style={{
-            marginHorizontal: 16,
-            marginBottom: 16,
+          margin: 16,
             flexDirection: "row",
             justifyContent: "space-between",
           }}

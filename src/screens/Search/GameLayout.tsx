@@ -22,16 +22,15 @@ export function GameLayout({ navigation }) {
 
   return (
     <>
-      <Searchbar
+      {/* <Searchbar
         categoryIndex={1}
         handleChange={(text) => setSearchValue(text)}
         value={searchValue}
-      />
+      /> */}
       {!debouncedSearch && (
         <View
           style={{
-            marginHorizontal: 16,
-            marginBottom: 16,
+            margin: 16,
             flexDirection: "row",
             justifyContent: "space-between",
           }}

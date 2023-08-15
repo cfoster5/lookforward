@@ -1,5 +1,5 @@
+import { ExtendedMovie } from "interfaces/trakt";
 import { useQuery } from "react-query";
-import { TMDB_KEY } from "@/constants/ApiKeys";
 import {
   Credits,
   Images,
@@ -9,8 +9,9 @@ import {
   ReleaseDates,
   Videos,
   WatchProviders,
-} from "interfaces/tmdb";
-import { ExtendedMovie } from "interfaces/trakt";
+} from "tmdb-ts";
+
+import { TMDB_KEY } from "@/constants/ApiKeys";
 
 interface MyInterface extends MovieDetails {
   credits: Credits;

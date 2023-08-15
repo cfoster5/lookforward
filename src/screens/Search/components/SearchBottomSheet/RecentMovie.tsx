@@ -7,17 +7,17 @@ import { iOSUIKit } from "react-native-typography";
 import { calculateWidth } from "@/helpers/helpers";
 import { Recent } from "@/types";
 
-export function RecentPerson({ item }: { item: Recent }) {
+export function RecentMovie({ item }: { item: Recent }) {
   // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   return (
     <Pressable
       onPress={() =>
-        navigation.navigate("Actor", {
-          personId: item.id,
-          name: item.name,
-          profile_path: item.img_path,
+        navigation.navigate("Movie", {
+          movieId: item.id,
+          movieTitle: item.name,
+          poster_path: item.img_path,
         })
       }
     >
@@ -27,9 +27,9 @@ export function RecentPerson({ item }: { item: Recent }) {
             uri: `https://image.tmdb.org/t/p/w300${item.img_path}`,
           }}
           style={{
-            aspectRatio: 1,
+            aspectRatio: 2 / 3,
             width: calculateWidth(12, 12, 3.5),
-            borderRadius: calculateWidth(12, 12, 3.5),
+            borderRadius: 8,
             marginBottom: 8,
           }}
         />
@@ -37,21 +37,16 @@ export function RecentPerson({ item }: { item: Recent }) {
         <View
           style={{
             backgroundColor: PlatformColor("systemGray"),
-            aspectRatio: 1,
+            aspectRatio: 2 / 3,
             width: calculateWidth(12, 12, 3.5),
-            borderRadius: calculateWidth(12, 12, 3.5),
+            borderRadius: 8,
             marginBottom: 8,
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Text
-            style={{
-              fontSize: calculateWidth(12, 12, 3.5) / 2,
-              color: "white",
-            }}
-          >
-            RP
+          <Text style={[iOSUIKit.bodyWhite, { textAlign: "center" }]}>
+            {item.name}
           </Text>
         </View>
       )}

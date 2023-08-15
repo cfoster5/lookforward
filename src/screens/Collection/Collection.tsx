@@ -6,7 +6,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CollectionDetails } from "interfaces/tmdb";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import { Platform, View } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
@@ -83,6 +83,7 @@ export function Collection({
             navigation.push("Movie", {
               movieId: item.id,
               movieTitle: item.title,
+              poster_path: item.poster_path,
             })
           }
           movie={item}

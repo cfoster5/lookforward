@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import FastImage from "react-native-fast-image";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 
 import { TextPoster } from "@/components/Posters/TextPoster";
 import TabStackContext from "@/contexts/TabStackContext";
@@ -57,7 +57,13 @@ function Person({ navigation, person }: Props) {
         alignItems: "center",
         marginTop: 16,
       }}
-      onPress={() => navigation.push("Actor", { personId: person.id })}
+      onPress={() =>
+        navigation.push("Actor", {
+          personId: person.id,
+          name: person.name,
+          profile_path: person.profile_path,
+        })
+      }
     >
       {person.profile_path ? (
         <FastImage

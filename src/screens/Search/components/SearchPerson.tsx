@@ -31,7 +31,13 @@ function SearchPerson({ navigation, person }: Props) {
   const { theme } = useContext(TabStackContext);
   return (
     <Pressable
-      onPress={() => navigation.push("Actor", { personId: person.id })}
+      onPress={() =>
+        navigation.push("Actor", {
+          personId: person.id,
+          name: person.name,
+          profile_path: person.profile_path,
+        })
+      }
     >
       {person.profile_path && (
         <FastImage

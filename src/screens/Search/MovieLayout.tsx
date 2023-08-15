@@ -116,6 +116,7 @@ export function MovieLayout({ navigation }) {
                 navigation.push("Movie", {
                   movieId: item.id,
                   movieTitle: item.title,
+                  poster_path: item.poster_path,
                 })
               }
               movie={item}

@@ -83,6 +83,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
       navigation.navigate("Movie", {
         movieId: item.id,
         movieTitle: item.title,
+        poster_path: item.poster_path,
       });
     }
   }

@@ -135,44 +135,6 @@ export function MovieLayout({ navigation }) {
           showsVerticalScrollIndicator={false}
           onEndReached={() => (hasNextPage ? fetchNextPage() : null)}
           onEndReachedThreshold={1.5}
-          ListHeaderComponent={
-            debouncedSearch ? (
-              <>
-                {(movies as TMDB.Search.MultiSearchResult[])?.filter(
-                  (movie) => movie.media_type === "person"
-                ).length > 0 && (
-                  <>
-                    <ListLabel text="People" />
-                    <FlatList
-                      keyExtractor={(item) => item.id.toString()}
-                      data={movies.filter(
-                        (movie) => movie.media_type === "person"
-                      )}
-                      renderItem={(person) => (
-                        <SearchPerson
-                          navigation={navigation}
-                          person={person.item}
-                        />
-                      )}
-                      horizontal
-                      style={{
-                        marginHorizontal: -16,
-                        marginBottom: 16,
-                      }}
-                      showsHorizontalScrollIndicator={false}
-                      ListHeaderComponent={<View style={{ width: 16 }} />}
-                      ItemSeparatorComponent={() => (
-                        <View style={{ width: 16 }} />
-                      )}
-                      ListFooterComponent={<View style={{ width: 16 }} />}
-                    />
-                  </>
-                )}
-                {movies?.filter((movie) => movie.media_type === "movie")
-                  .length > 0 && <ListLabel text="Movies" />}
-              </>
-            ) : null
-          }
         />
       ) : (
         <LoadingScreen />

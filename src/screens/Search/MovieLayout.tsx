@@ -17,9 +17,6 @@ import { iOSUIKit } from "react-native-typography";
 
 import { useMovieData } from "./api/getMovies";
 import { MovieSearchModal } from "./components/MovieSearchModal";
-import SearchPerson from "./components/SearchPerson";
-import Searchbar from "./components/Searchbar/Searchbar";
-import useDebounce from "./hooks/useDebounce";
 import { MovieOption } from "./types";
 
 import { ListLabel } from "@/components/ListLabel";
@@ -33,12 +30,7 @@ export function MovieLayout({ navigation }) {
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
   const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
-  const [searchValue, setSearchValue] = useState("");
-  const debouncedSearch = useDebounce(searchValue, 400);
-  const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(
-    option,
-    debouncedSearch
-  );
+  const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(option);
 
   const movies = data?.pages.flatMap((page) => page.results);
 
@@ -60,9 +52,6 @@ export function MovieLayout({ navigation }) {
   }, [movies, option]);
 
   function filteredMovies() {
-    if (debouncedSearch) {
-      return movies?.filter((movie) => movie.media_type === "movie");
-    } else {
       if (option === "Coming Soon") {
         return movies?.filter((movie) => {
           return movie.release_date
@@ -93,14 +82,11 @@ export function MovieLayout({ navigation }) {
         >
           <ListLabel text={option} style={{ marginBottom: 0 }} />
           <Pressable onPress={() => modalRef.current?.present()}>
-            <Text
-              style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}
-            >
+          <Text style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}>
               More
             </Text>
           </Pressable>
         </View>
-      )}
 
       {!isLoading ? (
         <KeyboardAwareFlatList

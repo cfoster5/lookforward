@@ -1,45 +1,41 @@
-import { TMDB_KEY } from "@/constants/ApiKeys";
+import { useInfiniteQuery } from "react-query";
 import {
   MoviesPlayingNow,
   PopularMovies,
+  TrendingResults,
   UpcomingMovies,
-} from "interfaces/tmdb";
-import { useInfiniteQuery } from "react-query";
+} from "tmdb-ts";
 
 import { MovieOption } from "../types";
 
-import { MultiSearch } from "@/types";
+import { TMDB_KEY } from "@/constants/ApiKeys";
 
 async function getMovies({
   pageParam = 1,
   option,
-  searchValue,
 }: {
   pageParam: number;
   option: MovieOption;
-  searchValue?: string;
 }) {
-  // const { option, searchValue }: { option: MovieOption; searchValue?: string } =
-  //   queryKey[1];
   const endpoints = {
     [MovieOption.ComingSoon]: `https://api.themoviedb.org/3/movie/upcoming?api_key=${TMDB_KEY}&language=en-US&page=${pageParam}&region=US`,
     [MovieOption.NowPlaying]: `https://api.themoviedb.org/3/movie/now_playing?api_key=${TMDB_KEY}&language=en-US&page=${pageParam}&region=US`,
     [MovieOption.Popular]: `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_KEY}&language=en-US&page=${pageParam}&region=US`,
     [MovieOption.Trending]: `https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDB_KEY}&page=${pageParam}`,
-    Search: `https://api.themoviedb.org/3/search/multi?api_key=${TMDB_KEY}&language=en-US&query=${searchValue}&page=${pageParam}&include_adult=false&region=US`,
   };
-  const response = await fetch(
-    !searchValue ? endpoints[option] : endpoints.Search
-  );
-  const json: UpcomingMovies | MoviesPlayingNow | PopularMovies | MultiSearch =
-    await response.json();
+  const response = await fetch(endpoints[option]);
+  const json:
+    | UpcomingMovies
+    | MoviesPlayingNow
+    | PopularMovies
+    | TrendingResults<"movie"> = await response.json();
   return json;
 }
 
-export function useMovieData(option: MovieOption, searchValue: string) {
+export function useMovieData(option: MovieOption) {
   return useInfiniteQuery(
-    ["movies", { option, searchValue }],
-    ({ pageParam }) => getMovies({ pageParam, option, searchValue }),
+    ["movies", { option }],
+    ({ pageParam }) => getMovies({ pageParam, option }),
     {
       getNextPageParam: (lastPage) =>
         lastPage.page !== lastPage.total_pages ? lastPage.page + 1 : undefined,

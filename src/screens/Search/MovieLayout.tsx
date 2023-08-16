@@ -12,7 +12,6 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 import { iOSUIKit } from "react-native-typography";
 
 import { useMovieData } from "./api/getMovies";
@@ -89,10 +88,7 @@ export function MovieLayout({ navigation }) {
         </View>
 
       {!isLoading ? (
-        <KeyboardAwareFlatList
-          extraScrollHeight={tabBarheight}
-          viewIsInsideTabBar
-          enableResetScrollToCoords={false}
+        <FlatList
           data={filteredMovies()}
           renderItem={({ item }) => (
             <MoviePoster

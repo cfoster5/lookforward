@@ -1,11 +1,8 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
 
 import { useGames } from "./api/getGames";
-import Searchbar from "./components/Searchbar/Searchbar";
-import useDebounce from "./hooks/useDebounce";
 
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { ListLabel } from "@/components/ListLabel";
@@ -40,10 +37,7 @@ export function GameLayout({ navigation }) {
       )}
       {!isLoading ? (
         <>
-          <KeyboardAwareFlatList
-            extraScrollHeight={tabBarheight}
-            viewIsInsideTabBar
-            enableResetScrollToCoords={false}
+          <FlatList
             data={data}
             renderItem={({
               item: game,

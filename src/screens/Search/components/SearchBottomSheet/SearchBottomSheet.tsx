@@ -31,14 +31,11 @@ export const SearchBottomSheet = () => {
   const { top } = useSafeAreaInsets();
   const { categoryIndex, setCategoryIndex } = useStore();
 
-  const snapPoints = useMemo(() => ["CONTENT_HEIGHT", "50%", "100%"], []);
-
-  const {
-    animatedHandleHeight,
-    animatedSnapPoints,
-    animatedContentHeight,
-    handleContentLayout,
-  } = useBottomSheetDynamicSnapPoints(snapPoints);
+  // Set initial snapPoint as tabBarHeight instead of "CONTENT_HEIGHT to fix issues with scrolling flatlist"
+  const snapPoints = useMemo(
+    () => [tabBarHeight, "50%", "100%"],
+    [tabBarHeight]
+  );
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
@@ -75,12 +72,9 @@ export const SearchBottomSheet = () => {
 
   return (
     <BottomSheet
-      // backgroundComponent={() => <BlurView style={StyleSheet.absoluteFill} />}
       bottomInset={tabBarHeight}
       topInset={top}
-      snapPoints={animatedSnapPoints}
-      handleHeight={animatedHandleHeight}
-      contentHeight={animatedContentHeight}
+      snapPoints={snapPoints}
       backgroundStyle={{
         backgroundColor:
           Platform.OS === "ios"
@@ -92,7 +86,7 @@ export const SearchBottomSheet = () => {
       }}
     >
       <View style={{ marginHorizontal: 12, flex: 1 }}>
-        <View onLayout={handleContentLayout} style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row" }}>
           <BottomSheetTextInput
             onChangeText={(value) => setSearchValue(value)}
             placeholder={categoryIndex === 0 ? "Movies & People" : "Games"}

@@ -68,12 +68,6 @@ export function MovieLayout({ navigation }) {
 
   return (
     <>
-      {/* <Searchbar
-        categoryIndex={0}
-        handleChange={(text) => setSearchValue(text)}
-        value={searchValue}
-      /> */}
-
       <View
         style={{
           margin: 16,

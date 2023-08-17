@@ -9,6 +9,7 @@ import {
   Platform,
   PlatformColor,
   Pressable,
+  SectionList,
   StyleSheet,
   Text,
   View,
@@ -19,9 +20,12 @@ import { iOSUIKit } from "react-native-typography";
 
 import { RecentMovie } from "./RecentMovie";
 import { RecentPerson } from "./RecentPerson";
+import { SearchMovie } from "./SearchMovie";
+import { SearchPerson } from "./SearchPerson";
 import { useSearchData } from "../../api/getSearch";
 import useDebounce from "../../hooks/useDebounce";
 
+import { calculateWidth } from "@/helpers/helpers";
 import { useStore } from "@/stores/store";
 import { Recent } from "@/types";
 
@@ -146,7 +150,9 @@ export const SearchBottomSheet = () => {
           />
         )}
 
-            <>
+        {!searchValue && (
+          <>
+            {shouldShowTitle() && (
               <Text
                 style={[
                   iOSUIKit.title3Emphasized,
@@ -155,67 +161,68 @@ export const SearchBottomSheet = () => {
               >
                 Recently Viewed
               </Text>
-              {composeRecentMovies().length > 0 && (
-                <>
+            )}
+            <SectionList
+              sections={[
+                {
+                  title: "Titles",
+                  data: [
+                    {
+                      items:
+                        categoryIndex === 0
+                          ? composeRecentMovies()
+                          : composeRecentGames(),
+                    },
+                  ],
+                },
+                {
+                  title: "People",
+                  data: [
+                    { items: categoryIndex === 0 ? composeRecentPeople() : [] },
+                  ],
+                },
+              ]}
+              renderItem={({ section, item }) => (
+                <BottomSheetFlatList
+                  data={item.items}
+                  renderItem={({ item }) =>
+                    section.title === "Titles" ? (
+                      <RecentMovie item={item} />
+                    ) : (
+                      <RecentPerson item={item} />
+                    )
+                  }
+                  ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
+                  ListHeaderComponent={() => <View style={{ width: 12 }} />}
+                  ListFooterComponent={() => <View style={{ width: 12 }} />}
+                  horizontal
+                  keyExtractor={(item) => item.id?.toString()}
+                  showsHorizontalScrollIndicator={false}
+                  style={{ marginHorizontal: -12 }}
+                />
+              )}
+              SectionSeparatorComponent={() => <View style={{ height: 8 }} />}
+              renderSectionHeader={({ section }) =>
+                section.data[0].items.length > 0 ? (
                   <Text
                     style={[
                       iOSUIKit.subheadEmphasized,
                       {
                         color: PlatformColor("secondaryLabel"),
-                        marginBottom: 8,
+                        marginTop: section.title !== "Titles" ? 8 : 0,
                       },
                     ]}
                   >
-                    Titles
+                    {section.title}
                   </Text>
-                  <FlatList
-                    data={composeRecentMovies()}
-                    renderItem={({ item }) => <RecentMovie item={item} />}
-                    ItemSeparatorComponent={() => (
-                      <View style={{ width: 12 }} />
-                    )}
-                    ListHeaderComponent={<View style={{ width: 12 }} />}
-                    ListFooterComponent={<View style={{ width: 12 }} />}
-                    horizontal
-                    keyExtractor={(item) => item.id.toString()}
-                    showsHorizontalScrollIndicator={false}
-                    style={{ marginHorizontal: -12 }}
-                  />
-                </>
-              )}
-              {composeRecentMovies().length > 0 && (
-                <View style={{ height: 16 }} />
-              )}
-              {composeRecentPeople().length > 0 && (
-                <>
-                  <Text
-                    style={[
-                      iOSUIKit.subheadEmphasized,
-                      {
-                        color: PlatformColor("secondaryLabel"),
-                        marginBottom: 8,
-                      },
-                    ]}
-                  >
-                    People
-                  </Text>
-                  <FlatList
-                    data={composeRecentPeople()}
-                    renderItem={({ item }) => <RecentPerson item={item} />}
-                    ItemSeparatorComponent={() => (
-                      <View style={{ width: 12 }} />
-                    )}
-                    ListHeaderComponent={<View style={{ width: 12 }} />}
-                    ListFooterComponent={<View style={{ width: 12 }} />}
-                    horizontal
-                    keyExtractor={({ id }) => id.toString()}
-                    showsHorizontalScrollIndicator={false}
-                    style={{ marginHorizontal: -12 }}
-                  />
-                </>
-              )}
-            </>
-          )}
+                ) : null
+              }
+              stickySectionHeadersEnabled={false}
+              scrollEnabled={false}
+              style={{ marginHorizontal: -12, paddingHorizontal: 12 }}
+            />
+          </>
+        )}
       </View>
     </BottomSheet>
   );
@@ -238,6 +245,7 @@ export const styles = StyleSheet.create({
     color: PlatformColor("label"),
     // textAlign: "center",
     marginBottom: 16,
+    flex: 1,
   },
   contentContainer: {
     flex: 1,

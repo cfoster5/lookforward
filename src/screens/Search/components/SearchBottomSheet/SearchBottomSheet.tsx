@@ -22,11 +22,13 @@ import { RecentPerson } from "./RecentPerson";
 import { useSearchData } from "../../api/getSearch";
 import useDebounce from "../../hooks/useDebounce";
 
+import { useStore } from "@/stores/store";
 import { Recent } from "@/types";
 
 export const SearchBottomSheet = () => {
   const tabBarHeight = useBottomTabBarHeight();
   const { top } = useSafeAreaInsets();
+  const { categoryIndex, setCategoryIndex } = useStore();
 
   const snapPoints = useMemo(() => ["CONTENT_HEIGHT", "50%", "100%"], []);
 

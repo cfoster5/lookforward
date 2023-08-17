@@ -4,15 +4,15 @@ import {
 } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useContext, useState } from "react";
-import { PlatformColor, SafeAreaView, View } from "react-native";
+import { useContext } from "react";
+import { PlatformColor, View } from "react-native";
 
 import { GameLayout } from "./GameLayout";
 import { MovieLayout } from "./MovieLayout";
 import { SearchBottomSheet } from "./components/SearchBottomSheet/SearchBottomSheet";
 
-import CategoryControl from "@/components/CategoryControl/CategoryControl";
 import TabStackContext from "@/contexts/TabStackContext";
+import { useStore } from "@/stores/store";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
 
 type FindScreenNavigationProp = CompositeScreenProps<
@@ -21,8 +21,8 @@ type FindScreenNavigationProp = CompositeScreenProps<
 >;
 
 function Search({ navigation, route }: FindScreenNavigationProp) {
-  const [categoryIndex, setCategoryIndex] = useState(0);
   const { theme } = useContext(TabStackContext);
+  const { categoryIndex } = useStore();
   const tabBarHeight = useBottomTabBarHeight();
 
   // const scrollIndicatorInsets =
@@ -30,15 +30,6 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
 
   return (
     <>
-      <SafeAreaView
-        style={{ backgroundColor: theme === "dark" ? "black" : "white" }}
-      >
-        <CategoryControl
-          buttons={["Movies", "Games"]}
-          categoryIndex={categoryIndex}
-          handleCategoryChange={(index) => setCategoryIndex(index)}
-        />
-      </SafeAreaView>
       {categoryIndex === 0 ? (
         <MovieLayout navigation={navigation} />
       ) : (

@@ -36,10 +36,13 @@ export function RecentMovie({ item }: { item: Recent }) {
       {item.img_path ? (
         <FastImage
           source={{
-            uri: `https://image.tmdb.org/t/p/w300${item.img_path}`,
+              uri:
+                item.media_type === "movie"
+                  ? `https://image.tmdb.org/t/p/w300${item.img_path}`
+                  : `https:${item.img_path.replace("thumb", "cover_big_2x")}`,
           }}
           style={{
-            aspectRatio: 2 / 3,
+              aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
             width: calculateWidth(12, 12, 3.5),
             borderRadius: 8,
             marginBottom: 8,

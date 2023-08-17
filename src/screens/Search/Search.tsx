@@ -30,11 +30,14 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
 
   return (
     <>
-      {categoryIndex === 0 ? (
-        <MovieLayout navigation={navigation} />
-      ) : (
-        <GameLayout navigation={navigation} />
-      )}
+      {/* Wrap with flex view to fix list running under tab bar; Use x2 because of tab bar and fake view from Search */}
+      <View style={{ flex: 1, paddingBottom: tabBarHeight * 2 }}>
+        {categoryIndex === 0 ? (
+          <MovieLayout navigation={navigation} />
+        ) : (
+          <GameLayout navigation={navigation} />
+        )}
+      </View>
       <SearchBottomSheet />
       {/* Create View under bottom sheet to remove blur effect for this screen */}
       {/* Keeps effect for other screens in stack */}

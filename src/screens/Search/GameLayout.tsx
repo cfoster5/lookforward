@@ -1,6 +1,15 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useRef, useState } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
+import {
+  FlatList,
+  PlatformColor,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { iOSUIKit } from "react-native-typography";
 
 import { useGames } from "./api/getGames";
 
@@ -11,22 +20,27 @@ import { GamePoster } from "@/components/Posters/GamePoster";
 import { Game, ReleaseDate } from "@/types";
 
 export function GameLayout({ navigation }) {
-  const tabBarheight = useBottomTabBarHeight();
+  const { top } = useSafeAreaInsets();
   const scrollRef = useRef<FlatList>(null);
   const { data, isLoading } = useGames("");
 
   return (
     <>
-        <View
-          style={{
-            margin: 16,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+      <View
+        style={{
+          margin: 16,
+          marginTop: top,
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text
+          style={[iOSUIKit.title3Emphasized, { color: PlatformColor("label") }]}
         >
-          <ListLabel text="Coming Soon" style={{ marginBottom: 0 }} />
-        </View>
-      )}
+          Coming Soon
+        </Text>
+        {/* <ListLabel text="Coming Soon" style={{ marginBottom: 0 }} /> */}
+      </View>
       {!isLoading ? (
         <>
           <FlatList

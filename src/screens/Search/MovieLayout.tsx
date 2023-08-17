@@ -12,6 +12,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { useMovieData } from "./api/getMovies";
@@ -30,6 +31,7 @@ export function MovieLayout({ navigation }) {
   useScrollToTop(scrollRef);
   const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
   const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(option);
+  const { top } = useSafeAreaInsets();
 
   const movies = data?.pages.flatMap((page) => page.results);
 
@@ -48,21 +50,21 @@ export function MovieLayout({ navigation }) {
         scrollRef.current?.scrollToIndex({ index: 0 });
       }
     }
-  }, [movies, option]);
+  }, [option]);
 
   function filteredMovies() {
-      if (option === "Coming Soon") {
-        return movies?.filter((movie) => {
-          return movie.release_date
-            ? DateTime.fromFormat(movie?.release_date, "yyyy-MM-dd") >=
-                DateTime.now()
-            : null;
-        });
-        // return movies;
-      } else {
-        return movies;
-      }
+    if (option === "Coming Soon") {
+      return movies?.filter((movie) => {
+        return movie.release_date
+          ? DateTime.fromFormat(movie?.release_date, "yyyy-MM-dd") >=
+              DateTime.now()
+          : null;
+      });
+      // return movies;
+    } else {
+      return movies;
     }
+  }
 
   return (
     <>
@@ -72,20 +74,26 @@ export function MovieLayout({ navigation }) {
         value={searchValue}
       /> */}
 
-        <View
-          style={{
+      <View
+        style={{
           margin: 16,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+          marginTop: top,
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text
+          style={[iOSUIKit.title3Emphasized, { color: PlatformColor("label") }]}
         >
-          <ListLabel text={option} style={{ marginBottom: 0 }} />
-          <Pressable onPress={() => modalRef.current?.present()}>
+          {option}
+        </Text>
+        {/* <ListLabel text={option} style={{ marginBottom: 0 }} /> */}
+        <Pressable onPress={() => modalRef.current?.present()}>
           <Text style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}>
-              More
-            </Text>
-          </Pressable>
-        </View>
+            More
+          </Text>
+        </Pressable>
+      </View>
 
       {!isLoading ? (
         <FlatList

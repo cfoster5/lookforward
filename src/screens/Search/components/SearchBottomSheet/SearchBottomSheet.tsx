@@ -1,12 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import BottomSheet, {
+  BottomSheetFlatList,
   BottomSheetTextInput,
-  useBottomSheetDynamicSnapPoints,
 } from "@gorhom/bottom-sheet";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useCallback, useMemo, useState } from "react";
 import {
-  FlatList,
   Platform,
   PlatformColor,
   Pressable,
@@ -39,6 +38,8 @@ export const SearchBottomSheet = () => {
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
+  const { data } = useSearchData(debouncedSearch);
+
   const [storedMovies, setStoredMovies] = useMMKVString("recent.movies");
 
   const composeRecentMovies = useCallback(
@@ -120,9 +121,31 @@ export const SearchBottomSheet = () => {
         >
           <Text>Empty stored people</Text>
         </Pressable> */}
-        {!searchValue &&
-          (composeRecentMovies().length > 0 ||
-            composeRecentPeople().length > 0) && (
+
+        {searchValue && (
+          <BottomSheetFlatList
+            data={data?.results.filter((result) => result.media_type !== "tv")}
+            renderItem={({ item }) => {
+              if (item.media_type === "movie") {
+                return <SearchMovie item={item} />;
+              } else if (item.media_type === "person") {
+                return <SearchPerson item={item} />;
+              } else return null;
+            }}
+            ItemSeparatorComponent={() => (
+              <View
+                style={{
+                  height: StyleSheet.hairlineWidth,
+                  backgroundColor: PlatformColor("separator"),
+                  marginVertical: 6,
+                  marginLeft: calculateWidth(12, 12, 3.5) + 12,
+                }}
+              />
+            )}
+            keyExtractor={(result) => result.id.toString()}
+          />
+        )}
+
             <>
               <Text
                 style={[

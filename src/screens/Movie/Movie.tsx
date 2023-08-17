@@ -188,6 +188,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
       name: movieTitle,
       img_path: poster_path,
       last_viewed: timestamp,
+      media_type: "movie",
     };
 
     const updatedRecentMovies = produce(

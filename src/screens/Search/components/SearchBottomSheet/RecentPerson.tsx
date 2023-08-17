@@ -21,6 +21,18 @@ export function RecentPerson({ item }: { item: Recent }) {
         })
       }
     >
+      <View
+        // Extracted from Figma, decide to keep or not
+        style={{
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowRadius: 4,
+          shadowColor: "rgba(0, 0, 0, 0.15)",
+          shadowOpacity: 1,
+        }}
+    >
       {item.img_path ? (
         <FastImage
           source={{
@@ -55,6 +67,7 @@ export function RecentPerson({ item }: { item: Recent }) {
           </Text>
         </View>
       )}
+      </View>
       <Text
         style={[
           iOSUIKit.subhead,

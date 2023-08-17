@@ -53,6 +53,13 @@ export const SearchBottomSheet = () => {
     [storedPeople]
   );
 
+  const [storedGames] = useMMKVString("recent.games");
+
+  const composeRecentGames = useCallback(
+    () => (storedGames ? (JSON.parse(storedGames) as Recent[]) : []),
+    [storedGames]
+  );
+
   return (
     <BottomSheet
       // backgroundComponent={() => <BlurView style={StyleSheet.absoluteFill} />}

@@ -81,14 +81,7 @@ export const SearchBottomSheet = () => {
         backgroundColor: PlatformColor("systemGray"),
       }}
     >
-      <View
-        // style={[
-        //     styles.contentContainer,
-        //     // { paddingBottom: tabBarHeight + 16 },
-        //     { paddingBottom: 16 },
-        //   ]}
-        style={{ marginHorizontal: 12 }}
-      >
+      <View style={{ marginHorizontal: 12, flex: 1 }}>
         <View onLayout={handleContentLayout} style={{ flexDirection: "row" }}>
           <BottomSheetTextInput
             onChangeText={(value) => setSearchValue(value)}

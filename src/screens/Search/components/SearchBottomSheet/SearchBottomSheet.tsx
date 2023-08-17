@@ -63,6 +63,16 @@ export const SearchBottomSheet = () => {
     [storedGames]
   );
 
+  const shouldShowTitle = () => {
+    if (categoryIndex === 0) {
+      return (
+        composeRecentMovies().length > 0 || composeRecentPeople().length > 0
+      );
+    } else {
+      return composeRecentGames().length > 0;
+    }
+  };
+
   return (
     <BottomSheet
       // backgroundComponent={() => <BlurView style={StyleSheet.absoluteFill} />}

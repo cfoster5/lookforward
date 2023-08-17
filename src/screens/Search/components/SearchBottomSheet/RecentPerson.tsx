@@ -71,7 +71,7 @@ export function RecentPerson({ item }: { item: Recent }) {
       <Text
         style={[
           iOSUIKit.subhead,
-          { color: "white", maxWidth: 96, textAlign: "center" },
+          { color: PlatformColor("label"), maxWidth: 96, textAlign: "center" },
         ]}
         numberOfLines={2}
       >

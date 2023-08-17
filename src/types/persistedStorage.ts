@@ -11,4 +11,5 @@ export type Recent = {
   name: string;
   img_path: string;
   last_viewed: number;
+  media_type?: "movie" | "game";
 };

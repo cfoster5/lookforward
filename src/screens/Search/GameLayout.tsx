@@ -13,18 +13,10 @@ import { Game, ReleaseDate } from "@/types";
 export function GameLayout({ navigation }) {
   const tabBarheight = useBottomTabBarHeight();
   const scrollRef = useRef<FlatList>(null);
-  const [searchValue, setSearchValue] = useState("");
-  const debouncedSearch = useDebounce(searchValue, 400);
-  const { data, isLoading } = useGames(debouncedSearch);
+  const { data, isLoading } = useGames("");
 
   return (
     <>
-      {/* <Searchbar
-        categoryIndex={1}
-        handleChange={(text) => setSearchValue(text)}
-        value={searchValue}
-      /> */}
-      {!debouncedSearch && (
         <View
           style={{
             margin: 16,
@@ -56,11 +48,6 @@ export function GameLayout({ navigation }) {
             initialNumToRender={6}
             // scrollIndicatorInsets={scrollIndicatorInsets}
             showsVerticalScrollIndicator={false}
-            ListHeaderComponent={
-              debouncedSearch ? (
-                <ListLabel text="Games" style={{ marginBottom: 16 }} />
-              ) : null
-            }
           />
           <GamePlatformPicker />
         </>

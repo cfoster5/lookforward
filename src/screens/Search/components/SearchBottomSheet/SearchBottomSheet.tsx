@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import BottomSheet, {
   BottomSheetTextInput,
   useBottomSheetDynamicSnapPoints,
@@ -88,14 +89,27 @@ export const SearchBottomSheet = () => {
         //   ]}
         style={{ marginHorizontal: 12 }}
       >
-        <View onLayout={handleContentLayout}>
+        <View onLayout={handleContentLayout} style={{ flexDirection: "row" }}>
           <BottomSheetTextInput
             onChangeText={(value) => setSearchValue(value)}
-            placeholder="Movies & People"
+            placeholder={categoryIndex === 0 ? "Movies & People" : "Games"}
             placeholderTextColor={PlatformColor("secondaryLabel")}
             clearButtonMode="while-editing"
             style={styles.textInput}
           />
+          <Pressable
+            onPress={() => setCategoryIndex(categoryIndex === 0 ? 1 : 0)}
+            style={{ justifyContent: "center", minWidth: 44, minHeight: 44 }}
+          >
+            <Ionicons
+              name={
+                categoryIndex === 0 ? "film-outline" : "game-controller-outline"
+              }
+              size={36}
+              color={PlatformColor("systemBlue")}
+              style={{ marginLeft: 12, marginBottom: 16 }}
+            />
+          </Pressable>
         </View>
         {/* <Pressable
           onPress={() => setStoredMovies(undefined)}

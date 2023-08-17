@@ -32,39 +32,39 @@ export function RecentMovie({ item }: { item: Recent }) {
           shadowColor: "rgba(0, 0, 0, 0.15)",
           shadowOpacity: 1,
         }}
-    >
-      {item.img_path ? (
-        <FastImage
-          source={{
+      >
+        {item.img_path ? (
+          <FastImage
+            source={{
               uri:
                 item.media_type === "movie"
                   ? `https://image.tmdb.org/t/p/w300${item.img_path}`
                   : `https:${item.img_path.replace("thumb", "cover_big_2x")}`,
-          }}
-          style={{
+            }}
+            style={{
               aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
-            width: calculateWidth(12, 12, 3.5),
-            borderRadius: 8,
-            marginBottom: 8,
-          }}
-        />
-      ) : (
-        <View
-          style={{
-            backgroundColor: PlatformColor("systemGray"),
-            aspectRatio: 2 / 3,
-            width: calculateWidth(12, 12, 3.5),
-            borderRadius: 8,
-            marginBottom: 8,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={[iOSUIKit.bodyWhite, { textAlign: "center" }]}>
-            {item.name}
-          </Text>
-        </View>
-      )}
+              width: calculateWidth(12, 12, 3.5),
+              borderRadius: 8,
+              marginBottom: 8,
+            }}
+          />
+        ) : (
+          <View
+            style={{
+              backgroundColor: PlatformColor("systemGray"),
+              aspectRatio: 2 / 3,
+              width: calculateWidth(12, 12, 3.5),
+              borderRadius: 8,
+              marginBottom: 8,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={[iOSUIKit.bodyWhite, { textAlign: "center" }]}>
+              {item.name}
+            </Text>
+          </View>
+        )}
       </View>
       <Text
         style={[

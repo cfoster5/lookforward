@@ -32,41 +32,41 @@ export function RecentPerson({ item }: { item: Recent }) {
           shadowColor: "rgba(0, 0, 0, 0.15)",
           shadowOpacity: 1,
         }}
-    >
-      {item.img_path ? (
-        <FastImage
-          source={{
-            uri: `https://image.tmdb.org/t/p/w300${item.img_path}`,
-          }}
-          style={{
-            aspectRatio: 1,
-            width: calculateWidth(12, 12, 3.5),
-            borderRadius: calculateWidth(12, 12, 3.5),
-            marginBottom: 8,
-          }}
-        />
-      ) : (
-        <View
-          style={{
-            backgroundColor: PlatformColor("systemGray"),
-            aspectRatio: 1,
-            width: calculateWidth(12, 12, 3.5),
-            borderRadius: calculateWidth(12, 12, 3.5),
-            marginBottom: 8,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text
+      >
+        {item.img_path ? (
+          <FastImage
+            source={{
+              uri: `https://image.tmdb.org/t/p/w300${item.img_path}`,
+            }}
             style={{
-              fontSize: calculateWidth(12, 12, 3.5) / 2,
-              color: "white",
+              aspectRatio: 1,
+              width: calculateWidth(12, 12, 3.5),
+              borderRadius: calculateWidth(12, 12, 3.5),
+              marginBottom: 8,
+            }}
+          />
+        ) : (
+          <View
+            style={{
+              backgroundColor: PlatformColor("systemGray"),
+              aspectRatio: 1,
+              width: calculateWidth(12, 12, 3.5),
+              borderRadius: calculateWidth(12, 12, 3.5),
+              marginBottom: 8,
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            RP
-          </Text>
-        </View>
-      )}
+            <Text
+              style={{
+                fontSize: calculateWidth(12, 12, 3.5) / 2,
+                color: "white",
+              }}
+            >
+              RP
+            </Text>
+          </View>
+        )}
       </View>
       <Text
         style={[

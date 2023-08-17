@@ -183,7 +183,7 @@ export const SearchBottomSheet = () => {
                 },
               ]}
               renderItem={({ section, item }) => (
-                <BottomSheetFlatList
+                <FlatList
                   data={item.items}
                   renderItem={({ item }) =>
                     section.title === "Titles" ? (

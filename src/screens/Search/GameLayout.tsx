@@ -1,11 +1,17 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useRef, useState } from "react";
-import { FlatList, Pressable, StyleSheet, View } from "react-native";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+import {
+  FlatList,
+  PlatformColor,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { iOSUIKit } from "react-native-typography";
 
 import { useGames } from "./api/getGames";
-import Searchbar from "./components/Searchbar/Searchbar";
-import useDebounce from "./hooks/useDebounce";
 
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { ListLabel } from "@/components/ListLabel";
@@ -14,37 +20,30 @@ import { GamePoster } from "@/components/Posters/GamePoster";
 import { Game, ReleaseDate } from "@/types";
 
 export function GameLayout({ navigation }) {
-  const tabBarheight = useBottomTabBarHeight();
+  const { top } = useSafeAreaInsets();
   const scrollRef = useRef<FlatList>(null);
-  const [searchValue, setSearchValue] = useState("");
-  const debouncedSearch = useDebounce(searchValue, 400);
-  const { data, isLoading } = useGames(debouncedSearch);
+  const { data, isLoading } = useGames();
 
   return (
     <>
-      <Searchbar
-        categoryIndex={1}
-        handleChange={(text) => setSearchValue(text)}
-        value={searchValue}
-      />
-      {!debouncedSearch && (
-        <View
-          style={{
-            marginHorizontal: 16,
-            marginBottom: 16,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
+      <View
+        style={{
+          margin: 16,
+          marginTop: top,
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <Text
+          style={[iOSUIKit.title3Emphasized, { color: PlatformColor("label") }]}
         >
-          <ListLabel text="Coming Soon" style={{ marginBottom: 0 }} />
-        </View>
-      )}
+          Coming Soon
+        </Text>
+        {/* <ListLabel text="Coming Soon" style={{ marginBottom: 0 }} /> */}
+      </View>
       {!isLoading ? (
         <>
-          <KeyboardAwareFlatList
-            extraScrollHeight={tabBarheight}
-            viewIsInsideTabBar
-            enableResetScrollToCoords={false}
+          <FlatList
             data={data}
             renderItem={({
               item: game,
@@ -63,11 +62,6 @@ export function GameLayout({ navigation }) {
             initialNumToRender={6}
             // scrollIndicatorInsets={scrollIndicatorInsets}
             showsVerticalScrollIndicator={false}
-            ListHeaderComponent={
-              debouncedSearch ? (
-                <ListLabel text="Games" style={{ marginBottom: 16 }} />
-              ) : null
-            }
           />
           <GamePlatformPicker />
         </>

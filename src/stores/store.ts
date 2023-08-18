@@ -35,6 +35,8 @@ type Store = {
   setMovieSubs: (movies: any) => void;
   gameSubs: any;
   setGameSubs: (games: any) => void;
+  categoryIndex: number;
+  setCategoryIndex: (number: Store["categoryIndex"]) => void;
   bottomSheetModalRef: typeof bottomSheetModalRef;
   onboardingModalRef: typeof onboardingModalRef;
   proModalRef: typeof proModalRef;
@@ -55,6 +57,8 @@ export const useStore = create<Store>((set) => ({
   setMovieSubs: (movieSubs) => set(() => ({ movieSubs })),
   gameSubs: [],
   setGameSubs: (gameSubs) => set(() => ({ gameSubs })),
+  categoryIndex: 0,
+  setCategoryIndex: (categoryIndex) => set(() => ({ categoryIndex })),
   bottomSheetModalRef,
   onboardingModalRef,
   proModalRef,

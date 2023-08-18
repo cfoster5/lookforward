@@ -7,7 +7,9 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import produce from "immer";
 import {
+  useCallback,
   useContext,
   useEffect,
   useLayoutEffect,
@@ -28,6 +30,7 @@ import {
 } from "react-native";
 import FastImage from "react-native-fast-image";
 import ImageView from "react-native-image-viewing";
+import { useMMKVString } from "react-native-mmkv";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -69,8 +72,8 @@ import Trailer from "@/components/Trailer";
 import TabStackContext from "@/contexts/TabStackContext";
 import { getRuntime } from "@/helpers/formatting";
 import { useStore } from "@/stores/store";
-import { BottomTabParams, FindStackParams } from "@/types";
-import { isoToUTC, compareDates } from "@/utils/dates";
+import { BottomTabParams, FindStackParams, Recent } from "@/types";
+import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 
 function ScrollViewWithFlatList({
   data,
@@ -141,7 +144,7 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 >;
 
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
-  const { movieId, movieTitle } = route.params;
+  const { movieId, movieTitle, poster_path } = route.params;
   const { user, movieSubs } = useStore();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString()
@@ -171,6 +174,37 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const [creditsSelection, setCreditsSelection] = useState("Cast");
 
   const modalRef = useRef<BottomSheetModal>();
+
+  const [storedMovies, setStoredMovies] = useMMKVString("recent.movies");
+
+  const composeRecentMovies = useCallback(
+    () => (storedMovies ? (JSON.parse(storedMovies) as Recent[]) : []),
+    [storedMovies]
+  );
+
+  useEffect(() => {
+    const recentMovie: Recent = {
+      id: movieId,
+      name: movieTitle,
+      img_path: poster_path,
+      last_viewed: timestamp,
+      media_type: "movie",
+    };
+
+    const updatedRecentMovies = produce(
+      composeRecentMovies(),
+      (draft: Recent[]) => {
+        const index = draft.findIndex((movie) => movie.id === movieId);
+        if (index === -1) draft.unshift(recentMovie);
+        else {
+          draft.splice(index, 1);
+          draft.unshift(recentMovie);
+        }
+      }
+    );
+
+    setStoredMovies(JSON.stringify(updatedRecentMovies));
+  }, [composeRecentMovies, movieId, movieTitle, poster_path, setStoredMovies]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -610,6 +644,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                           navigation.push("Movie", {
                             movieId: item.id,
                             movieTitle: item.title,
+                            poster_path: item.poster_path,
                           })
                         }
                         movie={item}

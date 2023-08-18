@@ -5,7 +5,14 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useLayoutEffect, useRef, useState } from "react";
+import produce from "immer";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Dimensions,
   FlatList,
@@ -15,6 +22,7 @@ import {
   View,
 } from "react-native";
 import FastImage from "react-native-fast-image";
+import { useMMKVString } from "react-native-mmkv";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
 
@@ -29,7 +37,8 @@ import { Text as ThemedText } from "@/components/Themed";
 import { dateToLocaleString } from "@/helpers/formatting";
 import { calculateWidth } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
-import { FindStackParams, BottomTabParams } from "@/types";
+import { FindStackParams, BottomTabParams, Recent } from "@/types";
+import { timestamp } from "@/utils/dates";
 
 type ActorScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParams, "Actor">,
@@ -41,6 +50,7 @@ type ActorScreenNavigationProp = CompositeScreenProps<
 
 function Actor({ route, navigation }: ActorScreenNavigationProp) {
   // const person = useGetPerson(route.params.personId);
+  const { personId, name, profile_path } = route.params;
   const { data: person, isLoading } = usePerson(route.params.personId);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
@@ -51,7 +61,38 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
 
   useLayoutEffect(() => {
     navigation.setOptions({ title: person?.name });
-  }, [person]);
+  }, [navigation, person]);
+
+  const [storedPeople, setStoredPeople] = useMMKVString("recent.people");
+
+  const composeRecentPeople = useCallback(
+    () => (storedPeople ? (JSON.parse(storedPeople) as Recent[]) : []),
+    [storedPeople]
+  );
+
+  useEffect(() => {
+    const recentPerson: Recent = {
+      id: personId,
+      name,
+      img_path: profile_path,
+      last_viewed: timestamp,
+    };
+
+    const updatedRecentMovies = produce(
+      composeRecentPeople(),
+      (draft: Recent[]) => {
+        console.log("draft", draft);
+        const index = draft.findIndex((person) => person.id === personId);
+        if (index === -1) draft.unshift(recentPerson);
+        else {
+          draft.splice(index, 1);
+          draft.unshift(recentPerson);
+        }
+      }
+    );
+
+    setStoredPeople(JSON.stringify(updatedRecentMovies));
+  }, [composeRecentPeople, name, personId, profile_path, setStoredPeople]);
 
   function RenderItem({ item, index }: { item: any; index: number }) {
     return (
@@ -116,6 +157,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
             navigation.push("Movie", {
               movieId: item.id,
               movieTitle: item.title,
+              poster_path: item.poster_path,
             })
           }
           movie={item}

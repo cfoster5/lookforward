@@ -1,10 +1,10 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Image } from "expo-image";
 import { IGDB } from "interfaces/igdb";
 import { Movie } from "interfaces/tmdb";
 import { useRef } from "react";
 import {
   Dimensions,
-  Image,
   PlatformColor,
   Pressable,
   SafeAreaView,

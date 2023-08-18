@@ -7,6 +7,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Image } from "expo-image";
 import produce from "immer";
 import {
   useCallback,
@@ -19,7 +20,6 @@ import {
 import {
   Dimensions,
   FlatList,
-  Image,
   Platform,
   PlatformColor,
   Pressable,
@@ -28,7 +28,6 @@ import {
   Text,
   View,
 } from "react-native";
-import FastImage from "react-native-fast-image";
 import ImageView from "react-native-image-viewing";
 import { useMMKVString } from "react-native-mmkv";
 import Animated, {
@@ -591,7 +590,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                       overflow: "hidden",
                     }}
                   >
-                    <FastImage
+                    <Image
                       style={{
                         width: Dimensions.get("screen").width - 32,
                         height: (Dimensions.get("screen").width - 32) / 1.78,

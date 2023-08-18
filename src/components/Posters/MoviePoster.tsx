@@ -1,12 +1,13 @@
+import { Image } from "expo-image";
 import { useContext } from "react";
 import {
+  ImageStyle,
   PlatformColor,
   Pressable,
   StyleProp,
   StyleSheet,
   ViewStyle,
 } from "react-native";
-import FastImage, { ImageStyle } from "react-native-fast-image";
 
 import { TextPoster } from "./TextPoster";
 import TabStackContext from "../../contexts/TabStackContext";
@@ -34,7 +35,7 @@ export function MoviePoster({
     <Pressable onPress={pressHandler} style={buttonStyle}>
       {movie && <PosterButton movieId={movie.id.toString()} />}
       {posterPath ? (
-        <FastImage
+        <Image
           style={[
             {
               borderRadius: 8,

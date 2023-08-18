@@ -1,9 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { Image } from "expo-image";
 import { DateTime } from "luxon";
 import { PlatformColor, Pressable, View, Text } from "react-native";
-import FastImage from "react-native-fast-image";
 import { iOSUIKit } from "react-native-typography";
 import { MovieWithMediaType } from "tmdb-ts";
 
@@ -37,7 +37,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
         }}
       >
         {item.poster_path ? (
-          <FastImage
+          <Image
             source={{
               uri: `https://image.tmdb.org/t/p/w300${item.poster_path}`,
             }}

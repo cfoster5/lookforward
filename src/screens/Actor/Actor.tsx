@@ -5,6 +5,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Image } from "expo-image";
 import produce from "immer";
 import {
   useCallback,
@@ -21,7 +22,6 @@ import {
   Text,
   View,
 } from "react-native";
-import FastImage from "react-native-fast-image";
 import { useMMKVString } from "react-native-mmkv";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
@@ -96,7 +96,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
 
   function RenderItem({ item, index }: { item: any; index: number }) {
     return (
-      <FastImage
+      <Image
         source={{
           uri: `https://image.tmdb.org/t/p/${PosterSizes.W300}${item.file_path}`,
         }}

@@ -5,6 +5,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Image } from "expo-image";
 import produce from "immer";
 import { FirestoreGame } from "interfaces/firebase";
 import {
@@ -22,7 +23,6 @@ import {
   FlatList,
   Text,
 } from "react-native";
-import FastImage from "react-native-fast-image";
 import { useMMKVString } from "react-native-mmkv";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -130,7 +130,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
       }
     >
       {game?.cover?.url && (
-        <FastImage
+        <Image
           style={{ aspectRatio: 16 / 9 }}
           source={{
             uri: `https:${game.cover.url.replace("thumb", "screenshot_big")}`,

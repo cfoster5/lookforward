@@ -1,14 +1,6 @@
-import { reusableStyles } from "@/helpers/styles";
+import { Image } from "expo-image";
 import { IGDB } from "interfaces/igdb";
-
-import {
-  Image,
-  PlatformColor,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -20,6 +12,7 @@ import { iOSUIKit } from "react-native-typography";
 import { RadioButton } from "./RadioButton";
 import { PosterSizes } from "../../../interfaces/tmdb/configuration";
 
+import { reusableStyles } from "@/helpers/styles";
 import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
 
 interface Props {

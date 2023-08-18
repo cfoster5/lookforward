@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { Image } from "expo-image";
 import { PlatformColor, Pressable, View, Text } from "react-native";
-import FastImage from "react-native-fast-image";
 import { iOSUIKit } from "react-native-typography";
 
 import { calculateWidth, getGameReleaseDate } from "@/helpers/helpers";
@@ -34,7 +34,7 @@ export function SearchGame({
         }}
       >
         {item.cover?.url ? (
-          <FastImage
+          <Image
             source={{
               uri: `https:${item.cover.url.replace("thumb", "cover_big_2x")}`,
             }}

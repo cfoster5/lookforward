@@ -1,8 +1,8 @@
+import { Image } from "expo-image";
 import { WatchLocale } from "interfaces/tmdb";
 import { useContext } from "react";
 import {
   FlatList,
-  Image,
   Linking,
   PlatformColor,
   Pressable,

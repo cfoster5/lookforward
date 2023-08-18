@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { Image } from "expo-image";
 import { PlatformColor, Pressable, Text, View } from "react-native";
-import FastImage from "react-native-fast-image";
 import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { PersonWithMediaType } from "tmdb-ts";
@@ -36,7 +36,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
         }}
       >
         {item.profile_path ? (
-          <FastImage
+          <Image
             source={{
               uri: `https://image.tmdb.org/t/p/w300${item.profile_path}`,
             }}

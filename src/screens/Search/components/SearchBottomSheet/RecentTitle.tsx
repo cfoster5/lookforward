@@ -1,7 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { Image } from "expo-image";
 import { PlatformColor, Pressable, Text, View } from "react-native";
-import FastImage from "react-native-fast-image";
 import { iOSUIKit } from "react-native-typography";
 
 import { calculateWidth } from "@/helpers/helpers";
@@ -42,7 +42,7 @@ export function RecentTitle({ item }: { item: Recent }) {
         }}
       >
         {item.img_path ? (
-          <FastImage
+          <Image
             source={{
               uri:
                 item.media_type === "movie"

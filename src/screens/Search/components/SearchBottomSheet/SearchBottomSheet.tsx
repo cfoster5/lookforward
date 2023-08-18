@@ -20,8 +20,8 @@ import { useMMKVString } from "react-native-mmkv";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { RecentMovie } from "./RecentMovie";
 import { RecentPerson } from "./RecentPerson";
+import { RecentTitle } from "./RecentTitle";
 import { SearchGame } from "./SearchGame";
 import { SearchMovie } from "./SearchMovie";
 import { SearchPerson } from "./SearchPerson";
@@ -226,7 +226,7 @@ export const SearchBottomSheet = () => {
                   data={item.items}
                   renderItem={({ item }) =>
                     section.title === "Titles" ? (
-                      <RecentMovie item={item} />
+                      <RecentTitle item={item} />
                     ) : (
                       <RecentPerson item={item} />
                     )

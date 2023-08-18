@@ -7,18 +7,26 @@ import { iOSUIKit } from "react-native-typography";
 import { calculateWidth } from "@/helpers/helpers";
 import { Recent } from "@/types";
 
-export function RecentMovie({ item }: { item: Recent }) {
+export function RecentTitle({ item }: { item: Recent }) {
   // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
   const navigation = useNavigation<StackNavigationProp<any>>();
 
   return (
     <Pressable
       onPress={() =>
-        navigation.navigate("Movie", {
-          movieId: item.id,
-          movieTitle: item.name,
-          poster_path: item.img_path,
-        })
+        item.media_type === "movie"
+          ? navigation.navigate("Movie", {
+              movieId: item.id,
+              movieTitle: item.name,
+              poster_path: item.img_path,
+            })
+          : navigation.navigate("Game", {
+              game: {
+                id: item.id,
+                name: item.name,
+                cover: { url: item.img_path },
+              },
+            })
       }
     >
       <View
@@ -44,7 +52,7 @@ export function RecentMovie({ item }: { item: Recent }) {
             style={{
               aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
               width: calculateWidth(12, 12, 3.5),
-              borderRadius: 8,
+              borderRadius: 10,
               marginBottom: 8,
             }}
           />
@@ -52,9 +60,9 @@ export function RecentMovie({ item }: { item: Recent }) {
           <View
             style={{
               backgroundColor: PlatformColor("systemGray"),
-              aspectRatio: 2 / 3,
+              aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
               width: calculateWidth(12, 12, 3.5),
-              borderRadius: 8,
+              borderRadius: 10,
               marginBottom: 8,
               justifyContent: "center",
               alignItems: "center",

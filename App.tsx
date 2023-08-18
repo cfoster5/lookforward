@@ -21,10 +21,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
+import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import { StatusBar, View } from "react-native";
+import { StatusBar } from "react-native";
 import Purchases from "react-native-purchases";
-import SplashScreen from "react-native-splash-screen";
 
 import Navigation from "./src/navigation";
 import { AppProvider } from "./src/providers/app";
@@ -50,6 +50,9 @@ library.add(
   faScroll,
   faVideoCamera
 );
+
+// Prevent the splash screen from auto-hiding before asset loading is complete.
+SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   // Set an initializing state whilst Firebase connects
@@ -118,11 +121,7 @@ export default function App() {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (!initializing) SplashScreen.hide();
-  }, [initializing]);
-
-  if (initializing) return <View />;
+  if (initializing) return null;
 
   return (
     <AppProvider>

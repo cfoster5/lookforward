@@ -3,6 +3,8 @@ import {
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 import { ColorSchemeName } from "react-native";
 import { OverflowMenuProvider } from "react-navigation-header-buttons";
 
@@ -33,6 +35,12 @@ export default function Navigation({
 
 function RootNavigator() {
   const { user } = useStore();
+
+  useEffect(() => {
+    const hideSplashScreen = async () => await SplashScreen.hideAsync();
+    hideSplashScreen();
+  }, [user]);
+
   if (!user) return <AuthStack />;
   return (
     <OverflowMenuProvider>

@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { PlatformColor, Pressable, Text, View } from "react-native";
 import FastImage from "react-native-fast-image";
 import { iOSUIKit } from "react-native-typography";
@@ -7,8 +9,20 @@ import { PersonWithMediaType } from "tmdb-ts";
 import { calculateWidth } from "@/helpers/helpers";
 
 export function SearchPerson({ item }: { item: PersonWithMediaType }) {
+  // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
   return (
-    <Pressable style={{ flexDirection: "row", alignItems: "center" }}>
+    <Pressable
+      onPress={() =>
+        navigation.navigate("Actor", {
+          personId: item.id,
+          name: item.name,
+          profile_path: item.profile_path,
+        })
+      }
+      style={{ flexDirection: "row", alignItems: "center" }}
+    >
       <View
         // Extracted from Figma, decide to keep or not
         style={{

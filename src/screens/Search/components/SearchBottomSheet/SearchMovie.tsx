@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { PlatformColor, Pressable, View, Text } from "react-native";
@@ -42,7 +43,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
             style={{
               aspectRatio: 2 / 3,
               width: calculateWidth(12, 12, 3.5),
-              borderRadius: 8,
+              borderRadius: 10,
             }}
           />
         ) : (
@@ -51,7 +52,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
               backgroundColor: PlatformColor("systemGray"),
               aspectRatio: 2 / 3,
               width: calculateWidth(12, 12, 3.5),
-              borderRadius: 8,
+              borderRadius: 10,
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -67,14 +68,20 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
           iOSUIKit.subhead,
           {
             color: PlatformColor("label"),
-            textAlign: "center",
-            marginLeft: 12,
+            marginHorizontal: 12,
+            flex: 1,
           },
         ]}
         numberOfLines={2}
       >
         {item.title}
       </Text>
+      <Ionicons
+        name="chevron-forward"
+        size={28}
+        style={{ marginRight: 12 }}
+        color={PlatformColor("tertiaryLabel")}
+      />
     </Pressable>
   );
 }

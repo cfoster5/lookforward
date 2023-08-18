@@ -6,6 +6,7 @@ import BottomSheet, {
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useCallback, useMemo, useState } from "react";
 import {
+  ActivityIndicator,
   Platform,
   PlatformColor,
   Pressable,
@@ -14,6 +15,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import { useMMKVString } from "react-native-mmkv";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -80,6 +82,34 @@ export const SearchBottomSheet = () => {
     }
   };
 
+  const getSearchData = () => {
+    if (categoryIndex === 0) {
+      return movieData?.results.filter((result) => result.media_type !== "tv");
+    } else {
+      return gamesData;
+    }
+  };
+
+  const getRenderItem = (item) => {
+    if (categoryIndex === 0) {
+      if (item.media_type === "movie") {
+        return <SearchMovie item={item} />;
+      } else if (item.media_type === "person") {
+        return <SearchPerson item={item} />;
+      } else return null;
+    } else {
+      return <SearchGame item={item} />;
+    }
+  };
+
+  const isLoading = () => {
+    if (categoryIndex === 0) {
+      return isLoadingMovies;
+    } else {
+      return isLoadingGames;
+    }
+  };
+
   return (
     <BottomSheet
       bottomInset={tabBarHeight}
@@ -106,7 +136,10 @@ export const SearchBottomSheet = () => {
             value={searchValue}
           />
           <Pressable
-            onPress={() => setCategoryIndex(categoryIndex === 0 ? 1 : 0)}
+            onPress={() => {
+              setCategoryIndex(categoryIndex === 0 ? 1 : 0);
+              setSearchValue("");
+            }}
             style={{ justifyContent: "center", minWidth: 44, minHeight: 44 }}
           >
             <Ionicons
@@ -132,29 +165,29 @@ export const SearchBottomSheet = () => {
           <Text>Empty stored people</Text>
         </Pressable> */}
 
-        {searchValue && (
-          <BottomSheetFlatList
-            data={data?.results.filter((result) => result.media_type !== "tv")}
-            renderItem={({ item }) => {
-              if (item.media_type === "movie") {
-                return <SearchMovie item={item} />;
-              } else if (item.media_type === "person") {
-                return <SearchPerson item={item} />;
-              } else return null;
-            }}
-            ItemSeparatorComponent={() => (
-              <View
-                style={{
-                  height: StyleSheet.hairlineWidth,
-                  backgroundColor: PlatformColor("separator"),
-                  marginVertical: 6,
-                  marginLeft: calculateWidth(12, 12, 3.5) + 12,
-                }}
-              />
-            )}
-            keyExtractor={(result) => result.id.toString()}
-          />
-        )}
+        {searchValue &&
+          (isLoading() ? (
+            <ActivityIndicator size="large" style={{ flex: 1 }} />
+          ) : (
+            <BottomSheetFlatList
+              data={getSearchData()}
+              renderItem={({ item }) => getRenderItem(item)}
+              ItemSeparatorComponent={() => (
+                <View
+                  style={{
+                    height: StyleSheet.hairlineWidth,
+                    backgroundColor: PlatformColor("separator"),
+                    marginVertical: 6,
+                    marginLeft: calculateWidth(12, 12, 3.5) + 12,
+                    marginRight: 12,
+                  }}
+                />
+              )}
+              keyExtractor={(result) => result.id.toString()}
+              style={{ marginRight: -12 }}
+              contentContainerStyle={{ paddingBottom: 12 }}
+            />
+          ))}
 
         {!searchValue && (
           <>

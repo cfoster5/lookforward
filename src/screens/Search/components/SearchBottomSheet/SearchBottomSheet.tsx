@@ -23,6 +23,7 @@ import { RecentPerson } from "./RecentPerson";
 import { SearchMovie } from "./SearchMovie";
 import { SearchPerson } from "./SearchPerson";
 import { useGamesSearch } from "../../api/getGamesSearch";
+import { useMoviesSearch } from "../../api/getMoviesSearch";
 import useDebounce from "../../hooks/useDebounce";
 
 import { calculateWidth } from "@/helpers/helpers";
@@ -42,6 +43,8 @@ export const SearchBottomSheet = () => {
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
+  const { data: movieData, isLoading: isLoadingMovies } =
+    useMoviesSearch(debouncedSearch);
   const { data: gamesData, isLoading: isLoadingGames } =
     useGamesSearch(debouncedSearch);
 

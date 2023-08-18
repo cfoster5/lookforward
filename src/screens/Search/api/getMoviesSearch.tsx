@@ -2,6 +2,7 @@ import { useQuery } from "react-query";
 import { MultiSearchResult, Search } from "tmdb-ts";
 
 import { TMDB_KEY } from "@/constants/ApiKeys";
+import { useStore } from "@/stores/store";
 
 async function fetchSearch(searchValue: string) {
   const response = await fetch(
@@ -11,10 +12,11 @@ async function fetchSearch(searchValue: string) {
   return json;
 }
 
-export function useSearchData(searchValue: string) {
+export function useMoviesSearch(searchValue: string) {
+  const { categoryIndex } = useStore();
   return useQuery(
     ["movieSearch", searchValue],
     () => fetchSearch(searchValue),
-    { enabled: searchValue !== "" }
+    { enabled: categoryIndex === 0 && searchValue !== "" }
   );
 }

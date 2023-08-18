@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { DateTime } from "luxon";
 import { PlatformColor, Pressable, View, Text } from "react-native";
 import FastImage from "react-native-fast-image";
 import { iOSUIKit } from "react-native-typography";
@@ -63,19 +64,22 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
           </View>
         )}
       </View>
-      <Text
-        style={[
-          iOSUIKit.subhead,
-          {
-            color: PlatformColor("label"),
-            marginHorizontal: 12,
-            flex: 1,
-          },
-        ]}
-        numberOfLines={2}
-      >
-        {item.title}
-      </Text>
+      <View style={{ flex: 1, marginHorizontal: 12 }}>
+        <Text
+          style={[iOSUIKit.body, { color: PlatformColor("label") }]}
+          numberOfLines={2}
+        >
+          {item.title}
+        </Text>
+        <Text
+          style={[iOSUIKit.subhead, { color: PlatformColor("secondaryLabel") }]}
+          numberOfLines={2}
+        >
+          {DateTime.fromFormat(item.release_date, "yyyy-mm-dd").toLocaleString(
+            DateTime.DATE_FULL
+          )}
+        </Text>
+      </View>
       <Ionicons
         name="chevron-forward"
         size={28}

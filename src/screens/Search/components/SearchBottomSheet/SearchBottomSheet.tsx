@@ -102,6 +102,7 @@ export const SearchBottomSheet = () => {
             placeholderTextColor={PlatformColor("secondaryLabel")}
             clearButtonMode="while-editing"
             style={styles.textInput}
+            value={searchValue}
           />
           <Pressable
             onPress={() => setCategoryIndex(categoryIndex === 0 ? 1 : 0)}

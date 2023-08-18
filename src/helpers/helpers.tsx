@@ -1,10 +1,12 @@
 import firestore from "@react-native-firebase/firestore";
+import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import { FirestoreMovie } from "../interfaces/firebase";
 
-import { ReleaseDate } from "@/types";
+import { Game, ReleaseDate } from "@/types";
+import { timestampToUTC } from "@/utils/dates";
 
 export const targetedProviders = [
   "Any",
@@ -113,4 +115,26 @@ export function calculateWidth(
   const totalEmptySpace =
     headerSpace + separatingSpace * Math.floor(elementCount);
   return (Dimensions.get("window").width - totalEmptySpace) / elementCount;
+}
+
+export function getGameReleaseDate(
+  game: Game & {
+    release_dates: ReleaseDate[];
+  }
+): string {
+  // need to filter client-side since combining search and filter on API is not working
+  const filteredDates = game?.release_dates.filter(
+    (releaseDate) => releaseDate.region === 2 || releaseDate.region === 8
+  );
+  const uniqueDates = [...new Set(filteredDates?.map((date) => date.date))];
+  try {
+    if (uniqueDates.length === 1) {
+      // return timestampToUTC(uniqueDates[0]).toFormat("MMMM d, yyyy");
+      return timestampToUTC(uniqueDates[0]).toLocaleString(DateTime.DATE_FULL);
+    } else {
+      return "Multiple dates";
+    }
+  } catch {
+    return "TBD";
+  }
 }

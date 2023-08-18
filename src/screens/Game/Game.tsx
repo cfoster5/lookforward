@@ -36,12 +36,12 @@ import { ExpandableText } from "@/components/ExpandableText";
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
-import { removeSub } from "@/helpers/helpers";
+import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
 import { horizontalListProps } from "@/screens/Movie/constants/horizontalListProps";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
-import { timestamp, timestampToUTC } from "@/utils/dates";
+import { timestamp } from "@/utils/dates";
 
 type GameScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParamList, "Game">,
@@ -63,21 +63,6 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
     () => (storedGames ? (JSON.parse(storedGames) as Recent[]) : []),
     [storedGames]
   );
-
-  function getReleaseDate(): string {
-    // need to filter client-side since combining search and filter on API is not working
-    const filteredDates = data?.release_dates.filter(
-      (releaseDate) => releaseDate.region === 2 || releaseDate.region === 8
-    );
-    const uniqueDates = [...new Set(filteredDates?.map((date) => date.date))];
-    if (uniqueDates.length === 1) {
-      return timestampToUTC(uniqueDates[0])
-        .toFormat("MMMM d, yyyy")
-        .toUpperCase();
-    } else {
-      return "MULTIPLE DATES";
-    }
-  }
 
   useEffect(() => {
     const recentGame: Recent = {
@@ -101,7 +86,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
     );
 
     setStoredGames(JSON.stringify(updatedRecentGames));
-  }, [composeRecentGames, game.cover?.url, game.id, game.name, setStoredGames]);
+  }, [composeRecentGames, game, setStoredGames]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -156,7 +141,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
         <ThemedText style={iOSUIKit.largeTitleEmphasized}>
           {game.name}
         </ThemedText>
-        <Text style={reusableStyles.date}>{getReleaseDate()}</Text>
+        <Text style={reusableStyles.date}>{getGameReleaseDate(data)}</Text>
 
         <ExpandableText text={data?.summary} />
 
@@ -188,7 +173,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
       <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
         {detailIndex === 0 && !isLoading && (
           <>
-            {data.involved_companies?.find((company) => company.publisher) && (
+            {data?.involved_companies?.find((company) => company.publisher) && (
               <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
                 Published by:
                 {data.involved_companies
@@ -202,7 +187,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
                   ))}
               </ThemedText>
             )}
-            {data.involved_companies?.find((company) => company.developer) && (
+            {data?.involved_companies?.find((company) => company.developer) && (
               <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
                 Developed by:
                 {data.involved_companies
@@ -216,7 +201,9 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
                   ))}
               </ThemedText>
             )}
-            {data.involved_companies?.find((company) => company.supporting) && (
+            {data?.involved_companies?.find(
+              (company) => company.supporting
+            ) && (
               <View
                 style={{
                   flexDirection: "row",
@@ -241,7 +228,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
         )}
         {detailIndex === 1 &&
           !isLoading &&
-          (data.videos ? (
+          (data?.videos ? (
             <FlatList
               keyExtractor={(item) => item.id}
               data={data!.videos}

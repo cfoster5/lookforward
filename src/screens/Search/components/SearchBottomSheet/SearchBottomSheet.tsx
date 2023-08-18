@@ -65,7 +65,7 @@ export const SearchBottomSheet = () => {
     [storedPeople]
   );
 
-  const [storedGames] = useMMKVString("recent.games");
+  const [storedGames, setStoredGames] = useMMKVString("recent.games");
 
   const composeRecentGames = useCallback(
     () => (storedGames ? (JSON.parse(storedGames) as Recent[]) : []),
@@ -110,6 +110,16 @@ export const SearchBottomSheet = () => {
     }
   };
 
+  function handleClearPress(sectionTitle: string) {
+    if (categoryIndex === 0) {
+      if (sectionTitle === "Titles") {
+        setStoredMovies(undefined);
+      } else {
+        setStoredPeople(undefined);
+      }
+    } else setStoredGames(undefined);
+  }
+
   return (
     <BottomSheet
       bottomInset={tabBarHeight}
@@ -152,18 +162,6 @@ export const SearchBottomSheet = () => {
             />
           </Pressable>
         </View>
-        {/* <Pressable
-          onPress={() => setStoredMovies(undefined)}
-          style={{ backgroundColor: PlatformColor("systemRed") }}
-        >
-          <Text>Empty stored movies</Text>
-        </Pressable>
-        <Pressable
-          onPress={() => setStoredPeople(undefined)}
-          style={{ backgroundColor: PlatformColor("systemRed") }}
-        >
-          <Text>Empty stored people</Text>
-        </Pressable> */}
 
         {searchValue &&
           (isLoading() ? (
@@ -243,17 +241,38 @@ export const SearchBottomSheet = () => {
               SectionSeparatorComponent={() => <View style={{ height: 8 }} />}
               renderSectionHeader={({ section }) =>
                 section.data[0].items.length > 0 ? (
-                  <Text
-                    style={[
-                      iOSUIKit.subheadEmphasized,
-                      {
-                        color: PlatformColor("secondaryLabel"),
-                        marginTop: section.title !== "Titles" ? 8 : 0,
-                      },
-                    ]}
+                  <View
+                    style={{
+                      flex: 1,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
                   >
-                    {section.title}
-                  </Text>
+                    <Text
+                      style={[
+                        iOSUIKit.subheadEmphasized,
+                        {
+                          color: PlatformColor("secondaryLabel"),
+                          marginTop: section.title !== "Titles" ? 8 : 0,
+                        },
+                      ]}
+                    >
+                      {section.title}
+                    </Text>
+                    <Pressable onPress={() => handleClearPress(section.title)}>
+                      <Text
+                        style={[
+                          iOSUIKit.subhead,
+                          {
+                            color: PlatformColor("systemBlue"),
+                            marginTop: section.title !== "Titles" ? 8 : 0,
+                          },
+                        ]}
+                      >
+                        Clear
+                      </Text>
+                    </Pressable>
+                  </View>
                 ) : null
               }
               stickySectionHeadersEnabled={false}

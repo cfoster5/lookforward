@@ -113,7 +113,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
             iconName={countdownId ? "checkmark-outline" : "add-outline"}
             onPress={() => {
               if (!countdownId) {
-                setGame(game);
+                setGame({ ...game, release_dates: data?.release_dates });
                 bottomSheetModalRef.current?.present();
               } else {
                 removeSub("gameReleases", countdownId, user!.uid);
@@ -123,7 +123,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
         </HeaderButtons>
       ),
     });
-  }, [bottomSheetModalRef, countdownId, game, navigation, setGame, user]);
+  }, [bottomSheetModalRef, countdownId, game, navigation, setGame, user, data]);
 
   useEffect(() => {
     const documentID = gameSubs.find(

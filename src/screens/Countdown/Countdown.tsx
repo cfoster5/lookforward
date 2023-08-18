@@ -85,6 +85,14 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
         movieTitle: item.title,
         poster_path: item.poster_path,
       });
+    } else if (sectionName === "Games") {
+      navigation.navigate("Game", {
+        game: {
+          id: item.game.id,
+          name: item.game.name,
+          cover: { url: item.game.cover.url },
+        },
+      });
     }
   }
 

@@ -49,7 +49,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
                 color: "white",
               }}
             >
-              RP
+              {item.name.split(" ").map((i: string) => i.charAt(0))}
             </Text>
           </View>
         )}

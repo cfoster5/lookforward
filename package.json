@@ -31,6 +31,7 @@
     "expo-dev-client": "~2.4.6",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
+    "expo-system-ui": "~2.4.0",
     "immer": "^9.0.15",
     "intl": "^1.2.5",
     "luxon": "^2.4.0",

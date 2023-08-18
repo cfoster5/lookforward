@@ -22,7 +22,7 @@ import { Game, ReleaseDate } from "@/types";
 export function GameLayout({ navigation }) {
   const { top } = useSafeAreaInsets();
   const scrollRef = useRef<FlatList>(null);
-  const { data, isLoading } = useGames("");
+  const { data, isLoading } = useGames();
 
   return (
     <>

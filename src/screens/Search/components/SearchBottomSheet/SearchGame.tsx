@@ -5,7 +5,7 @@ import { PlatformColor, Pressable, View, Text } from "react-native";
 import FastImage from "react-native-fast-image";
 import { iOSUIKit } from "react-native-typography";
 
-import { calculateWidth } from "@/helpers/helpers";
+import { calculateWidth, getGameReleaseDate } from "@/helpers/helpers";
 import { Game, ReleaseDate } from "@/types";
 
 export function SearchGame({
@@ -61,19 +61,20 @@ export function SearchGame({
           </View>
         )}
       </View>
-      <Text
-        style={[
-          iOSUIKit.subhead,
-          {
-            color: PlatformColor("label"),
-            marginHorizontal: 12,
-            flex: 1,
-          },
-        ]}
-        numberOfLines={2}
-      >
-        {item.name}
-      </Text>
+      <View style={{ flex: 1, marginHorizontal: 12 }}>
+        <Text
+          style={[iOSUIKit.body, { color: PlatformColor("label") }]}
+          numberOfLines={2}
+        >
+          {item.name}
+        </Text>
+        <Text
+          style={[iOSUIKit.subhead, { color: PlatformColor("secondaryLabel") }]}
+          numberOfLines={2}
+        >
+          {getGameReleaseDate(item)}
+        </Text>
+      </View>
       <Ionicons
         name="chevron-forward"
         size={28}

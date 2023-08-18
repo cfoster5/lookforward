@@ -20,6 +20,7 @@ import { iOSUIKit } from "react-native-typography";
 
 import { RecentMovie } from "./RecentMovie";
 import { RecentPerson } from "./RecentPerson";
+import { SearchGame } from "./SearchGame";
 import { SearchMovie } from "./SearchMovie";
 import { SearchPerson } from "./SearchPerson";
 import { useGamesSearch } from "../../api/getGamesSearch";

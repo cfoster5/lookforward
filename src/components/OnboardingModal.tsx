@@ -1,3 +1,4 @@
+import analytics from "@react-native-firebase/analytics";
 import { PlatformColor, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -80,9 +81,12 @@ export const OnboardingModal = ({ modalRef }: Props) => {
             justifyContent: "center",
             // marginVertical: 16,
           }}
-          onPress={() => {
+          onPress={async () => {
             onboardingModalRef.current?.dismiss();
             proModalRef.current?.present();
+            await analytics().logEvent("select_promotion", {
+              id: "com.lookforward.pro",
+            });
           }}
         >
           <Text

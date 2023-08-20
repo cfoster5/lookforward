@@ -11,7 +11,6 @@ import { Image } from "expo-image";
 import produce from "immer";
 import {
   useCallback,
-  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -68,7 +67,6 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
-import TabStackContext from "@/contexts/TabStackContext";
 import { getRuntime } from "@/helpers/formatting";
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams, Recent } from "@/types";
@@ -148,7 +146,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString()
   );
-  const { theme } = useContext(TabStackContext);
   const { data: { movieDetails, traktDetails } = {}, isLoading } =
     useMovie(movieId);
   const [detailIndex, setDetailIndex] = useState(0);
@@ -254,7 +251,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         scrollIndicatorInsets={
           Platform.OS === "ios"
             ? {
-                bottom: tabBarheight - 16,
+                bottom: tabBarheight - 32,
               }
             : undefined
         }
@@ -300,7 +297,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             </View>
           )}
 
-          {movieDetails!.tagline ? (
+          {movieDetails!.tagline && (
             <Text
               style={[
                 iOSUIKit.body,
@@ -313,7 +310,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             >
               {movieDetails!.tagline}
             </Text>
-          ) : null}
+          )}
 
           <ExpandableText text={movieDetails!.overview} />
 
@@ -343,7 +340,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 style={{
                   marginTop: 16,
                   flexDirection: "row",
-                  flexWrap: "nowrap",
                   justifyContent: "space-between",
                 }}
               >
@@ -384,12 +380,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     }}
                     style={{
                       height: calculateWidth(16, 8, 6),
-                      width: calculateWidth(16, 8, 6),
+                      aspectRatio: 1 / 1,
                       borderWidth: 1,
-                      borderColor:
-                        theme === "dark"
-                          ? PlatformColor("systemGray6")
-                          : "#e0e0e0",
+                      borderColor: PlatformColor("separator"),
                       borderRadius: 8,
                     }}
                   />
@@ -530,10 +523,8 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         mediaSelections.images === "posters"
                           ? calculateWidth(16, 8, 2.5)
                           : calculateWidth(16, 8, 1.5),
-                      height:
-                        mediaSelections.images === "posters"
-                          ? calculateWidth(16, 8, 2.5) * 1.5
-                          : calculateWidth(16, 8, 1.5) / 1.78,
+                      aspectRatio:
+                        mediaSelections.images === "posters" ? 2 / 3 : 16 / 9,
                     }}
                   />
                 )}
@@ -593,12 +584,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     <Image
                       style={{
                         width: Dimensions.get("screen").width - 32,
-                        height: (Dimensions.get("screen").width - 32) / 1.78,
+                        aspectRatio: 16 / 9,
                         borderWidth: 1,
-                        borderColor:
-                          theme === "dark"
-                            ? PlatformColor("systemGray6")
-                            : "#e0e0e0",
+                        borderColor: PlatformColor("separator"),
                         borderRadius: 8,
                       }}
                       source={{
@@ -650,7 +638,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         posterPath={item.poster_path}
                         style={{
                           width: calculateWidth(16, 8, 2.5),
-                          height: calculateWidth(16, 8, 2.5) * 1.5,
+                          aspectRatio: 2 / 3,
                         }}
                       />
                     )}

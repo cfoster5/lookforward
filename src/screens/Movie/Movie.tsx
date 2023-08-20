@@ -40,6 +40,7 @@ import { useMovie } from "./api/getMovie";
 import { DiscoverListLabel } from "./components/DiscoverListLabel";
 import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
+import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
 import { horizontalListProps } from "./constants/horizontalListProps";
 import {
@@ -309,6 +310,19 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               {movieDetails!.tagline}
             </Text>
           )}
+
+          <View
+            style={{
+              marginTop: 16,
+              flexDirection: "row",
+              justifyContent: "space-around",
+            }}
+          >
+            <Rating source="TMDB" rating={movieDetails!.vote_average} />
+            <Rating source="IMDb" rating={97} />
+            <Rating source="RT" rating={97} />
+            <Rating source="Metacritic" rating={97} />
+          </View>
 
           <ExpandableText text={movieDetails!.overview} />
 

@@ -6900,10 +6900,10 @@ react-native-mmkv@^2.10.1:
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.10.1.tgz#1a4e64edbf9561fe81a5ae3cefde17e88dfc669f"
   integrity sha512-MCrYytUJ3JhSVg7LwVXCj7ExbMHe48FoQdDA1xo1q/M4c1/QyI3M9L9d2dyJUhYPnsSO0+5c2mJICm7v39XA0w==
 
-react-native-purchases@^5.13.1:
-  version "5.16.0"
-  resolved "https://registry.yarnpkg.com/react-native-purchases/-/react-native-purchases-5.16.0.tgz#b68318216aa03e73de5a10495febe38f58e340ad"
-  integrity sha512-Us1YNzjG4kICxgnUGQOejlTkLoXHiCRc7Qnrr1w64AaVZrMMnzkqn7fPlo9RDR9hCE48OGgrYTav5nL8cV6H8A==
+react-native-purchases@^6.6.2:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/react-native-purchases/-/react-native-purchases-6.6.2.tgz#603f782a4744e6b7f0973d8ca4733e05c77fc3e7"
+  integrity sha512-G4k+EoNngUT6NDBwNLrFsndr05L5SlYA+qAFYwULgTsSYNJd4Ox9Ngj9m93j5MpKfDlDubDtMBaJKx4mBDGJ3w==
 
 react-native-reanimated@~3.3.0:
   version "3.3.0"

@@ -74,6 +74,7 @@ export function MovieLayout({ navigation }) {
           marginTop: top,
           flexDirection: "row",
           justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         <Text
@@ -82,7 +83,15 @@ export function MovieLayout({ navigation }) {
           {option}
         </Text>
         {/* <ListLabel text={option} style={{ marginBottom: 0 }} /> */}
-        <Pressable onPress={() => modalRef.current?.present()}>
+        <Pressable
+          onPress={() => modalRef.current?.present()}
+          style={{
+            minWidth: 44,
+            minHeight: 44,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Text style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}>
             More
           </Text>

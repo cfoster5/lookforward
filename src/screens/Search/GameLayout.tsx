@@ -32,6 +32,7 @@ export function GameLayout({ navigation }) {
           marginTop: top,
           flexDirection: "row",
           justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
         <Text
@@ -39,8 +40,16 @@ export function GameLayout({ navigation }) {
         >
           Coming Soon
         </Text>
-        {/* <ListLabel text="Coming Soon" style={{ marginBottom: 0 }} /> */}
+        <Pressable
+          style={{
+            minWidth: 44,
+            minHeight: 44,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        />
       </View>
+
       {!isLoading ? (
         <>
           <FlatList

@@ -24,7 +24,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
   const { proModalRef } = useStore();
   const [isPurchasing, setIsPurchasing] = useState(false);
 
-  async function handlePress() {
+  async function handlePurchase() {
     setIsPurchasing(true);
     try {
       const { customerInfo, productIdentifier } =
@@ -43,6 +43,17 @@ export const ExplorePro = ({ modalRef }: Props) => {
     } finally {
       setIsPurchasing(false);
     }
+  }
+
+  async function handleRestorePurchase() {
+    try {
+      const restore = await Purchases.restorePurchases();
+      // ... check restored purchaserInfo to see if entitlement is now active
+      console.log("restore", restore);
+      if (restore.entitlements.active.pro) {
+        Alert.alert("Purchase restored");
+      }
+    } catch (e) {}
   }
 
   return (
@@ -91,7 +102,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
         <LargeFilledButton
           disabled={false}
           style={{ marginVertical: 16 }}
-          handlePress={() => handlePress()}
+          handlePress={() => handlePurchase()}
         >
           {isPurchasing ? (
             <ActivityIndicator
@@ -110,6 +121,24 @@ export const ExplorePro = ({ modalRef }: Props) => {
             </Text>
           )}
         </LargeFilledButton>
+        <Pressable
+          style={{
+            minHeight: 44,
+            minWidth: 44,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onPress={handleRestorePurchase}
+        >
+          <Text
+            style={[
+              iOSUIKit.bodyEmphasized,
+              { color: PlatformColor("systemBlue") },
+            ]}
+          >
+            Restore Purchase
+          </Text>
+        </Pressable>
       </View>
     </DynamicHeightModal>
   );

@@ -178,6 +178,10 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     [storedMovies]
   );
 
+  const usReleaseDates = movieDetails?.release_dates.results.find(
+    (result) => result.iso_3166_1 === "US"
+  )?.release_dates;
+
   useEffect(() => {
     const recentMovie: Recent = {
       id: movieId,
@@ -269,14 +273,8 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
           </ThemedText>
           <View style={{ flexDirection: "row" }}>
             <Text style={reusableStyles.date}>
-              {movieDetails!.release_dates.results.find(
-                (result) => result.iso_3166_1 === "US"
-              )?.release_dates
-                ? getReleaseDate(
-                    movieDetails!.release_dates.results.find(
-                      (result) => result.iso_3166_1 === "US"
-                    )?.release_dates
-                  )
+              {usReleaseDates
+                ? getReleaseDate(usReleaseDates)
                 : "No release date yet"}
             </Text>
             <BlueBullet />

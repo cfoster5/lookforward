@@ -55,17 +55,21 @@ function Login({ navigation, route }: Props) {
       >
         {/* Wrapping with View fixes jump that Text elements experienced when keyboard is opening/dismissing */}
         <View>
-          <Text style={{ ...iOSUIKit.largeTitleEmphasizedWhiteObject }}>
+          <Text
+            style={[
+              iOSUIKit.largeTitleEmphasized,
+              { color: PlatformColor("label") },
+            ]}
+          >
             {route.params.emailSent
               ? "Check your email inbox"
               : "Welcome back!"}
           </Text>
           <Text
-            style={{
-              ...iOSUIKit.bodyObject,
-              color: PlatformColor("systemGray"),
-              marginBottom: 8,
-            }}
+            style={[
+              iOSUIKit.body,
+              { color: PlatformColor("secondaryLabel"), marginBottom: 8 },
+            ]}
           >
             {route.params.emailSent
               ? "Sign in after resetting your password"
@@ -81,7 +85,7 @@ function Login({ navigation, route }: Props) {
               marginVertical: 8,
             }}
             placeholder="Email"
-            placeholderTextColor={PlatformColor("systemGray")}
+            placeholderTextColor={PlatformColor("secondaryLabel")}
             autoCapitalize="none"
             keyboardType="email-address"
             textContentType="username"
@@ -98,7 +102,7 @@ function Login({ navigation, route }: Props) {
               marginVertical: 8,
             }}
             placeholder="Password"
-            placeholderTextColor={PlatformColor("systemGray")}
+            placeholderTextColor={PlatformColor("secondaryLabel")}
             secureTextEntry
             textContentType="password"
             value={password}
@@ -112,7 +116,7 @@ function Login({ navigation, route }: Props) {
               <Text
                 style={{
                   ...iOSUIKit.bodyObject,
-                  color: PlatformColor("systemGray"),
+                  color: PlatformColor("secondaryLabel"),
                   marginVertical: 8,
                 }}
               >

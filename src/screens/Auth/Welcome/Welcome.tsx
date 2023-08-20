@@ -52,10 +52,10 @@ function Welcome({ navigation }: Props) {
         }}
         style={{
           borderRadius: 8,
-          borderColor: PlatformColor("systemGray6"),
+          borderColor: PlatformColor("separator"),
           borderWidth: 1,
           width,
-          height: width * 1.5,
+          aspectRatio: 2 / 3,
           paddingHorizontal: horizontalMargin,
         }}
       />
@@ -103,26 +103,33 @@ function Welcome({ navigation }: Props) {
               onPress={() => navigation.navigate("Create Account")}
             >
               <Text
-                style={{
-                  ...iOSUIKit.bodyEmphasizedWhiteObject,
-                  textAlign: "center",
-                }}
+                style={[
+                  iOSUIKit.bodyEmphasized,
+                  { color: PlatformColor("label"), textAlign: "center" },
+                ]}
               >
                 Continue
               </Text>
             </Pressable>
-            <View style={{ flexDirection: "row", marginTop: 24 }}>
+            <View style={{ flexDirection: "row", marginTop: 16 }}>
               <Text
-                style={{
-                  ...iOSUIKit.bodyObject,
-                  color: PlatformColor("systemGray"),
-                  alignSelf: "center",
-                }}
+                style={[
+                  iOSUIKit.body,
+                  {
+                    color: PlatformColor("secondaryLabel"),
+                    alignSelf: "center",
+                  },
+                ]}
               >
                 Already have an account?
               </Text>
               <Pressable
-                style={{ marginHorizontal: 8 }}
+                style={{
+                  marginHorizontal: 8,
+                  minHeight: 44,
+                  minWidth: 44,
+                  justifyContent: "center",
+                }}
                 onPress={() =>
                   navigation.navigate("Sign In", { emailSent: false })
                 }

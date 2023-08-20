@@ -7,12 +7,16 @@ import {
   KeyboardAvoidingView,
   PlatformColor,
   Pressable,
+  PressableProps,
   Text,
   TextInput,
   View,
+  ViewStyle,
+  StyleProp,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { useStore } from "@/stores/store";
 import { AuthStackParams } from "@/types";
 
@@ -82,7 +86,7 @@ function CreateAccount({ navigation, route }: Props) {
                 backgroundColor: PlatformColor("systemGray6"),
                 color: PlatformColor("label"),
                 padding: 16,
-                borderRadius: 8,
+                borderRadius: 12,
                 marginVertical: 8,
               },
             ]}
@@ -101,7 +105,7 @@ function CreateAccount({ navigation, route }: Props) {
                 backgroundColor: PlatformColor("systemGray6"),
                 color: PlatformColor("label"),
                 padding: 16,
-                borderRadius: 8,
+                borderRadius: 12,
                 marginVertical: 8,
               },
             ]}
@@ -126,29 +130,12 @@ function CreateAccount({ navigation, route }: Props) {
               Skip?
             </Text>
           </Pressable>
-          <Pressable
-            style={{
-              backgroundColor: PlatformColor("systemBlue"),
-              width: "100%",
-              marginTop: 16,
-              paddingVertical: 16,
-              borderRadius: 8,
-              opacity: email && password ? 1 : 0.5,
-            }}
-            onPress={() => (email && password ? createAccount() : null)}
-          >
-            <Text
-              style={[
-                iOSUIKit.bodyEmphasized,
-                {
-                  color: PlatformColor("label"),
-                  textAlign: "center",
-                },
-              ]}
-            >
-              Continue
-            </Text>
-          </Pressable>
+          <LargeFilledButton
+            disabled={!email || !password}
+            style={{ marginTop: 16 }}
+            handlePress={() => (email && password ? createAccount() : null)}
+            text="Continue"
+          />
         </View>
       </KeyboardAvoidingView>
     </Pressable>

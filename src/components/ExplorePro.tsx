@@ -11,6 +11,8 @@ import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
+import { LargeFilledButton } from "./LargeFilledButton";
+
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
 import { useStore } from "@/stores/store";
@@ -86,20 +88,10 @@ export const ExplorePro = ({ modalRef }: Props) => {
           body="See your recent searches for titles and people"
           useAltIcon
         />
-        <Pressable
-          style={{
-            backgroundColor: PlatformColor("systemBlue"),
-            minHeight: 44,
-            minWidth: 44,
-            borderRadius: 12,
-            alignItems: "center",
-            justifyContent: "center",
-            marginVertical: 16,
-          }}
-          onPress={() => {
-            // proModalRef.current?.dismiss();
-            handlePress();
-          }}
+        <LargeFilledButton
+          disabled={false}
+          style={{ marginVertical: 16 }}
+          handlePress={() => handlePress()}
         >
           {isPurchasing ? (
             <ActivityIndicator color="white" />
@@ -108,7 +100,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
               Unlock for $0.99
             </Text>
           )}
-        </Pressable>
+        </LargeFilledButton>
       </View>
     </DynamicHeightModal>
   );

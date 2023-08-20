@@ -18,6 +18,8 @@ import { useHypedGames } from "./api/getHypedGames";
 import { useTrendingMovies } from "./api/getTrendingMovies";
 import { PosterSizes } from "../../../interfaces/tmdb/configuration";
 
+import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
+import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { AuthStackParams } from "@/types";
 
 type Props = NativeStackScreenProps<AuthStackParams, "Welcome">;
@@ -51,7 +53,7 @@ function Welcome({ navigation }: Props) {
                 )}`,
         }}
         style={{
-          borderRadius: 8,
+          borderRadius: 12,
           borderColor: PlatformColor("separator"),
           borderWidth: 1,
           width,
@@ -93,57 +95,18 @@ function Welcome({ navigation }: Props) {
             }}
           />
           <View style={{ marginHorizontal: 24 }}>
-            <Pressable
-              style={{
-                backgroundColor: PlatformColor("systemBlue"),
-                width: "100%",
-                paddingVertical: 16,
-                borderRadius: 8,
-              }}
-              onPress={() => navigation.navigate("Create Account")}
-            >
-              <Text
-                style={[
-                  iOSUIKit.bodyEmphasized,
-                  { color: PlatformColor("label"), textAlign: "center" },
-                ]}
-              >
-                Continue
-              </Text>
-            </Pressable>
-            <View style={{ flexDirection: "row", marginTop: 16 }}>
-              <Text
-                style={[
-                  iOSUIKit.body,
-                  {
-                    color: PlatformColor("secondaryLabel"),
-                    alignSelf: "center",
-                  },
-                ]}
-              >
-                Already have an account?
-              </Text>
-              <Pressable
-                style={{
-                  marginHorizontal: 8,
-                  minHeight: 44,
-                  minWidth: 44,
-                  justifyContent: "center",
-                }}
-                onPress={() =>
-                  navigation.navigate("Sign In", { emailSent: false })
-                }
-              >
-                <Text
-                  style={{
-                    ...iOSUIKit.bodyObject,
-                    color: PlatformColor("systemBlue"),
-                  }}
-                >
-                  Sign In
-                </Text>
-              </Pressable>
-            </View>
+            <LargeFilledButton
+              disabled={false}
+              handlePress={() => navigation.navigate("Create Account")}
+              text="Create Account"
+            />
+            <LargeBorderlessButton
+              style={{ marginTop: 16 }}
+              handlePress={() =>
+                navigation.navigate("Sign In", { emailSent: false })
+              }
+              text="Sign In"
+            />
           </View>
         </>
       )}

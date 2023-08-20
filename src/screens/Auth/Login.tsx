@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { useStore } from "@/stores/store";
 import { AuthStackParams } from "@/types";
 
@@ -81,7 +82,7 @@ function Login({ navigation, route }: Props) {
               backgroundColor: PlatformColor("systemGray6"),
               color: "white",
               padding: 16,
-              borderRadius: 8,
+              borderRadius: 12,
               marginVertical: 8,
             }}
             placeholder="Email"
@@ -98,7 +99,7 @@ function Login({ navigation, route }: Props) {
               backgroundColor: PlatformColor("systemGray6"),
               color: "white",
               padding: 16,
-              borderRadius: 8,
+              borderRadius: 12,
               marginVertical: 8,
             }}
             placeholder="Password"
@@ -114,36 +115,24 @@ function Login({ navigation, route }: Props) {
               onPress={() => navigation.navigate("Password Reset")}
             >
               <Text
-                style={{
-                  ...iOSUIKit.bodyObject,
-                  color: PlatformColor("secondaryLabel"),
-                  marginVertical: 8,
-                }}
+                style={[
+                  iOSUIKit.body,
+                  {
+                    color: PlatformColor("secondaryLabel"),
+                    marginVertical: 8,
+                  },
+                ]}
               >
                 Forgot password?
               </Text>
             </Pressable>
           )}
-          <Pressable
-            style={{
-              backgroundColor: PlatformColor("systemBlue"),
-              width: "100%",
-              marginTop: route.params.emailSent ? 16 : 8,
-              paddingVertical: 16,
-              borderRadius: 8,
-              opacity: email && password ? 1 : 0.5,
-            }}
-            onPress={() => (email && password ? signIn() : null)}
-          >
-            <Text
-              style={{
-                ...iOSUIKit.bodyEmphasizedWhiteObject,
-                textAlign: "center",
-              }}
-            >
-              Continue
-            </Text>
-          </Pressable>
+          <LargeFilledButton
+            disabled={!email || !password}
+            style={{ marginTop: route.params.emailSent ? 16 : 8 }}
+            handlePress={() => (email && password ? signIn() : null)}
+            text="Continue"
+          />
         </View>
       </KeyboardAvoidingView>
     </Pressable>

@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
+import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { AuthStackParams } from "@/types";
 
 type Props = NativeStackScreenProps<AuthStackParams, "Password Reset">;
@@ -61,7 +62,7 @@ function PasswordReset({ navigation }: Props) {
               backgroundColor: PlatformColor("systemGray6"),
               color: "white",
               padding: 16,
-              borderRadius: 8,
+              borderRadius: 12,
               marginVertical: 8,
             }}
             placeholder="Email"
@@ -72,26 +73,12 @@ function PasswordReset({ navigation }: Props) {
             value={email}
             onChangeText={(text) => setEmail(text)}
           />
-          <Pressable
-            style={{
-              backgroundColor: PlatformColor("systemBlue"),
-              width: "100%",
-              marginTop: 8,
-              paddingVertical: 16,
-              borderRadius: 8,
-              opacity: email ? 1 : 0.5,
-            }}
-            onPress={() => (email ? signIn() : null)}
-          >
-            <Text
-              style={{
-                ...iOSUIKit.bodyEmphasizedWhiteObject,
-                textAlign: "center",
-              }}
-            >
-              Continue
-            </Text>
-          </Pressable>
+          <LargeFilledButton
+            disabled={!email}
+            style={{ marginTop: 8 }}
+            handlePress={() => (email ? signIn() : null)}
+            text="Continue"
+          />
         </View>
       </KeyboardAvoidingView>
     </Pressable>

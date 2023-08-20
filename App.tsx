@@ -23,7 +23,7 @@ import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
+import { Alert, StatusBar } from "react-native";
 import Purchases from "react-native-purchases";
 
 import Navigation from "./src/navigation";
@@ -75,6 +75,14 @@ export default function App() {
       appUserID: null,
       observerMode: false,
       useAmazon: false,
+    });
+
+    Purchases.addCustomerInfoUpdateListener((info) => {
+      if (info.entitlements.active.pro) {
+        Alert.alert("isPro");
+      }
+
+      // handle any changes to customerInfo
     });
   }, []);
 

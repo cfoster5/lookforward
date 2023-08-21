@@ -94,9 +94,18 @@ export const ExplorePro = ({ modalRef }: Props) => {
           handlePress={() => handlePress()}
         >
           {isPurchasing ? (
-            <ActivityIndicator color="white" />
+            <ActivityIndicator
+              color="white"
+              // Match size to below text's lineHeight so pressable height isn't changed
+              size={iOSUIKit.bodyEmphasizedObject.lineHeight}
+            />
           ) : (
-            <Text style={[iOSUIKit.bodyEmphasized, { color: "white" }]}>
+            <Text
+              style={[
+                iOSUIKit.bodyEmphasized,
+                { color: "white", textAlign: "center" },
+              ]}
+            >
               Unlock for $0.99
             </Text>
           )}

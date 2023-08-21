@@ -21,7 +21,18 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
           profile_path: item.profile_path,
         })
       }
-      style={{ flexDirection: "row", alignItems: "center" }}
+      style={({ pressed }) => [
+        {
+          flexDirection: "row",
+          alignItems: "center",
+          paddingTop: 12,
+          paddingBottom: 12,
+          paddingLeft: 12,
+        },
+        pressed && {
+          backgroundColor: PlatformColor("tertiarySystemBackground"),
+        },
+      ]}
     >
       <View
         // Extracted from Figma, decide to keep or not

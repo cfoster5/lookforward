@@ -19,7 +19,18 @@ export function SearchGame({
   return (
     <Pressable
       onPress={() => navigation.navigate("Game", { game: item })}
-      style={{ flexDirection: "row", alignItems: "center" }}
+      style={({ pressed }) => [
+        {
+          flexDirection: "row",
+          alignItems: "center",
+          paddingTop: 12,
+          paddingBottom: 12,
+          paddingLeft: 12,
+        },
+        pressed && {
+          backgroundColor: PlatformColor("tertiarySystemBackground"),
+        },
+      ]}
     >
       <View
         style={{

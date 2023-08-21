@@ -175,15 +175,14 @@ export const SearchBottomSheet = () => {
                   style={{
                     height: StyleSheet.hairlineWidth,
                     backgroundColor: PlatformColor("separator"),
-                    marginVertical: 6,
+                    // marginVertical: 6,
                     marginLeft: calculateWidth(12, 12, 3.5) + 12,
                     marginRight: 12,
                   }}
                 />
               )}
               keyExtractor={(result) => result.id.toString()}
-              style={{ marginRight: -12 }}
-              contentContainerStyle={{ paddingBottom: 12 }}
+              style={{ marginRight: -12, marginLeft: -12 }}
             />
           ))}
 

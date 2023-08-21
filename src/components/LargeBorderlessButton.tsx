@@ -19,7 +19,7 @@ export const LargeBorderlessButton = ({
   text,
 }: LargeBorderlessButtonProps) => (
   <Pressable
-    style={[
+    style={({ pressed }) => [
       {
         minHeight: 44,
         minWidth: 44,
@@ -28,6 +28,7 @@ export const LargeBorderlessButton = ({
         width: "100%",
         paddingVertical: 16,
         borderRadius: 12,
+        opacity: pressed ? 0.5 : 1,
       },
       style,
     ]}

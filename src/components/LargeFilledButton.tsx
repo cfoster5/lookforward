@@ -23,7 +23,7 @@ export const LargeFilledButton = ({
   children,
 }: LargeFilledButtonProps) => (
   <Pressable
-    style={[
+    style={({ pressed }) => [
       {
         backgroundColor: disabled
           ? PlatformColor("tertiarySystemFillColor")
@@ -31,23 +31,28 @@ export const LargeFilledButton = ({
         width: "100%",
         paddingVertical: 16,
         borderRadius: 12,
+        opacity: pressed ? 0.5 : 1,
       },
       style,
     ]}
     onPress={handlePress}
   >
-    <Text
-      style={[
-        iOSUIKit.bodyEmphasized,
-        {
-          color: disabled
-            ? PlatformColor("tertiaryLabel")
-            : PlatformColor("label"),
-          textAlign: "center",
-        },
-      ]}
-    >
-      {text ?? children}
-    </Text>
+    {text ? (
+      <Text
+        style={[
+          iOSUIKit.bodyEmphasized,
+          {
+            color: disabled
+              ? PlatformColor("tertiaryLabel")
+              : PlatformColor("label"),
+            textAlign: "center",
+          },
+        ]}
+      >
+        {text}
+      </Text>
+    ) : (
+      children
+    )}
   </Pressable>
 );

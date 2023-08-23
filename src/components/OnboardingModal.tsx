@@ -1,5 +1,5 @@
 import analytics from "@react-native-firebase/analytics";
-import { PlatformColor, Text, View } from "react-native";
+import { Linking, PlatformColor, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
@@ -54,11 +54,14 @@ export const OnboardingModal = ({ modalRef }: Props) => {
           title="Details"
           body="Tap on a title to see genres, credits, trailers, and so much more."
         />
-        <Row
-          icon="notifications-outline"
-          title="Notifications"
-          body="Enable push notifications to be reminded about releases in your list that are a week or day away."
-        />
+        <Pressable onPress={() => Linking.openSettings()}>
+          <Row
+            icon="notifications-outline"
+            title="Notifications"
+            body="Allow push notifications to be reminded about releases in your list that are a week or day away."
+            showDrillIn
+          />
+        </Pressable>
         <LargeFilledButton
           disabled={false}
           style={{ marginVertical: 16 }}

@@ -87,7 +87,7 @@ function Welcome({ navigation }: Props) {
             scrollEnabled={false}
             sliderWidth={Dimensions.get("window").width}
             itemWidth={width + horizontalMargin * 2}
-            removeClippedSubviews
+            vertical={false}
             containerCustomStyle={{
               marginVertical: 24,
               flexGrow: 0,

@@ -196,6 +196,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
         <>
           {person?.images?.profiles && (
             <Carousel
+              vertical={false}
               ref={ref}
               data={person?.images?.profiles}
               renderItem={RenderItem}

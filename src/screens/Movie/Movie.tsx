@@ -143,11 +143,11 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { movieId, movieTitle, poster_path } = route.params;
-  const { user, movieSubs } = useStore();
+  const { user, movieSubs, isPro } = useStore();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString()
   );
-  const { data: { movieDetails, traktDetails } = {}, isLoading } =
+  const { data: { movieDetails, traktDetails, ratings } = {}, isLoading } =
     useMovie(movieId);
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
@@ -293,6 +293,26 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               <Text style={reusableStyles.date}>
                 {traktDetails?.certification}
               </Text>
+              {isPro && (
+                <>
+                  <BlueBullet />
+                  <Text style={styles.secondarySubhedEmphasized}>
+                    ${movieDetails!.revenue.toLocaleString()}
+                  </Text>
+                </>
+              )}
+            </View>
+          )}
+
+          {isPro && ratings!.length > 0 && (
+            <View style={{ marginTop: 16, flexDirection: "row" }}>
+              {ratings?.map((rating) => (
+                <Rating
+                  key={rating.Source}
+                  source={rating.Source}
+                  rating={rating.Value}
+                />
+              ))}
             </View>
           )}
 
@@ -310,19 +330,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               {movieDetails!.tagline}
             </Text>
           )}
-
-          <View
-            style={{
-              marginTop: 16,
-              flexDirection: "row",
-              justifyContent: "space-around",
-            }}
-          >
-            <Rating source="TMDB" rating={movieDetails!.vote_average} />
-            <Rating source="IMDb" rating={97} />
-            <Rating source="RT" rating={97} />
-            <Rating source="Metacritic" rating={97} />
-          </View>
 
           <ExpandableText text={movieDetails!.overview} />
 
@@ -679,5 +686,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  secondarySubhedEmphasized: {
+    ...iOSUIKit.subheadEmphasizedObject,
+    color: PlatformColor("secondaryLabel"),
+  },
+});
 
 export default MovieScreen;

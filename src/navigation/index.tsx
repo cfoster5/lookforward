@@ -6,7 +6,7 @@ import {
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { ColorSchemeName } from "react-native";
-import { OverflowMenuProvider } from "react-navigation-header-buttons";
+import { HeaderButtonsProvider } from "react-navigation-header-buttons";
 
 import { AuthStack } from "./AuthStack";
 import { TabStack } from "./TabStack";
@@ -43,10 +43,10 @@ function RootNavigator() {
 
   if (!user) return <AuthStack />;
   return (
-    <OverflowMenuProvider>
+    <HeaderButtonsProvider stackType="native">
       <TabStackContext.Provider value={{ theme: "dark" }}>
         <TabStack />
       </TabStackContext.Provider>
-    </OverflowMenuProvider>
+    </HeaderButtonsProvider>
   );
 }

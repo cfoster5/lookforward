@@ -56,7 +56,6 @@
     "react-navigation-header-buttons": "^9.0.1",
     "react-query": "^3.39.1",
     "tmdb-ts": "^1.4.0",
-    "use-immer": "^0.7.0",
     "zustand": "^4.1.4"
   },
   "devDependencies": {

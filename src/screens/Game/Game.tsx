@@ -37,7 +37,6 @@ import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
-import { reusableStyles } from "@/helpers/styles";
 import { horizontalListProps } from "@/screens/Movie/constants/horizontalListProps";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
@@ -141,7 +140,14 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
         <ThemedText style={iOSUIKit.largeTitleEmphasized}>
           {game.name}
         </ThemedText>
-        <Text style={reusableStyles.date}>{getGameReleaseDate(data)}</Text>
+        <Text
+          style={[
+            iOSUIKit.subheadEmphasized,
+            { color: PlatformColor("secondaryLabel") },
+          ]}
+        >
+          {getGameReleaseDate(data)}
+        </Text>
 
         <ExpandableText text={data?.summary} />
 

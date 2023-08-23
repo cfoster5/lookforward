@@ -121,7 +121,7 @@ function PosterButton({ movieId, game }: Props) {
           width: 36,
           borderRadius: 18,
           borderWidth: 1,
-          borderColor: PlatformColor("systemGray6"),
+          borderColor: PlatformColor("separator"),
           alignItems: "center",
           justifyContent: "center",
         }}

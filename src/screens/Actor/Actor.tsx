@@ -6,7 +6,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
-import produce from "immer";
+import { produce } from "immer";
 import {
   useCallback,
   useEffect,

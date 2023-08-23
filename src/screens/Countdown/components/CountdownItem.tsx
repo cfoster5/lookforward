@@ -81,7 +81,6 @@ function CountdownItem({
       width: 92 / 1.75,
       height: 132 / 1.75,
       borderRadius: 8,
-      resizeMode: "cover",
       marginLeft: 16,
       marginTop: 8,
       marginBottom: 8,
@@ -142,7 +141,11 @@ function CountdownItem({
             <RadioButton isSelected={isSelected} />
           </Animated.View>
           <View style={{ justifyContent: "center" }}>
-            <Image style={styles.image} source={{ uri: imageSrc }} />
+            <Image
+              style={styles.image}
+              source={{ uri: imageSrc }}
+              contentFit="cover"
+            />
           </View>
           <View style={styles.middle}>
             <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{title}</Text>

@@ -3,7 +3,7 @@ import analytics from "@react-native-firebase/analytics";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 import { useEffect, useRef, useState } from "react";
-import { Platform, Text, View } from "react-native";
+import { Linking, Platform, Text, View } from "react-native";
 
 import { NotificationSetting } from "./components/NotificationSetting";
 import { SettingNavButton } from "./components/SettingNavButton";
@@ -115,6 +115,15 @@ function Settings({ navigation }) {
                 });
               }}
               text="Tip Jar"
+              buttonStyle={{ marginTop: 0 }}
+            />
+            <SettingNavButton
+              handlePress={() => {
+                Linking.openURL(
+                  `itms-apps://itunes.apple.com/app/viewContentsUserReviews/id1492748952?action=write-review`
+                );
+              }}
+              text="Write a Review"
               buttonStyle={{ marginTop: 0 }}
             />
             <SettingNavButton

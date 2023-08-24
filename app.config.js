@@ -1,6 +1,6 @@
 export default {
   expo: {
-    name: "lookforward",
+    name: "LookForward",
     slug: "lookforward",
     version: "6.0.0",
     orientation: "portrait",

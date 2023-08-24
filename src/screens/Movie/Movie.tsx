@@ -9,6 +9,7 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { produce } from "immer";
+import { DateTime } from "luxon";
 import {
   useCallback,
   useEffect,
@@ -40,6 +41,7 @@ import { useMovie } from "./api/getMovie";
 import { DiscoverListLabel } from "./components/DiscoverListLabel";
 import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
+import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
 import { horizontalListProps } from "./constants/horizontalListProps";
 import {
@@ -48,7 +50,6 @@ import {
   subToMovie,
   tmdbMovieGenres,
 } from "../../helpers/helpers";
-import { reusableStyles } from "../../helpers/styles";
 import { FirestoreMovie } from "../../interfaces/firebase";
 import { ReleaseDate, ReleaseDateType } from "../../interfaces/tmdb";
 import {
@@ -127,9 +128,9 @@ export function getReleaseDate(releaseDates: ReleaseDate[]) {
     ({ release_date: a }, { release_date: b }) =>
       compareDates(isoToUTC(a), isoToUTC(b))
   );
-  return isoToUTC(sortedNonPremiereDates[0].release_date)
-    .toFormat("MMMM d, yyyy")
-    .toUpperCase();
+  return isoToUTC(sortedNonPremiereDates[0].release_date).toLocaleString(
+    DateTime.DATE_FULL
+  );
 }
 
 type MovieScreenNavigationProp = CompositeScreenProps<
@@ -142,11 +143,11 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { movieId, movieTitle, poster_path } = route.params;
-  const { user, movieSubs } = useStore();
+  const { user, movieSubs, isPro } = useStore();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString()
   );
-  const { data: { movieDetails, traktDetails } = {}, isLoading } =
+  const { data: { movieDetails, traktDetails, ratings } = {}, isLoading } =
     useMovie(movieId);
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
@@ -272,26 +273,48 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             {movieDetails!.title}
           </ThemedText>
           <View style={{ flexDirection: "row" }}>
-            <Text style={reusableStyles.date}>
+            <Text style={styles.secondarySubhedEmphasized}>
               {usReleaseDates
                 ? getReleaseDate(usReleaseDates)
                 : "No release date yet"}
             </Text>
             <BlueBullet />
-            <Text style={reusableStyles.date}>{movieDetails!.status}</Text>
+            <Text style={styles.secondarySubhedEmphasized}>
+              {movieDetails!.status}
+            </Text>
           </View>
 
           {(getRuntime(movieDetails!.runtime) ||
             traktDetails?.certification) && (
             <View style={{ flexDirection: "row" }}>
-              <Text style={reusableStyles.date}>
+              <Text style={styles.secondarySubhedEmphasized}>
                 {getRuntime(movieDetails!.runtime)}
               </Text>
               {getRuntime(movieDetails!.runtime) &&
                 traktDetails?.certification && <BlueBullet />}
-              <Text style={reusableStyles.date}>
+              <Text style={styles.secondarySubhedEmphasized}>
                 {traktDetails?.certification}
               </Text>
+              {isPro && (
+                <>
+                  <BlueBullet />
+                  <Text style={styles.secondarySubhedEmphasized}>
+                    ${movieDetails!.revenue.toLocaleString()}
+                  </Text>
+                </>
+              )}
+            </View>
+          )}
+
+          {isPro && ratings!.length > 0 && (
+            <View style={{ marginTop: 16, flexDirection: "row" }}>
+              {ratings?.map((rating) => (
+                <Rating
+                  key={rating.Source}
+                  source={rating.Source}
+                  rating={rating.Value}
+                />
+              ))}
             </View>
           )}
 
@@ -665,5 +688,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  secondarySubhedEmphasized: {
+    ...iOSUIKit.subheadEmphasizedObject,
+    color: PlatformColor("secondaryLabel"),
+  },
+});
 
 export default MovieScreen;

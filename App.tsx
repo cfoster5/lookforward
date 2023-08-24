@@ -57,7 +57,7 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const { user } = useStore();
+  const { user, setIsPro } = useStore();
   const [colorScheme] = useState("dark");
 
   useEffect(() => {
@@ -76,7 +76,13 @@ export default function App() {
       observerMode: false,
       useAmazon: false,
     });
-  }, []);
+
+    Purchases.addCustomerInfoUpdateListener((info) => {
+      if (info.entitlements.active.pro) setIsPro(true);
+      else setIsPro(false);
+      // handle any changes to customerInfo
+    });
+  }, [setIsPro]);
 
   useEffect(() => {
     async function requestUserPermission() {

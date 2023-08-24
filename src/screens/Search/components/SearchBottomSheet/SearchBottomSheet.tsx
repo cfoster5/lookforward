@@ -3,6 +3,7 @@ import BottomSheet, {
   BottomSheetFlatList,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
+import analytics from "@react-native-firebase/analytics";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useCallback, useMemo, useState } from "react";
 import {
@@ -29,6 +30,7 @@ import { useGamesSearch } from "../../api/getGamesSearch";
 import { useMoviesSearch } from "../../api/getMoviesSearch";
 import useDebounce from "../../hooks/useDebounce";
 
+import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { calculateWidth } from "@/helpers/helpers";
 import { useStore } from "@/stores/store";
 import { Recent } from "@/types";
@@ -36,7 +38,7 @@ import { Recent } from "@/types";
 export const SearchBottomSheet = () => {
   const tabBarHeight = useBottomTabBarHeight();
   const { top } = useSafeAreaInsets();
-  const { categoryIndex, setCategoryIndex } = useStore();
+  const { categoryIndex, setCategoryIndex, isPro, proModalRef } = useStore();
 
   // Set initial snapPoint as tabBarHeight instead of "CONTENT_HEIGHT to fix issues with scrolling flatlist"
   const snapPoints = useMemo(
@@ -186,100 +188,119 @@ export const SearchBottomSheet = () => {
             />
           ))}
 
-        {!searchValue && (
-          <>
-            {shouldShowTitle() && (
-              <Text
-                style={[
-                  iOSUIKit.title3Emphasized,
-                  { color: PlatformColor("label"), marginBottom: 16 },
-                ]}
-              >
-                Recently Viewed
-              </Text>
-            )}
-            <SectionList
-              sections={[
-                {
-                  title: "Titles",
-                  data: [
-                    {
-                      items:
-                        categoryIndex === 0
-                          ? composeRecentMovies()
-                          : composeRecentGames(),
-                    },
-                  ],
-                },
-                {
-                  title: "People",
-                  data: [
-                    { items: categoryIndex === 0 ? composeRecentPeople() : [] },
-                  ],
-                },
-              ]}
-              renderItem={({ section, item }) => (
-                <FlatList
-                  data={item.items}
-                  renderItem={({ item }) =>
-                    section.title === "Titles" ? (
-                      <RecentTitle item={item} />
-                    ) : (
-                      <RecentPerson item={item} />
-                    )
-                  }
-                  ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
-                  ListHeaderComponent={() => <View style={{ width: 12 }} />}
-                  ListFooterComponent={() => <View style={{ width: 12 }} />}
-                  horizontal
-                  keyExtractor={(item) => item.id?.toString()}
-                  showsHorizontalScrollIndicator={false}
-                  style={{ marginHorizontal: -12 }}
-                />
+        {!searchValue &&
+          (isPro ? (
+            <>
+              {shouldShowTitle() && (
+                <Text
+                  style={[
+                    iOSUIKit.title3Emphasized,
+                    { color: PlatformColor("label"), marginBottom: 16 },
+                  ]}
+                >
+                  Recently Viewed
+                </Text>
               )}
-              SectionSeparatorComponent={() => <View style={{ height: 8 }} />}
-              renderSectionHeader={({ section }) =>
-                section.data[0].items.length > 0 ? (
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Text
-                      style={[
-                        iOSUIKit.subheadEmphasized,
-                        {
-                          color: PlatformColor("secondaryLabel"),
-                          marginTop: section.title !== "Titles" ? 8 : 0,
-                        },
-                      ]}
+              <SectionList
+                sections={[
+                  {
+                    title: "Titles",
+                    data: [
+                      {
+                        items:
+                          categoryIndex === 0
+                            ? composeRecentMovies()
+                            : composeRecentGames(),
+                      },
+                    ],
+                  },
+                  {
+                    title: "People",
+                    data: [
+                      {
+                        items: categoryIndex === 0 ? composeRecentPeople() : [],
+                      },
+                    ],
+                  },
+                ]}
+                renderItem={({ section, item }) => (
+                  <FlatList
+                    data={item.items}
+                    renderItem={({ item }) =>
+                      section.title === "Titles" ? (
+                        <RecentTitle item={item} />
+                      ) : (
+                        <RecentPerson item={item} />
+                      )
+                    }
+                    ItemSeparatorComponent={() => (
+                      <View style={{ width: 12 }} />
+                    )}
+                    ListHeaderComponent={() => <View style={{ width: 12 }} />}
+                    ListFooterComponent={() => <View style={{ width: 12 }} />}
+                    horizontal
+                    keyExtractor={(item) => item.id?.toString()}
+                    showsHorizontalScrollIndicator={false}
+                    style={{ marginHorizontal: -12 }}
+                  />
+                )}
+                SectionSeparatorComponent={() => <View style={{ height: 8 }} />}
+                renderSectionHeader={({ section }) =>
+                  section.data[0].items.length > 0 ? (
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
                     >
-                      {section.title}
-                    </Text>
-                    <Pressable onPress={() => handleClearPress(section.title)}>
                       <Text
                         style={[
-                          iOSUIKit.subhead,
+                          iOSUIKit.subheadEmphasized,
                           {
-                            color: PlatformColor("systemBlue"),
+                            color: PlatformColor("secondaryLabel"),
                             marginTop: section.title !== "Titles" ? 8 : 0,
                           },
                         ]}
                       >
-                        Clear
+                        {section.title}
                       </Text>
-                    </Pressable>
-                  </View>
-                ) : null
-              }
-              stickySectionHeadersEnabled={false}
-              scrollEnabled={false}
-              style={{ marginHorizontal: -12, paddingHorizontal: 12 }}
+                      <Pressable
+                        onPress={() => handleClearPress(section.title)}
+                      >
+                        <Text
+                          style={[
+                            iOSUIKit.subhead,
+                            {
+                              color: PlatformColor("systemBlue"),
+                              marginTop: section.title !== "Titles" ? 8 : 0,
+                            },
+                          ]}
+                        >
+                          Clear
+                        </Text>
+                      </Pressable>
+                    </View>
+                  ) : null
+                }
+                stickySectionHeadersEnabled={false}
+                scrollEnabled={false}
+                style={{ marginHorizontal: -12, paddingHorizontal: 12 }}
+              />
+            </>
+          ) : (
+            <LargeBorderlessButton
+              handlePress={async () => {
+                // onboardingModalRef.current?.dismiss();
+                proModalRef.current?.present();
+                await analytics().logEvent("select_promotion", {
+                  id: "com.lookforward.pro",
+                });
+              }}
+              text="Explore Pro Features"
+              style={{ paddingTop: 0 }}
             />
-          </>
-        )}
+          ))}
       </View>
     </BottomSheet>
   );

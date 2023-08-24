@@ -38,6 +38,8 @@ type Store = {
   bottomSheetModalRef: typeof bottomSheetModalRef;
   onboardingModalRef: typeof onboardingModalRef;
   proModalRef: typeof proModalRef;
+  isPro: boolean;
+  setIsPro: (isPro: Store["isPro"]) => void;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -56,4 +58,6 @@ export const useStore = create<Store>((set) => ({
   bottomSheetModalRef,
   onboardingModalRef,
   proModalRef,
+  isPro: false,
+  setIsPro: (isPro) => set(() => ({ isPro })),
 }));

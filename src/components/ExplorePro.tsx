@@ -6,6 +6,7 @@ import {
   Pressable,
   Alert,
   ActivityIndicator,
+  Linking,
 } from "react-native";
 import Purchases, {
   PurchasesOffering,
@@ -186,6 +187,56 @@ export const ExplorePro = ({ modalRef }: Props) => {
             Restore Purchase
           </Text>
         </Pressable>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-evenly",
+            marginTop: 16,
+          }}
+        >
+          <Pressable
+            style={{
+              minHeight: 28,
+              minWidth: 28,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onPress={() =>
+              Linking.openURL(
+                "https://www.apple.com/legal/internet-services/itunes/dev/stdeula"
+              )
+            }
+          >
+            <Text
+              style={[
+                iOSUIKit.footnote,
+                { color: PlatformColor("systemBlue") },
+              ]}
+            >
+              Terms of Service
+            </Text>
+          </Pressable>
+          <Pressable
+            style={{
+              minHeight: 28,
+              minWidth: 28,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            onPress={() =>
+              Linking.openURL("https://getlookforward.app/privacy")
+            }
+          >
+            <Text
+              style={[
+                iOSUIKit.footnote,
+                { color: PlatformColor("systemBlue") },
+              ]}
+            >
+              Privacy Policy
+            </Text>
+          </Pressable>
+        </View>
       </View>
     </DynamicHeightModal>
   );

@@ -23,7 +23,7 @@ import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import { Alert, StatusBar } from "react-native";
+import { StatusBar } from "react-native";
 import Purchases from "react-native-purchases";
 
 import Navigation from "./src/navigation";
@@ -57,7 +57,7 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const { user } = useStore();
+  const { user, setIsPro } = useStore();
   const [colorScheme] = useState("dark");
 
   useEffect(() => {
@@ -78,13 +78,11 @@ export default function App() {
     });
 
     Purchases.addCustomerInfoUpdateListener((info) => {
-      if (info.entitlements.active.pro) {
-        Alert.alert("isPro");
-      }
-
+      if (info.entitlements.active.pro) setIsPro(true);
+      else setIsPro(false);
       // handle any changes to customerInfo
     });
-  }, []);
+  }, [setIsPro]);
 
   useEffect(() => {
     async function requestUserPermission() {

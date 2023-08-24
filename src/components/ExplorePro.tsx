@@ -7,11 +7,15 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import Purchases, { PurchasesPackage } from "react-native-purchases";
+import Purchases, {
+  PurchasesOffering,
+  PurchasesPackage,
+} from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { LargeFilledButton } from "./LargeFilledButton";
+import { SubscriptionOption } from "./SubscriptionOption";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
@@ -21,21 +25,47 @@ type Props = { modalRef: any };
 
 export const ExplorePro = ({ modalRef }: Props) => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const { proModalRef } = useStore();
+  const { setIsPro } = useStore();
+  const [products, setProducts] = useState<PurchasesOffering>();
+  const [selectedProduct, setSelectedProduct] = useState<PurchasesPackage>();
   const [isPurchasing, setIsPurchasing] = useState(false);
+
+  useEffect(() => {
+    // Get current available packages
+    const getPackages = async () => {
+      try {
+        const offerings = await Purchases.getOfferings();
+        if (
+          offerings.all["pro"] !== null &&
+          offerings.all["pro"].availablePackages.length !== 0
+        ) {
+          // console.log('offerings.all["pro"]', offerings.all["pro"]);
+          setProducts(offerings.all["pro"]);
+          setSelectedProduct(offerings.all["pro"]?.annual!);
+          // Display packages for sale
+        }
+      } catch (e) {}
+    };
+
+    getPackages();
+  }, []);
 
   async function handlePurchase() {
     setIsPurchasing(true);
+    // Using Offerings/Packages
     try {
-      const { customerInfo, productIdentifier } =
-        await Purchases.purchaseProduct("com.lookforward.pro");
-      console.log("customerInfo", customerInfo);
-      console.log("productIdentifier", productIdentifier);
-      // if (
-      //   typeof purchaserInfo.entitlements.active[ENTITLEMENT_ID] !== "undefined"
-      // ) {
-      //   navigation.goBack();
-      // }
+      const { customerInfo } = await Purchases.purchasePackage(
+        selectedProduct!
+      );
+      // await Purchases.purchasePackage(products?.lifetime!);
+      if (typeof customerInfo.entitlements.active.pro !== "undefined") {
+        // Unlock that great "pro" content
+        setIsPro(true);
+        Alert.alert(
+          "Thank you!",
+          "Thank you so much for your support. Please enjoy your Pro content."
+        );
+      }
     } catch (e) {
       if (!e.userCancelled) {
         Alert.alert("Error purchasing package", e.message);
@@ -49,8 +79,8 @@ export const ExplorePro = ({ modalRef }: Props) => {
     try {
       const restore = await Purchases.restorePurchases();
       // ... check restored purchaserInfo to see if entitlement is now active
-      console.log("restore", restore);
       if (restore.entitlements.active.pro) {
+        setIsPro(true);
         Alert.alert("Purchase restored");
       }
     } catch (e) {}
@@ -90,14 +120,30 @@ export const ExplorePro = ({ modalRef }: Props) => {
         <Row
           icon="ticket"
           title="Box Office"
-          body="See your recent searches for titles and people"
+          body="View ticket sales at the theaters."
           useAltIcon
         />
         <Row
           icon="clock.arrow.circlepath"
           title="Search History"
-          body="See your recent searches for titles and people"
+          body="See your recent searches for titles and people."
           useAltIcon
+        />
+        <SubscriptionOption
+          handlePress={() => setSelectedProduct(products?.monthly!)}
+          text={`${products?.monthly?.product.priceString} Monthly`}
+          isSelected={
+            products?.monthly?.identifier === selectedProduct?.identifier
+          }
+          style={{ marginTop: 16, marginBottom: 8 }}
+        />
+        <SubscriptionOption
+          handlePress={() => setSelectedProduct(products?.annual!)}
+          text={`${products?.annual?.product.priceString} Yearly`}
+          isSelected={
+            products?.annual?.identifier === selectedProduct?.identifier
+          }
+          style={{ marginTop: 8, marginBottom: 16 }}
         />
         <LargeFilledButton
           disabled={false}
@@ -117,7 +163,8 @@ export const ExplorePro = ({ modalRef }: Props) => {
                 { color: "white", textAlign: "center" },
               ]}
             >
-              Unlock for $0.99
+              {/* Unlock for {products?.lifetime?.product.priceString} */}
+              Unlock for {selectedProduct?.product.priceString}
             </Text>
           )}
         </LargeFilledButton>

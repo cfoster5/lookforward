@@ -38,6 +38,7 @@ export function GamePoster({
           source={{
             uri: `https:${game.cover?.url.replace("thumb", "cover_big_2x")}`,
           }}
+          contentFit="cover"
         />
       ) : (
         <TextPoster text={game.name} />

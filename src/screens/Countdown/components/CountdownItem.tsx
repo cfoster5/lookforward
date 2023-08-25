@@ -80,7 +80,7 @@ function CountdownItem({
     image: {
       width: 92 / 1.75,
       height: 132 / 1.75,
-      borderRadius: 8,
+      borderRadius: 12,
       marginLeft: 16,
       marginTop: 8,
       marginBottom: 8,

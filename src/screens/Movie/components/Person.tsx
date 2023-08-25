@@ -43,9 +43,9 @@ function Person({ navigation, person }: Props) {
     poster: {
       width: windowWidth / 3.5 - 16,
       height: (windowWidth / 3.5 - 16) * 1.5,
-      borderRadius: 8,
+      borderRadius: 12,
       borderWidth: 1,
-      borderColor: theme === "dark" ? PlatformColor("systemGray6") : "#e0e0e0",
+      borderColor: theme === "dark" ? PlatformColor("separator") : "#e0e0e0",
     },
   });
 

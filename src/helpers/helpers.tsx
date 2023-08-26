@@ -54,7 +54,7 @@ export const tmdbMovieGenres = [
 export function composeReleasesToGames(releaseDates: ReleaseDate[]) {
   const games: (ReleaseDate["game"] & { release_dates: ReleaseDate[] })[] = [];
   releaseDates.forEach((releaseDate) => {
-    if (releaseDate.hasOwnProperty("game")) {
+    if (Object.prototype.hasOwnProperty.call(releaseDate, "game")) {
       const game = { ...releaseDate.game, release_dates: [releaseDate] };
       // check if game has already been added to games array
       const existingGame = games.find(

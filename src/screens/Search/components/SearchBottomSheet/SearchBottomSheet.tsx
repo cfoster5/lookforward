@@ -8,6 +8,7 @@ import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useCallback, useMemo, useState } from "react";
 import {
   ActivityIndicator,
+  Keyboard,
   Platform,
   PlatformColor,
   Pressable,
@@ -292,6 +293,7 @@ export const SearchBottomSheet = () => {
             <LargeBorderlessButton
               handlePress={async () => {
                 // onboardingModalRef.current?.dismiss();
+                Keyboard.dismiss();
                 proModalRef.current?.present();
                 await analytics().logEvent("select_promotion", {
                   id: "com.lookforward.pro",

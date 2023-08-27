@@ -55,7 +55,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
             style={{
               aspectRatio: 2 / 3,
               width: calculateWidth(12, 12, 3.5),
-              borderRadius: 10,
+              borderRadius: 12,
               borderWidth: 1,
               borderColor: PlatformColor("separator"),
             }}
@@ -66,7 +66,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
               backgroundColor: PlatformColor("systemGray"),
               aspectRatio: 2 / 3,
               width: calculateWidth(12, 12, 3.5),
-              borderRadius: 10,
+              borderRadius: 12,
               borderWidth: 1,
               borderColor: PlatformColor("separator"),
               justifyContent: "center",

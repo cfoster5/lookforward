@@ -56,6 +56,8 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
               aspectRatio: 2 / 3,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 10,
+              borderWidth: 1,
+              borderColor: PlatformColor("separator"),
             }}
           />
         ) : (
@@ -65,6 +67,8 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
               aspectRatio: 2 / 3,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 10,
+              borderWidth: 1,
+              borderColor: PlatformColor("separator"),
               justifyContent: "center",
               alignItems: "center",
             }}

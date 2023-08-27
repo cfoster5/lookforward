@@ -55,6 +55,8 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
               aspectRatio: 1,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: calculateWidth(12, 12, 3.5),
+              borderWidth: 1,
+              borderColor: PlatformColor("separator"),
             }}
           />
         ) : (
@@ -64,6 +66,8 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
               aspectRatio: 1,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: calculateWidth(12, 12, 3.5),
+              borderWidth: 1,
+              borderColor: PlatformColor("separator"),
               justifyContent: "center",
               alignItems: "center",
             }}

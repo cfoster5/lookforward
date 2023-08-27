@@ -25,6 +25,9 @@ export default {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#000000",
       },
+      package: "com.lookforward.app",
+      googleServicesFile:
+        process.env.GOOGLE_SERVICE_JSON ?? "./google-services.secret.json",
     },
     plugins: [
       "@react-native-firebase/app",

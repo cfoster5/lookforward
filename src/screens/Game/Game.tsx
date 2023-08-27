@@ -15,14 +15,7 @@ import {
   useState,
   Fragment,
 } from "react";
-import {
-  Platform,
-  PlatformColor,
-  ScrollView,
-  View,
-  FlatList,
-  Text,
-} from "react-native";
+import { Platform, ScrollView, View, FlatList, Text } from "react-native";
 import { useMMKVString } from "react-native-mmkv";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -36,6 +29,7 @@ import { ExpandableText } from "@/components/ExpandableText";
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
+import { Colors } from "@/constants/Colors";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
 import { horizontalListProps } from "@/screens/Movie/constants/horizontalListProps";
 import { useStore } from "@/stores/store";
@@ -141,10 +135,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
           {game.name}
         </ThemedText>
         <Text
-          style={[
-            iOSUIKit.subheadEmphasized,
-            { color: PlatformColor("secondaryLabel") },
-          ]}
+          style={[iOSUIKit.subheadEmphasized, { color: Colors.secondaryLabel }]}
         >
           {getGameReleaseDate(data)}
         </Text>
@@ -164,8 +155,8 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
               text={genre.name}
               onPress={() => navigation.push("GameDiscover", { genre })}
               buttonStyle={{
-                backgroundColor: PlatformColor("systemGray5"),
-                borderColor: PlatformColor("systemGray5"),
+                backgroundColor: Colors.gray5,
+                borderColor: Colors.gray5,
               }}
             />
           ))}

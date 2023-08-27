@@ -6,15 +6,15 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Platform,
-  PlatformColor,
   Pressable,
   Text,
   TextInput,
   View,
 } from "react-native";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 
 import { LargeFilledButton } from "@/components/LargeFilledButton";
+import { Colors } from "@/constants/Colors";
 import { AuthStackParams } from "@/types";
 
 type Props = NativeStackScreenProps<AuthStackParams, "Password Reset">;
@@ -50,7 +50,7 @@ function PasswordReset({ navigation }: Props) {
           <Text
             style={{
               ...iOSUIKit.bodyObject,
-              color: PlatformColor("systemGray"),
+              color: Colors.gray,
               marginBottom: 8,
             }}
           >
@@ -59,14 +59,14 @@ function PasswordReset({ navigation }: Props) {
           <TextInput
             style={{
               ...iOSUIKit.bodyObject,
-              backgroundColor: PlatformColor("systemGray6"),
+              backgroundColor: Colors.gray6,
               color: "white",
               padding: 16,
               borderRadius: 12,
               marginVertical: 8,
             }}
             placeholder="Email"
-            placeholderTextColor={PlatformColor("systemGray")}
+            placeholderTextColor={Colors.gray}
             autoCapitalize="none"
             keyboardType="email-address"
             textContentType="username"

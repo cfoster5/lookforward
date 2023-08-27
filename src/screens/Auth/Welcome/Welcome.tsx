@@ -2,13 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { IGDB } from "interfaces/igdb";
 import { useRef } from "react";
-import {
-  Dimensions,
-  PlatformColor,
-  SafeAreaView,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, SafeAreaView, Text, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
 import { TrendingResults } from "tmdb-ts";
@@ -19,6 +13,7 @@ import { PosterSizes } from "../../../interfaces/tmdb/configuration";
 
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { LargeFilledButton } from "@/components/LargeFilledButton";
+import { Colors } from "@/constants/Colors";
 import { AuthStackParams } from "@/types";
 
 const width = 200;
@@ -44,7 +39,7 @@ const CarouselItem = ({ item, index }: CarouselItemProps) => (
     }}
     style={{
       borderRadius: 12,
-      borderColor: PlatformColor("separator"),
+      borderColor: Colors.separator,
       borderWidth: 1,
       width,
       aspectRatio: 2 / 3,

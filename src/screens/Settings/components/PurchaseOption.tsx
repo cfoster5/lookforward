@@ -1,5 +1,3 @@
-import { reusableStyles } from "@/helpers/styles";
-
 import {
   ActivityIndicator,
   Alert,
@@ -12,18 +10,21 @@ import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+import { Colors } from "@/constants/Colors";
+import { reusableStyles } from "@/helpers/styles";
+
 function Icon({ title }) {
   let name = "";
   let color = "";
   if (title === "Coffee-Sized Tip") {
     name = "cafe";
-    color = PlatformColor("systemBrown");
+    color = Colors.brown;
   } else if (title === "Snack-Sized Tip") {
     name = "ice-cream";
     color = "lightgreen";
   } else if (title === "Pizza-Sized Tip") {
     name = "pizza";
-    color = PlatformColor("systemYellow");
+    color = Colors.yellow;
   }
   return <Ionicons name={name} color={color} size={28} />;
 }

@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { IGDB } from "interfaces/igdb";
-import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -12,6 +12,7 @@ import { iOSUIKit } from "react-native-typography";
 import { RadioButton } from "./RadioButton";
 import { PosterSizes } from "../../../interfaces/tmdb/configuration";
 
+import { Colors } from "@/constants/Colors";
 import { reusableStyles } from "@/helpers/styles";
 import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
 
@@ -68,9 +69,7 @@ function CountdownItem({
   const styles = StyleSheet.create({
     rowFront: {
       overflow: "hidden",
-      backgroundColor: isSelected
-        ? PlatformColor("systemGray4")
-        : PlatformColor("systemGray6"),
+      backgroundColor: isSelected ? Colors.gray4 : Colors.gray6,
     },
     slide: {
       flex: 1,
@@ -86,7 +85,7 @@ function CountdownItem({
       marginBottom: 8,
     },
     middle: {
-      borderColor: PlatformColor("separator"),
+      borderColor: Colors.separator,
       borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
       flex: 1,
       justifyContent: "center",
@@ -95,7 +94,7 @@ function CountdownItem({
       paddingBottom: 8,
     },
     countdown: {
-      borderColor: PlatformColor("separator"),
+      borderColor: Colors.separator,
       borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
       flex: 1,
       alignItems: "center",
@@ -155,7 +154,7 @@ function CountdownItem({
             <Text
               style={{
                 ...iOSUIKit.title3EmphasizedWhiteObject,
-                color: PlatformColor("systemBlue"),
+                color: Colors.blue,
               }}
             >
               {getCountdownDays()}
@@ -163,7 +162,7 @@ function CountdownItem({
             <Text
               style={{
                 ...iOSUIKit.bodyWhiteObject,
-                color: PlatformColor("systemBlue"),
+                color: Colors.blue,
               }}
             >
               days

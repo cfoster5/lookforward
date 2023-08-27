@@ -5,18 +5,15 @@ import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
-  PlatformColor,
   Pressable,
-  PressableProps,
   Text,
   TextInput,
   View,
-  ViewStyle,
-  StyleProp,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { LargeFilledButton } from "@/components/LargeFilledButton";
+import { Colors } from "@/constants/Colors";
 import { useStore } from "@/stores/store";
 import { AuthStackParams } from "@/types";
 
@@ -61,10 +58,7 @@ function CreateAccount({ navigation, route }: Props) {
       >
         <View>
           <Text
-            style={[
-              iOSUIKit.largeTitleEmphasized,
-              { color: PlatformColor("label") },
-            ]}
+            style={[iOSUIKit.largeTitleEmphasized, { color: Colors.label }]}
           >
             Hello!
           </Text>
@@ -72,7 +66,7 @@ function CreateAccount({ navigation, route }: Props) {
             style={[
               iOSUIKit.body,
               {
-                color: PlatformColor("secondaryLabel"),
+                color: Colors.secondaryLabel,
                 marginBottom: 8,
               },
             ]}
@@ -83,15 +77,15 @@ function CreateAccount({ navigation, route }: Props) {
             style={[
               iOSUIKit.body,
               {
-                backgroundColor: PlatformColor("systemGray6"),
-                color: PlatformColor("label"),
+                backgroundColor: Colors.gray6,
+                color: Colors.label,
                 padding: 16,
                 borderRadius: 12,
                 marginVertical: 8,
               },
             ]}
             placeholder="Email"
-            placeholderTextColor={PlatformColor("secondaryLabel")}
+            placeholderTextColor={Colors.secondaryLabel}
             autoCapitalize="none"
             keyboardType="email-address"
             textContentType="username"
@@ -102,15 +96,15 @@ function CreateAccount({ navigation, route }: Props) {
             style={[
               iOSUIKit.body,
               {
-                backgroundColor: PlatformColor("systemGray6"),
-                color: PlatformColor("label"),
+                backgroundColor: Colors.gray6,
+                color: Colors.label,
                 padding: 16,
                 borderRadius: 12,
                 marginVertical: 8,
               },
             ]}
             placeholder="Password"
-            placeholderTextColor={PlatformColor("secondaryLabel")}
+            placeholderTextColor={Colors.secondaryLabel}
             secureTextEntry
             textContentType="password"
             value={password}
@@ -123,7 +117,7 @@ function CreateAccount({ navigation, route }: Props) {
             <Text
               style={{
                 ...iOSUIKit.bodyObject,
-                color: PlatformColor("secondaryLabel"),
+                color: Colors.secondaryLabel,
                 marginVertical: 8,
               }}
             >

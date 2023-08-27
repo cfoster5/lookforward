@@ -1,14 +1,9 @@
 import auth from "@react-native-firebase/auth";
 import { useState } from "react";
-import {
-  Alert,
-  PlatformColor,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { Colors } from "@/constants/Colors";
 
 export const DeleteAccountScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
@@ -23,7 +18,7 @@ export const DeleteAccountScreen = ({ navigation }) => {
       <Text
         style={[
           iOSUIKit.title3Emphasized,
-          { color: PlatformColor("label"), marginBottom: 16 },
+          { color: Colors.label, marginBottom: 16 },
         ]}
       >
         Confirm request
@@ -32,7 +27,7 @@ export const DeleteAccountScreen = ({ navigation }) => {
         style={[
           iOSUIKit.body,
           {
-            color: PlatformColor("secondaryLabel"),
+            color: Colors.secondaryLabel,
             marginBottom: 8,
           },
         ]}
@@ -42,7 +37,7 @@ export const DeleteAccountScreen = ({ navigation }) => {
       <TextInput
         style={{
           ...iOSUIKit.bodyObject,
-          backgroundColor: PlatformColor("systemGray6"),
+          backgroundColor: Colors.gray6,
           color: "white",
           padding: 16,
           borderRadius: 12,
@@ -53,7 +48,7 @@ export const DeleteAccountScreen = ({ navigation }) => {
       />
       <Pressable
         style={{
-          backgroundColor: PlatformColor("systemRed"),
+          backgroundColor: Colors.red,
           width: "100%",
           marginTop: 16,
           paddingVertical: 16,

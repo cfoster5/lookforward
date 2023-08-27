@@ -1,9 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
-import { PlatformColor, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { Colors } from "@/constants/Colors";
 import { calculateWidth } from "@/helpers/helpers";
 import { Recent } from "@/types";
 
@@ -50,7 +51,7 @@ export function RecentPerson({ item }: { item: Recent }) {
         ) : (
           <View
             style={{
-              backgroundColor: PlatformColor("systemGray"),
+              backgroundColor: Colors.gray,
               aspectRatio: 1,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: calculateWidth(12, 12, 3.5),
@@ -75,7 +76,7 @@ export function RecentPerson({ item }: { item: Recent }) {
       <Text
         style={[
           iOSUIKit.subhead,
-          { color: PlatformColor("label"), maxWidth: 96, textAlign: "center" },
+          { color: Colors.label, maxWidth: 96, textAlign: "center" },
         ]}
         numberOfLines={2}
       >

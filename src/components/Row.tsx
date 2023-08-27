@@ -3,6 +3,8 @@ import { PlatformColor, View, Text } from "react-native";
 import { SFSymbol } from "react-native-sfsymbols";
 import { iOSUIKit } from "react-native-typography";
 
+import { Colors } from "@/constants/Colors";
+
 type RowProps = {
   icon: string;
   title: string;
@@ -26,23 +28,21 @@ export const Row = ({
     }}
   >
     {!useAltIcon ? (
-      <Ionicons name={icon} size={36} color={PlatformColor("systemBlue")} />
+      <Ionicons name={icon} size={36} color={Colors.blue} />
     ) : (
       <SFSymbol
         name={icon}
         size={36}
-        color={PlatformColor("systemBlue")}
+        color={Colors.blue}
         resizeMode="center"
         style={{ height: 36, width: 36 }}
       />
     )}
     <View style={{ paddingLeft: 16, flex: 1, alignItems: "flex-start" }}>
-      <Text
-        style={[iOSUIKit.bodyEmphasized, { color: PlatformColor("label") }]}
-      >
+      <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.label }]}>
         {title}
       </Text>
-      <Text style={[iOSUIKit.body, { color: PlatformColor("secondaryLabel") }]}>
+      <Text style={[iOSUIKit.body, { color: Colors.secondaryLabel }]}>
         {body}
       </Text>
     </View>
@@ -50,7 +50,7 @@ export const Row = ({
       <Ionicons
         name="chevron-forward"
         size={iOSUIKit.bodyObject.lineHeight}
-        color={PlatformColor("secondaryLabel")}
+        color={Colors.secondaryLabel}
         style={{ paddingLeft: 8 }}
       />
     )}

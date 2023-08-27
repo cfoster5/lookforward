@@ -1,5 +1,7 @@
-import { Dimensions, PlatformColor, StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { Colors } from "@/constants/Colors";
 
 export const reusableStyles = StyleSheet.create({
   gamePoster: {
@@ -9,10 +11,10 @@ export const reusableStyles = StyleSheet.create({
     borderRadius: 12,
     resizeMode: "cover",
     borderWidth: 1,
-    borderColor: PlatformColor("separator"),
+    borderColor: Colors.separator,
   },
   date: {
     ...iOSUIKit.footnoteEmphasizedObject,
-    color: PlatformColor("systemGray"),
+    color: Colors.gray,
   },
 });

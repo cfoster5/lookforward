@@ -6,7 +6,8 @@ import {
   useBottomSheetDynamicSnapPoints,
 } from "@gorhom/bottom-sheet";
 import { cloneElement, useMemo } from "react";
-import { PlatformColor } from "react-native";
+
+import { Colors } from "@/constants/Colors";
 
 const RenderBackdrop = (props: BottomSheetBackdropProps) => (
   <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
@@ -35,10 +36,10 @@ export function DynamicHeightModal({
       contentHeight={animatedContentHeight}
       backdropComponent={RenderBackdrop}
       backgroundStyle={{
-        backgroundColor: PlatformColor("secondarySystemBackground"),
+        backgroundColor: Colors.secondaryBackground,
       }}
       handleIndicatorStyle={{
-        backgroundColor: PlatformColor("systemGray"),
+        backgroundColor: Colors.gray,
       }}
       children={cloneElement(children, { onLayout: handleContentLayout })}
     />

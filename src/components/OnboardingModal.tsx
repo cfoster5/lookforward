@@ -8,6 +8,7 @@ import { LargeFilledButton } from "./LargeFilledButton";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
+import { Colors } from "@/constants/Colors";
 import { useStore } from "@/stores/store";
 
 type Props = { modalRef: any };
@@ -24,14 +25,14 @@ export const OnboardingModal = ({ modalRef }: Props) => {
           justifyContent: "center",
           paddingHorizontal: 16,
           paddingBottom: safeBottomArea,
-          backgroundColor: PlatformColor("secondarySystemBackground"),
+          backgroundColor: Colors.secondaryBackground,
         }}
       >
         <Text
           style={[
             iOSUIKit.largeTitleEmphasized,
             {
-              color: PlatformColor("label"),
+              color: Colors.label,
               textAlign: "center",
               paddingBottom: 16,
             },

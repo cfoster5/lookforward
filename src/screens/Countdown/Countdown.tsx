@@ -8,17 +8,18 @@ import { CompositeScreenProps, useScrollToTop } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { produce } from "immer";
 import { useCallback, useLayoutEffect, useRef, useState } from "react";
-import { Platform, PlatformColor, SectionList, View } from "react-native";
+import { Platform, SectionList, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useMovieCountdowns } from "./api/getMovieCountdowns";
 import CountdownItem from "./components/CountdownItem";
-import { MyHeaderRight } from "./components/MyHeaderRight";
+import { MyHeaderRight } from "./components/MyHeaderRight.ios";
 import { SectionHeader } from "./components/SectionHeader";
 
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { Colors } from "@/constants/Colors";
 import { Subs, useStore } from "@/stores/store";
 import { CountdownStackParams, BottomTabParams } from "@/types";
 
@@ -72,8 +73,8 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
                 ...iOSUIKit.bodyEmphasizedObject,
                 color:
                   selectedMovies.concat(selectedGames).length === 0
-                    ? PlatformColor("systemGray3")
-                    : PlatformColor("systemRed"),
+                    ? Colors.gray3
+                    : Colors.red,
               }}
               onPress={() => {
                 if (selectedMovies.concat(selectedGames).length > 0) {
@@ -83,13 +84,14 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
             />
           </HeaderButtons>
         ),
-      headerRight: () => (
-        <MyHeaderRight
-          text={showButtons ? "Done" : "Edit"}
-          handlePress={() => setShowButtons((prevValue) => !prevValue)}
-          style={showButtons ? iOSUIKit.bodyEmphasized : null}
-        />
-      ),
+      headerRight: () =>
+        Platform.OS === "ios" && (
+          <MyHeaderRight
+            text={showButtons ? "Done" : "Edit"}
+            handlePress={() => setShowButtons((prevValue) => !prevValue)}
+            style={showButtons ? iOSUIKit.bodyEmphasized : null}
+          />
+        ),
     });
   }, [
     navigation,
@@ -195,7 +197,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
         <View
           style={{
             height: 16,
-            backgroundColor: PlatformColor("systemGray6"),
+            backgroundColor: Colors.gray6,
             borderTopLeftRadius: 8,
             borderTopRightRadius: 8,
           }}
@@ -205,7 +207,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
         <View
           style={{
             height: 16,
-            backgroundColor: PlatformColor("systemGray6"),
+            backgroundColor: Colors.gray6,
             borderBottomLeftRadius: 8,
             borderBottomRightRadius: 8,
           }}

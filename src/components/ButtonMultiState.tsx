@@ -1,9 +1,10 @@
 import { useContext } from "react";
-import { PlatformColor, Pressable, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 import TabStackContext from "../contexts/TabStackContext";
+
+import { Colors } from "@/constants/Colors";
 
 export default function ButtonMultiState({
   text,
@@ -26,9 +27,9 @@ export default function ButtonMultiState({
         // Below colors extracted from Apple Fitness category buttons
         backgroundColor:
           selectedVal === (test !== undefined ? test : text)
-            ? PlatformColor("systemGray4")
+            ? Colors.gray4
             : undefined,
-        borderColor: PlatformColor("systemGray4"),
+        borderColor: Colors.gray4,
         borderWidth: 1,
         borderRadius: 22,
         paddingHorizontal: 24,

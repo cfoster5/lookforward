@@ -5,6 +5,7 @@ import { Video } from "tmdb-ts";
 
 import { calculateWidth } from "../helpers/helpers";
 
+import { Colors } from "@/constants/Colors";
 import { Video as GameVideo } from "@/types";
 
 function Trailer({ video }: { video: Video | GameVideo }) {
@@ -24,7 +25,7 @@ function Trailer({ video }: { video: Video | GameVideo }) {
           aspectRatio: 16 / 9,
           borderRadius: 12,
           borderWidth: 1,
-          borderColor: PlatformColor("separator"),
+          borderColor: Colors.separator,
         }}
         source={{
           uri: (video as Video).key
@@ -39,7 +40,7 @@ function Trailer({ video }: { video: Video | GameVideo }) {
         style={[
           iOSUIKit.subheadEmphasized,
           {
-            color: PlatformColor("secondaryLabel"),
+            color: Colors.secondaryLabel,
             marginTop: 8,
           },
         ]}

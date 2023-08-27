@@ -5,7 +5,6 @@ import {
   Alert,
   Keyboard,
   KeyboardAvoidingView,
-  PlatformColor,
   Pressable,
   Text,
   TextInput,
@@ -14,6 +13,7 @@ import {
 import { iOSUIKit } from "react-native-typography";
 
 import { LargeFilledButton } from "@/components/LargeFilledButton";
+import { Colors } from "@/constants/Colors";
 import { useStore } from "@/stores/store";
 import { AuthStackParams } from "@/types";
 
@@ -57,10 +57,7 @@ function Login({ navigation, route }: Props) {
         {/* Wrapping with View fixes jump that Text elements experienced when keyboard is opening/dismissing */}
         <View>
           <Text
-            style={[
-              iOSUIKit.largeTitleEmphasized,
-              { color: PlatformColor("label") },
-            ]}
+            style={[iOSUIKit.largeTitleEmphasized, { color: Colors.label }]}
           >
             {route.params.emailSent
               ? "Check your email inbox"
@@ -69,7 +66,7 @@ function Login({ navigation, route }: Props) {
           <Text
             style={[
               iOSUIKit.body,
-              { color: PlatformColor("secondaryLabel"), marginBottom: 8 },
+              { color: Colors.secondaryLabel, marginBottom: 8 },
             ]}
           >
             {route.params.emailSent
@@ -79,14 +76,14 @@ function Login({ navigation, route }: Props) {
           <TextInput
             style={{
               ...iOSUIKit.bodyObject,
-              backgroundColor: PlatformColor("systemGray6"),
+              backgroundColor: Colors.gray6,
               color: "white",
               padding: 16,
               borderRadius: 12,
               marginVertical: 8,
             }}
             placeholder="Email"
-            placeholderTextColor={PlatformColor("secondaryLabel")}
+            placeholderTextColor={Colors.secondaryLabel}
             autoCapitalize="none"
             keyboardType="email-address"
             textContentType="username"
@@ -96,14 +93,14 @@ function Login({ navigation, route }: Props) {
           <TextInput
             style={{
               ...iOSUIKit.bodyObject,
-              backgroundColor: PlatformColor("systemGray6"),
+              backgroundColor: Colors.gray6,
               color: "white",
               padding: 16,
               borderRadius: 12,
               marginVertical: 8,
             }}
             placeholder="Password"
-            placeholderTextColor={PlatformColor("secondaryLabel")}
+            placeholderTextColor={Colors.secondaryLabel}
             secureTextEntry
             textContentType="password"
             value={password}
@@ -118,7 +115,7 @@ function Login({ navigation, route }: Props) {
                 style={[
                   iOSUIKit.body,
                   {
-                    color: PlatformColor("secondaryLabel"),
+                    color: Colors.secondaryLabel,
                     marginVertical: 8,
                   },
                 ]}

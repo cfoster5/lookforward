@@ -2,9 +2,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
-import { PlatformColor, Pressable, View, Text } from "react-native";
+import { Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { Colors } from "@/constants/Colors";
 import { calculateWidth, getGameReleaseDate } from "@/helpers/helpers";
 import { Game, ReleaseDate } from "@/types";
 
@@ -28,7 +29,7 @@ export function SearchGame({
           paddingLeft: 12,
         },
         pressed && {
-          backgroundColor: PlatformColor("tertiarySystemBackground"),
+          backgroundColor: Colors.tertiaryBackground,
         },
       ]}
     >
@@ -60,7 +61,7 @@ export function SearchGame({
         ) : (
           <View
             style={{
-              backgroundColor: PlatformColor("systemGray"),
+              backgroundColor: Colors.gray,
               aspectRatio: 3 / 4,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
@@ -78,13 +79,13 @@ export function SearchGame({
       </View>
       <View style={{ flex: 1, marginHorizontal: 12 }}>
         <Text
-          style={[iOSUIKit.body, { color: PlatformColor("label") }]}
+          style={[iOSUIKit.body, { color: Colors.label }]}
           numberOfLines={2}
         >
           {item.name}
         </Text>
         <Text
-          style={[iOSUIKit.subhead, { color: PlatformColor("secondaryLabel") }]}
+          style={[iOSUIKit.subhead, { color: Colors.secondaryLabel }]}
           numberOfLines={2}
         >
           {getGameReleaseDate(item)}
@@ -94,7 +95,7 @@ export function SearchGame({
         name="chevron-forward"
         size={28}
         style={{ marginRight: 12 }}
-        color={PlatformColor("tertiaryLabel")}
+        color={Colors.tertiaryLabel}
       />
     </Pressable>
   );

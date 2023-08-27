@@ -14,14 +14,7 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  Dimensions,
-  FlatList,
-  Platform,
-  PlatformColor,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, FlatList, Platform, Text, View } from "react-native";
 import { useMMKVString } from "react-native-mmkv";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
@@ -34,6 +27,7 @@ import { ExpandableText } from "@/components/ExpandableText";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
+import { Colors } from "@/constants/Colors";
 import { dateToLocaleString } from "@/helpers/formatting";
 import { calculateWidth } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
@@ -102,7 +96,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
         }}
         style={{
           borderRadius: 12,
-          borderColor: PlatformColor("separator"),
+          borderColor: Colors.separator,
           borderWidth: 1,
           width,
           height: width * 1.5,

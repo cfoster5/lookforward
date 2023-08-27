@@ -4,6 +4,8 @@ import { iOSUIKit } from "react-native-typography";
 
 import { OMDBMovie } from "../types/omdb";
 
+import { Colors } from "@/constants/Colors";
+
 export const Rating = ({
   source,
   rating,
@@ -45,9 +47,7 @@ export const Rating = ({
         contentFit="fill"
         source={imageMap[source].path}
       />
-      <Text style={[iOSUIKit.body, { color: PlatformColor("label") }]}>
-        {rating}
-      </Text>
+      <Text style={[iOSUIKit.body, { color: Colors.label }]}>{rating}</Text>
     </View>
   );
 };

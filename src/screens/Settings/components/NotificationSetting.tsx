@@ -1,12 +1,7 @@
-import {
-  PlatformColor,
-  StyleSheet,
-  Switch,
-  Text,
-  View,
-  ViewStyle,
-} from "react-native";
+import { StyleSheet, Switch, Text, View, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { Colors } from "@/constants/Colors";
 
 type Props = {
   title: string;
@@ -25,7 +20,7 @@ export const NotificationSetting = ({
     <View style={[styles.item, style]}>
       <Text style={iOSUIKit.bodyWhite}>{title}</Text>
       <Switch
-        trackColor={{ false: "red", true: PlatformColor("systemBlue") }}
+        trackColor={{ false: "red", true: Colors.blue }}
         style={{ marginRight: 16 }}
         onValueChange={onValueChange}
         value={value}
@@ -39,7 +34,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    backgroundColor: PlatformColor("systemGray6"),
+    backgroundColor: Colors.gray6,
     paddingLeft: 16,
     alignItems: "center",
   },
@@ -48,7 +43,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    borderColor: PlatformColor("separator"),
+    borderColor: Colors.separator,
     borderBottomWidth: StyleSheet.hairlineWidth,
     alignItems: "center",
     paddingVertical: 16,

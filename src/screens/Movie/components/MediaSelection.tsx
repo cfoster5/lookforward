@@ -1,5 +1,7 @@
-import { PlatformColor, Pressable, Text } from "react-native";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { Pressable, Text } from "react-native";
+import { iOSUIKit } from "react-native-typography";
+
+import { Colors } from "@/constants/Colors";
 
 export function MediaSelection({
   option,
@@ -26,8 +28,8 @@ export function MediaSelection({
             .toLowerCase()
             .includes(mediaSelections?.videos.toLowerCase()) ||
           option.toLowerCase().includes(creditsSelection?.toLowerCase())
-            ? [iOSUIKit.bodyEmphasized, { color: PlatformColor("label") }]
-            : [iOSUIKit.body, { color: PlatformColor("secondaryLabel") }],
+            ? [iOSUIKit.bodyEmphasized, { color: Colors.label }]
+            : [iOSUIKit.body, { color: Colors.secondaryLabel }],
           {
             marginTop: 16,
           },

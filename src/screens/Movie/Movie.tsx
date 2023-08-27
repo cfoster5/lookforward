@@ -21,7 +21,6 @@ import {
   Dimensions,
   FlatList,
   Platform,
-  PlatformColor,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -68,6 +67,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
+import { Colors } from "@/constants/Colors";
 import { getRuntime } from "@/helpers/formatting";
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams, Recent } from "@/types";
@@ -109,8 +109,8 @@ function ScrollViewWithFlatList({
               navigation.push("MovieDiscover", { [navParamKey]: item })
             }
             buttonStyle={{
-              backgroundColor: PlatformColor("systemGray5"),
-              borderColor: PlatformColor("systemGray5"),
+              backgroundColor: Colors.gray5,
+              borderColor: Colors.gray5,
             }}
           />
         )}
@@ -325,7 +325,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 {
                   paddingTop: 16,
                   fontStyle: "italic",
-                  color: PlatformColor("systemGray"),
+                  color: Colors.gray,
                 },
               ]}
             >
@@ -344,8 +344,8 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 buttonStyle={{
                   paddingHorizontal: 16,
                   flexDirection: "row",
-                  backgroundColor: PlatformColor("systemGray5"),
-                  borderColor: PlatformColor("systemGray5"),
+                  backgroundColor: Colors.gray5,
+                  borderColor: Colors.gray5,
                 }}
                 icon={tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon}
                 textStyle={{ alignSelf: "center" }}
@@ -366,12 +366,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               >
                 <ListLabel text="Watch on" style={{ marginBottom: 0 }} />
                 <Pressable onPress={() => modalRef.current?.present()}>
-                  <Text
-                    style={[
-                      iOSUIKit.body,
-                      { color: PlatformColor("systemBlue") },
-                    ]}
-                  >
+                  <Text style={[iOSUIKit.body, { color: Colors.blue }]}>
                     More
                   </Text>
                 </Pressable>
@@ -403,7 +398,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                       height: calculateWidth(16, 8, 6),
                       aspectRatio: 1 / 1,
                       borderWidth: 1,
-                      borderColor: PlatformColor("separator"),
+                      borderColor: Colors.separator,
                       borderRadius: 12,
                     }}
                   />
@@ -607,7 +602,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         width: Dimensions.get("screen").width - 32,
                         aspectRatio: 16 / 9,
                         borderWidth: 1,
-                        borderColor: PlatformColor("separator"),
+                        borderColor: Colors.separator,
                         borderRadius: 12,
                       }}
                       source={{
@@ -692,7 +687,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 const styles = StyleSheet.create({
   secondarySubhedEmphasized: {
     ...iOSUIKit.subheadEmphasizedObject,
-    color: PlatformColor("secondaryLabel"),
+    color: Colors.secondaryLabel,
   },
 });
 

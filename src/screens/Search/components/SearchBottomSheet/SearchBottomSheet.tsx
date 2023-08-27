@@ -10,7 +10,6 @@ import {
   ActivityIndicator,
   Keyboard,
   Platform,
-  PlatformColor,
   Pressable,
   SectionList,
   StyleSheet,
@@ -32,6 +31,7 @@ import { useMoviesSearch } from "../../api/getMoviesSearch";
 import useDebounce from "../../hooks/useDebounce";
 
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
+import { Colors } from "@/constants/Colors";
 import { calculateWidth } from "@/helpers/helpers";
 import { useStore } from "@/stores/store";
 import { Recent } from "@/types";
@@ -125,17 +125,14 @@ export const SearchBottomSheet = () => {
 
   return (
     <BottomSheet
-      bottomInset={tabBarHeight}
+      bottomInset={Platform.OS === "ios" ? tabBarHeight : 0}
       topInset={top}
       snapPoints={snapPoints}
       backgroundStyle={{
-        backgroundColor:
-          Platform.OS === "ios"
-            ? PlatformColor("secondarySystemBackground")
-            : "gray",
+        backgroundColor: Colors.secondaryBackground,
       }}
       handleIndicatorStyle={{
-        backgroundColor: PlatformColor("systemGray"),
+        backgroundColor: Colors.gray,
       }}
     >
       <View style={{ marginHorizontal: 12, flex: 1 }}>
@@ -143,7 +140,7 @@ export const SearchBottomSheet = () => {
           <BottomSheetTextInput
             onChangeText={(value) => setSearchValue(value)}
             placeholder={categoryIndex === 0 ? "Movies & People" : "Games"}
-            placeholderTextColor={PlatformColor("secondaryLabel")}
+            placeholderTextColor={Colors.secondaryLabel}
             clearButtonMode="while-editing"
             style={styles.textInput}
             value={searchValue}
@@ -160,7 +157,7 @@ export const SearchBottomSheet = () => {
                 categoryIndex === 0 ? "film-outline" : "game-controller-outline"
               }
               size={36}
-              color={PlatformColor("systemBlue")}
+              color={Colors.blue}
               style={{ marginLeft: 12, marginBottom: 16 }}
             />
           </Pressable>
@@ -177,7 +174,7 @@ export const SearchBottomSheet = () => {
                 <View
                   style={{
                     height: StyleSheet.hairlineWidth,
-                    backgroundColor: PlatformColor("separator"),
+                    backgroundColor: Colors.separator,
                     // marginVertical: 6,
                     marginLeft: calculateWidth(12, 12, 3.5) + 12,
                     marginRight: 12,
@@ -196,7 +193,7 @@ export const SearchBottomSheet = () => {
                 <Text
                   style={[
                     iOSUIKit.title3Emphasized,
-                    { color: PlatformColor("label"), marginBottom: 16 },
+                    { color: Colors.label, marginBottom: 16 },
                   ]}
                 >
                   Recently Viewed
@@ -259,7 +256,7 @@ export const SearchBottomSheet = () => {
                         style={[
                           iOSUIKit.subheadEmphasized,
                           {
-                            color: PlatformColor("secondaryLabel"),
+                            color: Colors.secondaryLabel,
                             marginTop: section.title !== "Titles" ? 8 : 0,
                           },
                         ]}
@@ -273,7 +270,7 @@ export const SearchBottomSheet = () => {
                           style={[
                             iOSUIKit.subhead,
                             {
-                              color: PlatformColor("systemBlue"),
+                              color: Colors.blue,
                               marginTop: section.title !== "Titles" ? 8 : 0,
                             },
                           ]}
@@ -321,8 +318,8 @@ export const styles = StyleSheet.create({
     // marginBottom: 12,
     padding: 12,
     borderRadius: 12,
-    backgroundColor: PlatformColor("tertiarySystemFill"),
-    color: PlatformColor("label"),
+    backgroundColor: Colors.tertiaryFill,
+    color: Colors.label,
     // textAlign: "center",
     marginBottom: 16,
     flex: 1,

@@ -1,13 +1,6 @@
 import { Image } from "expo-image";
 import { useContext } from "react";
-import {
-  FlatList,
-  Linking,
-  PlatformColor,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, Linking, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { WatchLocale } from "tmdb-ts";
@@ -16,6 +9,7 @@ import { LogoSizes } from "../../../interfaces/tmdb/configuration";
 import { horizontalListProps } from "../constants/horizontalListProps";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { Colors } from "@/constants/Colors";
 import TabStackContext from "@/contexts/TabStackContext";
 import { calculateWidth } from "@/helpers/helpers";
 
@@ -60,7 +54,7 @@ function WatchProvidersModal({
             <Text
               style={{
                 ...iOSUIKit.bodyEmphasizedObject,
-                color: PlatformColor("systemBlue"),
+                color: Colors.blue,
               }}
             >
               More Info
@@ -96,10 +90,7 @@ function WatchProvidersModal({
                           height: calculateWidth(16, 8, 4.5),
                           width: calculateWidth(16, 8, 4.5),
                           borderWidth: 1,
-                          borderColor:
-                            theme === "dark"
-                              ? PlatformColor("separator")
-                              : "#e0e0e0",
+                          borderColor: Colors.separator,
                           borderRadius: 12,
                         }}
                       />
@@ -137,7 +128,7 @@ function WatchProvidersModal({
           <Text
             style={{
               ...iOSUIKit.footnoteObject,
-              color: PlatformColor("systemGray"),
+              color: Colors.gray,
               marginRight: 8,
             }}
           >

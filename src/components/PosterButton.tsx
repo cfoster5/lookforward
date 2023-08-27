@@ -5,6 +5,7 @@ import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { iOSColors } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
+import { Colors } from "@/constants/Colors";
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
 
@@ -121,7 +122,7 @@ function PosterButton({ movieId, game }: Props) {
           width: 36,
           borderRadius: 18,
           borderWidth: 1,
-          borderColor: PlatformColor("separator"),
+          borderColor: Colors.separator,
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -131,7 +132,7 @@ function PosterButton({ movieId, game }: Props) {
             height: 36,
             width: 36,
             borderRadius: 18,
-            backgroundColor: PlatformColor("systemGray5"),
+            backgroundColor: Colors.gray5,
             alignItems: "center",
             justifyContent: "center",
           }}

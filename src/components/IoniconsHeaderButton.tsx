@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { PlatformColor } from "react-native";
 import { HeaderButton } from "react-navigation-header-buttons";
+
+import { Colors } from "@/constants/Colors";
 
 export function IoniconsHeaderButton(props) {
   return (
@@ -9,7 +10,7 @@ export function IoniconsHeaderButton(props) {
     <HeaderButton
       IconComponent={Ionicons}
       iconSize={30}
-      color={PlatformColor("systemBlue")}
+      color={Colors.blue}
       {...props}
     />
   );

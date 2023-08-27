@@ -1,11 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
-import { PlatformColor, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { PersonWithMediaType } from "tmdb-ts";
 
+import { Colors } from "@/constants/Colors";
 import { calculateWidth } from "@/helpers/helpers";
 
 export function SearchPerson({ item }: { item: PersonWithMediaType }) {
@@ -30,7 +31,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
           paddingLeft: 12,
         },
         pressed && {
-          backgroundColor: PlatformColor("tertiarySystemBackground"),
+          backgroundColor: Colors.tertiaryBackground,
         },
       ]}
     >
@@ -62,7 +63,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
         ) : (
           <View
             style={{
-              backgroundColor: PlatformColor("systemGray"),
+              backgroundColor: Colors.gray,
               aspectRatio: 1,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: calculateWidth(12, 12, 3.5),
@@ -85,13 +86,13 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
       </View>
       <View style={{ flex: 1, marginHorizontal: 12 }}>
         <Text
-          style={[iOSUIKit.body, { color: PlatformColor("label") }]}
+          style={[iOSUIKit.body, { color: Colors.label }]}
           numberOfLines={2}
         >
           {item.name}
         </Text>
         <Text
-          style={[iOSUIKit.subhead, { color: PlatformColor("secondaryLabel") }]}
+          style={[iOSUIKit.subhead, { color: Colors.secondaryLabel }]}
           numberOfLines={2}
         >
           {item.known_for_department}
@@ -101,7 +102,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
         name="chevron-forward"
         size={28}
         style={{ marginRight: 12 }}
-        color={PlatformColor("tertiaryLabel")}
+        color={Colors.tertiaryLabel}
       />
     </Pressable>
   );

@@ -20,6 +20,7 @@ import { SubscriptionOption } from "./SubscriptionOption";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
+import { Colors } from "@/constants/Colors";
 import { useStore } from "@/stores/store";
 
 type Props = { modalRef: any };
@@ -97,14 +98,14 @@ export const ExplorePro = ({ modalRef }: Props) => {
           // paddingHorizontal: 32,
           // backgroundColor: PlatformColor("systemBackground"),
           paddingBottom: safeBottomArea,
-          backgroundColor: PlatformColor("secondarySystemBackground"),
+          backgroundColor: Colors.secondaryBackground,
         }}
       >
         <Text
           style={[
             iOSUIKit.largeTitleEmphasized,
             {
-              color: PlatformColor("label"),
+              color: Colors.label,
               textAlign: "center",
               paddingBottom: 16,
             },
@@ -178,12 +179,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
           }}
           onPress={handleRestorePurchase}
         >
-          <Text
-            style={[
-              iOSUIKit.bodyEmphasized,
-              { color: PlatformColor("systemBlue") },
-            ]}
-          >
+          <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.blue }]}>
             Restore Purchase
           </Text>
         </Pressable>
@@ -207,12 +203,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
               )
             }
           >
-            <Text
-              style={[
-                iOSUIKit.footnote,
-                { color: PlatformColor("systemBlue") },
-              ]}
-            >
+            <Text style={[iOSUIKit.footnote, { color: Colors.blue }]}>
               Terms of Service
             </Text>
           </Pressable>
@@ -227,12 +218,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
               Linking.openURL("https://getlookforward.app/privacy")
             }
           >
-            <Text
-              style={[
-                iOSUIKit.footnote,
-                { color: PlatformColor("systemBlue") },
-              ]}
-            >
+            <Text style={[iOSUIKit.footnote, { color: Colors.blue }]}>
               Privacy Policy
             </Text>
           </Pressable>

@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   Alert,
   FlatList,
-  PlatformColor,
   StyleSheet,
   Text,
   View,
@@ -15,6 +14,7 @@ import { iOSUIKit } from "react-native-typography";
 import { PurchaseOption } from "./PurchaseOption";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { Colors } from "@/constants/Colors";
 import TabStackContext from "@/contexts/TabStackContext";
 
 type Props = { modalRef: any };
@@ -73,7 +73,7 @@ export const TipModal = ({ modalRef }: Props) => {
             style={{
               marginVertical: 4,
               borderBottomWidth: StyleSheet.hairlineWidth,
-              borderColor: PlatformColor("separator"),
+              borderColor: Colors.separator,
             }}
           />
         )}

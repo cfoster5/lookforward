@@ -1,9 +1,11 @@
 import { useContext } from "react";
-import { PlatformColor, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import TabStackContext from "../../contexts/TabStackContext";
 import { reusableStyles } from "../../helpers/styles";
+
+import { Colors } from "@/constants/Colors";
 
 export function TextPoster({ text, style }: { text: string; style?: any }) {
   const { theme } = useContext(TabStackContext);
@@ -12,7 +14,7 @@ export function TextPoster({ text, style }: { text: string; style?: any }) {
       style={{
         ...reusableStyles.gamePoster,
         // borderWidth: 1,
-        borderColor: PlatformColor("separator"),
+        borderColor: Colors.separator,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
@@ -26,7 +28,7 @@ export function TextPoster({ text, style }: { text: string; style?: any }) {
             ? { ...iOSUIKit.title3EmphasizedWhiteObject, textAlign: "center" }
             : {
                 ...iOSUIKit.title3EmphasizedObject,
-                color: PlatformColor("systemGray"),
+                color: Colors.gray,
                 textAlign: "center",
               }
         }

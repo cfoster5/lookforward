@@ -1,11 +1,7 @@
-import {
-  PlatformColor,
-  Pressable,
-  StyleProp,
-  Text,
-  ViewStyle,
-} from "react-native";
+import { Pressable, StyleProp, Text, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { Colors } from "@/constants/Colors";
 
 type Props = {
   handlePress: () => void;
@@ -28,24 +24,24 @@ export const SubscriptionOption = ({
         flexDirection: "row",
         // justifyContent: "space-between",
         justifyContent: "center",
-        backgroundColor: PlatformColor("tertiarySystemBackground"),
+        backgroundColor: Colors.tertiaryBackground,
         width: "100%",
         paddingVertical: 16,
         paddingHorizontal: 16,
         borderRadius: 12,
-        borderColor: isSelected ? PlatformColor("systemBlue") : "transparent",
+        borderColor: isSelected ? Colors.blue : "transparent",
         borderWidth: 1,
       },
       style,
     ]}
   >
-    <Text style={[iOSUIKit.bodyEmphasized, { color: PlatformColor("label") }]}>
+    <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.label }]}>
       {text}
     </Text>
     {/* {isSelected && (
       <Ionicons
         name="checkmark-circle"
-        color={PlatformColor("systemBlue")}
+        color={Colors.blue}
         size={iOSUIKit.bodyEmphasizedObject.lineHeight}
       />
     )} */}

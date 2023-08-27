@@ -1,9 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useContext } from "react";
-import { PlatformColor, Pressable, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import TabStackContext from "../contexts/TabStackContext";
+
+import { Colors } from "@/constants/Colors";
 
 export default function ButtonSingleState({
   text,
@@ -23,8 +25,8 @@ export default function ButtonSingleState({
     <Pressable
       onPress={onPress}
       style={{
-        backgroundColor: PlatformColor("systemGray4"),
-        borderColor: PlatformColor("systemGray4"),
+        backgroundColor: Colors.gray4,
+        borderColor: Colors.gray4,
         // Use below when animated background with colors is implemented
         // backgroundColor: "transparent",
         // borderColor: "#636366",

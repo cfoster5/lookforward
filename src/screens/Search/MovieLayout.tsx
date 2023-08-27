@@ -20,6 +20,7 @@ import { MovieOption } from "./types";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { Colors } from "@/constants/Colors";
 
 export function MovieLayout({ navigation }) {
   const { width: windowWidth } = useWindowDimensions();
@@ -74,9 +75,7 @@ export function MovieLayout({ navigation }) {
           alignItems: "center",
         }}
       >
-        <Text
-          style={[iOSUIKit.title3Emphasized, { color: PlatformColor("label") }]}
-        >
+        <Text style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}>
           {option}
         </Text>
         {/* <ListLabel text={option} style={{ marginBottom: 0 }} /> */}
@@ -89,9 +88,7 @@ export function MovieLayout({ navigation }) {
             justifyContent: "center",
           }}
         >
-          <Text style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}>
-            More
-          </Text>
+          <Text style={[iOSUIKit.body, { color: Colors.blue }]}>More</Text>
         </Pressable>
       </View>
 

@@ -1,5 +1,4 @@
 import {
-  PlatformColor,
   Pressable,
   PressableProps,
   StyleSheet,
@@ -8,6 +7,8 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
+
+import { Colors } from "@/constants/Colors";
 
 type Props = {
   handlePress: () => void;
@@ -19,7 +20,7 @@ export const SettingNavButton = ({ handlePress, text, buttonStyle }: Props) => (
   <Pressable
     style={({ pressed }) => [
       styles.buttonContainer,
-      pressed ? { backgroundColor: PlatformColor("systemGray5") } : null,
+      pressed ? { backgroundColor: Colors.gray5 } : null,
       buttonStyle,
     ]}
     onPress={handlePress}
@@ -28,7 +29,7 @@ export const SettingNavButton = ({ handlePress, text, buttonStyle }: Props) => (
       <Text style={iOSUIKit.bodyWhite}>{text}</Text>
       <Ionicons
         name="chevron-forward"
-        color={PlatformColor("systemGray")}
+        color={Colors.gray}
         size={iOSUIKit.bodyObject.fontSize}
         style={{ alignSelf: "center" }}
       />
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    backgroundColor: PlatformColor("systemGray6"),
+    backgroundColor: Colors.gray6,
     alignItems: "center",
     marginTop: 32,
   },
@@ -50,7 +51,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    borderColor: PlatformColor("separator"),
+    borderColor: Colors.separator,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderTopWidth: StyleSheet.hairlineWidth,
     padding: 16,

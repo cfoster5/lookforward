@@ -17,6 +17,7 @@ import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { ListLabel } from "@/components/ListLabel";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { GamePoster } from "@/components/Posters/GamePoster";
+import { Colors } from "@/constants/Colors";
 import { Game, ReleaseDate } from "@/types";
 
 export function GameLayout({ navigation }) {
@@ -35,9 +36,7 @@ export function GameLayout({ navigation }) {
           alignItems: "center",
         }}
       >
-        <Text
-          style={[iOSUIKit.title3Emphasized, { color: PlatformColor("label") }]}
-        >
+        <Text style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}>
           Coming Soon
         </Text>
         <Pressable

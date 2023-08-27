@@ -1,13 +1,5 @@
 import firestore from "@react-native-firebase/firestore";
-
-import {
-  FlatList,
-  PlatformColor,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -15,6 +7,7 @@ import { iOSUIKit } from "react-native-typography";
 import { DynamicHeightModal } from "./DynamicHeightModal";
 import { reusableStyles } from "../helpers/styles";
 
+import { Colors } from "@/constants/Colors";
 import { useStore } from "@/stores/store";
 import { ReleaseDate } from "@/types";
 import { timestampToUTC } from "@/utils/dates";
@@ -93,7 +86,7 @@ export function GamePlatformPicker() {
             style={{
               marginVertical: 4,
               borderBottomWidth: StyleSheet.hairlineWidth,
-              borderColor: PlatformColor("separator"),
+              borderColor: Colors.separator,
             }}
           />
         )}

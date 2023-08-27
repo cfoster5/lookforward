@@ -1,16 +1,12 @@
 import { Image } from "expo-image";
-import {
-  ImageStyle,
-  PlatformColor,
-  Pressable,
-  StyleProp,
-  ViewStyle,
-} from "react-native";
+import { ImageStyle, Pressable, StyleProp, ViewStyle } from "react-native";
 
 import { TextPoster } from "./TextPoster";
 import { Movie, Recommendation } from "../../interfaces/tmdb";
 import { PosterSizes } from "../../interfaces/tmdb/configuration";
 import PosterButton from "../PosterButton";
+
+import { Colors } from "@/constants/Colors";
 
 export function MoviePoster({
   pressHandler,
@@ -34,7 +30,7 @@ export function MoviePoster({
             {
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: PlatformColor("separator"),
+              borderColor: Colors.separator,
             },
             style,
           ]}

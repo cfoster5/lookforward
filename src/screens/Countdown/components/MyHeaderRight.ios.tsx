@@ -1,7 +1,8 @@
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-
-import { PlatformColor, StyleProp, TextStyle, ViewStyle } from "react-native";
+import { StyleProp, TextStyle, ViewStyle } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { Colors } from "@/constants/Colors";
 
 type Props = {
   text: string;
@@ -13,7 +14,7 @@ export const MyHeaderRight = ({ text, handlePress, style }: Props) => (
   <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
     <Item
       title={text}
-      buttonStyle={[style, { color: PlatformColor("systemBlue") }]}
+      buttonStyle={[style, { color: Colors.blue }]}
       onPress={handlePress}
     />
   </HeaderButtons>

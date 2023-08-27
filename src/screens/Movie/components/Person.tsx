@@ -4,7 +4,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
 import { useContext } from "react";
 import {
-  PlatformColor,
   Pressable,
   StyleSheet,
   Text,
@@ -14,6 +13,7 @@ import {
 import { iOSUIKit } from "react-native-typography";
 import { Cast, Crew } from "tmdb-ts";
 
+import { Colors } from "@/constants/Colors";
 import TabStackContext from "@/contexts/TabStackContext";
 import {
   CountdownStackParamList,
@@ -44,7 +44,7 @@ function Person({ navigation, person }: Props) {
       aspectRatio: 2 / 3,
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: theme === "dark" ? PlatformColor("separator") : "#e0e0e0",
+      borderColor: Colors.separator,
     },
   });
 
@@ -87,7 +87,7 @@ function Person({ navigation, person }: Props) {
                   }
                 : {
                     ...iOSUIKit.title3EmphasizedObject,
-                    color: PlatformColor("systemGray"),
+                    color: Colors.gray,
                     textAlign: "center",
                   }
             }
@@ -103,9 +103,7 @@ function Person({ navigation, person }: Props) {
         <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>
           {person.name}
         </Text>
-        <Text
-          style={[iOSUIKit.callout, { color: PlatformColor("systemGray") }]}
-        >
+        <Text style={[iOSUIKit.callout, { color: Colors.gray }]}>
           {"character" in person ? person.character : person.job}
         </Text>
       </View>

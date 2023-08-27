@@ -52,7 +52,7 @@ export function RecentTitle({ item }: { item: Recent }) {
             style={{
               aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
               width: calculateWidth(12, 12, 3.5),
-              borderRadius: 10,
+              borderRadius: 12,
               borderWidth: 1,
               borderColor: PlatformColor("separator"),
               marginBottom: 8,
@@ -64,7 +64,7 @@ export function RecentTitle({ item }: { item: Recent }) {
               backgroundColor: PlatformColor("systemGray"),
               aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
               width: calculateWidth(12, 12, 3.5),
-              borderRadius: 10,
+              borderRadius: 12,
               borderWidth: 1,
               borderColor: PlatformColor("separator"),
               marginBottom: 8,

@@ -52,7 +52,7 @@ export function SearchGame({
             style={{
               aspectRatio: 3 / 4,
               width: calculateWidth(12, 12, 3.5),
-              borderRadius: 10,
+              borderRadius: 12,
               borderWidth: 1,
               borderColor: PlatformColor("separator"),
             }}
@@ -63,7 +63,7 @@ export function SearchGame({
               backgroundColor: PlatformColor("systemGray"),
               aspectRatio: 3 / 4,
               width: calculateWidth(12, 12, 3.5),
-              borderRadius: 10,
+              borderRadius: 12,
               borderWidth: 1,
               borderColor: PlatformColor("separator"),
               justifyContent: "center",

@@ -1,5 +1,4 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useScrollToTop } from "@react-navigation/native";
 import { DateTime } from "luxon";
 import { useEffect, useRef, useState } from "react";
@@ -19,12 +18,10 @@ import { useMovieData } from "./api/getMovies";
 import { MovieSearchModal } from "./components/MovieSearchModal";
 import { MovieOption } from "./types";
 
-import { ListLabel } from "@/components/ListLabel";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 
 export function MovieLayout({ navigation }) {
-  const tabBarheight = useBottomTabBarHeight();
   const { width: windowWidth } = useWindowDimensions();
   const modalRef = useRef<BottomSheetModal>();
   const scrollRef = useRef<FlatList>(null);
@@ -114,7 +111,7 @@ export function MovieLayout({ navigation }) {
               posterPath={item.poster_path}
               style={{
                 width: windowWidth / 2 - 24,
-                height: (windowWidth / 2 - 24) * 1.5,
+                aspectRatio: 2 / 3,
               }}
             />
           )}

@@ -185,6 +185,7 @@ export const SearchBottomSheet = () => {
                 />
               )}
               keyExtractor={(result) => result.id.toString()}
+              keyboardShouldPersistTaps="handled"
               style={{ marginRight: -12, marginLeft: -12 }}
             />
           ))}
@@ -241,6 +242,7 @@ export const SearchBottomSheet = () => {
                     ListFooterComponent={() => <View style={{ width: 12 }} />}
                     horizontal
                     keyExtractor={(item) => item.id?.toString()}
+                    keyboardShouldPersistTaps="handled"
                     showsHorizontalScrollIndicator={false}
                     style={{ marginHorizontal: -12 }}
                   />
@@ -287,6 +289,7 @@ export const SearchBottomSheet = () => {
                 stickySectionHeadersEnabled={false}
                 scrollEnabled={false}
                 style={{ marginHorizontal: -12, paddingHorizontal: 12 }}
+                keyboardShouldPersistTaps="handled"
               />
             </>
           ) : (

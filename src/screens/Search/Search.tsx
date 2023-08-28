@@ -32,7 +32,8 @@ function Search({ navigation }: FindScreenNavigationProp) {
       <View
         style={{
           flex: 1,
-          paddingBottom: Platform.OS === "ios" ? tabBarHeight * 2 : undefined,
+          paddingBottom:
+            Platform.OS === "ios" ? tabBarHeight * 2 : tabBarHeight + 32,
         }}
       >
         {categoryIndex === 0 ? (

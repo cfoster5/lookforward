@@ -7,7 +7,7 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CollectionDetails } from "interfaces/tmdb";
 import { useLayoutEffect } from "react";
-import { Platform, View } from "react-native";
+import { Platform, View, Text } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -20,7 +20,7 @@ import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { ExpandableText } from "@/components/ExpandableText";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
-import { Text as ThemedText } from "@/components/Themed";
+import { Colors } from "@/constants/Colors";
 import { calculateWidth } from "@/helpers/helpers";
 import { FindStackParams, BottomTabParams } from "@/types";
 
@@ -65,11 +65,14 @@ export function Collection({
               />
             </View>
           )}
-          <ThemedText
-            style={[iOSUIKit.largeTitleEmphasized, { paddingTop: 16 }]}
+          <Text
+            style={[
+              iOSUIKit.largeTitleEmphasized,
+              { color: Colors.label, paddingTop: 16 },
+            ]}
           >
             {collection!.name}
-          </ThemedText>
+          </Text>
           <ExpandableText text={collection!.overview} />
           <View style={{ height: 16 }} />
         </>

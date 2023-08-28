@@ -65,7 +65,6 @@ import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { ListLabel } from "@/components/ListLabel";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
-import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { Colors } from "@/constants/Colors";
 import { getRuntime } from "@/helpers/formatting";
@@ -269,9 +268,11 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
           />
         )}
         <View style={{ margin: 16 }}>
-          <ThemedText style={iOSUIKit.largeTitleEmphasized}>
+          <Text
+            style={[iOSUIKit.largeTitleEmphasized, { color: Colors.label }]}
+          >
             {movieDetails!.title}
-          </ThemedText>
+          </Text>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.secondarySubhedEmphasized}>
               {usReleaseDates
@@ -490,9 +491,14 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   />
                 </>
               ) : (
-                <ThemedText style={[iOSUIKit.body, { paddingTop: 16 }]}>
+                <Text
+                  style={[
+                    iOSUIKit.body,
+                    { color: Colors.label, paddingTop: 16 },
+                  ]}
+                >
                   No trailers yet! Come back later!
-                </ThemedText>
+                </Text>
               )}
 
               <View style={{ flexDirection: "row" }}>
@@ -623,14 +629,18 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         },
                       ]}
                     />
-                    <ThemedText
+                    <Text
                       style={[
                         iOSUIKit.body,
-                        { margin: 8, position: "absolute" },
+                        {
+                          color: Colors.label,
+                          margin: 8,
+                          position: "absolute",
+                        },
                       ]}
                     >
                       {movieDetails!.belongs_to_collection.name}
-                    </ThemedText>
+                    </Text>
                   </Pressable>
                 </>
               )}

@@ -31,7 +31,7 @@ export function AppProvider({ children }: AppProviderProps) {
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged((user) => setUser(user));
     return subscriber; // unsubscribe on unmount
-  }, []);
+  }, [setUser]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

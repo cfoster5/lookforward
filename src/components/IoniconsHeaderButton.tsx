@@ -1,5 +1,5 @@
+import { Ionicons } from "@expo/vector-icons";
 import { PlatformColor } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { HeaderButton } from "react-navigation-header-buttons";
 
 export function IoniconsHeaderButton(props) {

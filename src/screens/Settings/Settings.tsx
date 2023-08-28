@@ -1,8 +1,9 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import analytics from "@react-native-firebase/analytics";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 import { useEffect, useRef, useState } from "react";
-import { Platform, Text, View } from "react-native";
+import { Linking, Platform, Text, View } from "react-native";
 
 import { NotificationSetting } from "./components/NotificationSetting";
 import { SettingNavButton } from "./components/SettingNavButton";
@@ -92,12 +93,37 @@ function Settings({ navigation }) {
         {Platform.OS === "ios" && (
           <>
             <SettingNavButton
-              handlePress={() => proModalRef.current?.present()}
+              handlePress={async () => {
+                proModalRef.current?.present();
+                await analytics().logEvent("select_promotion", {
+                  name: "Pro",
+                  id: "com.lookforward.pro",
+                });
+              }}
               text="Explore Pro Features"
             />
             <SettingNavButton
-              handlePress={() => modalRef.current?.present()}
+              handlePress={async () => {
+                modalRef.current?.present();
+                await analytics().logEvent("select_promotion", {
+                  name: "Tip Jar",
+                  items: [
+                    { id: "com.lookforward.tip1" },
+                    { id: "com.lookforward.tip3" },
+                    { id: "com.lookforward.tip5" },
+                  ],
+                });
+              }}
               text="Tip Jar"
+              buttonStyle={{ marginTop: 0 }}
+            />
+            <SettingNavButton
+              handlePress={() => {
+                Linking.openURL(
+                  `itms-apps://itunes.apple.com/app/viewContentsUserReviews/id1492748952?action=write-review`
+                );
+              }}
+              text="Write a Review"
               buttonStyle={{ marginTop: 0 }}
             />
             <SettingNavButton

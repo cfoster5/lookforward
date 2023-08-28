@@ -7,12 +7,16 @@ import {
   KeyboardAvoidingView,
   PlatformColor,
   Pressable,
+  PressableProps,
   Text,
   TextInput,
   View,
+  ViewStyle,
+  StyleProp,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { useStore } from "@/stores/store";
 import { AuthStackParams } from "@/types";
 
@@ -56,29 +60,38 @@ function CreateAccount({ navigation, route }: Props) {
         behavior="padding"
       >
         <View>
-          <Text style={{ ...iOSUIKit.largeTitleEmphasizedWhiteObject }}>
+          <Text
+            style={[
+              iOSUIKit.largeTitleEmphasized,
+              { color: PlatformColor("label") },
+            ]}
+          >
             Hello!
           </Text>
           <Text
-            style={{
-              ...iOSUIKit.bodyObject,
-              color: PlatformColor("systemGray"),
-              marginBottom: 8,
-            }}
+            style={[
+              iOSUIKit.body,
+              {
+                color: PlatformColor("secondaryLabel"),
+                marginBottom: 8,
+              },
+            ]}
           >
             Create an account for the best experience
           </Text>
           <TextInput
-            style={{
-              ...iOSUIKit.bodyObject,
-              backgroundColor: PlatformColor("systemGray6"),
-              color: "white",
-              padding: 16,
-              borderRadius: 8,
-              marginVertical: 8,
-            }}
+            style={[
+              iOSUIKit.body,
+              {
+                backgroundColor: PlatformColor("systemGray6"),
+                color: PlatformColor("label"),
+                padding: 16,
+                borderRadius: 12,
+                marginVertical: 8,
+              },
+            ]}
             placeholder="Email"
-            placeholderTextColor={PlatformColor("systemGray")}
+            placeholderTextColor={PlatformColor("secondaryLabel")}
             autoCapitalize="none"
             keyboardType="email-address"
             textContentType="username"
@@ -86,16 +99,18 @@ function CreateAccount({ navigation, route }: Props) {
             onChangeText={(text) => setEmail(text)}
           />
           <TextInput
-            style={{
-              ...iOSUIKit.bodyObject,
-              backgroundColor: PlatformColor("systemGray6"),
-              color: "white",
-              padding: 16,
-              borderRadius: 8,
-              marginVertical: 8,
-            }}
+            style={[
+              iOSUIKit.body,
+              {
+                backgroundColor: PlatformColor("systemGray6"),
+                color: PlatformColor("label"),
+                padding: 16,
+                borderRadius: 12,
+                marginVertical: 8,
+              },
+            ]}
             placeholder="Password"
-            placeholderTextColor={PlatformColor("systemGray")}
+            placeholderTextColor={PlatformColor("secondaryLabel")}
             secureTextEntry
             textContentType="password"
             value={password}
@@ -108,33 +123,19 @@ function CreateAccount({ navigation, route }: Props) {
             <Text
               style={{
                 ...iOSUIKit.bodyObject,
-                color: PlatformColor("systemGray"),
+                color: PlatformColor("secondaryLabel"),
                 marginVertical: 8,
               }}
             >
               Skip?
             </Text>
           </Pressable>
-          <Pressable
-            style={{
-              backgroundColor: PlatformColor("systemBlue"),
-              width: "100%",
-              marginTop: 16,
-              paddingVertical: 16,
-              borderRadius: 8,
-              opacity: email && password ? 1 : 0.5,
-            }}
-            onPress={() => (email && password ? createAccount() : null)}
-          >
-            <Text
-              style={{
-                ...iOSUIKit.bodyEmphasizedWhiteObject,
-                textAlign: "center",
-              }}
-            >
-              Continue
-            </Text>
-          </Pressable>
+          <LargeFilledButton
+            disabled={!email || !password}
+            style={{ marginTop: 16 }}
+            handlePress={() => (email && password ? createAccount() : null)}
+            text="Continue"
+          />
         </View>
       </KeyboardAvoidingView>
     </Pressable>

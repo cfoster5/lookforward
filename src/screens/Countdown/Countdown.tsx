@@ -6,7 +6,8 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps, useScrollToTop } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useLayoutEffect, useRef, useState } from "react";
+import { produce } from "immer";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
 import { Platform, PlatformColor, SectionList, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -31,13 +32,33 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
 
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
-  const { user, movieSubs, gameSubs, updateSubs } = useStore();
+  const { user, movieSubs, gameSubs, setMovieSubs, setGameSubs } = useStore();
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const movies = useMovieCountdowns(movieSubs);
 
   const selectedMovies: any[] = movieSubs.filter((sub) => sub.isSelected);
   const selectedGames: any[] = gameSubs.filter((sub) => sub.isSelected);
+
+  const deleteItems = useCallback(async () => {
+    const batch = firestore().batch();
+    selectedMovies.map((selection) => {
+      const docRef = firestore().collection("movies").doc(selection.documentID);
+      batch.update(docRef, {
+        subscribers: firestore.FieldValue.arrayRemove(user!.uid),
+      });
+    });
+    selectedGames.map((selection) => {
+      const docRef = firestore()
+        .collection("gameReleases")
+        .doc(selection.documentID);
+      batch.update(docRef, {
+        subscribers: firestore.FieldValue.arrayRemove(user!.uid),
+      });
+    });
+    await batch.commit();
+    setShowButtons(false);
+  }, [selectedGames, selectedMovies, user]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -70,41 +91,50 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
         />
       ),
     });
-  }, [navigation, showButtons, movieSubs, gameSubs]);
+  }, [
+    navigation,
+    showButtons,
+    movieSubs,
+    gameSubs,
+    selectedMovies,
+    selectedGames,
+    deleteItems,
+  ]);
 
   function handlePress(item, sectionName: string) {
     if (showButtons) {
       if (sectionName === "Movies") {
-        updateSubs(Subs.movieSubs, item.documentID);
+        const updatedMovieSubs = produce(movieSubs, (draft) => {
+          const index = draft.findIndex(
+            (sub) => sub.documentID === item.documentID
+          );
+          draft[index].isSelected = !draft[index].isSelected || false;
+        });
+        setMovieSubs(updatedMovieSubs);
       } else {
-        updateSubs(Subs.gameSubs, item.documentID);
+        const updatedGameSubs = produce(gameSubs, (draft) => {
+          const index = draft.findIndex(
+            (sub) => sub.documentID === item.documentID
+          );
+          draft[index].isSelected = !draft[index].isSelected || false;
+        });
+        setGameSubs(updatedGameSubs);
       }
     } else if (sectionName === "Movies") {
       navigation.navigate("Movie", {
         movieId: item.id,
         movieTitle: item.title,
+        poster_path: item.poster_path,
+      });
+    } else if (sectionName === "Games") {
+      navigation.navigate("Game", {
+        game: {
+          id: item.game.id,
+          name: item.game.name,
+          cover: { url: item.game.cover.url },
+        },
       });
     }
-  }
-
-  async function deleteItems() {
-    const batch = firestore().batch();
-    selectedMovies.map((selection) => {
-      const docRef = firestore().collection("movies").doc(selection.documentID);
-      batch.update(docRef, {
-        subscribers: firestore.FieldValue.arrayRemove(user!.uid),
-      });
-    });
-    selectedGames.map((selection) => {
-      const docRef = firestore()
-        .collection("gameReleases")
-        .doc(selection.documentID);
-      batch.update(docRef, {
-        subscribers: firestore.FieldValue.arrayRemove(user!.uid),
-      });
-    });
-    await batch.commit();
-    setShowButtons(false);
   }
 
   if (movies.some((movie) => movie.isLoading)) return <LoadingScreen />;
@@ -122,7 +152,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
       ]}
       // contentContainerStyle={{ paddingTop: 16, paddingBottom: tabBarheight + 16, marginHorizontal: 16 }}
       scrollIndicatorInsets={
-        Platform.OS == "ios"
+        Platform.OS === "ios"
           ? {
               top: 16,
               bottom: tabBarheight - 16,

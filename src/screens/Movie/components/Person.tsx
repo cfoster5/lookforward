@@ -1,6 +1,7 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { Image } from "expo-image";
 import { Cast, Crew } from "interfaces/tmdb";
 import { useContext } from "react";
 import {
@@ -11,8 +12,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import FastImage from "react-native-fast-image";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 
 import { TextPoster } from "@/components/Posters/TextPoster";
 import TabStackContext from "@/contexts/TabStackContext";
@@ -57,10 +57,16 @@ function Person({ navigation, person }: Props) {
         alignItems: "center",
         marginTop: 16,
       }}
-      onPress={() => navigation.push("Actor", { personId: person.id })}
+      onPress={() =>
+        navigation.push("Actor", {
+          personId: person.id,
+          name: person.name,
+          profile_path: person.profile_path,
+        })
+      }
     >
       {person.profile_path ? (
-        <FastImage
+        <Image
           style={styles.poster}
           source={{
             uri: `https://image.tmdb.org/t/p/w300${person.profile_path}`,

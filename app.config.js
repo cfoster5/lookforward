@@ -1,16 +1,16 @@
 export default {
   expo: {
-    name: "lookforward",
+    name: "LookForward",
     slug: "lookforward",
     version: "6.0.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
     scheme: "myapp",
-    userInterfaceStyle: "automatic",
+    userInterfaceStyle: "dark",
     splash: {
       image: "./assets/splash.png",
       resizeMode: "contain",
-      backgroundColor: "#ffffff",
+      backgroundColor: "#000000",
     },
     assetBundlePatterns: ["**/*"],
     ios: {
@@ -18,12 +18,12 @@ export default {
       googleServicesFile:
         process.env.GOOGLE_SERVICE_PLIST ?? "./GoogleService-Info.secret.plist",
       bundleIdentifier: "com.lookforward.app",
-      buildNumber: "6",
+      buildNumber: "15",
     },
     android: {
       adaptiveIcon: {
         foregroundImage: "./assets/adaptive-icon.png",
-        backgroundColor: "#ffffff",
+        backgroundColor: "#000000",
       },
     },
     plugins: [

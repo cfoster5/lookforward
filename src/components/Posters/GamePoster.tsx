@@ -1,4 +1,4 @@
-import FastImage from "react-native-fast-image";
+import { Image } from "expo-image";
 
 import { TextPoster } from "./TextPoster";
 import { reusableStyles } from "../../helpers/styles";
@@ -26,12 +26,13 @@ export function GamePoster({
         <PosterButton game={game} inCountdown={inCountdown} />
       )}
       {game.cover?.url ? (
-        <FastImage
+        <Image
           style={{
             ...reusableStyles.gamePoster,
-            height:
-              (game.cover.height / game.cover.width) *
-              reusableStyles.gamePoster.width,
+            // height:
+            //   (game.cover.height / game.cover.width) *
+            //   reusableStyles.gamePoster.width,
+            aspectRatio: 3 / 4,
           }}
           // source={{ uri: `https:${(data as IGDB.ReleaseDate.ReleaseDate)?.game?.cover?.url.replace("thumb", "cover_big_2x")}` }}
           source={{

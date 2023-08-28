@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { useStore } from "@/stores/store";
 import { AuthStackParams } from "@/types";
 
@@ -55,17 +56,21 @@ function Login({ navigation, route }: Props) {
       >
         {/* Wrapping with View fixes jump that Text elements experienced when keyboard is opening/dismissing */}
         <View>
-          <Text style={{ ...iOSUIKit.largeTitleEmphasizedWhiteObject }}>
+          <Text
+            style={[
+              iOSUIKit.largeTitleEmphasized,
+              { color: PlatformColor("label") },
+            ]}
+          >
             {route.params.emailSent
               ? "Check your email inbox"
               : "Welcome back!"}
           </Text>
           <Text
-            style={{
-              ...iOSUIKit.bodyObject,
-              color: PlatformColor("systemGray"),
-              marginBottom: 8,
-            }}
+            style={[
+              iOSUIKit.body,
+              { color: PlatformColor("secondaryLabel"), marginBottom: 8 },
+            ]}
           >
             {route.params.emailSent
               ? "Sign in after resetting your password"
@@ -77,11 +82,11 @@ function Login({ navigation, route }: Props) {
               backgroundColor: PlatformColor("systemGray6"),
               color: "white",
               padding: 16,
-              borderRadius: 8,
+              borderRadius: 12,
               marginVertical: 8,
             }}
             placeholder="Email"
-            placeholderTextColor={PlatformColor("systemGray")}
+            placeholderTextColor={PlatformColor("secondaryLabel")}
             autoCapitalize="none"
             keyboardType="email-address"
             textContentType="username"
@@ -94,11 +99,11 @@ function Login({ navigation, route }: Props) {
               backgroundColor: PlatformColor("systemGray6"),
               color: "white",
               padding: 16,
-              borderRadius: 8,
+              borderRadius: 12,
               marginVertical: 8,
             }}
             placeholder="Password"
-            placeholderTextColor={PlatformColor("systemGray")}
+            placeholderTextColor={PlatformColor("secondaryLabel")}
             secureTextEntry
             textContentType="password"
             value={password}
@@ -110,36 +115,24 @@ function Login({ navigation, route }: Props) {
               onPress={() => navigation.navigate("Password Reset")}
             >
               <Text
-                style={{
-                  ...iOSUIKit.bodyObject,
-                  color: PlatformColor("systemGray"),
-                  marginVertical: 8,
-                }}
+                style={[
+                  iOSUIKit.body,
+                  {
+                    color: PlatformColor("secondaryLabel"),
+                    marginVertical: 8,
+                  },
+                ]}
               >
                 Forgot password?
               </Text>
             </Pressable>
           )}
-          <Pressable
-            style={{
-              backgroundColor: PlatformColor("systemBlue"),
-              width: "100%",
-              marginTop: route.params.emailSent ? 16 : 8,
-              paddingVertical: 16,
-              borderRadius: 8,
-              opacity: email && password ? 1 : 0.5,
-            }}
-            onPress={() => (email && password ? signIn() : null)}
-          >
-            <Text
-              style={{
-                ...iOSUIKit.bodyEmphasizedWhiteObject,
-                textAlign: "center",
-              }}
-            >
-              Continue
-            </Text>
-          </Pressable>
+          <LargeFilledButton
+            disabled={!email || !password}
+            style={{ marginTop: route.params.emailSent ? 16 : 8 }}
+            handlePress={() => (email && password ? signIn() : null)}
+            text="Continue"
+          />
         </View>
       </KeyboardAvoidingView>
     </Pressable>

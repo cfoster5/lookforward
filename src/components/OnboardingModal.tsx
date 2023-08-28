@@ -1,6 +1,10 @@
-import { PlatformColor, Pressable, Text, View } from "react-native";
+import analytics from "@react-native-firebase/analytics";
+import { Linking, PlatformColor, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
+
+import { LargeBorderlessButton } from "./LargeBorderlessButton";
+import { LargeFilledButton } from "./LargeFilledButton";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
@@ -50,50 +54,30 @@ export const OnboardingModal = ({ modalRef }: Props) => {
           title="Details"
           body="Tap on a title to see genres, credits, trailers, and so much more."
         />
-        <Row
-          icon="notifications-outline"
-          title="Notifications"
-          body="Enable push notifications to be reminded about releases in your list that are a week or day away."
-        />
-        <Pressable
-          style={{
-            backgroundColor: PlatformColor("systemBlue"),
-            minHeight: 44,
-            minWidth: 44,
-            borderRadius: 12,
-            alignItems: "center",
-            justifyContent: "center",
-            marginVertical: 16,
-          }}
-          onPress={() => onboardingModalRef.current?.dismiss()}
-        >
-          <Text style={[iOSUIKit.bodyEmphasized, { color: "white" }]}>
-            Continue
-          </Text>
+        <Pressable onPress={() => Linking.openSettings()}>
+          <Row
+            icon="notifications-outline"
+            title="Notifications"
+            body="Allow push notifications to be reminded about releases in your list that are a week or day away."
+            showDrillIn
+          />
         </Pressable>
-        <Pressable
-          style={{
-            // backgroundColor: PlatformColor("systemBlue"),
-            minHeight: 44,
-            minWidth: 44,
-            alignItems: "center",
-            justifyContent: "center",
-            // marginVertical: 16,
-          }}
-          onPress={() => {
+        <LargeFilledButton
+          disabled={false}
+          style={{ marginVertical: 16 }}
+          handlePress={() => onboardingModalRef.current?.dismiss()}
+          text="Continue"
+        />
+        <LargeBorderlessButton
+          handlePress={async () => {
             onboardingModalRef.current?.dismiss();
             proModalRef.current?.present();
+            await analytics().logEvent("select_promotion", {
+              id: "com.lookforward.pro",
+            });
           }}
-        >
-          <Text
-            style={[
-              iOSUIKit.bodyEmphasized,
-              { color: PlatformColor("systemBlue") },
-            ]}
-          >
-            Explore Pro Features
-          </Text>
-        </Pressable>
+          text="Explore Pro Features"
+        />
       </View>
     </DynamicHeightModal>
   );

@@ -12,14 +12,11 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { KeyboardAwareFlatList } from "react-native-keyboard-aware-scroll-view";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { useMovieData } from "./api/getMovies";
 import { MovieSearchModal } from "./components/MovieSearchModal";
-import SearchPerson from "./components/SearchPerson";
-import Searchbar from "./components/Searchbar/Searchbar";
-import useDebounce from "./hooks/useDebounce";
 import { MovieOption } from "./types";
 
 import { ListLabel } from "@/components/ListLabel";
@@ -33,12 +30,8 @@ export function MovieLayout({ navigation }) {
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
   const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
-  const [searchValue, setSearchValue] = useState("");
-  const debouncedSearch = useDebounce(searchValue, 400);
-  const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(
-    option,
-    debouncedSearch
-  );
+  const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(option);
+  const { top } = useSafeAreaInsets();
 
   const movies = data?.pages.flatMap((page) => page.results);
 
@@ -57,58 +50,56 @@ export function MovieLayout({ navigation }) {
         scrollRef.current?.scrollToIndex({ index: 0 });
       }
     }
-  }, [movies, option]);
+  }, [option]);
 
   function filteredMovies() {
-    if (debouncedSearch) {
-      return movies?.filter((movie) => movie.media_type === "movie");
+    if (option === "Coming Soon") {
+      return movies?.filter((movie) => {
+        return movie.release_date
+          ? DateTime.fromFormat(movie?.release_date, "yyyy-MM-dd") >=
+              DateTime.now()
+          : null;
+      });
+      // return movies;
     } else {
-      if (option === "Coming Soon") {
-        return movies?.filter((movie) => {
-          return movie.release_date
-            ? DateTime.fromFormat(movie?.release_date, "yyyy-MM-dd") >=
-                DateTime.now()
-            : null;
-        });
-        // return movies;
-      } else {
-        return movies;
-      }
+      return movies;
     }
   }
 
   return (
     <>
-      <Searchbar
-        categoryIndex={0}
-        handleChange={(text) => setSearchValue(text)}
-        value={searchValue}
-      />
-      {!debouncedSearch && (
-        <View
+      <View
+        style={{
+          margin: 16,
+          marginTop: top,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={[iOSUIKit.title3Emphasized, { color: PlatformColor("label") }]}
+        >
+          {option}
+        </Text>
+        {/* <ListLabel text={option} style={{ marginBottom: 0 }} /> */}
+        <Pressable
+          onPress={() => modalRef.current?.present()}
           style={{
-            marginHorizontal: 16,
-            marginBottom: 16,
-            flexDirection: "row",
-            justifyContent: "space-between",
+            minWidth: 44,
+            minHeight: 44,
+            alignItems: "center",
+            justifyContent: "center",
           }}
         >
-          <ListLabel text={option} style={{ marginBottom: 0 }} />
-          <Pressable onPress={() => modalRef.current?.present()}>
-            <Text
-              style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}
-            >
-              More
-            </Text>
-          </Pressable>
-        </View>
-      )}
+          <Text style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}>
+            More
+          </Text>
+        </Pressable>
+      </View>
 
       {!isLoading ? (
-        <KeyboardAwareFlatList
-          extraScrollHeight={tabBarheight}
-          viewIsInsideTabBar
-          enableResetScrollToCoords={false}
+        <FlatList
           data={filteredMovies()}
           renderItem={({ item }) => (
             <MoviePoster
@@ -116,6 +107,7 @@ export function MovieLayout({ navigation }) {
                 navigation.push("Movie", {
                   movieId: item.id,
                   movieTitle: item.title,
+                  poster_path: item.poster_path,
                 })
               }
               movie={item}
@@ -136,44 +128,6 @@ export function MovieLayout({ navigation }) {
           showsVerticalScrollIndicator={false}
           onEndReached={() => (hasNextPage ? fetchNextPage() : null)}
           onEndReachedThreshold={1.5}
-          ListHeaderComponent={
-            debouncedSearch ? (
-              <>
-                {(movies as TMDB.Search.MultiSearchResult[])?.filter(
-                  (movie) => movie.media_type === "person"
-                ).length > 0 && (
-                  <>
-                    <ListLabel text="People" />
-                    <FlatList
-                      keyExtractor={(item) => item.id.toString()}
-                      data={movies.filter(
-                        (movie) => movie.media_type === "person"
-                      )}
-                      renderItem={(person) => (
-                        <SearchPerson
-                          navigation={navigation}
-                          person={person.item}
-                        />
-                      )}
-                      horizontal
-                      style={{
-                        marginHorizontal: -16,
-                        marginBottom: 16,
-                      }}
-                      showsHorizontalScrollIndicator={false}
-                      ListHeaderComponent={<View style={{ width: 16 }} />}
-                      ItemSeparatorComponent={() => (
-                        <View style={{ width: 16 }} />
-                      )}
-                      ListFooterComponent={<View style={{ width: 16 }} />}
-                    />
-                  </>
-                )}
-                {movies?.filter((movie) => movie.media_type === "movie")
-                  .length > 0 && <ListLabel text="Movies" />}
-              </>
-            ) : null
-          }
         />
       ) : (
         <LoadingScreen />

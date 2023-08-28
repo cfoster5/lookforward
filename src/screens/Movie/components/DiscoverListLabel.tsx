@@ -7,7 +7,7 @@ export function DiscoverListLabel({ text }: { text: string }) {
       style={[
         iOSUIKit.subheadEmphasized,
         {
-          color: PlatformColor("systemGray"),
+          color: PlatformColor("secondaryLabel"),
           textAlign: "center",
           marginTop: 16,
         },

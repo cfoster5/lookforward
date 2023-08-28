@@ -2,16 +2,22 @@ import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { PlatformColor, View, Text } from "react-native";
 import { SFSymbol } from "react-native-sfsymbols";
 import { iOSUIKit } from "react-native-typography";
-// import Ionicons from "react-native-vector-icons/Ionicons";
 
 type RowProps = {
   icon: string;
   title: string;
   body: string;
   useAltIcon?: boolean;
+  showDrillIn?: boolean;
 };
 
-export const Row = ({ icon, title, body, useAltIcon }: RowProps) => (
+export const Row = ({
+  icon,
+  title,
+  body,
+  useAltIcon,
+  showDrillIn,
+}: RowProps) => (
   <View
     style={{
       flexDirection: "row",
@@ -40,5 +46,13 @@ export const Row = ({ icon, title, body, useAltIcon }: RowProps) => (
         {body}
       </Text>
     </View>
+    {showDrillIn && (
+      <Ionicons
+        name="chevron-forward"
+        size={iOSUIKit.bodyObject.lineHeight}
+        color={PlatformColor("secondaryLabel")}
+        style={{ paddingLeft: 8 }}
+      />
+    )}
   </View>
 );

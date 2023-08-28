@@ -1,5 +1,6 @@
+import { Image } from "expo-image";
 import { useContext } from "react";
-import { Image, Linking, PlatformColor, Pressable, Text } from "react-native";
+import { Linking, PlatformColor, Pressable, Text } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 
 import TabStackContext from "../contexts/TabStackContext";

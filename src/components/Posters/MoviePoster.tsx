@@ -1,16 +1,13 @@
-import { useContext } from "react";
+import { Image } from "expo-image";
 import {
+  ImageStyle,
   PlatformColor,
   Pressable,
   StyleProp,
-  StyleSheet,
   ViewStyle,
 } from "react-native";
-import FastImage, { ImageStyle } from "react-native-fast-image";
 
 import { TextPoster } from "./TextPoster";
-import TabStackContext from "../../contexts/TabStackContext";
-import { reusableStyles } from "../../helpers/styles";
 import { Movie, Recommendation } from "../../interfaces/tmdb";
 import { PosterSizes } from "../../interfaces/tmdb/configuration";
 import PosterButton from "../PosterButton";
@@ -28,19 +25,16 @@ export function MoviePoster({
   style?: StyleProp<ImageStyle>;
   buttonStyle?: StyleProp<ViewStyle>;
 }) {
-  const { theme } = useContext(TabStackContext);
-
   return (
     <Pressable onPress={pressHandler} style={buttonStyle}>
       {movie && <PosterButton movieId={movie.id.toString()} />}
       {posterPath ? (
-        <FastImage
+        <Image
           style={[
             {
-              borderRadius: 8,
+              borderRadius: 12,
               borderWidth: 1,
-              borderColor:
-                theme === "dark" ? PlatformColor("systemGray6") : "#e0e0e0",
+              borderColor: PlatformColor("separator"),
             },
             style,
           ]}

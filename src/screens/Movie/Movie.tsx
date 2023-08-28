@@ -7,8 +7,11 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Image } from "expo-image";
+import { produce } from "immer";
+import { DateTime } from "luxon";
 import {
-  useContext,
+  useCallback,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -17,7 +20,6 @@ import {
 import {
   Dimensions,
   FlatList,
-  Image,
   Platform,
   PlatformColor,
   Pressable,
@@ -26,8 +28,8 @@ import {
   Text,
   View,
 } from "react-native";
-import FastImage from "react-native-fast-image";
 import ImageView from "react-native-image-viewing";
+import { useMMKVString } from "react-native-mmkv";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -39,6 +41,7 @@ import { useMovie } from "./api/getMovie";
 import { DiscoverListLabel } from "./components/DiscoverListLabel";
 import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
+import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
 import { horizontalListProps } from "./constants/horizontalListProps";
 import {
@@ -47,7 +50,6 @@ import {
   subToMovie,
   tmdbMovieGenres,
 } from "../../helpers/helpers";
-import { reusableStyles } from "../../helpers/styles";
 import { FirestoreMovie } from "../../interfaces/firebase";
 import { ReleaseDate, ReleaseDateType } from "../../interfaces/tmdb";
 import {
@@ -66,11 +68,10 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
-import TabStackContext from "@/contexts/TabStackContext";
 import { getRuntime } from "@/helpers/formatting";
 import { useStore } from "@/stores/store";
-import { BottomTabParams, FindStackParams } from "@/types";
-import { isoToUTC, compareDates } from "@/utils/dates";
+import { BottomTabParams, FindStackParams, Recent } from "@/types";
+import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 
 function ScrollViewWithFlatList({
   data,
@@ -127,9 +128,9 @@ export function getReleaseDate(releaseDates: ReleaseDate[]) {
     ({ release_date: a }, { release_date: b }) =>
       compareDates(isoToUTC(a), isoToUTC(b))
   );
-  return isoToUTC(sortedNonPremiereDates[0].release_date)
-    .toFormat("MMMM d, yyyy")
-    .toUpperCase();
+  return isoToUTC(sortedNonPremiereDates[0].release_date).toLocaleString(
+    DateTime.DATE_FULL
+  );
 }
 
 type MovieScreenNavigationProp = CompositeScreenProps<
@@ -141,13 +142,12 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 >;
 
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
-  const { movieId, movieTitle } = route.params;
-  const { user, movieSubs } = useStore();
+  const { movieId, movieTitle, poster_path } = route.params;
+  const { user, movieSubs, isPro } = useStore();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString()
   );
-  const { theme } = useContext(TabStackContext);
-  const { data: { movieDetails, traktDetails } = {}, isLoading } =
+  const { data: { movieDetails, traktDetails, ratings } = {}, isLoading } =
     useMovie(movieId);
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
@@ -171,6 +171,41 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const [creditsSelection, setCreditsSelection] = useState("Cast");
 
   const modalRef = useRef<BottomSheetModal>();
+
+  const [storedMovies, setStoredMovies] = useMMKVString("recent.movies");
+
+  const composeRecentMovies = useCallback(
+    () => (storedMovies ? (JSON.parse(storedMovies) as Recent[]) : []),
+    [storedMovies]
+  );
+
+  const usReleaseDates = movieDetails?.release_dates.results.find(
+    (result) => result.iso_3166_1 === "US"
+  )?.release_dates;
+
+  useEffect(() => {
+    const recentMovie: Recent = {
+      id: movieId,
+      name: movieTitle,
+      img_path: poster_path,
+      last_viewed: timestamp,
+      media_type: "movie",
+    };
+
+    const updatedRecentMovies = produce(
+      composeRecentMovies(),
+      (draft: Recent[]) => {
+        const index = draft.findIndex((movie) => movie.id === movieId);
+        if (index === -1) draft.unshift(recentMovie);
+        else {
+          draft.splice(index, 1);
+          draft.unshift(recentMovie);
+        }
+      }
+    );
+
+    setStoredMovies(JSON.stringify(updatedRecentMovies));
+  }, [composeRecentMovies, movieId, movieTitle, poster_path, setStoredMovies]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -221,7 +256,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         scrollIndicatorInsets={
           Platform.OS === "ios"
             ? {
-                bottom: tabBarheight - 16,
+                bottom: tabBarheight - 32,
               }
             : undefined
         }
@@ -238,36 +273,52 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             {movieDetails!.title}
           </ThemedText>
           <View style={{ flexDirection: "row" }}>
-            <Text style={reusableStyles.date}>
-              {movieDetails!.release_dates.results.find(
-                (result) => result.iso_3166_1 === "US"
-              )?.release_dates
-                ? getReleaseDate(
-                    movieDetails!.release_dates.results.find(
-                      (result) => result.iso_3166_1 === "US"
-                    )?.release_dates
-                  )
+            <Text style={styles.secondarySubhedEmphasized}>
+              {usReleaseDates
+                ? getReleaseDate(usReleaseDates)
                 : "No release date yet"}
             </Text>
             <BlueBullet />
-            <Text style={reusableStyles.date}>{movieDetails!.status}</Text>
+            <Text style={styles.secondarySubhedEmphasized}>
+              {movieDetails!.status}
+            </Text>
           </View>
 
           {(getRuntime(movieDetails!.runtime) ||
             traktDetails?.certification) && (
             <View style={{ flexDirection: "row" }}>
-              <Text style={reusableStyles.date}>
+              <Text style={styles.secondarySubhedEmphasized}>
                 {getRuntime(movieDetails!.runtime)}
               </Text>
               {getRuntime(movieDetails!.runtime) &&
                 traktDetails?.certification && <BlueBullet />}
-              <Text style={reusableStyles.date}>
+              <Text style={styles.secondarySubhedEmphasized}>
                 {traktDetails?.certification}
               </Text>
+              {isPro && (
+                <>
+                  <BlueBullet />
+                  <Text style={styles.secondarySubhedEmphasized}>
+                    ${movieDetails!.revenue.toLocaleString()}
+                  </Text>
+                </>
+              )}
             </View>
           )}
 
-          {movieDetails!.tagline ? (
+          {isPro && ratings!.length > 0 && (
+            <View style={{ marginTop: 16, flexDirection: "row" }}>
+              {ratings?.map((rating) => (
+                <Rating
+                  key={rating.Source}
+                  source={rating.Source}
+                  rating={rating.Value}
+                />
+              ))}
+            </View>
+          )}
+
+          {movieDetails!.tagline && (
             <Text
               style={[
                 iOSUIKit.body,
@@ -280,7 +331,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             >
               {movieDetails!.tagline}
             </Text>
-          ) : null}
+          )}
 
           <ExpandableText text={movieDetails!.overview} />
 
@@ -310,7 +361,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 style={{
                   marginTop: 16,
                   flexDirection: "row",
-                  flexWrap: "nowrap",
                   justifyContent: "space-between",
                 }}
               >
@@ -351,12 +401,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     }}
                     style={{
                       height: calculateWidth(16, 8, 6),
-                      width: calculateWidth(16, 8, 6),
+                      aspectRatio: 1 / 1,
                       borderWidth: 1,
-                      borderColor:
-                        theme === "dark"
-                          ? PlatformColor("systemGray6")
-                          : "#e0e0e0",
+                      borderColor: PlatformColor("separator"),
                       borderRadius: 8,
                     }}
                   />
@@ -497,10 +544,8 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         mediaSelections.images === "posters"
                           ? calculateWidth(16, 8, 2.5)
                           : calculateWidth(16, 8, 1.5),
-                      height:
-                        mediaSelections.images === "posters"
-                          ? calculateWidth(16, 8, 2.5) * 1.5
-                          : calculateWidth(16, 8, 1.5) / 1.78,
+                      aspectRatio:
+                        mediaSelections.images === "posters" ? 2 / 3 : 16 / 9,
                     }}
                   />
                 )}
@@ -557,15 +602,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                       overflow: "hidden",
                     }}
                   >
-                    <FastImage
+                    <Image
                       style={{
                         width: Dimensions.get("screen").width - 32,
-                        height: (Dimensions.get("screen").width - 32) / 1.78,
+                        aspectRatio: 16 / 9,
                         borderWidth: 1,
-                        borderColor:
-                          theme === "dark"
-                            ? PlatformColor("systemGray6")
-                            : "#e0e0e0",
+                        borderColor: PlatformColor("separator"),
                         borderRadius: 8,
                       }}
                       source={{
@@ -610,13 +652,14 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                           navigation.push("Movie", {
                             movieId: item.id,
                             movieTitle: item.title,
+                            poster_path: item.poster_path,
                           })
                         }
                         movie={item}
                         posterPath={item.poster_path}
                         style={{
                           width: calculateWidth(16, 8, 2.5),
-                          height: calculateWidth(16, 8, 2.5) * 1.5,
+                          aspectRatio: 2 / 3,
                         }}
                       />
                     )}
@@ -645,5 +688,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  secondarySubhedEmphasized: {
+    ...iOSUIKit.subheadEmphasizedObject,
+    color: PlatformColor("secondaryLabel"),
+  },
+});
 
 export default MovieScreen;

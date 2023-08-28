@@ -1,10 +1,10 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Image } from "expo-image";
 import { IGDB } from "interfaces/igdb";
 import { Movie } from "interfaces/tmdb";
 import { useRef } from "react";
 import {
   Dimensions,
-  Image,
   PlatformColor,
   Pressable,
   SafeAreaView,
@@ -18,6 +18,8 @@ import { useHypedGames } from "./api/getHypedGames";
 import { useTrendingMovies } from "./api/getTrendingMovies";
 import { PosterSizes } from "../../../interfaces/tmdb/configuration";
 
+import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
+import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { AuthStackParams } from "@/types";
 
 type Props = NativeStackScreenProps<AuthStackParams, "Welcome">;
@@ -51,11 +53,11 @@ function Welcome({ navigation }: Props) {
                 )}`,
         }}
         style={{
-          borderRadius: 8,
-          borderColor: PlatformColor("systemGray6"),
+          borderRadius: 12,
+          borderColor: PlatformColor("separator"),
           borderWidth: 1,
           width,
-          height: width * 1.5,
+          aspectRatio: 2 / 3,
           paddingHorizontal: horizontalMargin,
         }}
       />
@@ -85,7 +87,7 @@ function Welcome({ navigation }: Props) {
             scrollEnabled={false}
             sliderWidth={Dimensions.get("window").width}
             itemWidth={width + horizontalMargin * 2}
-            removeClippedSubviews
+            vertical={false}
             containerCustomStyle={{
               marginVertical: 24,
               flexGrow: 0,
@@ -93,50 +95,18 @@ function Welcome({ navigation }: Props) {
             }}
           />
           <View style={{ marginHorizontal: 24 }}>
-            <Pressable
-              style={{
-                backgroundColor: PlatformColor("systemBlue"),
-                width: "100%",
-                paddingVertical: 16,
-                borderRadius: 8,
-              }}
-              onPress={() => navigation.navigate("Create Account")}
-            >
-              <Text
-                style={{
-                  ...iOSUIKit.bodyEmphasizedWhiteObject,
-                  textAlign: "center",
-                }}
-              >
-                Continue
-              </Text>
-            </Pressable>
-            <View style={{ flexDirection: "row", marginTop: 24 }}>
-              <Text
-                style={{
-                  ...iOSUIKit.bodyObject,
-                  color: PlatformColor("systemGray"),
-                  alignSelf: "center",
-                }}
-              >
-                Already have an account?
-              </Text>
-              <Pressable
-                style={{ marginHorizontal: 8 }}
-                onPress={() =>
-                  navigation.navigate("Sign In", { emailSent: false })
-                }
-              >
-                <Text
-                  style={{
-                    ...iOSUIKit.bodyObject,
-                    color: PlatformColor("systemBlue"),
-                  }}
-                >
-                  Sign In
-                </Text>
-              </Pressable>
-            </View>
+            <LargeFilledButton
+              disabled={false}
+              handlePress={() => navigation.navigate("Create Account")}
+              text="Create Account"
+            />
+            <LargeBorderlessButton
+              style={{ marginTop: 16 }}
+              handlePress={() =>
+                navigation.navigate("Sign In", { emailSent: false })
+              }
+              text="Sign In"
+            />
           </View>
         </>
       )}

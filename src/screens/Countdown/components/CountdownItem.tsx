@@ -1,14 +1,6 @@
-import { reusableStyles } from "@/helpers/styles";
+import { Image } from "expo-image";
 import { IGDB } from "interfaces/igdb";
-
-import {
-  Image,
-  PlatformColor,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -20,6 +12,7 @@ import { iOSUIKit } from "react-native-typography";
 import { RadioButton } from "./RadioButton";
 import { PosterSizes } from "../../../interfaces/tmdb/configuration";
 
+import { reusableStyles } from "@/helpers/styles";
 import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
 
 interface Props {
@@ -88,7 +81,6 @@ function CountdownItem({
       width: 92 / 1.75,
       height: 132 / 1.75,
       borderRadius: 8,
-      resizeMode: "cover",
       marginLeft: 16,
       marginTop: 8,
       marginBottom: 8,
@@ -149,7 +141,11 @@ function CountdownItem({
             <RadioButton isSelected={isSelected} />
           </Animated.View>
           <View style={{ justifyContent: "center" }}>
-            <Image style={styles.image} source={{ uri: imageSrc }} />
+            <Image
+              style={styles.image}
+              source={{ uri: imageSrc }}
+              contentFit="cover"
+            />
           </View>
           <View style={styles.middle}>
             <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{title}</Text>

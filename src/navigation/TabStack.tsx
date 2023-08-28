@@ -75,6 +75,7 @@ export function TabStack() {
           Platform.OS === "ios" ? (
             <BlurView style={StyleSheet.absoluteFill} />
           ) : undefined,
+        tabBarHideOnKeyboard: Platform.OS === "ios" ? undefined : true,
       })}
     >
       {/* Is setting headerShown to false the best method? */}

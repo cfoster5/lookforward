@@ -43,7 +43,11 @@ export const SearchBottomSheet = () => {
 
   // Set initial snapPoint as tabBarHeight instead of "CONTENT_HEIGHT to fix issues with scrolling flatlist"
   const snapPoints = useMemo(
-    () => [tabBarHeight, "50%", "100%"],
+    () => [
+      Platform.OS === "ios" ? tabBarHeight : tabBarHeight + 32,
+      "50%",
+      "100%",
+    ],
     [tabBarHeight]
   );
 

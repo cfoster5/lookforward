@@ -126,12 +126,12 @@ function Settings({ navigation }) {
               text="Write a Review"
               buttonStyle={{ marginTop: 0 }}
             />
-            <SettingNavButton
-              handlePress={() => onboardingModalRef.current?.present()}
-              text="Show Getting Started"
-            />
           </>
         )}
+        <SettingNavButton
+          handlePress={() => onboardingModalRef.current?.present()}
+          text="Show Getting Started"
+        />
         <SettingNavButton
           handlePress={() => navigation.navigate("Account")}
           text="Account"

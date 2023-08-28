@@ -42,6 +42,8 @@ export function RecentPerson({ item }: { item: Recent }) {
               aspectRatio: 1,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: calculateWidth(12, 12, 3.5),
+              borderWidth: 1,
+              borderColor: PlatformColor("separator"),
               marginBottom: 8,
             }}
           />
@@ -52,6 +54,8 @@ export function RecentPerson({ item }: { item: Recent }) {
               aspectRatio: 1,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: calculateWidth(12, 12, 3.5),
+              borderWidth: 1,
+              borderColor: PlatformColor("separator"),
               marginBottom: 8,
               justifyContent: "center",
               alignItems: "center",

@@ -28,7 +28,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
   const { setIsPro } = useStore();
   const [products, setProducts] = useState<PurchasesOffering>();
-  const [selectedProduct, setSelectedProduct] = useState<PurchasesPackage>();
+  // const [selectedProduct, setSelectedProduct] = useState<PurchasesPackage>();
   const [isPurchasing, setIsPurchasing] = useState(false);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
         ) {
           // console.log('offerings.all["pro"]', offerings.all["pro"]);
           setProducts(offerings.all["pro"]);
-          setSelectedProduct(offerings.all["pro"]?.annual!);
+          // setSelectedProduct(offerings.all["pro"]?.annual!);
           // Display packages for sale
         }
       } catch (e) {}
@@ -56,9 +56,9 @@ export const ExplorePro = ({ modalRef }: Props) => {
     // Using Offerings/Packages
     try {
       const { customerInfo } = await Purchases.purchasePackage(
-        selectedProduct!
+        // selectedProduct!
+        products?.lifetime!
       );
-      // await Purchases.purchasePackage(products?.lifetime!);
       if (typeof customerInfo.entitlements.active.pro !== "undefined") {
         // Unlock that great "pro" content
         setIsPro(true);
@@ -130,7 +130,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
           body="See your recent searches for titles and people."
           useAltIcon
         />
-        <SubscriptionOption
+        {/* <SubscriptionOption
           handlePress={() => setSelectedProduct(products?.monthly!)}
           text={`${products?.monthly?.product.priceString} Monthly`}
           isSelected={
@@ -145,7 +145,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
             products?.annual?.identifier === selectedProduct?.identifier
           }
           style={{ marginTop: 8, marginBottom: 16 }}
-        />
+        /> */}
         <LargeFilledButton
           disabled={false}
           style={{ marginVertical: 16 }}
@@ -164,8 +164,8 @@ export const ExplorePro = ({ modalRef }: Props) => {
                 { color: "white", textAlign: "center" },
               ]}
             >
-              {/* Unlock for {products?.lifetime?.product.priceString} */}
-              Unlock for {selectedProduct?.product.priceString}
+              Unlock for {products?.lifetime?.product.priceString}
+              {/* Unlock for {selectedProduct?.product.priceString} */}
             </Text>
           )}
         </LargeFilledButton>

@@ -26,8 +26,8 @@ export function MediaSelection({
             .toLowerCase()
             .includes(mediaSelections?.videos.toLowerCase()) ||
           option.toLowerCase().includes(creditsSelection?.toLowerCase())
-            ? iOSUIKit.bodyEmphasizedWhite
-            : { ...iOSUIKit.bodyObject, color: PlatformColor("systemGray") },
+            ? [iOSUIKit.bodyEmphasized, { color: PlatformColor("label") }]
+            : [iOSUIKit.body, { color: PlatformColor("secondaryLabel") }],
           {
             marginTop: 16,
           },

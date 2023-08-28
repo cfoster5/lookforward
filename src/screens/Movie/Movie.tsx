@@ -404,7 +404,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                       aspectRatio: 1 / 1,
                       borderWidth: 1,
                       borderColor: PlatformColor("separator"),
-                      borderRadius: 8,
+                      borderRadius: 12,
                     }}
                   />
                 )}
@@ -608,7 +608,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         aspectRatio: 16 / 9,
                         borderWidth: 1,
                         borderColor: PlatformColor("separator"),
-                        borderRadius: 8,
+                        borderRadius: 12,
                       }}
                       source={{
                         uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${

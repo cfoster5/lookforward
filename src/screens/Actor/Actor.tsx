@@ -101,8 +101,8 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
           uri: `https://image.tmdb.org/t/p/${PosterSizes.W300}${item.file_path}`,
         }}
         style={{
-          borderRadius: 8,
-          borderColor: PlatformColor("systemGray6"),
+          borderRadius: 12,
+          borderColor: PlatformColor("separator"),
           borderWidth: 1,
           width,
           height: width * 1.5,

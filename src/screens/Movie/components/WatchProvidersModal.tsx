@@ -1,5 +1,4 @@
 import { Image } from "expo-image";
-import { WatchLocale } from "interfaces/tmdb";
 import { useContext } from "react";
 import {
   FlatList,
@@ -11,6 +10,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
+import { WatchLocale } from "tmdb-ts";
 
 import { LogoSizes } from "../../../interfaces/tmdb/configuration";
 import { horizontalListProps } from "../constants/horizontalListProps";
@@ -98,9 +98,9 @@ function WatchProvidersModal({
                           borderWidth: 1,
                           borderColor:
                             theme === "dark"
-                              ? PlatformColor("systemGray6")
+                              ? PlatformColor("separator")
                               : "#e0e0e0",
-                          borderRadius: 8,
+                          borderRadius: 12,
                         }}
                       />
                       <Text

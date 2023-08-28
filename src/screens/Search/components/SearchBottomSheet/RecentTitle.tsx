@@ -55,7 +55,7 @@ export function RecentTitle({ item }: { item: Recent }) {
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: PlatformColor("separator"),
+              borderColor: Colors.separator,
               marginBottom: 8,
             }}
           />
@@ -67,7 +67,7 @@ export function RecentTitle({ item }: { item: Recent }) {
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: PlatformColor("separator"),
+              borderColor: Colors.separator,
               marginBottom: 8,
               justifyContent: "center",
               alignItems: "center",

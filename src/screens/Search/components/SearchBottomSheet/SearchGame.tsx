@@ -55,7 +55,7 @@ export function SearchGame({
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: PlatformColor("separator"),
+              borderColor: Colors.separator,
             }}
           />
         ) : (
@@ -66,7 +66,7 @@ export function SearchGame({
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: PlatformColor("separator"),
+              borderColor: Colors.separator,
               justifyContent: "center",
               alignItems: "center",
             }}

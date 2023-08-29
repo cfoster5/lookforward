@@ -2,7 +2,6 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
-import { Cast, Crew } from "interfaces/tmdb";
 import { useContext } from "react";
 import {
   PlatformColor,
@@ -13,8 +12,8 @@ import {
   View,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import { Cast, Crew } from "tmdb-ts";
 
-import { TextPoster } from "@/components/Posters/TextPoster";
 import TabStackContext from "@/contexts/TabStackContext";
 import {
   CountdownStackParamList,
@@ -42,10 +41,10 @@ function Person({ navigation, person }: Props) {
   const styles = StyleSheet.create({
     poster: {
       width: windowWidth / 3.5 - 16,
-      height: (windowWidth / 3.5 - 16) * 1.5,
-      borderRadius: 8,
+      aspectRatio: 2 / 3,
+      borderRadius: 12,
       borderWidth: 1,
-      borderColor: theme === "dark" ? PlatformColor("systemGray6") : "#e0e0e0",
+      borderColor: theme === "dark" ? PlatformColor("separator") : "#e0e0e0",
     },
   });
 
@@ -73,13 +72,32 @@ function Person({ navigation, person }: Props) {
           }}
         />
       ) : (
-        <TextPoster
-          text={person.name
-            .split(" ")
-            .map((i: string) => i.charAt(0))
-            .join("")}
-          style={styles.poster}
-        />
+        <View
+          style={[
+            styles.poster,
+            { alignItems: "center", justifyContent: "center" },
+          ]}
+        >
+          <Text
+            style={
+              theme === "dark"
+                ? {
+                    ...iOSUIKit.title3EmphasizedWhiteObject,
+                    textAlign: "center",
+                  }
+                : {
+                    ...iOSUIKit.title3EmphasizedObject,
+                    color: PlatformColor("systemGray"),
+                    textAlign: "center",
+                  }
+            }
+          >
+            {person.name
+              .split(" ")
+              .map((i: string) => i.charAt(0))
+              .join("")}
+          </Text>
+        </View>
       )}
       <View style={{ marginLeft: 16, flex: 1 }}>
         <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>

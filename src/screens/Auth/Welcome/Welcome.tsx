@@ -1,18 +1,17 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { IGDB } from "interfaces/igdb";
-import { Movie } from "interfaces/tmdb";
 import { useRef } from "react";
 import {
   Dimensions,
   PlatformColor,
-  Pressable,
   SafeAreaView,
   Text,
   View,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
+import { TrendingResults } from "tmdb-ts";
 
 import { useHypedGames } from "./api/getHypedGames";
 import { useTrendingMovies } from "./api/getTrendingMovies";
@@ -22,6 +21,38 @@ import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { AuthStackParams } from "@/types";
 
+const width = 200;
+const horizontalMargin = 4;
+
+type CarouselItemProps = {
+  item: TrendingResults<"movie">["results"][number] | IGDB.Game.Game;
+  index: number;
+};
+
+const CarouselItem = ({ item, index }: CarouselItemProps) => (
+  <Image
+    source={{
+      uri:
+        index % 2
+          ? `https://image.tmdb.org/t/p/${PosterSizes.W500}${
+              (item as TrendingResults<"movie">["results"][number]).poster_path
+            }`
+          : `https:${(item as IGDB.Game.Game)?.cover?.url.replace(
+              "thumb",
+              "cover_big_2x"
+            )}`,
+    }}
+    style={{
+      borderRadius: 12,
+      borderColor: PlatformColor("separator"),
+      borderWidth: 1,
+      width,
+      aspectRatio: 2 / 3,
+      paddingHorizontal: horizontalMargin,
+    }}
+  />
+);
+
 type Props = NativeStackScreenProps<AuthStackParams, "Welcome">;
 
 function Welcome({ navigation }: Props) {
@@ -29,40 +60,6 @@ function Welcome({ navigation }: Props) {
   // const hypedGames: IGDB.Game.Game[] = useGetHypedGames();
   const { data: hypedGames } = useHypedGames();
   const ref = useRef<Carousel<any>>(null);
-  const width = 200;
-  const horizontalMargin = 4;
-
-  function RenderItem({
-    item,
-    index,
-  }: {
-    item: Movie | IGDB.Game.Game;
-    index: number;
-  }) {
-    return (
-      <Image
-        source={{
-          uri:
-            index % 2
-              ? `https://image.tmdb.org/t/p/${PosterSizes.W500}${
-                  (item as Movie).poster_path
-                }`
-              : `https:${(item as IGDB.Game.Game)?.cover?.url.replace(
-                  "thumb",
-                  "cover_big_2x"
-                )}`,
-        }}
-        style={{
-          borderRadius: 12,
-          borderColor: PlatformColor("separator"),
-          borderWidth: 1,
-          width,
-          aspectRatio: 2 / 3,
-          paddingHorizontal: horizontalMargin,
-        }}
-      />
-    );
-  }
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
@@ -77,10 +74,10 @@ function Welcome({ navigation }: Props) {
             ref={ref}
             // Merge two arrays so that the values alternate
             data={trendingMovies
-              .slice(0, 10)
+              ?.slice(0, 10)
               .map((movie, i) => [movie, hypedGames[i]])
               .reduce((a, b) => a.concat(b))}
-            renderItem={RenderItem}
+            renderItem={CarouselItem}
             layout="default"
             loop
             autoplay

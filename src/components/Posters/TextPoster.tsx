@@ -10,12 +10,13 @@ export function TextPoster({ text, style }: { text: string; style?: any }) {
   return (
     <View
       style={{
-        ...reusableStyles.itemRight,
+        ...reusableStyles.gamePoster,
         // borderWidth: 1,
         borderColor: PlatformColor("separator"),
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
+        aspectRatio: 3 / 4,
         ...style,
       }}
     >

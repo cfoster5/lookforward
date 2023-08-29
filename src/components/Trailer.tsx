@@ -1,16 +1,13 @@
 import { Image } from "expo-image";
-import { useContext } from "react";
 import { Linking, PlatformColor, Pressable, Text } from "react-native";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
+import { Video } from "tmdb-ts";
 
-import TabStackContext from "../contexts/TabStackContext";
 import { calculateWidth } from "../helpers/helpers";
-import { Video } from "../interfaces/tmdb";
 
 import { Video as GameVideo } from "@/types";
 
 function Trailer({ video }: { video: Video | GameVideo }) {
-  const { theme } = useContext(TabStackContext);
   return (
     <Pressable
       onPress={() =>
@@ -25,11 +22,9 @@ function Trailer({ video }: { video: Video | GameVideo }) {
       <Image
         style={{
           aspectRatio: 16 / 9,
-          resizeMode: "cover",
-          borderRadius: 8,
+          borderRadius: 12,
           borderWidth: 1,
-          borderColor:
-            theme === "dark" ? PlatformColor("systemGray6") : "#e0e0e0",
+          borderColor: PlatformColor("separator"),
         }}
         source={{
           uri: (video as Video).key
@@ -38,13 +33,16 @@ function Trailer({ video }: { video: Video | GameVideo }) {
                 (video as GameVideo).video_id
               }/mqdefault.jpg`,
         }}
+        contentFit="cover"
       />
       <Text
-        style={{
-          ...iOSUIKit.subheadEmphasizedObject,
-          color: PlatformColor("systemGray"),
-          marginTop: 8,
-        }}
+        style={[
+          iOSUIKit.subheadEmphasized,
+          {
+            color: PlatformColor("secondaryLabel"),
+            marginTop: 8,
+          },
+        ]}
       >
         {video.name}
       </Text>

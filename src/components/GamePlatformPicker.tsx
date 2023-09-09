@@ -1,5 +1,4 @@
 import firestore from "@react-native-firebase/firestore";
-
 import {
   FlatList,
   PlatformColor,
@@ -38,7 +37,11 @@ const RenderItem = ({ handlePress, releaseDate }: RenderItemProps) => (
     {/* <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}> */}
     <Text style={iOSUIKit.bodyWhite}>{releaseDate.platform.name}</Text>
     <Text style={reusableStyles.date}>
-      {timestampToUTC(releaseDate.date).toFormat("MM/dd/yyyy")}
+      {/* Crashing here
+      fromSeconds requires a numerical input */}
+      {releaseDate.date
+        ? timestampToUTC(releaseDate.date).toFormat("MM/dd/yyyy")
+        : releaseDate.human}
     </Text>
   </Pressable>
 );

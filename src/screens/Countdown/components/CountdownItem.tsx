@@ -43,9 +43,13 @@ function CountdownItem({
         return "No release date yet";
       }
     } else {
-      return timestampToUTC(
-        (item as IGDB.ReleaseDate.ReleaseDate).date
-      ).toFormat("MM/dd/yyyy");
+      if (item.date) {
+        return timestampToUTC(
+          (item as IGDB.ReleaseDate.ReleaseDate).date
+        ).toFormat("MM/dd/yyyy");
+      } else {
+        return item.human;
+      }
     }
   }
 
@@ -58,10 +62,14 @@ function CountdownItem({
         return "∞";
       }
     } else {
-      const diff = timestampToUTC(
-        (item as IGDB.ReleaseDate.ReleaseDate).date
-      ).diff(now);
-      return Math.ceil(diff.as("days"));
+      if ((item as IGDB.ReleaseDate.ReleaseDate).date) {
+        const diff = timestampToUTC(
+          (item as IGDB.ReleaseDate.ReleaseDate).date
+        ).diff(now);
+        return Math.ceil(diff.as("days"));
+      } else {
+        return "∞";
+      }
     }
   }
 

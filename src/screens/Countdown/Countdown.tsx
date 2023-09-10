@@ -7,11 +7,18 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps, useScrollToTop } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { produce } from "immer";
-import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { Platform, PlatformColor, SectionList, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
+import { useGameCountdowns } from "./api/getGameCountdowns";
 import { useMovieCountdowns } from "./api/getMovieCountdowns";
 import CountdownItem from "./components/CountdownItem";
 import { MyHeaderRight } from "./components/MyHeaderRight";
@@ -36,6 +43,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const movies = useMovieCountdowns(movieSubs);
+  const gameReleases = useGameCountdowns();
 
   const selectedMovies: any[] = movieSubs.filter((sub) => sub.isSelected);
   const selectedGames: any[] = gameSubs.filter((sub) => sub.isSelected);
@@ -114,7 +122,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
       } else {
         const updatedGameSubs = produce(gameSubs, (draft) => {
           const index = draft.findIndex(
-            (sub) => sub.documentID === item.documentID
+            (sub) => sub.documentID === item.id.toString()
           );
           draft[index].isSelected = !draft[index].isSelected || false;
         });
@@ -137,7 +145,11 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
     }
   }
 
-  if (movies.some((movie) => movie.isLoading)) return <LoadingScreen />;
+  if (
+    movies.some((movie) => movie.isLoading) ||
+    gameReleases.some((release) => release.isLoading)
+  )
+    return <LoadingScreen />;
 
   return (
     <SectionList
@@ -167,7 +179,12 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
             .sort((a, b) => a.releaseDate?.localeCompare(b.releaseDate)),
           title: "Movies",
         },
-        { data: gameSubs, title: "Games" },
+        {
+          data: gameReleases
+            .flatMap((release) => release.data)
+            .sort((a, b) => a.date - b.date),
+          title: "Games",
+        },
       ]}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}
@@ -185,7 +202,8 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
             section.title === "Movies"
               ? movieSubs.find((sub) => sub.documentID === item.documentID)
                   .isSelected
-              : item.isSelected
+              : gameSubs.find((sub) => sub.documentID === item.id.toString())
+                  .isSelected
           }
           handlePress={() => handlePress(item, section.title)}
         />

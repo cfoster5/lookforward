@@ -53,15 +53,14 @@ export function GamePlatformPicker() {
   async function addGameRelease(releaseDate: ReleaseDate) {
     // console.log("releaseDate", releaseDate);
     // console.log(game);
-    const { id, name, cover } = game;
+    const { id, name } = game;
     try {
       await firestore()
         .collection("gameReleases")
         .doc(releaseDate.id.toString())
         .set(
           {
-            ...releaseDate,
-            game: { cover, id, name },
+            game: { id, name },
             subscribers: firestore.FieldValue.arrayUnion(user!.uid),
           },
           { merge: true }

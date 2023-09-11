@@ -31,7 +31,6 @@ export function TabStack() {
 
     const gameSubscription = firestore()
       .collection("gameReleases")
-      .orderBy("date")
       .where("subscribers", "array-contains", user!.uid)
       .onSnapshot((documentSnapshot) => {
         const gameSubsData = documentSnapshot.docs.map((doc) => ({

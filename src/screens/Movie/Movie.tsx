@@ -142,14 +142,19 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 >;
 
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
-  const { movieId, movieTitle, poster_path } = route.params;
+  const {
+    movieId,
+    movieTitle,
+    poster_path,
+    detailIndex = 0,
+    creditsSelection = "Cast",
+  } = route.params;
   const { user, movieSubs, isPro } = useStore();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString()
   );
   const { data: { movieDetails, traktDetails, ratings } = {}, isLoading } =
     useMovie(movieId);
-  const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const scrollOffset = useSharedValue(0);
@@ -167,8 +172,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     isVisible: false,
     index: 0,
   });
-
-  const [creditsSelection, setCreditsSelection] = useState("Cast");
 
   const modalRef = useRef<BottomSheetModal>();
 
@@ -417,7 +420,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         <CategoryControl
           buttons={["Cast & Crew", "Media", "Discover"]}
           categoryIndex={detailIndex}
-          handleCategoryChange={(index: number) => setDetailIndex(index)}
+          handleCategoryChange={(index: number) =>
+            navigation.setParams({ detailIndex: index })
+          }
         />
         <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
           {detailIndex === 0 && (
@@ -427,7 +432,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   <MediaSelection
                     key={i}
                     option={element}
-                    action={() => setCreditsSelection(element)}
+                    action={() =>
+                      navigation.setParams({ creditsSelection: element })
+                    }
                     creditsSelection={creditsSelection}
                   />
                 ))}

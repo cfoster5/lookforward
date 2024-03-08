@@ -7,13 +7,7 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { produce } from "immer";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import {
   Dimensions,
   FlatList,
@@ -50,14 +44,13 @@ type ActorScreenNavigationProp = CompositeScreenProps<
 
 function Actor({ route, navigation }: ActorScreenNavigationProp) {
   // const person = useGetPerson(route.params.personId);
-  const { personId, name, profile_path } = route.params;
+  const { personId, name, profile_path, selectedJob = "Actor" } = route.params;
   const { data: person, isLoading } = usePerson(route.params.personId);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const ref = useRef<Carousel<any>>(null);
   const width = 200;
   const horizontalMargin = 4;
-  const [selectedJob, setSelectedJob] = useState("Actor");
 
   useLayoutEffect(() => {
     navigation.setOptions({ title: person?.name });
@@ -230,7 +223,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
             <ButtonMultiState
               text="Actor"
               selectedVal={selectedJob}
-              onPress={() => setSelectedJob("Actor")}
+              onPress={() => navigation.setParams({ selectedJob: "Actor" })}
             />
             {person?.movie_credits.crew
               .filter((v, i, a) => a.findIndex((t) => t.job === v.job) === i)
@@ -248,7 +241,9 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
                   key={i}
                   text={credit.job}
                   selectedVal={selectedJob}
-                  onPress={() => setSelectedJob(credit.job)}
+                  onPress={() =>
+                    navigation.setParams({ selectedJob: credit.job })
+                  }
                 />
               ))}
           </View>

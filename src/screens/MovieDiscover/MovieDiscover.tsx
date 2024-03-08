@@ -7,7 +7,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Movie } from "interfaces/tmdb";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import {
   FlatList,
   Platform,
@@ -47,13 +47,17 @@ function MovieDiscover({
 }: MovieDiscoverScreenNavigationProp) {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
   const { width: windowWidth } = useWindowDimensions();
-  const { genre, company, keyword, provider } = route.params;
+  const {
+    genre,
+    company,
+    keyword,
+    provider,
+    sortMethod = "popularity.desc",
+    selectedMovieWatchProvider = 0,
+  } = route.params;
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [sortMethod, setSortMethod] = useState("popularity.desc");
-  const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
-    useState<number>(0);
   const {
     data: movies,
     fetchNextPage,
@@ -74,9 +78,11 @@ function MovieDiscover({
 
   useEffect(() => {
     if (provider) {
-      setSelectedMovieWatchProvider(provider.provider_id);
+      navigation.setParams({
+        selectedMovieWatchProvider: provider.provider_id,
+      });
     }
-  }, [provider]);
+  }, [navigation, provider]);
 
   const sortOptions = [
     { actual: "popularity.desc", friendly: "Popularity", direction: "Down" },
@@ -189,7 +195,9 @@ function MovieDiscover({
                 <ButtonMultiState
                   text={item.friendly}
                   selectedVal={sortMethod}
-                  onPress={() => setSortMethod(item.actual)}
+                  onPress={() =>
+                    navigation.setParams({ sortMethod: item.actual })
+                  }
                   test={item.actual}
                   children={
                     <Ionicons
@@ -241,7 +249,9 @@ function MovieDiscover({
                   text={item.provider_name}
                   selectedVal={selectedMovieWatchProvider}
                   onPress={() =>
-                    setSelectedMovieWatchProvider(item.provider_id)
+                    navigation.setParams({
+                      selectedMovieWatchProvider: item.provider_id,
+                    })
                   }
                   test={item.provider_id}
                 />

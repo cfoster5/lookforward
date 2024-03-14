@@ -209,7 +209,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: movieTitle,
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           <Item
@@ -224,7 +223,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         </HeaderButtons>
       ),
     });
-  }, [movieTitle, navigation, movieId, user, isSubbed]);
+  }, [isSubbed, movieId, navigation, user]);
 
   useEffect(() => {
     const obj = {

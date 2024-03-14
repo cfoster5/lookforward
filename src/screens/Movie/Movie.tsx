@@ -106,7 +106,10 @@ function ScrollViewWithFlatList({
           <ButtonSingleState
             text={item.name}
             onPress={() =>
-              navigation.push("MovieDiscover", { [navParamKey]: item })
+              navigation.push("MovieDiscover", {
+                screenTitle: item.name,
+                [navParamKey]: item,
+              })
             }
             buttonStyle={{
               backgroundColor: PlatformColor("systemGray5"),
@@ -339,7 +342,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               <ButtonSingleState
                 key={index}
                 text={genre.name}
-                onPress={() => navigation.push("MovieDiscover", { genre })}
+                onPress={() =>
+                  navigation.push("MovieDiscover", {
+                    screenTitle: genre.name,
+                    genre,
+                  })
+                }
                 buttonStyle={{
                   paddingHorizontal: 16,
                   flexDirection: "row",
@@ -591,6 +599,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   <Pressable
                     onPress={() =>
                       navigation.push("Collection", {
+                        name: movieDetails!.belongs_to_collection.name,
                         collectionId: movieDetails!.belongs_to_collection?.id,
                       })
                     }

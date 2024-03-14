@@ -10,6 +10,8 @@ import Countdown from "../screens/Countdown/Countdown";
 import Movie from "../screens/Movie/Movie";
 import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 
+import Game from "@/screens/Game/Game";
+import GameDiscover from "@/screens/GameDiscover/GameDiscover";
 import { CountdownStackParamList, TabNavigationParamList } from "@/types";
 
 type CountdownStackNavProp = CompositeNavigationProp<
@@ -55,11 +57,11 @@ export function CountdownStack({ navigation, route }: Props) {
       <Stack.Screen
         name="MovieDiscover"
         component={MovieDiscover}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
-          headerBlurEffect: "regular",
-          title: "",
-        }}
+          headerBlurEffect: "dark",
+          title: route.params.screenTitle,
+        })}
       />
       <Stack.Screen
         name="GameDiscover"

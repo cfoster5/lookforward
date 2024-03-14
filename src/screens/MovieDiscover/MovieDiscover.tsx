@@ -73,6 +73,7 @@ function MovieDiscover({
   const modalRef = useRef<BottomSheetModal>();
 
   useEffect(() => {
+    // If navigating to screen by selecting a watch provider, set selectedMovieWatchProvider so correct button is highlighted
     if (provider) {
       setSelectedMovieWatchProvider(provider.provider_id);
     }
@@ -121,27 +122,6 @@ function MovieDiscover({
       ),
     });
   }, [navigation]);
-
-  useEffect(() => {
-    let title = "";
-    if (genre) {
-      title = genre.name;
-    } else if (company) {
-      title = company.name;
-    } else if (keyword) {
-      title = keyword.name;
-    } else if (provider) {
-      if (provider.provider_id !== selectedMovieWatchProvider) {
-        title = movieWatchProviders.find(
-          (provider, i) => provider.provider_id === selectedMovieWatchProvider
-        )?.provider_name;
-      } else {
-        title = provider.provider_name;
-      }
-    }
-
-    navigation.setOptions({ title });
-  }, [genre, company, keyword, selectedMovieWatchProvider]);
 
   function ModalListWrapper({
     text,
@@ -240,9 +220,10 @@ function MovieDiscover({
                 <ButtonMultiState
                   text={item.provider_name}
                   selectedVal={selectedMovieWatchProvider}
-                  onPress={() =>
-                    setSelectedMovieWatchProvider(item.provider_id)
-                  }
+                  onPress={() => {
+                    setSelectedMovieWatchProvider(item.provider_id);
+                    navigation.setOptions({ title: item.provider_name });
+                  }}
                   test={item.provider_id}
                 />
               )}

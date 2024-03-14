@@ -6214,10 +6214,17 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
-node-fetch@^2.2.0, node-fetch@^2.6.0, node-fetch@^2.6.1, node-fetch@^2.6.12, node-fetch@^2.6.7:
+node-fetch@^2.2.0, node-fetch@^2.6.0, node-fetch@^2.6.1, node-fetch@^2.6.7:
   version "2.6.12"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.12.tgz#02eb8e22074018e3d5a83016649d04df0e348fba"
   integrity sha512-C/fGU2E8ToujUivIO0H+tpQ6HWo4eEmchoPIoXtxCrVghxdKq+QOHqEZW7tuP3KlV3bC8FRMO5nMCC7Zm1VP6g==
+  dependencies:
+    whatwg-url "^5.0.0"
+
+node-fetch@^2.6.12:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
+  integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==
   dependencies:
     whatwg-url "^5.0.0"
 
@@ -7898,9 +7905,9 @@ through@2:
   integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
 
 tmdb-ts@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/tmdb-ts/-/tmdb-ts-1.4.0.tgz#f20b44e1a7f724da00b57fbd02c40cc1c4a93b04"
-  integrity sha512-fJLJnOtJ1qd7qTBbvl7ooJYD5Xj9DxWzYVLO/2De1ExKokMSTe57huc0jHR4vK6lD9RsAoGNgVHxp289S8aHEg==
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/tmdb-ts/-/tmdb-ts-1.7.1.tgz#af9b97f6c5d1804d9a4abac352ff3a3f626db767"
+  integrity sha512-8W/ye8uKTzhcAlHRASCe5SfzRl+DyMHKsTc5p82mtZp4NEiQwKb5ugqK/K6aPVU+kQsErhbwwiCLngQjh4BbHg==
   dependencies:
     cross-fetch "^3.1.4"
 

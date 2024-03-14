@@ -69,11 +69,11 @@ export function FindStack({ navigation, route }: FindStackParamList) {
       <Stack.Screen
         name="Collection"
         component={Collection}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.name,
+        })}
       />
     </Stack.Navigator>
   );

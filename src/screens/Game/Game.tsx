@@ -161,7 +161,12 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
             <ButtonSingleState
               key={i}
               text={genre.name}
-              onPress={() => navigation.push("GameDiscover", { genre })}
+              onPress={() =>
+                navigation.push("GameDiscover", {
+                  genre,
+                  screenTitle: genre.name,
+                })
+              }
               buttonStyle={{
                 backgroundColor: PlatformColor("systemGray5"),
                 borderColor: PlatformColor("systemGray5"),

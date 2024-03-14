@@ -51,11 +51,11 @@ export function FindStack({ navigation, route }: FindStackParamList) {
       <Stack.Screen
         name="GameDiscover"
         component={GameDiscover}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.screenTitle,
+        })}
       />
       <Stack.Screen
         name="Actor"

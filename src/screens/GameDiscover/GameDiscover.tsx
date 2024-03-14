@@ -5,7 +5,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useLayoutEffect, useRef } from "react";
+import { useRef } from "react";
 import { FlatList, Platform, Pressable } from "react-native";
 
 import { useDiscoverGames } from "./api/getDiscoverGames";
@@ -30,18 +30,6 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const { data: games, isLoading } = useDiscoverGames({ genreId: genre.id });
-
-  useLayoutEffect(() => {
-    let title = "";
-    if (genre) {
-      title = genre.name;
-    } else if (company) {
-      title = company.name;
-    } else if (keyword) {
-      title = keyword.name;
-    }
-    navigation.setOptions({ title });
-  }, [route.params]);
 
   return !isLoading ? (
     <FlatList

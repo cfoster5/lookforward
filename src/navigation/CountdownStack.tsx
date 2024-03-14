@@ -1,7 +1,4 @@
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Platform } from "react-native";
 
 import Actor from "../screens/Actor/Actor";
@@ -12,20 +9,10 @@ import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 
 import Game from "@/screens/Game/Game";
 import GameDiscover from "@/screens/GameDiscover/GameDiscover";
-import { CountdownStackParamList, TabNavigationParamList } from "@/types";
+import { CountdownStackParamList } from "@/types";
 
-type CountdownStackNavProp = CompositeNavigationProp<
-  StackNavigationProp<CountdownStackParamList, "Countdown">,
-  BottomTabNavigationProp<TabNavigationParamList>
->;
-
-interface Props {
-  navigation: CountdownStackNavProp;
-  route: RouteProp<TabNavigationParamList, "CountdownTab">;
-}
-
-const Stack = createNativeStackNavigator();
-export function CountdownStack({ navigation, route }: Props) {
+const Stack = createNativeStackNavigator<CountdownStackParamList>();
+export function CountdownStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen

@@ -9,11 +9,10 @@ import Movie from "../screens/Movie/Movie";
 import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 import Search from "../screens/Search/Search";
 
-import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { FindStackParamList } from "@/types";
 
-const Stack = createNativeStackNavigator();
-export function FindStack({ navigation, route }: FindStackParamList) {
+const Stack = createNativeStackNavigator<FindStackParamList>();
+export function FindStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen

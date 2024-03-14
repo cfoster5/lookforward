@@ -89,7 +89,6 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: game.name,
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           <Item

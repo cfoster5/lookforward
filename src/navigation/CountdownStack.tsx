@@ -71,6 +71,15 @@ export function CountdownStack({ navigation, route }: Props) {
         }}
       />
       <Stack.Screen
+        name="Actor"
+        component={Actor}
+        options={({ route }) => ({
+          headerTransparent: Platform.OS === "ios",
+          headerBlurEffect: "dark",
+          title: route.params.name,
+        })}
+      />
+      <Stack.Screen
         name="Collection"
         component={Collection}
         options={{

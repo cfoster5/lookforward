@@ -7,13 +7,7 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { produce } from "immer";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -58,10 +52,6 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
   const width = 200;
   const horizontalMargin = 4;
   const [selectedJob, setSelectedJob] = useState("Actor");
-
-  useLayoutEffect(() => {
-    navigation.setOptions({ title: person?.name });
-  }, [navigation, person]);
 
   const [storedPeople, setStoredPeople] = useMMKVString("recent.people");
 

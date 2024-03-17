@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@dev-plugins/react-navigation": "^0.0.5",
     "@dev-plugins/react-query": "^0.0.5",
     "@expo/vector-icons": "^14.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",

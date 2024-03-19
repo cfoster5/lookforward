@@ -41,6 +41,7 @@ export default {
     ],
     experiments: {
       tsconfigPaths: true,
+      typedRoutes: true,
     },
     extra: {
       eas: {

@@ -6,7 +6,7 @@ export default function Page() {
     <View style={styles.container}>
       <View style={styles.main}>
         <Text style={styles.title}>Countdown Screen</Text>
-        <Link href="./[movie]">Go to Movie</Link>
+        <Link href="./Godzilla">Go to Movie</Link>
       </View>
     </View>
   );

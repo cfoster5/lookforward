@@ -1,3 +1,4 @@
+import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { createContext, useEffect, useState } from "react";
@@ -22,6 +23,7 @@ export const AuthProviderContext = createContext<{
 export function AppProvider({ children }: AppProviderProps) {
   // const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
   const { user, setUser } = useStore();
+  useReactQueryDevTools(queryClient);
 
   // useEffect(() => {
   //   const unsubscribe = auth().onAuthStateChanged((user) => setUser(user));

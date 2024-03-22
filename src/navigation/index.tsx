@@ -1,7 +1,9 @@
+import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
 import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  useNavigationContainerRef,
 } from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
@@ -21,9 +23,12 @@ export default function Navigation({
 }: {
   colorScheme: ColorSchemeName;
 }) {
+  const navigationRef = useNavigationContainerRef();
+  useReactNavigationDevTools(navigationRef);
   const { onboardingModalRef, proModalRef } = useStore();
   return (
     <NavigationContainer
+      ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
     >
       <OnboardingModal modalRef={onboardingModalRef} />

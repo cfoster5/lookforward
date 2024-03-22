@@ -6,8 +6,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
-import { produce } from "immer";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -32,6 +31,7 @@ import { dateToLocaleString } from "@/helpers/formatting";
 import { calculateWidth } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
 import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
+import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { FindStackParams, BottomTabParams, Recent } from "@/types";
 import { timestamp } from "@/utils/dates";
 
@@ -57,29 +57,17 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
   const [storedPeople, setStoredPeople] = useMMKVString("recent.people");
   const composeRecentPeople = useComposeRecentItems(storedPeople);
 
-  useEffect(() => {
-    const recentPerson: Recent = {
-      id: personId,
-      name,
-      img_path: profile_path,
-      last_viewed: timestamp,
-    };
+  const recentPerson: Recent = {
+    id: personId,
+    name,
+    img_path: profile_path,
+    last_viewed: timestamp,
+  };
 
-    const updatedRecentMovies = produce(
-      composeRecentPeople(),
-      (draft: Recent[]) => {
-        console.log("draft", draft);
-        const index = draft.findIndex((person) => person.id === personId);
-        if (index === -1) draft.unshift(recentPerson);
-        else {
-          draft.splice(index, 1);
-          draft.unshift(recentPerson);
-        }
-      }
-    );
-
-    setStoredPeople(JSON.stringify(updatedRecentMovies));
-  }, [composeRecentPeople, name, personId, profile_path, setStoredPeople]);
+  useUpdateRecentItems(composeRecentPeople, recentPerson, setStoredPeople, [
+    personId,
+    profile_path,
+  ]);
 
   function RenderItem({ item, index }: { item: any; index: number }) {
     return (

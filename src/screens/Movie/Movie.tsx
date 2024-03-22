@@ -8,7 +8,6 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
-import { produce } from "immer";
 import { DateTime } from "luxon";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
@@ -64,6 +63,7 @@ import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { getRuntime } from "@/helpers/formatting";
 import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
+import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams, Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
@@ -177,29 +177,19 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     (result) => result.iso_3166_1 === "US"
   )?.release_dates;
 
-  useEffect(() => {
-    const recentMovie: Recent = {
-      id: movieId,
-      name: movieTitle,
-      img_path: poster_path,
-      last_viewed: timestamp,
-      media_type: "movie",
-    };
+  const recentMovie: Recent = {
+    id: movieId,
+    name: movieTitle,
+    img_path: poster_path,
+    last_viewed: timestamp,
+    media_type: "movie",
+  };
 
-    const updatedRecentMovies = produce(
-      composeRecentMovies(),
-      (draft: Recent[]) => {
-        const index = draft.findIndex((movie) => movie.id === movieId);
-        if (index === -1) draft.unshift(recentMovie);
-        else {
-          draft.splice(index, 1);
-          draft.unshift(recentMovie);
-        }
-      }
-    );
-
-    setStoredMovies(JSON.stringify(updatedRecentMovies));
-  }, [composeRecentMovies, movieId, movieTitle, poster_path, setStoredMovies]);
+  useUpdateRecentItems(composeRecentMovies, recentMovie, setStoredMovies, [
+    movieId,
+    movieTitle,
+    poster_path,
+  ]);
 
   useLayoutEffect(() => {
     navigation.setOptions({

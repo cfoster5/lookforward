@@ -15,7 +15,8 @@ export const useUpdateRecentItems = (
       (draft: Recent[]) => {
         const index = draft.findIndex((item) => item.id === newItem.id);
         if (index === -1) draft.unshift(newItem);
-        else {
+        else if (index !== 0) {
+          // No action if item is already at beginning
           draft.splice(index, 1);
           draft.unshift(newItem);
         }

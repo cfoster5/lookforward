@@ -7,7 +7,7 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { produce } from "immer";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -31,6 +31,7 @@ import { Text as ThemedText } from "@/components/Themed";
 import { dateToLocaleString } from "@/helpers/formatting";
 import { calculateWidth } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
+import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { FindStackParams, BottomTabParams, Recent } from "@/types";
 import { timestamp } from "@/utils/dates";
 
@@ -54,11 +55,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
   const [selectedJob, setSelectedJob] = useState("Actor");
 
   const [storedPeople, setStoredPeople] = useMMKVString("recent.people");
-
-  const composeRecentPeople = useCallback(
-    () => (storedPeople ? (JSON.parse(storedPeople) as Recent[]) : []),
-    [storedPeople]
-  );
+  const composeRecentPeople = useComposeRecentItems(storedPeople);
 
   useEffect(() => {
     const recentPerson: Recent = {

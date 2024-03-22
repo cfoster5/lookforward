@@ -8,13 +8,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { produce } from "immer";
 import { FirestoreGame } from "interfaces/firebase";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-  Fragment,
-} from "react";
+import { useEffect, useLayoutEffect, useState, Fragment } from "react";
 import {
   Platform,
   PlatformColor,
@@ -37,6 +31,7 @@ import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
+import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { horizontalListProps } from "@/screens/Movie/constants/horizontalListProps";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
@@ -57,11 +52,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const headerHeight = useHeaderHeight();
 
   const [storedGames, setStoredGames] = useMMKVString("recent.games");
-
-  const composeRecentGames = useCallback(
-    () => (storedGames ? (JSON.parse(storedGames) as Recent[]) : []),
-    [storedGames]
-  );
+  const composeRecentGames = useComposeRecentItems(storedGames);
 
   useEffect(() => {
     const recentGame: Recent = {

@@ -5,7 +5,7 @@ import BottomSheet, {
 } from "@gorhom/bottom-sheet";
 import analytics from "@react-native-firebase/analytics";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Keyboard,
@@ -33,8 +33,8 @@ import useDebounce from "../../hooks/useDebounce";
 
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { calculateWidth } from "@/helpers/helpers";
+import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { useStore } from "@/stores/store";
-import { Recent } from "@/types";
 
 export const SearchBottomSheet = () => {
   const tabBarHeight = useBottomTabBarHeight();
@@ -55,25 +55,12 @@ export const SearchBottomSheet = () => {
     useGamesSearch(debouncedSearch);
 
   const [storedMovies, setStoredMovies] = useMMKVString("recent.movies");
-
-  const composeRecentMovies = useCallback(
-    () => (storedMovies ? (JSON.parse(storedMovies) as Recent[]) : []),
-    [storedMovies]
-  );
-
   const [storedPeople, setStoredPeople] = useMMKVString("recent.people");
-
-  const composeRecentPeople = useCallback(
-    () => (storedPeople ? (JSON.parse(storedPeople) as Recent[]) : []),
-    [storedPeople]
-  );
-
   const [storedGames, setStoredGames] = useMMKVString("recent.games");
 
-  const composeRecentGames = useCallback(
-    () => (storedGames ? (JSON.parse(storedGames) as Recent[]) : []),
-    [storedGames]
-  );
+  const composeRecentMovies = useComposeRecentItems(storedMovies);
+  const composeRecentPeople = useComposeRecentItems(storedPeople);
+  const composeRecentGames = useComposeRecentItems(storedGames);
 
   const shouldShowTitle = () => {
     if (categoryIndex === 0) {

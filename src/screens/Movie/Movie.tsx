@@ -10,13 +10,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { produce } from "immer";
 import { DateTime } from "luxon";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -69,6 +63,7 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { getRuntime } from "@/helpers/formatting";
+import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams, Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
@@ -176,11 +171,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const modalRef = useRef<BottomSheetModal>();
 
   const [storedMovies, setStoredMovies] = useMMKVString("recent.movies");
-
-  const composeRecentMovies = useCallback(
-    () => (storedMovies ? (JSON.parse(storedMovies) as Recent[]) : []),
-    [storedMovies]
-  );
+  const composeRecentMovies = useComposeRecentItems(storedMovies);
 
   const usReleaseDates = movieDetails?.release_dates.results.find(
     (result) => result.iso_3166_1 === "US"

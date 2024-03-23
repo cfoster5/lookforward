@@ -7,7 +7,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Movie } from "interfaces/tmdb";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import {
   FlatList,
   Platform,
@@ -31,13 +31,13 @@ import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { targetedProviders } from "@/helpers/helpers";
-import { FindStackParams, BottomTabParams } from "@/types";
+import { FindStackParamList, TabNavigationParamList } from "@/types";
 
 type MovieDiscoverScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "MovieDiscover">,
+  NativeStackScreenProps<FindStackParamList, "MovieDiscover">,
   CompositeScreenProps<
-    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
-    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
+    BottomTabScreenProps<TabNavigationParamList, "FindTab">,
+    BottomTabScreenProps<TabNavigationParamList, "CountdownTab">
   >
 >;
 
@@ -53,7 +53,7 @@ function MovieDiscover({
   const headerHeight = useHeaderHeight();
   const [sortMethod, setSortMethod] = useState("popularity.desc");
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
-    useState<number>(0);
+    useState<number>(provider?.provider_id ?? 0);
   const {
     data: movies,
     fetchNextPage,
@@ -63,21 +63,11 @@ function MovieDiscover({
     genreId: genre?.id,
     companyId: company?.id,
     keywordId: keyword?.id,
-    watchProvider:
-      provider?.provider_id !== selectedMovieWatchProvider
-        ? selectedMovieWatchProvider
-        : provider.provider_id,
+    watchProvider: selectedMovieWatchProvider,
     sortMethod,
   });
   const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
   const modalRef = useRef<BottomSheetModal>();
-
-  useEffect(() => {
-    // If navigating to screen by selecting a watch provider, set selectedMovieWatchProvider so correct button is highlighted
-    if (provider) {
-      setSelectedMovieWatchProvider(provider.provider_id);
-    }
-  }, [provider]);
 
   const sortOptions = [
     { actual: "popularity.desc", friendly: "Popularity", direction: "Down" },

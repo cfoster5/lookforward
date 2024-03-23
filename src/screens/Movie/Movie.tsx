@@ -37,6 +37,7 @@ import Person from "./components/Person";
 import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
 import { horizontalListProps } from "./constants/horizontalListProps";
+import { composeRuntime } from "./utils/composeRuntime";
 import {
   calculateWidth,
   removeSub,
@@ -177,6 +178,8 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     (result) => result.iso_3166_1 === "US"
   )?.release_dates;
 
+  const runtime = composeRuntime(movieDetails?.runtime);
+
   const recentMovie: Recent = {
     id: movieId,
     name: movieTitle,
@@ -267,14 +270,10 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             </Text>
           </View>
 
-          {(getRuntime(movieDetails!.runtime) ||
-            traktDetails?.certification) && (
+          {(runtime || traktDetails?.certification) && (
             <View style={{ flexDirection: "row" }}>
-              <Text style={styles.secondarySubhedEmphasized}>
-                {getRuntime(movieDetails!.runtime)}
-              </Text>
-              {getRuntime(movieDetails!.runtime) &&
-                traktDetails?.certification && <BlueBullet />}
+              <Text style={styles.secondarySubhedEmphasized}>{runtime}</Text>
+              {runtime && traktDetails?.certification && <BlueBullet />}
               <Text style={styles.secondarySubhedEmphasized}>
                 {traktDetails?.certification}
               </Text>

@@ -210,19 +210,19 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   }, [isSubbed, movieId, navigation, user]);
 
   useEffect(() => {
-    const obj = {
-      videos:
-        movieDetails?.videos.results.filter(
-          (result) => result.type === "Trailer"
-        ).length === 0
-          ? "Teaser"
-          : "Trailer",
-      images:
-        movieDetails?.images.posters.length === 0 ? "backdrops" : "posters",
-    };
+    if (movieDetails) {
+      const videos = movieDetails.videos.results.some(
+        (result) => result.type === "Trailer"
+      )
+        ? "Trailer"
+        : "Teaser";
 
-    setMediaSelections(obj);
-  }, [movieDetails?.videos.results, movieDetails?.images]);
+      const images =
+        movieDetails.images.posters.length > 0 ? "posters" : "backdrops";
+
+      setMediaSelections({ videos, images });
+    }
+  }, [movieDetails]);
 
   if (isLoading) return <LoadingScreen />;
 
@@ -438,15 +438,15 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
           {detailIndex === 1 && (
             <View>
-              {movieDetails!.videos.results.filter(
+              {movieDetails!.videos.results.some(
                 (result) =>
                   result.type === "Trailer" || result.type === "Teaser"
-              ).length > 0 ? (
+              ) ? (
                 <>
                   <View style={{ flexDirection: "row" }}>
-                    {movieDetails!.videos.results.filter(
+                    {movieDetails!.videos.results.some(
                       (result) => result.type === "Trailer"
-                    ).length > 0 && (
+                    ) && (
                       <MediaSelection
                         option="Trailers"
                         action={() =>
@@ -458,9 +458,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         mediaSelections={mediaSelections}
                       />
                     )}
-                    {movieDetails!.videos.results.filter(
+                    {movieDetails!.videos.results.some(
                       (result) => result.type === "Teaser"
-                    ).length > 0 && (
+                    ) && (
                       <MediaSelection
                         option="Teasers"
                         action={() =>

@@ -20,6 +20,7 @@ import { MovieOption } from "./types";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { now } from "@/utils/dates";
 
 export function MovieLayout({ navigation }) {
   const { width: windowWidth } = useWindowDimensions();

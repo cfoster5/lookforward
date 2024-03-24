@@ -27,13 +27,12 @@ import { ExpandableText } from "@/components/ExpandableText";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
-import { dateToLocaleString } from "@/helpers/formatting";
 import { calculateWidth } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
 import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { FindStackParams, BottomTabParams, Recent } from "@/types";
-import { timestamp } from "@/utils/dates";
+import { dateToFullLocale, timestamp } from "@/utils/dates";
 
 type ActorScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParams, "Actor">,
@@ -191,7 +190,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
           </ThemedText>
           {person?.birthday && (
             <Text style={reusableStyles.date}>
-              {dateToLocaleString(person?.birthday)}
+              {dateToFullLocale(person?.birthday).toUpperCase()}
             </Text>
           )}
           <ExpandableText text={person.biography} />

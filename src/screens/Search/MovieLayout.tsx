@@ -52,12 +52,11 @@ export function MovieLayout({ navigation }) {
 
   function filteredMovies() {
     if (option === "Coming Soon") {
-      return movies?.filter((movie) => {
-        return movie.release_date
-          ? DateTime.fromFormat(movie?.release_date, "yyyy-MM-dd") >=
-              DateTime.now()
-          : null;
-      });
+      return movies?.filter((movie) =>
+        movie.release_date
+          ? DateTime.fromFormat(movie?.release_date, "yyyy-MM-dd") >= now
+          : null
+      );
       // return movies;
     } else {
       return movies;

@@ -31,6 +31,8 @@ import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useMovie } from "./api/getMovie";
+import { useMovieRatings } from "./api/getMovieRatings";
+import { useTraktMovie } from "./api/getTraktMovie";
 import { DiscoverListLabel } from "./components/DiscoverListLabel";
 import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
@@ -62,7 +64,6 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
-import { getRuntime } from "@/helpers/formatting";
 import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { useStore } from "@/stores/store";
@@ -146,8 +147,13 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString()
   );
-  const { data: { movieDetails, traktDetails, ratings } = {}, isLoading } =
-    useMovie(movieId);
+  const { data: movieDetails, isLoading } = useMovie(movieId);
+  const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(
+    movieDetails?.imdb_id
+  );
+  const { data: traktDetails, isLoading: isLoadingTrakt } = useTraktMovie(
+    movieDetails?.imdb_id
+  );
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
@@ -227,7 +233,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     }
   }, [movieDetails]);
 
-  if (isLoading) return <LoadingScreen />;
+  if (isLoading || isLoadingRatings || isLoadingTrakt) return <LoadingScreen />;
 
   return (
     <>

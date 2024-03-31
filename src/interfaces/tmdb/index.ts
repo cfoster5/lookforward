@@ -2,7 +2,6 @@ export * from "./certification";
 export * from "./changes";
 export * from "./credits";
 export * from "./movies";
-export * from "./search";
 export * from "./tv-shows";
 export * from "./watch-providers";
 

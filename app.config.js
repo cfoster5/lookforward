@@ -18,7 +18,7 @@ export default {
       googleServicesFile:
         process.env.GOOGLE_SERVICE_PLIST ?? "./GoogleService-Info.secret.plist",
       bundleIdentifier: "com.lookforward.app",
-      buildNumber: "1",
+      buildNumber: "2",
     },
     android: {
       adaptiveIcon: {

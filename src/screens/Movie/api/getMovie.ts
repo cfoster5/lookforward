@@ -11,10 +11,7 @@ import {
   WatchProviders,
 } from "tmdb-ts";
 
-import { OMDBMovie } from "../types/omdb";
-
-import { TMDB_KEY, OMDB_KEY } from "@/constants/ApiKeys";
-import { useStore } from "@/stores/store";
+import { TMDB_KEY } from "@/constants/ApiKeys";
 
 interface MyInterface extends MovieDetails {
   credits: Credits;
@@ -26,7 +23,7 @@ interface MyInterface extends MovieDetails {
   release_dates: ReleaseDates;
 }
 
-async function getMovie(movieId: number, isPro: boolean) {
+async function getMovie(movieId: number) {
   const response = await fetch(
     `https://api.themoviedb.org/3/movie/${movieId}?api_key=${TMDB_KEY}&append_to_response=credits,videos,keywords,recommendations,images,watch/providers,release_dates&include_image_language=en,null,`
   );
@@ -43,23 +40,12 @@ async function getMovie(movieId: number, isPro: boolean) {
   );
   const traktJson: ExtendedMovie = await traktResponse.json();
 
-  const omdbResponse = isPro
-    ? await fetch(
-        `http://www.omdbapi.com/?apikey=${OMDB_KEY}&i=${tmdbJson.imdb_id}`
-      )
-    : null;
-  const omdbData: OMDBMovie = await omdbResponse?.json();
-  console.log("omdbData", omdbData);
-
   return {
     movieDetails: tmdbJson,
     traktDetails: traktJson,
-    ratings: omdbData?.Ratings ?? [],
-    boxOffice: omdbData?.BoxOffice ?? null,
   };
 }
 
 export function useMovie(movieId: number) {
-  const { isPro } = useStore();
-  return useQuery(["movie", movieId], () => getMovie(movieId, isPro));
+  return useQuery(["movie", movieId], () => getMovie(movieId));
 }

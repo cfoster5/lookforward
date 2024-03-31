@@ -23,7 +23,7 @@ export function AnimatedHeaderImage({
   const styles = StyleSheet.create({
     backdrop: {
       width: windowWidth,
-      height: windowWidth / 1.78,
+      height: windowWidth / (16 / 9),
     },
   });
 

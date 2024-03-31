@@ -18,7 +18,7 @@ export const targetedProviders = [
   "Disney Plus",
   // "Starz",
   "Hulu",
-  "HBO Max",
+  "Max",
   // "Showtime",
   "Google Play Movies",
   "YouTube",

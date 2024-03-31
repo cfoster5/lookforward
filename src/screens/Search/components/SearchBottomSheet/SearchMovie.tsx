@@ -2,12 +2,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
-import { DateTime } from "luxon";
 import { PlatformColor, Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { MovieWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
+import { dateToFullLocale } from "@/utils/dates";
 
 export function SearchMovie({ item }: { item: MovieWithMediaType }) {
   // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
@@ -90,9 +90,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
           style={[iOSUIKit.subhead, { color: PlatformColor("secondaryLabel") }]}
           numberOfLines={2}
         >
-          {DateTime.fromFormat(item.release_date, "yyyy-mm-dd").toLocaleString(
-            DateTime.DATE_FULL
-          )}
+          {dateToFullLocale(item.release_date)}
         </Text>
       </View>
       <Ionicons

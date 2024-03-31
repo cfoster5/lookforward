@@ -1,7 +1,4 @@
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Platform } from "react-native";
 
 import Actor from "../screens/Actor/Actor";
@@ -10,20 +7,12 @@ import Countdown from "../screens/Countdown/Countdown";
 import Movie from "../screens/Movie/Movie";
 import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 
-import { CountdownStackParamList, TabNavigationParamList } from "@/types";
+import Game from "@/screens/Game/Game";
+import GameDiscover from "@/screens/GameDiscover/GameDiscover";
+import { CountdownStackParamList } from "@/types";
 
-type CountdownStackNavProp = CompositeNavigationProp<
-  StackNavigationProp<CountdownStackParamList, "Countdown">,
-  BottomTabNavigationProp<TabNavigationParamList>
->;
-
-interface Props {
-  navigation: CountdownStackNavProp;
-  route: RouteProp<TabNavigationParamList, "CountdownTab">;
-}
-
-const Stack = createNativeStackNavigator();
-export function CountdownStack({ navigation, route }: Props) {
+const Stack = createNativeStackNavigator<CountdownStackParamList>();
+export function CountdownStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -37,38 +26,56 @@ export function CountdownStack({ navigation, route }: Props) {
       <Stack.Screen
         name="Movie"
         component={Movie}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.movieTitle,
+        })}
+      />
+      <Stack.Screen
+        name="Game"
+        component={Game}
+        options={({ route }) => ({
+          headerTransparent: Platform.OS === "ios",
+          headerBlurEffect: "dark",
+          title: route.params.game.name,
+        })}
       />
       <Stack.Screen
         name="MovieDiscover"
         component={MovieDiscover}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
-          headerBlurEffect: "regular",
-          title: "",
-        }}
+          headerBlurEffect: "dark",
+          title: route.params.screenTitle,
+        })}
+      />
+      <Stack.Screen
+        name="GameDiscover"
+        component={GameDiscover}
+        options={({ route }) => ({
+          headerTransparent: Platform.OS === "ios",
+          headerBlurEffect: "dark",
+          title: route.params.screenTitle,
+        })}
       />
       <Stack.Screen
         name="Actor"
         component={Actor}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.name,
+        })}
       />
       <Stack.Screen
         name="Collection"
         component={Collection}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.name,
+        })}
       />
     </Stack.Navigator>
   );

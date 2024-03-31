@@ -1,6 +1,12 @@
+import {
+  BelongsToCollection,
+  Credits,
+  Keywords,
+  MovieDetails,
+  WatchProviders,
+} from "tmdb-ts";
+
 import { Game, ReleaseDate } from "./igdb";
-import { Movie, MovieWatchProvider, TMDB } from "./tmdb";
-import { Trakt } from "./trakt";
 
 export type TabNavigationParamList = {
   FindTab: undefined;
@@ -9,26 +15,46 @@ export type TabNavigationParamList = {
 };
 
 type MovieScreens = {
-  Movie: { movieId: Movie["id"]; movieTitle: Movie["title"] };
+  Movie: { movieId: MovieDetails["id"]; movieTitle: MovieDetails["title"] };
   MovieDiscover: {
-    genre?: TMDB.Genre;
-    company?: TMDB.ProductionCompany;
-    keyword?: TMDB.Movie.Keywords;
-    provider?: MovieWatchProvider;
+    screenTitle: string;
+    genre?: MovieDetails["genres"][number];
+    company?: MovieDetails["production_companies"][number];
+    keyword?: Keywords["keywords"][number];
+    provider?: WatchProviders["results"]["US"][
+      | "buy"
+      | "flatrate"
+      | "rent"][number];
   };
-  Actor: { personId: number };
-  Collection: { collectionId: number };
+  Actor: {
+    name: Credits["cast" | "crew"][number]["name"];
+    personId: Credits["cast" | "crew"][number]["id"];
+  };
+  Collection: {
+    name: BelongsToCollection["name"];
+    collectionId: BelongsToCollection["id"];
+  };
+};
+
+type GameScreens = {
+  Game: { game: Game & { release_dates: ReleaseDate[] } };
+  GameDiscover: {
+    screenTitle: string;
+    genre?: any;
+    company?: any;
+    keyword?: any;
+  };
 };
 
 export type FindStackParamList = {
   Find: undefined;
-  Game: { game: Game & { release_dates: ReleaseDate[] } };
-  GameDiscover: { genre?: any; company?: any; keyword?: any };
-} & MovieScreens;
+} & MovieScreens &
+  GameScreens;
 
 export type CountdownStackParamList = {
   Countdown: undefined;
-} & MovieScreens;
+} & MovieScreens &
+  GameScreens;
 
 export type SettingsStackParamList = {
   Settings: undefined;

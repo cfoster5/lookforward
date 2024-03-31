@@ -8,15 +8,8 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
-import { produce } from "immer";
 import { DateTime } from "luxon";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -44,6 +37,7 @@ import Person from "./components/Person";
 import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
 import { horizontalListProps } from "./constants/horizontalListProps";
+import { composeRuntime } from "./utils/composeRuntime";
 import {
   calculateWidth,
   removeSub,
@@ -69,6 +63,8 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { getRuntime } from "@/helpers/formatting";
+import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
+import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams, Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
@@ -106,7 +102,10 @@ function ScrollViewWithFlatList({
           <ButtonSingleState
             text={item.name}
             onPress={() =>
-              navigation.push("MovieDiscover", { [navParamKey]: item })
+              navigation.push("MovieDiscover", {
+                screenTitle: item.name,
+                [navParamKey]: item,
+              })
             }
             buttonStyle={{
               backgroundColor: PlatformColor("systemGray5"),
@@ -173,43 +172,30 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const modalRef = useRef<BottomSheetModal>();
 
   const [storedMovies, setStoredMovies] = useMMKVString("recent.movies");
-
-  const composeRecentMovies = useCallback(
-    () => (storedMovies ? (JSON.parse(storedMovies) as Recent[]) : []),
-    [storedMovies]
-  );
+  const composeRecentMovies = useComposeRecentItems(storedMovies);
 
   const usReleaseDates = movieDetails?.release_dates.results.find(
     (result) => result.iso_3166_1 === "US"
   )?.release_dates;
 
-  useEffect(() => {
-    const recentMovie: Recent = {
-      id: movieId,
-      name: movieTitle,
-      img_path: poster_path,
-      last_viewed: timestamp,
-      media_type: "movie",
-    };
+  const runtime = composeRuntime(movieDetails?.runtime);
 
-    const updatedRecentMovies = produce(
-      composeRecentMovies(),
-      (draft: Recent[]) => {
-        const index = draft.findIndex((movie) => movie.id === movieId);
-        if (index === -1) draft.unshift(recentMovie);
-        else {
-          draft.splice(index, 1);
-          draft.unshift(recentMovie);
-        }
-      }
-    );
+  const recentMovie: Recent = {
+    id: movieId,
+    name: movieTitle,
+    img_path: poster_path,
+    last_viewed: timestamp,
+    media_type: "movie",
+  };
 
-    setStoredMovies(JSON.stringify(updatedRecentMovies));
-  }, [composeRecentMovies, movieId, movieTitle, poster_path, setStoredMovies]);
+  useUpdateRecentItems(composeRecentMovies, recentMovie, setStoredMovies, [
+    movieId,
+    movieTitle,
+    poster_path,
+  ]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: movieTitle,
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           <Item
@@ -224,22 +210,22 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         </HeaderButtons>
       ),
     });
-  }, [movieTitle, navigation, movieId, user, isSubbed]);
+  }, [isSubbed, movieId, navigation, user]);
 
   useEffect(() => {
-    const obj = {
-      videos:
-        movieDetails?.videos.results.filter(
-          (result) => result.type === "Trailer"
-        ).length === 0
-          ? "Teaser"
-          : "Trailer",
-      images:
-        movieDetails?.images.posters.length === 0 ? "backdrops" : "posters",
-    };
+    if (movieDetails) {
+      const videos = movieDetails.videos.results.some(
+        (result) => result.type === "Trailer"
+      )
+        ? "Trailer"
+        : "Teaser";
 
-    setMediaSelections(obj);
-  }, [movieDetails?.videos.results, movieDetails?.images]);
+      const images =
+        movieDetails.images.posters.length > 0 ? "posters" : "backdrops";
+
+      setMediaSelections({ videos, images });
+    }
+  }, [movieDetails]);
 
   if (isLoading) return <LoadingScreen />;
 
@@ -284,14 +270,10 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             </Text>
           </View>
 
-          {(getRuntime(movieDetails!.runtime) ||
-            traktDetails?.certification) && (
+          {(runtime || traktDetails?.certification) && (
             <View style={{ flexDirection: "row" }}>
-              <Text style={styles.secondarySubhedEmphasized}>
-                {getRuntime(movieDetails!.runtime)}
-              </Text>
-              {getRuntime(movieDetails!.runtime) &&
-                traktDetails?.certification && <BlueBullet />}
+              <Text style={styles.secondarySubhedEmphasized}>{runtime}</Text>
+              {runtime && traktDetails?.certification && <BlueBullet />}
               <Text style={styles.secondarySubhedEmphasized}>
                 {traktDetails?.certification}
               </Text>
@@ -340,7 +322,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               <ButtonSingleState
                 key={index}
                 text={genre.name}
-                onPress={() => navigation.push("MovieDiscover", { genre })}
+                onPress={() =>
+                  navigation.push("MovieDiscover", {
+                    screenTitle: genre.name,
+                    genre,
+                  })
+                }
                 buttonStyle={{
                   paddingHorizontal: 16,
                   flexDirection: "row",
@@ -450,15 +437,15 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
           {detailIndex === 1 && (
             <View>
-              {movieDetails!.videos.results.filter(
+              {movieDetails!.videos.results.some(
                 (result) =>
                   result.type === "Trailer" || result.type === "Teaser"
-              ).length > 0 ? (
+              ) ? (
                 <>
                   <View style={{ flexDirection: "row" }}>
-                    {movieDetails!.videos.results.filter(
+                    {movieDetails!.videos.results.some(
                       (result) => result.type === "Trailer"
-                    ).length > 0 && (
+                    ) && (
                       <MediaSelection
                         option="Trailers"
                         action={() =>
@@ -470,9 +457,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         mediaSelections={mediaSelections}
                       />
                     )}
-                    {movieDetails!.videos.results.filter(
+                    {movieDetails!.videos.results.some(
                       (result) => result.type === "Teaser"
-                    ).length > 0 && (
+                    ) && (
                       <MediaSelection
                         option="Teasers"
                         action={() =>
@@ -592,6 +579,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   <Pressable
                     onPress={() =>
                       navigation.push("Collection", {
+                        name: movieDetails!.belongs_to_collection.name,
                         collectionId: movieDetails!.belongs_to_collection?.id,
                       })
                     }

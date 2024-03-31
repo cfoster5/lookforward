@@ -1,12 +1,6 @@
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
-import ButtonMultiState from "@/components/ButtonMultiState";
-import ButtonSingleState from "@/components/ButtonSingleState";
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
-import { targetedProviders } from "@/helpers/helpers";
-
 import { FlatList, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,6 +8,11 @@ import { iOSUIKit } from "react-native-typography";
 
 import { MovieOption } from "../types";
 
+import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
+import ButtonMultiState from "@/components/ButtonMultiState";
+import ButtonSingleState from "@/components/ButtonSingleState";
+import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { targetedProviders } from "@/helpers/helpers";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
 
 export function MovieSearchModal({
@@ -95,7 +94,10 @@ export function MovieSearchModal({
                   text={item.provider_name}
                   onPress={() => {
                     modalRef.current?.dismiss();
-                    navigation.push("MovieDiscover", { provider: item });
+                    navigation.push("MovieDiscover", {
+                      screenTitle: item.provider_name,
+                      provider: item,
+                    });
                   }}
                 />
               )}

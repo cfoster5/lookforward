@@ -1,15 +1,23 @@
-import { useInfiniteQuery } from "react-query";
-import { TMDB_KEY } from "@/constants/ApiKeys";
 import {
   MoviesPlayingNow,
   PopularMovies,
   UpcomingMovies,
 } from "interfaces/tmdb";
+import { useInfiniteQuery } from "react-query";
+
+import { TMDB_KEY } from "@/constants/ApiKeys";
 
 async function getMovies({ pageParam = 1, queryKey }) {
-  const { filter, sortMethod } = queryKey[1];
+  const [_key, { ...params }] = queryKey;
+  // Remove undefined params or watch_providers when set to 0
+  const filteredParamsArrays = Object.entries(params).filter(
+    (param) => param[1]
+  );
+  const queryString = filteredParamsArrays
+    .map(([key, value]) => `&${key}=${value}`)
+    .join("");
   const response = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}${filter}&region=US&watch_region=US&sort_by=${sortMethod}&page=${pageParam}`
+    `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}${queryString}&region=US&watch_region=US&page=${pageParam}`
   );
   const json = await response.json();
   return {
@@ -31,23 +39,27 @@ export function useDiscoverMovies({
   sortMethod: string;
   watchProvider: number;
 }) {
-  let filter = "";
-  filter += genreId ? `&with_genres=${genreId}` : ``;
-  filter += companyId ? `&with_companies=${companyId}` : ``;
-  filter += keywordId ? `&with_keywords=${keywordId}` : ``;
   if (watchProvider === 119) {
     // Using updated Amazon Prime id
     watchProvider = 9;
   }
-  filter += watchProvider !== 0 ? `&with_watch_providers=${watchProvider}` : ``;
 
   return useInfiniteQuery(
-    ["discoverMovies", { filter: filter, sortMethod: sortMethod }],
+    [
+      "discoverMovies",
+      {
+        with_genres: genreId,
+        with_companies: companyId,
+        with_keywords: keywordId,
+        with_watch_providers: watchProvider,
+        sort_by: sortMethod,
+      },
+    ],
     getMovies,
     {
       getNextPageParam: (lastPage) => lastPage.nextPage,
       select: (movieData) => movieData.pages.flatMap((page) => page.results),
-      keepPreviousData: true,
+      // keepPreviousData: true,
     }
   );
 }

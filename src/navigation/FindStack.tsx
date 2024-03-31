@@ -9,11 +9,10 @@ import Movie from "../screens/Movie/Movie";
 import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 import Search from "../screens/Search/Search";
 
-import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { FindStackParamList } from "@/types";
 
-const Stack = createNativeStackNavigator();
-export function FindStack({ navigation, route }: FindStackParamList) {
+const Stack = createNativeStackNavigator<FindStackParamList>();
+export function FindStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -24,56 +23,56 @@ export function FindStack({ navigation, route }: FindStackParamList) {
       <Stack.Screen
         name="Movie"
         component={Movie}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.movieTitle,
+        })}
       />
       <Stack.Screen
         name="Game"
         component={Game}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.game.name,
+        })}
       />
       <Stack.Screen
         name="MovieDiscover"
         component={MovieDiscover}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.screenTitle,
+        })}
       />
       <Stack.Screen
         name="GameDiscover"
         component={GameDiscover}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.screenTitle,
+        })}
       />
       <Stack.Screen
         name="Actor"
         component={Actor}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.name,
+        })}
       />
       <Stack.Screen
         name="Collection"
         component={Collection}
-        options={{
+        options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: "",
-        }}
+          title: route.params.name,
+        })}
       />
     </Stack.Navigator>
   );

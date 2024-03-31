@@ -6,14 +6,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
-import { produce } from "immer";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -34,11 +27,12 @@ import { ExpandableText } from "@/components/ExpandableText";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
-import { dateToLocaleString } from "@/helpers/formatting";
 import { calculateWidth } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
+import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
+import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { FindStackParams, BottomTabParams, Recent } from "@/types";
-import { timestamp } from "@/utils/dates";
+import { dateToFullLocale, timestamp } from "@/utils/dates";
 
 type ActorScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParams, "Actor">,
@@ -59,40 +53,20 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
   const horizontalMargin = 4;
   const [selectedJob, setSelectedJob] = useState("Actor");
 
-  useLayoutEffect(() => {
-    navigation.setOptions({ title: person?.name });
-  }, [navigation, person]);
-
   const [storedPeople, setStoredPeople] = useMMKVString("recent.people");
+  const composeRecentPeople = useComposeRecentItems(storedPeople);
 
-  const composeRecentPeople = useCallback(
-    () => (storedPeople ? (JSON.parse(storedPeople) as Recent[]) : []),
-    [storedPeople]
-  );
+  const recentPerson: Recent = {
+    id: personId,
+    name,
+    img_path: profile_path,
+    last_viewed: timestamp,
+  };
 
-  useEffect(() => {
-    const recentPerson: Recent = {
-      id: personId,
-      name,
-      img_path: profile_path,
-      last_viewed: timestamp,
-    };
-
-    const updatedRecentMovies = produce(
-      composeRecentPeople(),
-      (draft: Recent[]) => {
-        console.log("draft", draft);
-        const index = draft.findIndex((person) => person.id === personId);
-        if (index === -1) draft.unshift(recentPerson);
-        else {
-          draft.splice(index, 1);
-          draft.unshift(recentPerson);
-        }
-      }
-    );
-
-    setStoredPeople(JSON.stringify(updatedRecentMovies));
-  }, [composeRecentPeople, name, personId, profile_path, setStoredPeople]);
+  useUpdateRecentItems(composeRecentPeople, recentPerson, setStoredPeople, [
+    personId,
+    profile_path,
+  ]);
 
   function RenderItem({ item, index }: { item: any; index: number }) {
     return (
@@ -216,7 +190,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
           </ThemedText>
           {person?.birthday && (
             <Text style={reusableStyles.date}>
-              {dateToLocaleString(person?.birthday)}
+              {dateToFullLocale(person?.birthday).toUpperCase()}
             </Text>
           )}
           <ExpandableText text={person.biography} />

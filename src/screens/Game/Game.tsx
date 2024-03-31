@@ -6,15 +6,8 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
-import { produce } from "immer";
 import { FirestoreGame } from "interfaces/firebase";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useState,
-  Fragment,
-} from "react";
+import { useEffect, useLayoutEffect, useState, Fragment } from "react";
 import {
   Platform,
   PlatformColor,
@@ -37,6 +30,8 @@ import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
+import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
+import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { horizontalListProps } from "@/screens/Movie/constants/horizontalListProps";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
@@ -57,39 +52,20 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const headerHeight = useHeaderHeight();
 
   const [storedGames, setStoredGames] = useMMKVString("recent.games");
+  const composeRecentGames = useComposeRecentItems(storedGames);
 
-  const composeRecentGames = useCallback(
-    () => (storedGames ? (JSON.parse(storedGames) as Recent[]) : []),
-    [storedGames]
-  );
+  const recentGame: Recent = {
+    id: game.id,
+    name: game.name,
+    img_path: game.cover?.url ?? "",
+    last_viewed: timestamp,
+    media_type: "game",
+  };
 
-  useEffect(() => {
-    const recentGame: Recent = {
-      id: game.id,
-      name: game.name,
-      img_path: game.cover?.url ?? "",
-      last_viewed: timestamp,
-      media_type: "game",
-    };
-
-    const updatedRecentGames = produce(
-      composeRecentGames(),
-      (draft: Recent[]) => {
-        const index = draft.findIndex((recent) => recent.id === game.id);
-        if (index === -1) draft.unshift(recentGame);
-        else {
-          draft.splice(index, 1);
-          draft.unshift(recentGame);
-        }
-      }
-    );
-
-    setStoredGames(JSON.stringify(updatedRecentGames));
-  }, [composeRecentGames, game, setStoredGames]);
+  useUpdateRecentItems(composeRecentGames, recentGame, setStoredGames, [game]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: game.name,
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           <Item
@@ -162,7 +138,12 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
             <ButtonSingleState
               key={i}
               text={genre.name}
-              onPress={() => navigation.push("GameDiscover", { genre })}
+              onPress={() =>
+                navigation.push("GameDiscover", {
+                  genre,
+                  screenTitle: genre.name,
+                })
+              }
               buttonStyle={{
                 backgroundColor: PlatformColor("systemGray5"),
                 borderColor: PlatformColor("systemGray5"),

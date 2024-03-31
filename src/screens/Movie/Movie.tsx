@@ -32,6 +32,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useMovie } from "./api/getMovie";
 import { useMovieRatings } from "./api/getMovieRatings";
+import { useTraktMovie } from "./api/getTraktMovie";
 import { DiscoverListLabel } from "./components/DiscoverListLabel";
 import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
@@ -146,9 +147,11 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString()
   );
-  const { data: { movieDetails, traktDetails } = {}, isLoading } =
-    useMovie(movieId);
+  const { data: movieDetails, isLoading } = useMovie(movieId);
   const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(
+    movieDetails?.imdb_id
+  );
+  const { data: traktDetails, isLoading: isLoadingTrakt } = useTraktMovie(
     movieDetails?.imdb_id
   );
   const [detailIndex, setDetailIndex] = useState(0);
@@ -230,7 +233,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     }
   }, [movieDetails]);
 
-  if (isLoading || isLoadingRatings) return <LoadingScreen />;
+  if (isLoading || isLoadingRatings || isLoadingTrakt) return <LoadingScreen />;
 
   return (
     <>

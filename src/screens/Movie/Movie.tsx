@@ -151,9 +151,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(
     movieDetails?.imdb_id
   );
-  const { data: traktDetails, isLoading: isLoadingTrakt } = useTraktMovie(
-    movieDetails?.imdb_id
-  );
+  // const { data: traktDetails, isLoading: isLoadingTrakt } = useTraktMovie(
+  //   movieDetails?.imdb_id
+  // );
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
@@ -183,6 +183,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const usReleaseDates = movieDetails?.release_dates.results.find(
     (result) => result.iso_3166_1 === "US"
   )?.release_dates;
+
+  // Get cert of first release date where cert is defined
+  // Does not consider multiple ratings such as Battle of the Five Armies where Extended Edition is R
+  const certification = usReleaseDates?.find(
+    (releaseDate) => releaseDate.certification
+  )?.certification;
 
   const runtime = composeRuntime(movieDetails?.runtime);
 
@@ -233,7 +239,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     }
   }, [movieDetails]);
 
-  if (isLoading || isLoadingRatings || isLoadingTrakt) return <LoadingScreen />;
+  if (isLoading || isLoadingRatings) return <LoadingScreen />;
 
   return (
     <>
@@ -276,12 +282,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             </Text>
           </View>
 
-          {(runtime || traktDetails?.certification) && (
+          {(runtime || certification) && (
             <View style={{ flexDirection: "row" }}>
               <Text style={styles.secondarySubhedEmphasized}>{runtime}</Text>
-              {runtime && traktDetails?.certification && <BlueBullet />}
+              {runtime && certification && <BlueBullet />}
               <Text style={styles.secondarySubhedEmphasized}>
-                {traktDetails?.certification}
+                {certification}
               </Text>
               {isPro && (
                 <>

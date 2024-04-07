@@ -33,22 +33,22 @@ export function MovieLayout({ navigation }) {
 
   const movies = data?.pages.flatMap((page) => page.results);
 
-  useEffect(() => {
-    // Manually get second page on load to fix cases where empty space is rendered before scrolling
-    if (data?.pages.filter((page) => page.page === 2).length === 0) {
-      fetchNextPage({ pageParam: 2 });
-    }
-  }, [data, fetchNextPage]);
+  // useEffect(() => {
+  //   // Manually get second page on load to fix cases where empty space is rendered before scrolling
+  //   if (data?.pages.filter((page) => page.page === 2).length === 0) {
+  //     fetchNextPage({ pageParam: 2 });
+  //   }
+  // }, [data, fetchNextPage]);
 
-  useEffect(() => {
-    modalRef.current?.dismiss();
-    // https://stackoverflow.com/a/64232399/5648619
-    if (scrollRef !== null && scrollRef.current !== null && movies) {
-      if (typeof scrollRef.current.scrollToIndex === "function") {
-        scrollRef.current?.scrollToIndex({ index: 0 });
-      }
-    }
-  }, [option]);
+  // useEffect(() => {
+  //   modalRef.current?.dismiss();
+  //   // https://stackoverflow.com/a/64232399/5648619
+  //   if (scrollRef !== null && scrollRef.current !== null && movies) {
+  //     if (typeof scrollRef.current.scrollToIndex === "function") {
+  //       scrollRef.current?.scrollToIndex({ index: 0 });
+  //     }
+  //   }
+  // }, [option]);
 
   function filteredMovies() {
     if (option === "Coming Soon") {
@@ -133,7 +133,11 @@ export function MovieLayout({ navigation }) {
         navigation={navigation}
         modalRef={modalRef}
         selectedOption={option}
-        setSelectedOption={(option) => setOption(option)}
+        setSelectedOption={(option) => {
+          setOption(option);
+          modalRef.current?.dismiss();
+          scrollRef.current?.scrollToIndex({ index: 0 });
+        }}
       />
     </>
   );

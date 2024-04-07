@@ -300,9 +300,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             </View>
           )}
 
-          {isPro && ratings!.length > 0 && (
+          {isPro && ratings && ratings?.length > 0 && (
             <View style={{ marginTop: 16, flexDirection: "row" }}>
-              {ratings?.map((rating) => (
+              {ratings.map((rating) => (
                 <Rating
                   key={rating.Source}
                   source={rating.Source}

@@ -2,7 +2,7 @@ export default {
   expo: {
     name: "LookForward",
     slug: "lookforward",
-    version: "6.1.0",
+    version: "6.1.1",
     orientation: "portrait",
     icon: "./assets/icon.png",
     scheme: "myapp",
@@ -18,7 +18,7 @@ export default {
       googleServicesFile:
         process.env.GOOGLE_SERVICE_PLIST ?? "./GoogleService-Info.secret.plist",
       bundleIdentifier: "com.lookforward.app",
-      buildNumber: "4",
+      buildNumber: "2",
     },
     android: {
       adaptiveIcon: {

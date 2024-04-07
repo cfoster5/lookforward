@@ -289,7 +289,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               <Text style={styles.secondarySubhedEmphasized}>
                 {certification}
               </Text>
-              {isPro && (
+              {isPro && movieDetails!.revenue > 0 && (
                 <>
                   <BlueBullet />
                   <Text style={styles.secondarySubhedEmphasized}>

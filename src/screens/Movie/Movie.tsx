@@ -39,7 +39,6 @@ import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
 import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
-import { horizontalListProps } from "./constants/horizontalListProps";
 import { composeRuntime } from "./utils/composeRuntime";
 import {
   calculateWidth,
@@ -61,6 +60,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
+import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { useStore } from "@/stores/store";

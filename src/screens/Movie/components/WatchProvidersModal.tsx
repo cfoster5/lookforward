@@ -13,6 +13,7 @@ import { iOSColors, iOSUIKit } from "react-native-typography";
 import { LogoSizes, WatchLocale } from "tmdb-ts";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { horizontalListProps } from "@/constants/HorizontalListProps";
 import TabStackContext from "@/contexts/TabStackContext";
 import { calculateWidth } from "@/helpers/helpers";
 

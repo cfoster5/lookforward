@@ -29,6 +29,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { BackdropSizes, PosterSizes } from "tmdb-ts";
 
 import { useMovie } from "./api/getMovie";
 import { useMovieRatings } from "./api/getMovieRatings";
@@ -48,10 +49,6 @@ import {
 } from "../../helpers/helpers";
 import { FirestoreMovie } from "../../interfaces/firebase";
 import { ReleaseDate, ReleaseDateType } from "../../interfaces/tmdb";
-import {
-  BackdropSizes,
-  PosterSizes,
-} from "../../interfaces/tmdb/configuration";
 
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { BlueBullet } from "@/components/BlueBullet";

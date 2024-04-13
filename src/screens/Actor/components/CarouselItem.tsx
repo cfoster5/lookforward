@@ -1,9 +1,8 @@
 import { Image } from "expo-image";
 import { PlatformColor } from "react-native";
+import { PosterSizes } from "tmdb-ts";
 
 import { MyPerson } from "../types";
-
-import { PosterSizes } from "@/interfaces/tmdb/configuration";
 
 type Props = {
   item: MyPerson["images"]["profiles"][number];

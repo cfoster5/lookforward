@@ -5,8 +5,7 @@ import Animated, {
   SharedValue,
   useAnimatedStyle,
 } from "react-native-reanimated";
-
-import { BackdropSizes } from "../interfaces/tmdb/configuration";
+import { BackdropSizes } from "tmdb-ts";
 
 const AnimatedImageBackground =
   Animated.createAnimatedComponent(ImageBackground);

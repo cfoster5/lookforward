@@ -8,9 +8,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
+import { PosterSizes } from "tmdb-ts";
 
 import { RadioButton } from "./RadioButton";
-import { PosterSizes } from "../../../interfaces/tmdb/configuration";
 
 import { reusableStyles } from "@/helpers/styles";
 import { isoToUTC, now, timestampToUTC } from "@/utils/dates";

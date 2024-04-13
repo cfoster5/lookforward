@@ -4,7 +4,7 @@ import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
 
-async function fetchGamesSearch(searchValue: string) {
+async function getGamesSearch(searchValue: string) {
   const response = await fetch(
     "https://k0o7ncaic1.execute-api.us-east-2.amazonaws.com/production/v4/games",
     {
@@ -25,7 +25,7 @@ export function useGamesSearch(searchValue: string) {
   const { categoryIndex } = useStore();
   return useQuery(
     ["games", { searchValue }],
-    () => fetchGamesSearch(searchValue),
+    () => getGamesSearch(searchValue),
     { enabled: categoryIndex === 1 && searchValue !== "" }
   );
 }

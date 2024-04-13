@@ -5,13 +5,13 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { CollectionDetails } from "interfaces/tmdb";
 import { Platform, View } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
+import { DetailedCollection } from "tmdb-ts";
 
 import { useCollection } from "./api/getCollection";
 
@@ -72,7 +72,7 @@ export function Collection({
       onScroll={scrollHandler}
       scrollEventThrottle={16}
       data={collection!.parts}
-      renderItem={({ item }: { item: CollectionDetails["parts"][0] }) => (
+      renderItem={({ item }: { item: DetailedCollection["parts"][number] }) => (
         <MoviePoster
           pressHandler={() =>
             navigation.push("Movie", {
@@ -107,7 +107,7 @@ export function Collection({
             }
           : undefined
       }
-      keyExtractor={(movie: CollectionDetails["parts"][0]) =>
+      keyExtractor={(movie: DetailedCollection["parts"][number]) =>
         movie.id.toString()
       }
     />

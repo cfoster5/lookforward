@@ -6,7 +6,6 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Movie } from "interfaces/tmdb";
 import { useLayoutEffect, useRef, useState } from "react";
 import {
   FlatList,
@@ -20,7 +19,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-// import { useDiscoverFilterCreation } from "../hooks/useDiscoverFilterCreation";
+import { Movie } from "tmdb-ts";
 
 import { useDiscoverMovies } from "./api/getDiscoverMovies";
 

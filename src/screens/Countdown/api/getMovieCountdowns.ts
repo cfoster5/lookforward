@@ -1,9 +1,8 @@
-import { TMDB_KEY } from "@/constants/ApiKeys";
 import { FirestoreMovie } from "interfaces/firebase";
 import { useQueries } from "react-query";
+import { ReleaseDateType } from "tmdb-ts";
 
-import { ReleaseDateType } from "../../../interfaces/tmdb";
-
+import { TMDB_KEY } from "@/constants/ApiKeys";
 import { isoToUTC } from "@/utils/dates";
 
 async function getMovie(movieId: FirestoreMovie["documentID"]) {

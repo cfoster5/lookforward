@@ -1,8 +1,3 @@
-import {
-  MoviesPlayingNow,
-  PopularMovies,
-  UpcomingMovies,
-} from "interfaces/tmdb";
 import { useInfiniteQuery } from "react-query";
 
 import { TMDB_KEY } from "@/constants/ApiKeys";

@@ -5,22 +5,15 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { Image } from "expo-image";
 import { useRef, useState } from "react";
-import {
-  Dimensions,
-  FlatList,
-  Platform,
-  PlatformColor,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, FlatList, Platform, Text, View } from "react-native";
 import { useMMKVString } from "react-native-mmkv";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
+import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
 
 import { usePerson } from "./api/getPerson";
-import { PosterSizes } from "../../interfaces/tmdb/configuration";
+import { CarouselItem } from "./components/CarouselItem";
 
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { ExpandableText } from "@/components/ExpandableText";
@@ -42,6 +35,24 @@ type ActorScreenNavigationProp = CompositeScreenProps<
   >
 >;
 
+const width = 200;
+const horizontalMargin = 4;
+
+function sortReleaseDates(
+  a: PersonMovieCast | PersonMovieCrew,
+  b: PersonMovieCast | PersonMovieCrew
+) {
+  if (Platform.OS === "ios")
+    return b.release_date?.localeCompare(a.release_date);
+  else {
+    if (b.release_date !== a.release_date) {
+      return b.release_date < a.release_date ? -1 : 1;
+    } else {
+      return 0;
+    }
+  }
+}
+
 function Actor({ route, navigation }: ActorScreenNavigationProp) {
   // const person = useGetPerson(route.params.personId);
   const { personId, name, profile_path } = route.params;
@@ -49,8 +60,6 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const ref = useRef<Carousel<any>>(null);
-  const width = 200;
-  const horizontalMargin = 4;
   const [selectedJob, setSelectedJob] = useState("Actor");
 
   const [storedPeople, setStoredPeople] = useMMKVString("recent.people");
@@ -68,54 +77,13 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
     profile_path,
   ]);
 
-  function RenderItem({ item, index }: { item: any; index: number }) {
-    return (
-      <Image
-        source={{
-          uri: `https://image.tmdb.org/t/p/${PosterSizes.W300}${item.file_path}`,
-        }}
-        style={{
-          borderRadius: 12,
-          borderColor: PlatformColor("separator"),
-          borderWidth: 1,
-          width,
-          height: width * 1.5,
-          paddingHorizontal: horizontalMargin,
-        }}
-      />
-    );
-  }
-
   function returnData() {
     if (selectedJob === "Actor") {
-      return (
-        person?.movie_credits.cast
-          // .sort((a, b) => b.release_date?.localeCompare(a.release_date))
-          .sort((a, b) =>
-            Platform.OS === "ios"
-              ? b.release_date?.localeCompare(a.release_date)
-              : b.release_date !== a.release_date
-              ? b.release_date < a.release_date
-                ? -1
-                : 1
-              : 0
-          )
-      );
+      return person?.movie_credits.cast.sort(sortReleaseDates);
     } else {
-      return (
-        person?.movie_credits.crew
-          .filter((credit) => credit.job === selectedJob)
-          // .sort((a, b) => b.release_date?.localeCompare(a.release_date))
-          .sort((a, b) =>
-            Platform.OS === "ios"
-              ? b.release_date?.localeCompare(a.release_date)
-              : b.release_date !== a.release_date
-              ? b.release_date < a.release_date
-                ? -1
-                : 1
-              : 0
-          )
-      );
+      return person?.movie_credits.crew
+        .filter((credit) => credit.job === selectedJob)
+        .sort(sortReleaseDates);
     }
   }
 
@@ -173,7 +141,13 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
               vertical={false}
               ref={ref}
               data={person?.images?.profiles}
-              renderItem={RenderItem}
+              renderItem={({ item }) => (
+                <CarouselItem
+                  item={item}
+                  width={width}
+                  horizontalMargin={horizontalMargin}
+                />
+              )}
               layout="default"
               loop
               sliderWidth={Dimensions.get("window").width}
@@ -193,7 +167,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
               {dateToFullLocale(person?.birthday).toUpperCase()}
             </Text>
           )}
-          <ExpandableText text={person.biography} />
+          <ExpandableText text={person!.biography} />
           <View
             style={{
               flexDirection: "row",
@@ -208,15 +182,18 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
             />
             {person?.movie_credits.crew
               .filter((v, i, a) => a.findIndex((t) => t.job === v.job) === i)
-              .sort((a, b) =>
-                Platform.OS === "ios"
-                  ? a.job.toLowerCase().localeCompare(b.job.toLowerCase())
-                  : a.job.toLowerCase() !== b.job.toLowerCase()
-                  ? a.job.toLowerCase() < b.job.toLowerCase()
-                    ? -1
-                    : 1
-                  : 0
-              )
+              .sort((a, b) => {
+                const jobA = a.job.toLowerCase();
+                const jobB = b.job.toLowerCase();
+                if (Platform.OS === "ios") return jobA.localeCompare(jobB);
+                else {
+                  if (jobA !== jobB) {
+                    return jobA < jobB ? -1 : 1;
+                  } else {
+                    return 0;
+                  }
+                }
+              })
               .map((credit, i) => (
                 <ButtonMultiState
                   key={i}

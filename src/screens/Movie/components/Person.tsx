@@ -106,7 +106,7 @@ function Person({ navigation, person }: Props) {
         <Text
           style={[iOSUIKit.callout, { color: PlatformColor("systemGray") }]}
         >
-          {"character" in person ? person.character : person.job}
+          {"character" in person ? person.character : person.job?.join(", ")}
         </Text>
       </View>
     </Pressable>

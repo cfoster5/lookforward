@@ -46,6 +46,7 @@ export default {
         projectId: "4ebe5d26-ee4a-4228-9d28-e757244e31b0",
       },
       TMDB_KEY: process.env.TMDB_KEY || null,
+      TMDB_TOKEN: process.env.TMDB_TOKEN || null,
       IGDB_AWS_KEY: process.env.IGDB_AWS_KEY || null,
       TRAKT_KEY: process.env.TRAKT_KEY || null,
       OMDB_KEY: process.env.OMDB_KEY || null,

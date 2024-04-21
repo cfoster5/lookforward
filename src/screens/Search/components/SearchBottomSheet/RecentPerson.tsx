@@ -17,7 +17,6 @@ export function RecentPerson({ item }: { item: Recent }) {
         navigation.navigate("Actor", {
           personId: item.id,
           name: item.name,
-          profile_path: item.img_path,
         })
       }
     >

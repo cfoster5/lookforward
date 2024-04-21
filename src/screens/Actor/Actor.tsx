@@ -55,7 +55,7 @@ function sortReleaseDates(
 
 function Actor({ route, navigation }: ActorScreenNavigationProp) {
   // const person = useGetPerson(route.params.personId);
-  const { personId, name, profile_path } = route.params;
+  const { personId, name } = route.params;
   const { data: person, isLoading } = usePerson(route.params.personId);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
@@ -68,13 +68,13 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
   const recentPerson: Recent = {
     id: personId,
     name,
-    img_path: profile_path,
+    img_path: person?.profile_path,
     last_viewed: timestamp,
   };
 
   useUpdateRecentItems(composeRecentPeople, recentPerson, setStoredPeople, [
     personId,
-    profile_path,
+    person?.profile_path,
   ]);
 
   function returnData() {

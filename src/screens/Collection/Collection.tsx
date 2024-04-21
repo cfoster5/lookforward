@@ -5,6 +5,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useLayoutEffect } from "react";
 import { Platform, View } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
@@ -17,6 +18,7 @@ import { useCollection } from "./api/getCollection";
 
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { ExpandableText } from "@/components/ExpandableText";
+import { DynamicShareHeader } from "@/components/Headers";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
@@ -45,6 +47,18 @@ export function Collection({
   const scrollHandler = useAnimatedScrollHandler(
     (e) => (scrollOffset.value = e.contentOffset.y)
   );
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      // eslint-disable-next-line react/no-unstable-nested-components
+      headerRight: () => (
+        <DynamicShareHeader
+          title={collection?.name}
+          urlSegment={`collection/${collectionId}?name=${collection?.name}`}
+        />
+      ),
+    });
+  }, [collection?.name, navigation, collectionId]);
 
   if (isLoading) return <LoadingScreen />;
 

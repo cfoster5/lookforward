@@ -70,6 +70,7 @@ import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams, Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
+import { onShare } from "@/utils/share";
 
 function ScrollViewWithFlatList({
   data,
@@ -219,6 +220,11 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 ? subToMovie(movieId.toString(), user!.uid)
                 : removeSub("movies", movieId.toString(), user!.uid)
             }
+          />
+          <Item
+            title="share"
+            iconName="share-outline"
+            onPress={() => onShare(name, `movie/${movieId}?name=${name}`)}
           />
         </HeaderButtons>
       ),

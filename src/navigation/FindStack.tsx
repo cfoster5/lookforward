@@ -9,6 +9,7 @@ import Movie from "../screens/Movie/Movie";
 import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 import Search from "../screens/Search/Search";
 
+import { MultiItemHeader, ShareHeader } from "@/components/Headers";
 import { FindStackParamList } from "@/types";
 
 const Stack = createNativeStackNavigator<FindStackParamList>();
@@ -27,6 +28,8 @@ export function FindStack() {
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: route.params.name,
+          // Add a placeholder button without the `onPress` to avoid flicker
+          headerRight: MultiItemHeader,
         })}
       />
       <Stack.Screen
@@ -63,6 +66,8 @@ export function FindStack() {
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: route.params.name,
+          // Add a placeholder button without the `onPress` to avoid flicker
+          headerRight: ShareHeader,
         })}
       />
       <Stack.Screen
@@ -72,6 +77,8 @@ export function FindStack() {
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           title: route.params.name,
+          // Add a placeholder button without the `onPress` to avoid flicker
+          headerRight: ShareHeader,
         })}
       />
     </Stack.Navigator>

@@ -5,7 +5,7 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, Platform, Text, View } from "react-native";
 import { useMMKVString } from "react-native-mmkv";
 import Carousel from "react-native-snap-carousel";
@@ -17,6 +17,7 @@ import { CarouselItem } from "./components/CarouselItem";
 
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { ExpandableText } from "@/components/ExpandableText";
+import { DynamicShareHeader } from "@/components/Headers";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
@@ -76,6 +77,18 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
     personId,
     person?.profile_path,
   ]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      // eslint-disable-next-line react/no-unstable-nested-components
+      headerRight: () => (
+        <DynamicShareHeader
+          title={name}
+          urlSegment={`person/${personId}?name=${name}`}
+        />
+      ),
+    });
+  }, [name, navigation, personId]);
 
   function returnData() {
     if (selectedJob === "Actor") {

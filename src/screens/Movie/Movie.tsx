@@ -143,7 +143,7 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 >;
 
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
-  const { movieId, movieTitle, poster_path } = route.params;
+  const { movieId, name } = route.params;
   const { user, movieSubs, isPro } = useStore();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString()
@@ -195,16 +195,16 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
   const recentMovie: Recent = {
     id: movieId,
-    name: movieTitle,
-    img_path: poster_path,
+    name,
+    img_path: movieDetails?.poster_path,
     last_viewed: timestamp,
     media_type: "movie",
   };
 
   useUpdateRecentItems(composeRecentMovies, recentMovie, setStoredMovies, [
     movieId,
-    movieTitle,
-    poster_path,
+    name,
+    movieDetails?.poster_path,
   ]);
 
   useLayoutEffect(() => {
@@ -223,7 +223,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         </HeaderButtons>
       ),
     });
-  }, [isSubbed, movieId, navigation, user]);
+  }, [isSubbed, movieId, name, navigation, user]);
 
   useEffect(() => {
     if (movieDetails) {
@@ -668,8 +668,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         pressHandler={() =>
                           navigation.push("Movie", {
                             movieId: item.id,
-                            movieTitle: item.title,
-                            poster_path: item.poster_path,
+                            name: item.title,
                           })
                         }
                         movie={item}

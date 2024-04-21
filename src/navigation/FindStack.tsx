@@ -26,7 +26,7 @@ export function FindStack() {
         options={({ route }) => ({
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
-          title: route.params.movieTitle,
+          title: route.params.name,
         })}
       />
       <Stack.Screen

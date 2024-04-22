@@ -5,6 +5,7 @@ import {
   DarkTheme,
   useNavigationContainerRef,
 } from "@react-navigation/native";
+import * as Linking from "expo-linking";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { ColorSchemeName } from "react-native";
@@ -26,10 +27,29 @@ export default function Navigation({
   const navigationRef = useNavigationContainerRef();
   useReactNavigationDevTools(navigationRef);
   const { onboardingModalRef, proModalRef } = useStore();
+  const linking = {
+    prefixes: [Linking.createURL("/"), "https://getlookforward.app"],
+    config: {
+      screens: {
+        FindTabStack: {
+          initialRouteName: "Find",
+          screens: {
+            Find: "find",
+            Movie: "movie/:movieId",
+            Actor: "person/:personId",
+            Collection: "collection/:collectionId",
+          },
+        },
+      },
+    },
+  };
+
   return (
     <NavigationContainer
       ref={navigationRef}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      linking={linking}
+      // fallback={<Text>Loading...</Text>}
     >
       <OnboardingModal modalRef={onboardingModalRef} />
       <ExplorePro modalRef={proModalRef} />

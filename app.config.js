@@ -2,10 +2,10 @@ export default {
   expo: {
     name: "LookForward",
     slug: "lookforward",
-    version: "6.1.1",
+    version: "6.2.0",
     orientation: "portrait",
     icon: "./assets/icon.png",
-    scheme: "myapp",
+    scheme: "lookforward",
     userInterfaceStyle: "dark",
     splash: {
       image: "./assets/splash.png",
@@ -18,7 +18,8 @@ export default {
       googleServicesFile:
         process.env.GOOGLE_SERVICE_PLIST ?? "./GoogleService-Info.secret.plist",
       bundleIdentifier: "com.lookforward.app",
-      buildNumber: "4",
+      associatedDomains: ["applinks:getlookforward.app"],
+      buildNumber: "5",
     },
     android: {
       adaptiveIcon: {
@@ -46,6 +47,7 @@ export default {
         projectId: "4ebe5d26-ee4a-4228-9d28-e757244e31b0",
       },
       TMDB_KEY: process.env.TMDB_KEY || null,
+      TMDB_TOKEN: process.env.TMDB_TOKEN || null,
       IGDB_AWS_KEY: process.env.IGDB_AWS_KEY || null,
       TRAKT_KEY: process.env.TRAKT_KEY || null,
       OMDB_KEY: process.env.OMDB_KEY || null,

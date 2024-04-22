@@ -11,11 +11,10 @@ import {
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
-import { TrendingResults } from "tmdb-ts";
+import { PosterSizes, TrendingResults } from "tmdb-ts";
 
 import { useHypedGames } from "./api/getHypedGames";
 import { useTrendingMovies } from "./api/getTrendingMovies";
-import { PosterSizes } from "../../../interfaces/tmdb/configuration";
 
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { LargeFilledButton } from "@/components/LargeFilledButton";

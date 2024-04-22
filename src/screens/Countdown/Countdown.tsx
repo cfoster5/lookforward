@@ -131,8 +131,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
     } else if (sectionName === "Movies") {
       navigation.navigate("Movie", {
         movieId: item.id,
-        movieTitle: item.title,
-        poster_path: item.poster_path,
+        name: item.title,
       });
     } else if (sectionName === "Games") {
       navigation.navigate("Game", {

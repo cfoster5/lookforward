@@ -10,12 +10,10 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { WatchLocale } from "tmdb-ts";
-
-import { LogoSizes } from "../../../interfaces/tmdb/configuration";
-import { horizontalListProps } from "../constants/horizontalListProps";
+import { LogoSizes, WatchLocale } from "tmdb-ts";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { horizontalListProps } from "@/constants/HorizontalListProps";
 import TabStackContext from "@/contexts/TabStackContext";
 import { calculateWidth } from "@/helpers/helpers";
 

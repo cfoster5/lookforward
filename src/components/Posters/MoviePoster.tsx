@@ -6,10 +6,9 @@ import {
   StyleProp,
   ViewStyle,
 } from "react-native";
+import { Movie, PosterSizes, Recommendation } from "tmdb-ts";
 
 import { TextPoster } from "./TextPoster";
-import { Movie, Recommendation } from "../../interfaces/tmdb";
-import { PosterSizes } from "../../interfaces/tmdb/configuration";
 import PosterButton from "../PosterButton";
 
 export function MoviePoster({

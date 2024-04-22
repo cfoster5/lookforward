@@ -5,10 +5,14 @@ import { createContext, useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { TMDB } from "tmdb-ts";
 
+import { TMDB_TOKEN } from "@/constants/ApiKeys";
 import { useStore } from "@/stores/store";
 
 const queryClient = new QueryClient();
+
+export const tmdb = new TMDB(TMDB_TOKEN);
 
 type AppProviderProps = {
   children: React.ReactNode;

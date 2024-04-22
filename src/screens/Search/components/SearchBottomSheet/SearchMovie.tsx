@@ -18,8 +18,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
       onPress={() =>
         navigation.navigate("Movie", {
           movieId: item.id,
-          movieTitle: item.title,
-          poster_path: item.poster_path,
+          name: item.title,
         })
       }
       style={({ pressed }) => [

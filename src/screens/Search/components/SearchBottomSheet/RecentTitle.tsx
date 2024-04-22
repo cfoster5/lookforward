@@ -17,8 +17,7 @@ export function RecentTitle({ item }: { item: Recent }) {
         item.media_type === "movie"
           ? navigation.navigate("Movie", {
               movieId: item.id,
-              movieTitle: item.name,
-              poster_path: item.img_path,
+              name: item.name,
             })
           : navigation.navigate("Game", {
               game: {

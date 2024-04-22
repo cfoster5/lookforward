@@ -60,7 +60,6 @@ function Person({ navigation, person }: Props) {
         navigation.push("Actor", {
           personId: person.id,
           name: person.name,
-          profile_path: person.profile_path,
         })
       }
     >

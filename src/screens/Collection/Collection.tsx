@@ -5,18 +5,20 @@ import {
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { CollectionDetails } from "interfaces/tmdb";
+import { useLayoutEffect } from "react";
 import { Platform, View } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
+import { DetailedCollection } from "tmdb-ts";
 
 import { useCollection } from "./api/getCollection";
 
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { ExpandableText } from "@/components/ExpandableText";
+import { DynamicShareHeader } from "@/components/Headers";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
@@ -46,6 +48,18 @@ export function Collection({
     (e) => (scrollOffset.value = e.contentOffset.y)
   );
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      // eslint-disable-next-line react/no-unstable-nested-components
+      headerRight: () => (
+        <DynamicShareHeader
+          title={collection?.name}
+          urlSegment={`collection/${collectionId}?name=${collection?.name}`}
+        />
+      ),
+    });
+  }, [collection?.name, navigation, collectionId]);
+
   if (isLoading) return <LoadingScreen />;
 
   return (
@@ -72,13 +86,12 @@ export function Collection({
       onScroll={scrollHandler}
       scrollEventThrottle={16}
       data={collection!.parts}
-      renderItem={({ item }: { item: CollectionDetails["parts"][0] }) => (
+      renderItem={({ item }: { item: DetailedCollection["parts"][number] }) => (
         <MoviePoster
           pressHandler={() =>
             navigation.push("Movie", {
               movieId: item.id,
-              movieTitle: item.title,
-              poster_path: item.poster_path,
+              name: item.title,
             })
           }
           movie={item}
@@ -107,7 +120,7 @@ export function Collection({
             }
           : undefined
       }
-      keyExtractor={(movie: CollectionDetails["parts"][0]) =>
+      keyExtractor={(movie: DetailedCollection["parts"][number]) =>
         movie.id.toString()
       }
     />

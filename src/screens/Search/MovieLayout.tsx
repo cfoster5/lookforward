@@ -103,8 +103,7 @@ export function MovieLayout({ navigation }) {
               pressHandler={() =>
                 navigation.push("Movie", {
                   movieId: item.id,
-                  movieTitle: item.title,
-                  poster_path: item.poster_path,
+                  name: item.title,
                 })
               }
               movie={item}

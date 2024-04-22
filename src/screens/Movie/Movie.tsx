@@ -29,6 +29,12 @@ import Animated, {
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import {
+  BackdropSizes,
+  PosterSizes,
+  ReleaseDate,
+  ReleaseDateType,
+} from "tmdb-ts";
 
 import { useMovie } from "./api/getMovie";
 import { useMovieRatings } from "./api/getMovieRatings";
@@ -38,7 +44,6 @@ import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
 import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
-import { horizontalListProps } from "./constants/horizontalListProps";
 import { composeRuntime } from "./utils/composeRuntime";
 import {
   calculateWidth,
@@ -47,11 +52,6 @@ import {
   tmdbMovieGenres,
 } from "../../helpers/helpers";
 import { FirestoreMovie } from "../../interfaces/firebase";
-import { ReleaseDate, ReleaseDateType } from "../../interfaces/tmdb";
-import {
-  BackdropSizes,
-  PosterSizes,
-} from "../../interfaces/tmdb/configuration";
 
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { BlueBullet } from "@/components/BlueBullet";
@@ -64,11 +64,13 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
+import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams, Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
+import { onShare } from "@/utils/share";
 
 function ScrollViewWithFlatList({
   data,
@@ -142,7 +144,7 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 >;
 
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
-  const { movieId, movieTitle, poster_path } = route.params;
+  const { movieId, name } = route.params;
   const { user, movieSubs, isPro } = useStore();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString()
@@ -194,16 +196,16 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
   const recentMovie: Recent = {
     id: movieId,
-    name: movieTitle,
-    img_path: poster_path,
+    name,
+    img_path: movieDetails?.poster_path,
     last_viewed: timestamp,
     media_type: "movie",
   };
 
   useUpdateRecentItems(composeRecentMovies, recentMovie, setStoredMovies, [
     movieId,
-    movieTitle,
-    poster_path,
+    name,
+    movieDetails?.poster_path,
   ]);
 
   useLayoutEffect(() => {
@@ -219,10 +221,15 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 : removeSub("movies", movieId.toString(), user!.uid)
             }
           />
+          <Item
+            title="share"
+            iconName="share-outline"
+            onPress={() => onShare(name, `movie/${movieId}?name=${name}`)}
+          />
         </HeaderButtons>
       ),
     });
-  }, [isSubbed, movieId, navigation, user]);
+  }, [isSubbed, movieId, name, navigation, user]);
 
   useEffect(() => {
     if (movieDetails) {
@@ -667,8 +674,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         pressHandler={() =>
                           navigation.push("Movie", {
                             movieId: item.id,
-                            movieTitle: item.title,
-                            poster_path: item.poster_path,
+                            name: item.title,
                           })
                         }
                         movie={item}

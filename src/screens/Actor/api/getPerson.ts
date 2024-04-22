@@ -1,17 +1,9 @@
 import { useQuery } from "react-query";
 
-import { MyPerson } from "../types";
+import { tmdb } from "@/providers/app";
 
-import { TMDB_KEY } from "@/constants/ApiKeys";
+const getPerson = async (personId: number) =>
+  await tmdb.people.details(personId, ["movie_credits", "images"], "en-US");
 
-async function getPerson(personId: number) {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/person/${personId}?api_key=${TMDB_KEY}&language=en-US&append_to_response=movie_credits,images`
-  );
-  const json: MyPerson = await response.json();
-  return json;
-}
-
-export function usePerson(personId: number) {
-  return useQuery(["person", personId], () => getPerson(personId));
-}
+export const usePerson = (personId: number) =>
+  useQuery(["person", personId], () => getPerson(personId));

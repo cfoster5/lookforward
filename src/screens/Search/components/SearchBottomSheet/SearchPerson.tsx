@@ -18,7 +18,6 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
         navigation.navigate("Actor", {
           personId: item.id,
           name: item.name,
-          profile_path: item.profile_path,
         })
       }
       style={({ pressed }) => [

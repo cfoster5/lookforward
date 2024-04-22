@@ -15,7 +15,7 @@ export type TabNavigationParamList = {
 };
 
 type MovieScreens = {
-  Movie: { movieId: MovieDetails["id"]; movieTitle: MovieDetails["title"] };
+  Movie: { movieId: MovieDetails["id"]; name: MovieDetails["title"] };
   MovieDiscover: {
     screenTitle: string;
     genre?: MovieDetails["genres"][number];

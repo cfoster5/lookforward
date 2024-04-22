@@ -1,16 +1,9 @@
 import { useQuery } from "react-query";
-import { TMDB_KEY } from "@/constants/ApiKeys";
 
-async function getCollection(collectionId: number) {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/collection/${collectionId}?api_key=${TMDB_KEY}&language=en-US`
-  );
-  const json = await response.json();
-  return json;
-}
+import { tmdb } from "@/providers/app";
 
-export function useCollection(collectionId: number) {
-  return useQuery(["collection", collectionId], () =>
-    getCollection(collectionId)
-  );
-}
+const getCollection = async (collectionId: number) =>
+  await tmdb.collections.details(collectionId, { language: "en-US" });
+
+export const useCollection = (collectionId: number) =>
+  useQuery(["collection", collectionId], () => getCollection(collectionId));

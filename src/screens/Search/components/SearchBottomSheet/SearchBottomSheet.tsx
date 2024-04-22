@@ -28,7 +28,7 @@ import { SearchGame } from "./SearchGame";
 import { SearchMovie } from "./SearchMovie";
 import { SearchPerson } from "./SearchPerson";
 import { useGamesSearch } from "../../api/getGamesSearch";
-import { useMoviesSearch } from "../../api/getMoviesSearch";
+import { useMultiSearch } from "../../api/getMultiSearch";
 import useDebounce from "../../hooks/useDebounce";
 
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
@@ -61,7 +61,7 @@ export const SearchBottomSheet = () => {
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
   const { data: movieData, isLoading: isLoadingMovies } =
-    useMoviesSearch(debouncedSearch);
+    useMultiSearch(debouncedSearch);
   const { data: gamesData, isLoading: isLoadingGames } =
     useGamesSearch(debouncedSearch);
 

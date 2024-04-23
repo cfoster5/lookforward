@@ -1,24 +1,3 @@
-import { library } from "@fortawesome/fontawesome-svg-core";
-import {
-  faBomb,
-  faChildren,
-  faFaceLaughSquint,
-  faGhost,
-  faHandcuffs,
-  faHatCowboy,
-  faHatWizard,
-  faHeart,
-  faJetFighter,
-  faMagnifyingGlass,
-  faMasksTheater,
-  faMusic,
-  faPersonHiking,
-  faPersonRunning,
-  faRocket,
-  faScroll,
-  faUserSecret,
-  faVideoCamera,
-} from "@fortawesome/free-solid-svg-icons";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 import * as SplashScreen from "expo-splash-screen";
@@ -29,27 +8,6 @@ import Purchases from "react-native-purchases";
 import Navigation from "./src/navigation";
 import { AppProvider } from "./src/providers/app";
 import { useStore } from "./src/stores/store";
-
-library.add(
-  faPersonHiking,
-  faHatWizard,
-  faGhost,
-  faMusic,
-  faMagnifyingGlass,
-  faHeart,
-  faJetFighter,
-  faHatCowboy,
-  faRocket,
-  faUserSecret,
-  faBomb,
-  faHandcuffs,
-  faPersonRunning,
-  faFaceLaughSquint,
-  faMasksTheater,
-  faChildren,
-  faScroll,
-  faVideoCamera
-);
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

@@ -1,5 +1,5 @@
+import { Ionicons } from "@expo/vector-icons";
 import auth from "@react-native-firebase/auth";
-
 import {
   Alert,
   PlatformColor,
@@ -10,7 +10,6 @@ import {
   ViewStyle,
 } from "react-native";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 export const SettingsItem = ({
   handlePress,

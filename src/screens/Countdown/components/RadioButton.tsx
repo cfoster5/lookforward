@@ -1,6 +1,6 @@
+import { Ionicons } from "@expo/vector-icons";
 import { PlatformColor, View } from "react-native";
 import { iOSColors } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 export const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
   <View

@@ -1,4 +1,4 @@
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { useContext } from "react";
 import { PlatformColor, Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
@@ -40,8 +40,8 @@ export default function ButtonSingleState({
       }}
     >
       {icon && (
-        <FontAwesomeIcon
-          icon={icon}
+        <FontAwesome6
+          name={icon}
           color="white"
           style={{ marginRight: 8, alignSelf: "center" }}
           size={iOSUIKit.footnoteEmphasizedObject.lineHeight}

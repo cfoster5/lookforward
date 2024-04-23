@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import {
   BottomTabScreenProps,
@@ -17,7 +18,6 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Movie } from "tmdb-ts";
 
@@ -160,13 +160,13 @@ function MovieDiscover({
                   selectedVal={sortMethod}
                   onPress={() => setSortMethod(item.actual)}
                   test={item.actual}
-                  children={
-                    <Ionicons
-                      name={item.direction === "Up" ? "arrow-up" : "arrow-down"}
-                      color="white"
-                    />
-                  }
-                />
+                >
+                  {" "}
+                  <Ionicons
+                    name={item.direction === "Up" ? "arrow-up" : "arrow-down"}
+                    color="white"
+                  />
+                </ButtonMultiState>
               )}
               keyExtractor={(item, index) => index.toString()}
             />

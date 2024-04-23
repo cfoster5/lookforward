@@ -1,5 +1,4 @@
-import { reusableStyles } from "@/helpers/styles";
-
+import { Ionicons } from "@expo/vector-icons";
 import {
   ActivityIndicator,
   Alert,
@@ -10,7 +9,8 @@ import {
 } from "react-native";
 import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
+
+import { reusableStyles } from "@/helpers/styles";
 
 function Icon({ title }) {
   let name = "";

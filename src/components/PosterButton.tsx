@@ -1,9 +1,9 @@
+import { Ionicons } from "@expo/vector-icons";
 import firestore from "@react-native-firebase/firestore";
 import { useRef } from "react";
 import { Animated, Easing, PlatformColor, Pressable, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { iOSColors } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";

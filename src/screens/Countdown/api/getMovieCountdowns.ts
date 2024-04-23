@@ -1,12 +1,16 @@
-import { FirestoreMovie } from "interfaces/firebase";
 import { useQueries } from "react-query";
 import { ReleaseDateType } from "tmdb-ts";
 
+import { FirestoreMovie } from "@/interfaces/firebase";
 import { tmdb } from "@/providers/app";
 import { isoToUTC } from "@/utils/dates";
 
 async function getMovie(movieId: FirestoreMovie["documentID"]) {
-  const json = await tmdb.movies.details(movieId, ["release_dates"], "en-US");
+  const json = await tmdb.movies.details(
+    Number(movieId),
+    ["release_dates"],
+    "en-US"
+  );
 
   const usRelease = json.release_dates.results.find(
     (result) => result.iso_3166_1 === "US"
@@ -28,7 +32,7 @@ async function getMovie(movieId: FirestoreMovie["documentID"]) {
 }
 
 // Rename this function and this file
-export function useMovieCountdowns(movieSubs) {
+export function useMovieCountdowns(movieSubs: FirestoreMovie[]) {
   return useQueries(
     movieSubs.map((sub) => {
       return {

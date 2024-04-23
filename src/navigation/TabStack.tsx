@@ -22,10 +22,13 @@ export function TabStack() {
       .collection("movies")
       .where("subscribers", "array-contains", user!.uid)
       .onSnapshot((documentSnapshot) => {
-        const movieSubsData = documentSnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          documentID: doc.id,
-        }));
+        const movieSubsData: FirestoreMovie[] = documentSnapshot.docs.map(
+          (doc) => ({
+            ...doc.data(),
+            subscribers: doc.data()["subscribers"],
+            documentID: doc.id,
+          })
+        );
         setMovieSubs(movieSubsData);
       });
 

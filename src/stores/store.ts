@@ -4,6 +4,7 @@ import { createRef } from "react";
 import { ColorSchemeName } from "react-native";
 import { create } from "zustand";
 
+import { FirestoreMovie } from "@/interfaces/firebase";
 import { Game, ReleaseDate } from "@/types";
 
 const bottomSheetModalRef = createRef<BottomSheetModal>();
@@ -29,8 +30,8 @@ type Store = {
       release_dates: ReleaseDate[];
     }
   ) => void;
-  movieSubs: any;
-  setMovieSubs: (movies: any) => void;
+  movieSubs: FirestoreMovie[];
+  setMovieSubs: (movies: FirestoreMovie[]) => void;
   gameSubs: any;
   setGameSubs: (games: any) => void;
   categoryIndex: number;

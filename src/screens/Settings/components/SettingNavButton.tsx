@@ -1,3 +1,4 @@
+import { Ionicons } from "@expo/vector-icons";
 import {
   PlatformColor,
   Pressable,
@@ -7,7 +8,6 @@ import {
   View,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 type Props = {
   handlePress: () => void;

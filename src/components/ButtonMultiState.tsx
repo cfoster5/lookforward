@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { PlatformColor, Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 import TabStackContext from "../contexts/TabStackContext";
 
@@ -48,7 +47,6 @@ export default function ButtonMultiState({
       >
         {text}
         {children}
-        {/* <Ionicons name={method.direction === "Up" ? "arrow-up" : "arrow-down"} color="white" /> */}
       </Text>
     </Pressable>
   );

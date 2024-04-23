@@ -1,9 +1,9 @@
+import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "@react-native-community/blur";
 import firestore from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useEffect } from "react";
 import { Platform, PlatformColor, StyleSheet } from "react-native";
-import Ionicons from "react-native-vector-icons/Ionicons";
 
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
@@ -22,10 +22,13 @@ export function TabStack() {
       .collection("movies")
       .where("subscribers", "array-contains", user!.uid)
       .onSnapshot((documentSnapshot) => {
-        const movieSubsData = documentSnapshot.docs.map((doc) => ({
-          ...doc.data(),
-          documentID: doc.id,
-        }));
+        const movieSubsData: FirestoreMovie[] = documentSnapshot.docs.map(
+          (doc) => ({
+            ...doc.data(),
+            subscribers: doc.data()["subscribers"],
+            documentID: doc.id,
+          })
+        );
         setMovieSubs(movieSubsData);
       });
 

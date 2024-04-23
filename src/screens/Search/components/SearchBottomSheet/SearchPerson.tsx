@@ -1,9 +1,9 @@
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
 import { PlatformColor, Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import { PersonWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";

@@ -32,7 +32,7 @@
     "expo-dev-client": "~3.3.11",
     "expo-image": "~1.10.6",
     "expo-linking": "~6.2.2",
-    "expo-splash-screen": "~0.26.4",
+    "expo-splash-screen": "~0.26.5",
     "expo-status-bar": "~1.11.1",
     "expo-system-ui": "~2.9.4",
     "immer": "^9.0.15",

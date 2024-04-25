@@ -1,8 +1,8 @@
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  FlatList,
   PlatformColor,
   StyleSheet,
   Text,
@@ -18,6 +18,16 @@ import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import TabStackContext from "@/contexts/TabStackContext";
 
 type Props = { modalRef: any };
+
+const ItemSeparator = () => (
+  <View
+    style={{
+      marginVertical: 4,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderColor: PlatformColor("separator"),
+    }}
+  />
+);
 
 export const TipModal = ({ modalRef }: Props) => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
@@ -48,7 +58,7 @@ export const TipModal = ({ modalRef }: Props) => {
 
   return (
     <DynamicHeightModal modalRef={modalRef}>
-      <FlatList
+      <BottomSheetFlatList
         data={packages?.sort(({ product: a, product: b }) => a.price - b.price)}
         ListHeaderComponent={
           <Text
@@ -68,20 +78,15 @@ export const TipModal = ({ modalRef }: Props) => {
             setIsPurchasing={setIsPurchasing}
           />
         )}
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              marginVertical: 4,
-              borderBottomWidth: StyleSheet.hairlineWidth,
-              borderColor: PlatformColor("separator"),
-            }}
-          />
-        )}
+        ItemSeparatorComponent={ItemSeparator}
         keyExtractor={(item) => item.identifier}
         ListEmptyComponent={ActivityIndicator}
         showsVerticalScrollIndicator={false}
         scrollEnabled={false}
-        style={{ paddingBottom: safeBottomArea, paddingHorizontal: 16 }}
+        contentContainerStyle={{
+          paddingBottom: safeBottomArea,
+          paddingHorizontal: 16,
+        }}
       />
     </DynamicHeightModal>
   );

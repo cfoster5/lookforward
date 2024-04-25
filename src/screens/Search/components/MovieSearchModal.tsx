@@ -1,7 +1,8 @@
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { FlatList, Text, View } from "react-native";
+import { FlatList, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -34,7 +35,7 @@ export function MovieSearchModal({
 
   return (
     <DynamicHeightModal modalRef={modalRef}>
-      <View style={{ paddingBottom: safeBottomArea }}>
+      <BottomSheetView style={{ paddingBottom: safeBottomArea }}>
         <FlatList
           horizontal
           contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
@@ -105,7 +106,7 @@ export function MovieSearchModal({
             />
           )}
         </ScrollView>
-      </View>
+      </BottomSheetView>
     </DynamicHeightModal>
   );
 }

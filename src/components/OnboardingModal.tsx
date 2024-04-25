@@ -1,5 +1,6 @@
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 import analytics from "@react-native-firebase/analytics";
-import { Linking, PlatformColor, Pressable, Text, View } from "react-native";
+import { Linking, PlatformColor, Pressable, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
@@ -18,9 +19,8 @@ export const OnboardingModal = ({ modalRef }: Props) => {
 
   return (
     <DynamicHeightModal modalRef={modalRef}>
-      <View
+      <BottomSheetView
         style={{
-          flex: 1,
           justifyContent: "center",
           paddingHorizontal: 16,
           paddingBottom: safeBottomArea,
@@ -78,7 +78,7 @@ export const OnboardingModal = ({ modalRef }: Props) => {
           }}
           text="Explore Pro Features"
         />
-      </View>
+      </BottomSheetView>
     </DynamicHeightModal>
   );
 };

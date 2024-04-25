@@ -1,3 +1,4 @@
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
 import { useContext } from "react";
 import {
@@ -33,7 +34,7 @@ function WatchProvidersModal({
 
   return (
     <DynamicHeightModal modalRef={modalRef}>
-      <View style={{ paddingBottom: safeBottomArea }}>
+      <BottomSheetView style={{ paddingBottom: safeBottomArea }}>
         <View
           style={{
             margin: 16,
@@ -149,7 +150,7 @@ function WatchProvidersModal({
             }}
           />
         </View>
-      </View>
+      </BottomSheetView>
     </DynamicHeightModal>
   );
 }

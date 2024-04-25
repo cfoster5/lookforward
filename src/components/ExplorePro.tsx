@@ -1,3 +1,4 @@
+import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useEffect, useState } from "react";
 import {
   PlatformColor,
@@ -89,9 +90,8 @@ export const ExplorePro = ({ modalRef }: Props) => {
 
   return (
     <DynamicHeightModal modalRef={modalRef}>
-      <View
+      <BottomSheetView
         style={{
-          flex: 1,
           justifyContent: "center",
           paddingHorizontal: 16,
           // paddingHorizontal: 32,
@@ -237,7 +237,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
             </Text>
           </Pressable>
         </View>
-      </View>
+      </BottomSheetView>
     </DynamicHeightModal>
   );
 };

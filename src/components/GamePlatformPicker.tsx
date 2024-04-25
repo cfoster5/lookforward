@@ -1,12 +1,6 @@
+import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import firestore from "@react-native-firebase/firestore";
-import {
-  FlatList,
-  PlatformColor,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -46,6 +40,16 @@ const RenderItem = ({ handlePress, releaseDate }: RenderItemProps) => (
   </Pressable>
 );
 
+const ItemSeparator = () => (
+  <View
+    style={{
+      marginVertical: 4,
+      borderBottomWidth: StyleSheet.hairlineWidth,
+      borderColor: PlatformColor("separator"),
+    }}
+  />
+);
+
 export function GamePlatformPicker() {
   const { user, bottomSheetModalRef, game } = useStore();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
@@ -77,7 +81,7 @@ export function GamePlatformPicker() {
 
   return (
     <DynamicHeightModal modalRef={bottomSheetModalRef}>
-      <FlatList
+      <BottomSheetFlatList
         // need to filter client-side since combining search and filter on API is not working
         data={game?.release_dates.filter(
           (release_date) =>
@@ -90,17 +94,12 @@ export function GamePlatformPicker() {
             releaseDate={releaseDate}
           />
         )}
-        ItemSeparatorComponent={() => (
-          <View
-            style={{
-              marginVertical: 4,
-              borderBottomWidth: StyleSheet.hairlineWidth,
-              borderColor: PlatformColor("separator"),
-            }}
-          />
-        )}
+        ItemSeparatorComponent={ItemSeparator}
         scrollEnabled={false}
-        style={{ paddingBottom: safeBottomArea, paddingHorizontal: 16 }}
+        contentContainerStyle={{
+          paddingBottom: safeBottomArea,
+          paddingHorizontal: 16,
+        }}
       />
     </DynamicHeightModal>
   );

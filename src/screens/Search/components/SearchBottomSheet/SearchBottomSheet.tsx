@@ -9,6 +9,7 @@ import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Keyboard,
+  LayoutChangeEvent,
   Platform,
   PlatformColor,
   Pressable,
@@ -51,11 +52,17 @@ export const SearchBottomSheet = () => {
   const tabBarHeight = useBottomTabBarHeight();
   const { top } = useSafeAreaInsets();
   const { categoryIndex, setCategoryIndex, isPro, proModalRef } = useStore();
+  const [initialSnapPoint, setInitialSnapPoint] = useState(0);
 
   // Set initial snapPoint as tabBarHeight instead of "CONTENT_HEIGHT to fix issues with scrolling flatlist"
   const snapPoints = useMemo(
-    () => [tabBarHeight, "50%", "100%"],
-    [tabBarHeight]
+    // 24 is height of handle indicator component
+    () => [
+      initialSnapPoint + 24 + styles.textInput.marginBottom,
+      "50%",
+      "100%",
+    ],
+    [initialSnapPoint]
   );
 
   const [searchValue, setSearchValue] = useState("");
@@ -121,6 +128,11 @@ export const SearchBottomSheet = () => {
     } else setStoredGames(undefined);
   }
 
+  const onLayout = (event: LayoutChangeEvent) => {
+    const { height } = event.nativeEvent.layout;
+    setInitialSnapPoint(height);
+  };
+
   return (
     <BottomSheet
       bottomInset={tabBarHeight}
@@ -139,6 +151,7 @@ export const SearchBottomSheet = () => {
       <View style={{ marginHorizontal: 12, flex: 1 }}>
         <View style={{ flexDirection: "row" }}>
           <BottomSheetTextInput
+            onLayout={onLayout}
             onChangeText={(value) => setSearchValue(value)}
             placeholder={categoryIndex === 0 ? "Movies & People" : "Games"}
             placeholderTextColor={PlatformColor("secondaryLabel")}

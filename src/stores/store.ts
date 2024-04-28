@@ -41,6 +41,8 @@ type Store = {
   proModalRef: typeof proModalRef;
   isPro: boolean;
   setIsPro: (isPro: Store["isPro"]) => void;
+  initialSnapPoint: number;
+  setInitialSnapPoint: (value: number) => void;
 };
 
 export const useStore = create<Store>((set) => ({
@@ -61,4 +63,6 @@ export const useStore = create<Store>((set) => ({
   proModalRef,
   isPro: false,
   setIsPro: (isPro) => set(() => ({ isPro })),
+  initialSnapPoint: 0,
+  setInitialSnapPoint: (value) => set(() => ({ initialSnapPoint: value })),
 }));

@@ -51,18 +51,22 @@ const ListHeader = () => (
 export const SearchBottomSheet = () => {
   const tabBarHeight = useBottomTabBarHeight();
   const { top } = useSafeAreaInsets();
-  const { categoryIndex, setCategoryIndex, isPro, proModalRef } = useStore();
-  const [initialSnapPoint, setInitialSnapPoint] = useState(0);
+  const {
+    categoryIndex,
+    setCategoryIndex,
+    isPro,
+    proModalRef,
+    initialSnapPoint,
+    setInitialSnapPoint,
+  } = useStore();
 
-  // Set initial snapPoint as tabBarHeight instead of "CONTENT_HEIGHT to fix issues with scrolling flatlist"
   const snapPoints = useMemo(
-    // 24 is height of handle indicator component
     () => [
-      initialSnapPoint + 24 + styles.textInput.marginBottom,
+      initialSnapPoint !== 0 ? initialSnapPoint : tabBarHeight,
       "50%",
       "100%",
     ],
-    [initialSnapPoint]
+    [initialSnapPoint, tabBarHeight]
   );
 
   const [searchValue, setSearchValue] = useState("");
@@ -130,7 +134,8 @@ export const SearchBottomSheet = () => {
 
   const onLayout = (event: LayoutChangeEvent) => {
     const { height } = event.nativeEvent.layout;
-    setInitialSnapPoint(height);
+    // 24 is height of handle indicator component
+    setInitialSnapPoint(height + 24 + styles.textInput.marginBottom);
   };
 
   return (

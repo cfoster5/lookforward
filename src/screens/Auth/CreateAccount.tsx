@@ -50,7 +50,9 @@ function CreateAccount({ navigation, route }: Props) {
   async function skipAccountCreation() {
     try {
       await auth().signInAnonymously();
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

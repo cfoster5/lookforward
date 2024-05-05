@@ -52,9 +52,9 @@ export const PurchaseOption = ({
       // ) {
       //   navigation.goBack();
       // }
-    } catch (e) {
-      if (!e.userCancelled) {
-        Alert.alert("Error purchasing package", e.message);
+    } catch (error) {
+      if (!error.userCancelled) {
+        Alert.alert("Error purchasing package", error.message);
       }
     } finally {
       setIsPurchasing(null);

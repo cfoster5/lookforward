@@ -46,7 +46,9 @@ export const ExplorePro = ({ modalRef }: Props) => {
           // setSelectedProduct(offerings.all["pro"]?.annual!);
           // Display packages for sale
         }
-      } catch (e) {}
+      } catch (error) {
+        console.error(error);
+      }
     };
 
     getPackages();
@@ -68,8 +70,8 @@ export const ExplorePro = ({ modalRef }: Props) => {
           "Thank you so much for your support. Please enjoy your Pro content."
         );
       }
-    } catch (e) {
-      if (!e.userCancelled) {
+    } catch (error) {
+      if (!error.userCancelled) {
         Alert.alert("Error purchasing package", e.message);
       }
     } finally {
@@ -85,7 +87,9 @@ export const ExplorePro = ({ modalRef }: Props) => {
         setIsPro(true);
         Alert.alert("Purchase restored");
       }
-    } catch (e) {}
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (

@@ -5,7 +5,6 @@ import { ColorSchemeName } from "react-native";
 import { create } from "zustand";
 
 import { FirestoreMovie } from "@/interfaces/firebase";
-import { Game, ReleaseDate } from "@/types";
 
 const bottomSheetModalRef = createRef<BottomSheetModal>();
 const onboardingModalRef = createRef<BottomSheetModal>();

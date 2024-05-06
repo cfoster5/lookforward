@@ -21,15 +21,6 @@ type Store = {
   setUser: (user: FirebaseAuthTypes.User | null) => void;
   theme: ColorSchemeName;
   setTheme: (theme: ColorSchemeName) => void;
-  // I think below type is correct but needs validation
-  game: Game & {
-    release_dates: ReleaseDate[];
-  };
-  setGame: (
-    game: Game & {
-      release_dates: ReleaseDate[];
-    }
-  ) => void;
   movieSubs: FirestoreMovie[];
   setMovieSubs: (movies: FirestoreMovie[]) => void;
   gameSubs: any;
@@ -50,8 +41,6 @@ export const useStore = create<Store>((set) => ({
   setUser: (user) => set(() => ({ user })),
   theme: "dark",
   setTheme: (theme) => set(() => ({ theme })),
-  game: null,
-  setGame: (game) => set(() => ({ game })),
   movieSubs: [],
   setMovieSubs: (movieSubs) => set(() => ({ movieSubs })),
   gameSubs: [],

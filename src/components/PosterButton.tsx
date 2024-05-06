@@ -14,8 +14,7 @@ interface Props {
 }
 
 function PosterButton({ movieId, game }: Props) {
-  const { user, movieSubs, setGame, gameSubs, bottomSheetModalRef } =
-    useStore();
+  const { user, movieSubs, gameSubs, bottomSheetModalRef } = useStore();
 
   let docId = "";
   if (movieId) {
@@ -104,8 +103,7 @@ function PosterButton({ movieId, game }: Props) {
     } else if (game) {
       if (isSubbed()) deleteItem("gameReleases");
       else {
-        setGame(game);
-        bottomSheetModalRef.current?.present();
+        bottomSheetModalRef.current?.present(game);
       }
     }
   }

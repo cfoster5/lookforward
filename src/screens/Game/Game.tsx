@@ -45,7 +45,7 @@ type GameScreenNavigationProp = CompositeScreenProps<
 export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const { game } = route.params;
   const [countdownId, setCountdownId] = useState<FirestoreGame["documentID"]>();
-  const { user, gameSubs, bottomSheetModalRef, setGame } = useStore();
+  const { user, gameSubs, bottomSheetModalRef } = useStore();
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
   const tabBarheight = useBottomTabBarHeight();
@@ -73,8 +73,10 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
             iconName={countdownId ? "checkmark-outline" : "add-outline"}
             onPress={() => {
               if (!countdownId) {
-                setGame({ ...game, release_dates: data?.release_dates });
-                bottomSheetModalRef.current?.present();
+                bottomSheetModalRef.current?.present({
+                  ...game,
+                  release_dates: data?.release_dates,
+                });
               } else {
                 removeSub("gameReleases", countdownId, user!.uid);
               }
@@ -83,7 +85,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
         </HeaderButtons>
       ),
     });
-  }, [bottomSheetModalRef, countdownId, game, navigation, setGame, user, data]);
+  }, [bottomSheetModalRef, countdownId, game, navigation, user, data]);
 
   useEffect(() => {
     const documentID = gameSubs.find(

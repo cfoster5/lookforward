@@ -90,21 +90,16 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
     });
   }, [name, navigation, personId]);
 
-  function returnData() {
-    if (selectedJob === "Actor") {
-      return person?.movie_credits.cast.sort(sortReleaseDates);
-    } else {
-      return person?.movie_credits.crew
-        .filter((credit) => credit.job === selectedJob)
-        .sort(sortReleaseDates);
-    }
-  }
+  const castCredits = person?.movie_credits.cast.sort(sortReleaseDates);
+  const crewCredits = person?.movie_credits.crew
+    .filter((credit) => credit.job === selectedJob)
+    .sort(sortReleaseDates);
 
   if (isLoading) return <LoadingScreen />;
 
   return (
     <FlatList
-      data={returnData()}
+      data={selectedJob === "Actor" ? castCredits : crewCredits}
       renderItem={({ item }) => (
         <MoviePoster
           key={item.id.toString()}

@@ -1,7 +1,8 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useScrollToTop } from "@react-navigation/native";
 import { DateTime } from "luxon";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   FlatList,
   PlatformColor,
@@ -20,6 +21,7 @@ import { MovieOption } from "./types";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { useStore } from "@/stores/store";
 import { now } from "@/utils/dates";
 
 export function MovieLayout({ navigation }) {
@@ -30,6 +32,8 @@ export function MovieLayout({ navigation }) {
   const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
   const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(option);
   const { top } = useSafeAreaInsets();
+  const { initialSnapPoint } = useStore();
+  const tabBarHeight = useBottomTabBarHeight();
 
   const movies = data?.pages.flatMap((page) => page.results);
 
@@ -124,6 +128,7 @@ export function MovieLayout({ navigation }) {
           showsVerticalScrollIndicator={false}
           onEndReached={() => (hasNextPage ? fetchNextPage() : null)}
           onEndReachedThreshold={1.5}
+          contentInset={{ bottom: tabBarHeight + initialSnapPoint }}
         />
       ) : (
         <LoadingScreen />

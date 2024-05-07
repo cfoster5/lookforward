@@ -74,20 +74,6 @@
     "typescript": "^5.3.0"
   },
   "private": true,
-  "eslintConfig": {
-    "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "plugin:react/jsx-runtime",
-      "universe/native",
-      "plugin:react-hooks/recommended"
-    ],
-    "rules": {
-      "react/no-unstable-nested-components": [
-        "warn"
-      ]
-    }
-  },
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"

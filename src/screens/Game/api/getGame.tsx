@@ -3,7 +3,9 @@ import { useQuery } from "react-query";
 import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
 import { Game, ReleaseDate } from "@/types";
 
-async function getGame(gameId: number) {
+async function getGame(
+  gameId: number
+): Promise<(Game & { release_dates: ReleaseDate[] })[]> {
   const response = await fetch(
     "https://k0o7ncaic1.execute-api.us-east-2.amazonaws.com/production/v4/games",
     {
@@ -13,11 +15,10 @@ async function getGame(gameId: number) {
       where id = ${gameId} & release_dates.region = (2,8);`,
     }
   );
-  const json: (Game & { release_dates: ReleaseDate[] })[] =
-    await response.json();
-  return json[0];
+  return await response.json();
 }
 
-export function useGame(gameId: number) {
-  return useQuery(["game", { gameId }], () => getGame(gameId));
-}
+export const useGame = (gameId: number) =>
+  useQuery(["game", { gameId }], () => getGame(gameId), {
+    select: (games) => games[0],
+  });

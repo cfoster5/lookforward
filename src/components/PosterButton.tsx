@@ -16,16 +16,6 @@ interface Props {
 function PosterButton({ movieId, game }: Props) {
   const { user, movieSubs, gameSubs, bottomSheetModalRef } = useStore();
 
-  let docId = "";
-  if (movieId) {
-    docId = movieId;
-  }
-  if (game) {
-    docId = gameSubs.find(
-      (releaseDate) => releaseDate.game.id === game.id
-    )?.documentID;
-  }
-
   const isMovieSub = () =>
     movieId && movieSubs.some((sub) => sub.documentID === movieId.toString());
 
@@ -44,7 +34,7 @@ function PosterButton({ movieId, game }: Props) {
       try {
         await firestore()
           .collection("movies")
-          .doc(docId)
+          .doc(movieId)
           .set(
             { subscribers: firestore.FieldValue.arrayUnion(user!.uid) },
             { merge: true }
@@ -66,7 +56,7 @@ function PosterButton({ movieId, game }: Props) {
     });
   }
 
-  async function deleteItem(collection: string) {
+  async function deleteItem(collection: string, docId: string) {
     Animated.timing(transformAnim, {
       toValue: 0,
       duration: 50,
@@ -74,7 +64,6 @@ function PosterButton({ movieId, game }: Props) {
       easing: Easing.inOut(Easing.ease),
     }).start(async () => {
       try {
-        console.log(`docId`, docId);
         await firestore()
           .collection(collection)
           .doc(docId)
@@ -94,12 +83,15 @@ function PosterButton({ movieId, game }: Props) {
   }
 
   function toggleMovieSub() {
-    return isMovieSub() ? deleteItem("movies") : addMovieToList();
+    return isMovieSub() ? deleteItem("movies", movieId!) : addMovieToList();
   }
 
   function toggleGameSub() {
+    const gameId = gameSubs.find(
+      (releaseDate) => releaseDate.game.id === game!.id
+    )?.documentID;
     return isGameSub()
-      ? deleteItem("gameReleases")
+      ? deleteItem("gameReleases", gameId)
       : bottomSheetModalRef.current?.present(game);
   }
 

@@ -26,14 +26,11 @@ function PosterButton({ movieId, game }: Props) {
     )?.documentID;
   }
 
-  function isSubbed(): boolean {
-    if (movieId) {
-      return movieSubs.some((sub) => sub.documentID === movieId?.toString());
-    } else if (game) {
-      return gameSubs.some((releaseDate) => releaseDate.game.id === game.id);
-    }
-    return false;
-  }
+  const isMovieSub = () =>
+    movieId && movieSubs.some((sub) => sub.documentID === movieId.toString());
+
+  const isGameSub = () =>
+    game && gameSubs.some((releaseDate) => releaseDate.game.id === game.id);
 
   const transformAnim = useRef(new Animated.Value(1)).current;
 
@@ -96,21 +93,19 @@ function PosterButton({ movieId, game }: Props) {
     });
   }
 
-  function handlePress() {
-    if (movieId) {
-      if (isSubbed()) deleteItem("movies");
-      else addMovieToList();
-    } else if (game) {
-      if (isSubbed()) deleteItem("gameReleases");
-      else {
-        bottomSheetModalRef.current?.present(game);
-      }
-    }
+  function toggleMovieSub() {
+    return isMovieSub() ? deleteItem("movies") : addMovieToList();
+  }
+
+  function toggleGameSub() {
+    return isGameSub()
+      ? deleteItem("gameReleases")
+      : bottomSheetModalRef.current?.present(game);
   }
 
   return (
     <Pressable
-      onPress={handlePress}
+      onPress={movieId ? () => toggleMovieSub() : () => toggleGameSub()}
       style={{ position: "absolute", zIndex: 1, bottom: 4, right: 4 }}
     >
       <View
@@ -136,7 +131,11 @@ function PosterButton({ movieId, game }: Props) {
         >
           <Animated.View style={{ transform: [{ scale: transformAnim }] }}>
             <Ionicons
-              name={isSubbed() ? "checkmark-outline" : "add-outline"}
+              name={
+                isMovieSub() || isGameSub()
+                  ? "checkmark-outline"
+                  : "add-outline"
+              }
               color={iOSColors.white}
               size={28}
               style={{ textAlign: "center" }}

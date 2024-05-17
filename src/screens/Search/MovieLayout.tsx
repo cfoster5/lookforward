@@ -54,18 +54,12 @@ export function MovieLayout({ navigation }) {
   //   }
   // }, [option]);
 
-  function filteredMovies() {
-    if (option === "Coming Soon") {
-      return movies?.filter((movie) =>
-        movie.release_date
-          ? DateTime.fromFormat(movie?.release_date, "yyyy-MM-dd") >= now
-          : null
-      );
-      // return movies;
-    } else {
-      return movies;
-    }
-  }
+  const upcomingMovies = () =>
+    movies?.filter((movie) =>
+      movie.release_date
+        ? DateTime.fromFormat(movie.release_date, "yyyy-MM-dd") >= now
+        : null
+    );
 
   return (
     <>
@@ -101,7 +95,7 @@ export function MovieLayout({ navigation }) {
 
       {!isLoading ? (
         <FlatList
-          data={filteredMovies()}
+          data={option === "Coming Soon" ? upcomingMovies() : movies}
           renderItem={({ item }) => (
             <MoviePoster
               pressHandler={() =>

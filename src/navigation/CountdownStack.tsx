@@ -5,11 +5,11 @@ import Actor from "../screens/Actor/Actor";
 import { Collection } from "../screens/Collection/Collection";
 import Countdown from "../screens/Countdown/Countdown";
 import Movie from "../screens/Movie/Movie";
-import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 
 import { MultiItemHeader, ShareHeader } from "@/components/Headers";
 import Game from "@/screens/Game/Game";
 import GameDiscover from "@/screens/GameDiscover/GameDiscover";
+import MovieDiscover from "@/screens/MovieDiscover/MovieDiscover";
 import { CountdownStackParamList } from "@/types";
 
 const Stack = createNativeStackNavigator<CountdownStackParamList>();

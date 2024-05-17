@@ -1,8 +1,8 @@
-import { composeReleasesToGames } from "@/helpers/helpers";
 import { useQuery } from "react-query";
 
-import { timestamp } from "@/utils/dates";
 import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
+import { composeReleasesToGames } from "@/helpers/helpers";
+import { timestamp } from "@/utils/dates";
 
 async function getReleases(filter: string) {
   const response = await fetch(

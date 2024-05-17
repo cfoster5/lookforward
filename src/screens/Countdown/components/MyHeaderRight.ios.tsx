@@ -1,7 +1,7 @@
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-
 import { PlatformColor, StyleProp, TextStyle, ViewStyle } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 
 type Props = {
   text: string;

@@ -7,7 +7,7 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "postinstall": "patch-package && husky",
+    "postinstall": "husky",
     "lint": "expo lint"
   },
   "dependencies": {
@@ -39,7 +39,6 @@
     "immer": "^9.0.15",
     "intl": "^1.2.5",
     "luxon": "^2.4.0",
-    "patch-package": "^8.0.0",
     "postinstall-postinstall": "^2.1.0",
     "react": "18.2.0",
     "react-native": "0.74.1",

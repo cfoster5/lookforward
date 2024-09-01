@@ -36,3 +36,6 @@ yarn-error.*
 
 # .secret.* files
 **/*.secret.*
+
+# commonly used commands
+docs/scripts.md

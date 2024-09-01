@@ -14,27 +14,13 @@ interface Props {
 }
 
 function PosterButton({ movieId, game }: Props) {
-  const { user, movieSubs, setGame, gameSubs, bottomSheetModalRef } =
-    useStore();
+  const { user, movieSubs, gameSubs, bottomSheetModalRef } = useStore();
 
-  let docId = "";
-  if (movieId) {
-    docId = movieId;
-  }
-  if (game) {
-    docId = gameSubs.find(
-      (releaseDate) => releaseDate.game.id === game.id
-    )?.documentID;
-  }
+  const isMovieSub = () =>
+    movieId && movieSubs.some((sub) => sub.documentID === movieId.toString());
 
-  function isSubbed(): boolean {
-    if (movieId) {
-      return movieSubs.some((sub) => sub.documentID === movieId?.toString());
-    } else if (game) {
-      return gameSubs.some((releaseDate) => releaseDate.game.id === game.id);
-    }
-    return false;
-  }
+  const isGameSub = () =>
+    game && gameSubs.some((releaseDate) => releaseDate.game.id === game.id);
 
   const transformAnim = useRef(new Animated.Value(1)).current;
 
@@ -48,7 +34,7 @@ function PosterButton({ movieId, game }: Props) {
       try {
         await firestore()
           .collection("movies")
-          .doc(docId)
+          .doc(movieId)
           .set(
             { subscribers: firestore.FieldValue.arrayUnion(user!.uid) },
             { merge: true }
@@ -70,7 +56,7 @@ function PosterButton({ movieId, game }: Props) {
     });
   }
 
-  async function deleteItem(collection: string) {
+  async function deleteItem(collection: string, docId: string) {
     Animated.timing(transformAnim, {
       toValue: 0,
       duration: 50,
@@ -78,7 +64,6 @@ function PosterButton({ movieId, game }: Props) {
       easing: Easing.inOut(Easing.ease),
     }).start(async () => {
       try {
-        console.log(`docId`, docId);
         await firestore()
           .collection(collection)
           .doc(docId)
@@ -97,22 +82,22 @@ function PosterButton({ movieId, game }: Props) {
     });
   }
 
-  function handlePress() {
-    if (movieId) {
-      if (isSubbed()) deleteItem("movies");
-      else addMovieToList();
-    } else if (game) {
-      if (isSubbed()) deleteItem("gameReleases");
-      else {
-        setGame(game);
-        bottomSheetModalRef.current?.present();
-      }
-    }
+  function toggleMovieSub() {
+    return isMovieSub() ? deleteItem("movies", movieId!) : addMovieToList();
+  }
+
+  function toggleGameSub() {
+    const gameId = gameSubs.find(
+      (releaseDate) => releaseDate.game.id === game!.id
+    )?.documentID;
+    return isGameSub()
+      ? deleteItem("gameReleases", gameId)
+      : bottomSheetModalRef.current?.present(game);
   }
 
   return (
     <Pressable
-      onPress={handlePress}
+      onPress={movieId ? () => toggleMovieSub() : () => toggleGameSub()}
       style={{ position: "absolute", zIndex: 1, bottom: 4, right: 4 }}
     >
       <View
@@ -138,7 +123,11 @@ function PosterButton({ movieId, game }: Props) {
         >
           <Animated.View style={{ transform: [{ scale: transformAnim }] }}>
             <Ionicons
-              name={isSubbed() ? "checkmark-outline" : "add-outline"}
+              name={
+                isMovieSub() || isGameSub()
+                  ? "checkmark-outline"
+                  : "add-outline"
+              }
               color={iOSColors.white}
               size={28}
               style={{ textAlign: "center" }}

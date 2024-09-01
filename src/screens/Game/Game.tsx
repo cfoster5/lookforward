@@ -22,7 +22,6 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useGame } from "./api/getGame";
 
-import { BlueBullet } from "@/components/BlueBullet";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import CategoryControl from "@/components/CategoryControl/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
@@ -42,10 +41,32 @@ type GameScreenNavigationProp = CompositeScreenProps<
   BottomTabScreenProps<TabNavigationParamList, "FindTab">
 >;
 
+type GameData = NonNullable<ReturnType<typeof useGame>["data"]>;
+
+type GameCreditsProp = {
+  companies: GameData["involved_companies"];
+  type: "publisher" | "developer" | "supporting";
+  title: string;
+};
+
+const GameCredits = ({ companies, type, title }: GameCreditsProp) =>
+  companies?.find((company) => company[type]) && (
+    <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+      {title}:
+      {companies
+        .filter((company) => company[type])
+        .map((company, i) => (
+          <Fragment key={i}>
+            {i > 0 ? `, ${company.company.name}` : ` ${company.company.name}`}
+          </Fragment>
+        ))}
+    </ThemedText>
+  );
+
 export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const { game } = route.params;
   const [countdownId, setCountdownId] = useState<FirestoreGame["documentID"]>();
-  const { user, gameSubs, bottomSheetModalRef, setGame } = useStore();
+  const { user, gameSubs, bottomSheetModalRef } = useStore();
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
   const tabBarheight = useBottomTabBarHeight();
@@ -73,8 +94,10 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
             iconName={countdownId ? "checkmark-outline" : "add-outline"}
             onPress={() => {
               if (!countdownId) {
-                setGame({ ...game, release_dates: data?.release_dates });
-                bottomSheetModalRef.current?.present();
+                bottomSheetModalRef.current?.present({
+                  ...game,
+                  release_dates: data?.release_dates,
+                });
               } else {
                 removeSub("gameReleases", countdownId, user!.uid);
               }
@@ -83,7 +106,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
         </HeaderButtons>
       ),
     });
-  }, [bottomSheetModalRef, countdownId, game, navigation, setGame, user, data]);
+  }, [bottomSheetModalRef, countdownId, game, navigation, user, data]);
 
   useEffect(() => {
     const documentID = gameSubs.find(
@@ -160,57 +183,21 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
       <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
         {detailIndex === 0 && !isLoading && (
           <>
-            {data?.involved_companies?.find((company) => company.publisher) && (
-              <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
-                Published by:
-                {data.involved_companies
-                  .filter((company) => company.publisher)
-                  .map((company, i) => (
-                    <Fragment key={i}>
-                      {i > 0
-                        ? `, ${company.company.name}`
-                        : ` ${company.company.name}`}
-                    </Fragment>
-                  ))}
-              </ThemedText>
-            )}
-            {data?.involved_companies?.find((company) => company.developer) && (
-              <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
-                Developed by:
-                {data.involved_companies
-                  .filter((company) => company.developer)
-                  .map((company, i) => (
-                    <Fragment key={i}>
-                      {i > 0
-                        ? `, ${company.company.name}`
-                        : ` ${company.company.name}`}
-                    </Fragment>
-                  ))}
-              </ThemedText>
-            )}
-            {data?.involved_companies?.find(
-              (company) => company.supporting
-            ) && (
-              <View
-                style={{
-                  flexDirection: "row",
-                  paddingTop: 16,
-                  flexWrap: "wrap",
-                }}
-              >
-                <ThemedText style={iOSUIKit.body}>Supported by: </ThemedText>
-                {data.involved_companies
-                  .filter((company) => company.supporting)
-                  .map((company, i) => (
-                    <View style={{ flexDirection: "row" }} key={i}>
-                      {i > 0 && <BlueBullet />}
-                      <ThemedText style={iOSUIKit.body}>
-                        {company.company.name}
-                      </ThemedText>
-                    </View>
-                  ))}
-              </View>
-            )}
+            <GameCredits
+              companies={data?.involved_companies}
+              type="publisher"
+              title="Published by"
+            />
+            <GameCredits
+              companies={data?.involved_companies}
+              type="developer"
+              title="Developed by"
+            />
+            <GameCredits
+              companies={data?.involved_companies}
+              type="supporting"
+              title="Supported by"
+            />
           </>
         )}
         {detailIndex === 1 &&

@@ -9,7 +9,7 @@ import { DynamicHeightModal } from "./DynamicHeightModal";
 import { reusableStyles } from "../helpers/styles";
 
 import { useStore } from "@/stores/store";
-import { ReleaseDate } from "@/types";
+import { Game, ReleaseDate } from "@/types";
 import { timestampToUTC } from "@/utils/dates";
 
 type RenderItemProps = {
@@ -51,10 +51,15 @@ const ItemSeparator = () => (
 );
 
 export function GamePlatformPicker() {
-  const { user, bottomSheetModalRef, game } = useStore();
+  const { user, bottomSheetModalRef } = useStore();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
-  async function addGameRelease(releaseDate: ReleaseDate) {
+  async function addGameRelease(
+    game: Game & {
+      release_dates: ReleaseDate[];
+    },
+    releaseDate: ReleaseDate
+  ) {
     // console.log("releaseDate", releaseDate);
     // console.log(game);
     const { id, name } = game;
@@ -81,26 +86,28 @@ export function GamePlatformPicker() {
 
   return (
     <DynamicHeightModal modalRef={bottomSheetModalRef}>
-      <BottomSheetFlatList
-        // need to filter client-side since combining search and filter on API is not working
-        data={game?.release_dates.filter(
-          (release_date) =>
-            release_date.region === 2 || release_date.region === 8
-        )}
-        renderItem={({ item: releaseDate }) => (
-          <RenderItem
-            key={releaseDate.id}
-            handlePress={() => addGameRelease(releaseDate)}
-            releaseDate={releaseDate}
-          />
-        )}
-        ItemSeparatorComponent={ItemSeparator}
-        scrollEnabled={false}
-        contentContainerStyle={{
-          paddingBottom: safeBottomArea,
-          paddingHorizontal: 16,
-        }}
-      />
+      {({ data }) => (
+        <BottomSheetFlatList
+          // need to filter client-side since combining search and filter on API is not working
+          data={data?.release_dates.filter(
+            (release_date) =>
+              release_date.region === 2 || release_date.region === 8
+          )}
+          renderItem={({ item: releaseDate }) => (
+            <RenderItem
+              key={releaseDate.id}
+              handlePress={() => addGameRelease(data, releaseDate)}
+              releaseDate={releaseDate}
+            />
+          )}
+          ItemSeparatorComponent={ItemSeparator}
+          scrollEnabled={false}
+          contentContainerStyle={{
+            paddingBottom: safeBottomArea,
+            paddingHorizontal: 16,
+          }}
+        />
+      )}
     </DynamicHeightModal>
   );
 }

@@ -48,8 +48,8 @@ export const TipModal = ({ modalRef }: Props) => {
         ) {
           setPackages(offerings.current.availablePackages);
         }
-      } catch (e) {
-        Alert.alert("Error getting offers", e.message);
+      } catch (error) {
+        Alert.alert("Error getting offers", error.message);
       }
     };
 

@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 
-import { timestamp } from "@/utils/dates";
 import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
+import { timestamp } from "@/utils/dates";
 
 async function getGames() {
   const response = await fetch(

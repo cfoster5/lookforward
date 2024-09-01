@@ -1,5 +1,5 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import {
   FlatList,
   PlatformColor,
@@ -14,15 +14,17 @@ import { iOSUIKit } from "react-native-typography";
 import { useGames } from "./api/getGames";
 
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
-import { ListLabel } from "@/components/ListLabel";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { GamePoster } from "@/components/Posters/GamePoster";
+import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
 
 export function GameLayout({ navigation }) {
   const { top } = useSafeAreaInsets();
   const scrollRef = useRef<FlatList>(null);
   const { data, isLoading } = useGames();
+  const { initialSnapPoint } = useStore();
+  const tabBarHeight = useBottomTabBarHeight();
 
   return (
     <>
@@ -71,6 +73,7 @@ export function GameLayout({ navigation }) {
             initialNumToRender={6}
             // scrollIndicatorInsets={scrollIndicatorInsets}
             showsVerticalScrollIndicator={false}
+            contentInset={{ bottom: tabBarHeight + initialSnapPoint }}
           />
           <GamePlatformPicker />
         </>

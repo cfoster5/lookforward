@@ -6,10 +6,10 @@ import { Collection } from "../screens/Collection/Collection";
 import Game from "../screens/Game/Game";
 import GameDiscover from "../screens/GameDiscover/GameDiscover";
 import Movie from "../screens/Movie/Movie";
-import MovieDiscover from "../screens/MovieDiscover/MovieDiscover";
 import Search from "../screens/Search/Search";
 
 import { MultiItemHeader, ShareHeader } from "@/components/Headers";
+import MovieDiscover from "@/screens/MovieDiscover/MovieDiscover";
 import { FindStackParamList } from "@/types";
 
 const Stack = createNativeStackNavigator<FindStackParamList>();

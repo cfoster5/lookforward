@@ -22,7 +22,7 @@ type FindScreenNavigationProp = CompositeScreenProps<
 
 function Search({ navigation, route }: FindScreenNavigationProp) {
   const { theme } = useContext(TabStackContext);
-  const { categoryIndex } = useStore();
+  const { categoryIndex, initialSnapPoint } = useStore();
   const tabBarHeight = useBottomTabBarHeight();
 
   // const scrollIndicatorInsets =
@@ -31,7 +31,12 @@ function Search({ navigation, route }: FindScreenNavigationProp) {
   return (
     <>
       {/* Wrap with flex view to fix list running under tab bar; Use x2 because of tab bar and fake view from Search */}
-      <View style={{ flex: 1, paddingBottom: tabBarHeight * 2 }}>
+      <View
+        style={{
+          flex: 1,
+          paddingBottom: tabBarHeight + initialSnapPoint,
+        }}
+      >
         {categoryIndex === 0 ? (
           <MovieLayout navigation={navigation} />
         ) : (

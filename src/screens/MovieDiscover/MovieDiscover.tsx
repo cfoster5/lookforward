@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import {
   BottomTabScreenProps,
   useBottomTabBarHeight,
@@ -8,13 +8,7 @@ import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useLayoutEffect, useRef, useState } from "react";
-import {
-  FlatList,
-  Platform,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { FlatList, Platform, Text, useWindowDimensions } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -141,7 +135,7 @@ function MovieDiscover({
   function DiscoveryFilterModal({ modalRef }) {
     return (
       <DynamicHeightModal modalRef={modalRef}>
-        <View style={{ paddingBottom: safeBottomArea }}>
+        <BottomSheetView style={{ paddingBottom: safeBottomArea }}>
           <ModalListWrapper text="Sort By">
             <FlatList
               scrollEnabled={false}
@@ -219,7 +213,7 @@ function MovieDiscover({
               keyExtractor={(item) => item.provider_id.toString()}
             />
           </ModalListWrapper>
-        </View>
+        </BottomSheetView>
       </DynamicHeightModal>
     );
   }

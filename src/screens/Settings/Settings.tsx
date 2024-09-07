@@ -29,7 +29,7 @@ function Settings({ navigation }) {
       .doc(user!.uid)
       .onSnapshot(
         (docSnapshot) => setNotifications(docSnapshot.data()?.notifications),
-        (error) => console.log(error)
+        (error) => console.log(error),
       );
     // Stop listening for updates when no longer required
     return preferenceSubscription;
@@ -68,7 +68,7 @@ function Settings({ navigation }) {
               .update({ "notifications.day": value });
             await getNotificationPermissions();
           }}
-          value={notifications.day}
+          value={notifications?.day}
         />
         <NotificationSetting
           title="Week Before"
@@ -80,7 +80,7 @@ function Settings({ navigation }) {
               .update({ "notifications.week": value });
             await getNotificationPermissions();
           }}
-          value={notifications.week}
+          value={notifications?.week}
           style={{ borderBottomWidth: 0 }}
         />
         {!hasPermissions && (
@@ -120,7 +120,7 @@ function Settings({ navigation }) {
             <SettingNavButton
               handlePress={() => {
                 Linking.openURL(
-                  `itms-apps://itunes.apple.com/app/viewContentsUserReviews/id1492748952?action=write-review`
+                  `itms-apps://itunes.apple.com/app/viewContentsUserReviews/id1492748952?action=write-review`,
                 );
               }}
               text="Write a Review"

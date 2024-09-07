@@ -2235,35 +2235,35 @@
   resolved "https://registry.yarnpkg.com/@react-native-community/segmented-control/-/segmented-control-2.2.2.tgz#4014256819ab8f40f6bc3a3929ff14a9d149cf04"
   integrity sha512-14+4HnGVrg3USqMzcHCPCqPmPmaEj0ogQH4pHRFXjoVvJokzidXBcYyXl5yrwFcKGW6zTXI6Fx9Qgt4ydtS6tw==
 
-"@react-native-firebase/analytics@^18.3.1":
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-18.3.1.tgz#f52bebb8c94647d5247a72b7f7c5b30c69018853"
-  integrity sha512-MoznQywthPGLqaiebsyXE45SFPMZrouDnBdmQ5PIjAgjD+f2SW9JogeebZ79zetXd64qMdXdGeYAPyLB3NUEbA==
+"@react-native-firebase/analytics@18.9.0":
+  version "18.9.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/analytics/-/analytics-18.9.0.tgz#15defe1052b01975e8b9dd487aff4041b5e42c1d"
+  integrity sha512-+5xuU2k+6zCG+QOzHTKLdZpD14DD9tz1m7gfO89/gO2qFdCqwOpLcBu2bb6ocsfgUE9CJkb0cFceO/m/9pe3jw==
 
-"@react-native-firebase/app@^18.3.1":
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-18.3.1.tgz#f6f53dd64837ba39710032a40c217358dc385963"
-  integrity sha512-6IbAwVfIrRoKMP+lRVGwDByOz0uSPPMlHTbRp9xglm0OOPrbDWH0hjDhHoHQ8KFrMQvUIaV3bMSg5iBRFHrdnA==
+"@react-native-firebase/app@18.9.0":
+  version "18.9.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/app/-/app-18.9.0.tgz#e3c26156ac4f1d12ad5b2c9ce5caf7745204be65"
+  integrity sha512-kMY4HVWxfz0YjQ5n9oyW9uifI5CkQfLfj2FEeQrI9mCwaCNuRw04x9Yc8LeFpew7NPEDVfty7tlL3WEjDpvNEw==
   dependencies:
-    opencollective-postinstall "^2.0.1"
+    opencollective-postinstall "^2.0.3"
     superstruct "^0.6.2"
 
-"@react-native-firebase/auth@^18.3.1":
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-18.3.1.tgz#e0a6a3093952c1eb6d4a40a5cdd595e9fee9f77e"
-  integrity sha512-8LOVUO9BMGDGvX4uz4pJBQxGsOaLO3MFwgjuN+y9inpQRgqVm1kHQ1lsKWaS7zZLqVyYUxpY+wYx6jWL/xGwiA==
+"@react-native-firebase/auth@18.9.0":
+  version "18.9.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/auth/-/auth-18.9.0.tgz#4be5dd516684db4468f23dfed5f5d1e9fe00928b"
+  integrity sha512-EkkjoXU2iSUmcP1Hpb/uua9f47P3GxRgqMF2aAi/B+Db5h1Ua5I4cNx3M1iVz9+MApZeNyb1ES4fI9EbXJBfxQ==
   dependencies:
-    plist "^3.0.5"
+    plist "^3.1.0"
 
-"@react-native-firebase/firestore@^18.3.1":
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-18.3.1.tgz#337304eee2570bfe58d66dba19d2c1a0ba865b1f"
-  integrity sha512-+ot8gdZufsfXGbqW6F4sORxEPXhW2l/LnbJBKxhCVM+w0FikYJJu3VtEneumvojNP4KC0Ci+xn6aCvI5qkqZ6Q==
+"@react-native-firebase/firestore@18.9.0":
+  version "18.9.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/firestore/-/firestore-18.9.0.tgz#4285e51271010f97a62fdeeecb4f909b90dc35c5"
+  integrity sha512-Hma+LB5wAYt+NgGxALWxCwrTkUz7jNXHIRZLghzMK4RFmhVCaL7q2qaFvMfbu58UmRbcocGetykI4R1qQOxY9w==
 
-"@react-native-firebase/messaging@^18.3.1":
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-18.3.1.tgz#874482eec5070eb9b9c0167240063d278aeba874"
-  integrity sha512-83WPEPY7bIpyBsXv9zjlMtnPz9MotBCnx7wGG7frjPV8VSh8XLPxjiPtngy734NrRfEwqCbMoDssnWos1njq6w==
+"@react-native-firebase/messaging@18.9.0":
+  version "18.9.0"
+  resolved "https://registry.yarnpkg.com/@react-native-firebase/messaging/-/messaging-18.9.0.tgz#7c814145717407192534d54baa354036978cee6a"
+  integrity sha512-Jl62EI1WEpM7TZG4BXXeKAphkiFlyNh57yiBJRRY4N5/c8GXxP4GoB7UZVyQjhD55RuqrVfosFG63uBtd7Hsvg==
 
 "@react-native/assets-registry@0.74.87":
   version "0.74.87"
@@ -7400,7 +7400,7 @@ open@^8.0.4, open@^8.3.0:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-opencollective-postinstall@^2.0.1:
+opencollective-postinstall@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz#7a0fff978f6dbfa4d006238fbac98ed4198c3259"
   integrity sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
@@ -7663,7 +7663,7 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-plist@^3.0.5:
+plist@^3.0.5, plist@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/plist/-/plist-3.1.0.tgz#797a516a93e62f5bde55e0b9cc9c967f860893c9"
   integrity sha512-uysumyrvkUX0rX/dEVqt8gC3sTBzd4zoWfLeS29nb53imdaXVvLINYXTI2GNqzaMuvacNx4uJQ8+b3zXR0pkgQ==

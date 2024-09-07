@@ -19,6 +19,9 @@ export default {
         process.env.GOOGLE_SERVICE_PLIST ?? "./GoogleService-Info.secret.plist",
       bundleIdentifier: "com.lookforward.app",
       associatedDomains: ["applinks:getlookforward.app"],
+      entitlements: {
+        "aps-environment": "production",
+      },
       buildNumber: "1",
     },
     android: {

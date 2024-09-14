@@ -13,8 +13,6 @@ jobs:
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
       - name: Set up Git user
@@ -23,5 +21,6 @@ jobs:
           git config --local user.email "cfoster3204@gmail.com"
       - name: Bump and tag version
         run: |
-          npx -y commit-and-tag-version -t ""
+          npx -y commit-and-tag-version -skip.bump -skip.changelog -skip.commit -t ""
+          git push --follow-tags origin master
       - run: echo "🍏 This job's status is ${{ job.status }}."

@@ -1,6 +1,6 @@
 {
   "name": "lookforward",
-  "version": "1.0.0",
+  "version": "6.2.5",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -84,6 +84,11 @@
       "subject-case": [
         0
       ]
+    }
+  },
+  "commit-and-tag-version": {
+    "skip": {
+      "commit": true
     }
   }
 }

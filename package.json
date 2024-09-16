@@ -85,5 +85,10 @@
         0
       ]
     }
+  },
+  "commit-and-tag-version": {
+    "skip": {
+      "commit": true
+    }
   }
 }

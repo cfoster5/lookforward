@@ -6,6 +6,8 @@ on:
       - master
 jobs:
   Bump-and-tag-version:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."

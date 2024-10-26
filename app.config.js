@@ -2,7 +2,7 @@ export default {
   expo: {
     name: "LookForward",
     slug: "lookforward",
-    version: "6.2.5",
+    version: "6.2.6",
     orientation: "portrait",
     icon: "./assets/icon.png",
     scheme: "lookforward",

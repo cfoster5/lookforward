@@ -4,6 +4,7 @@ import { ReleaseDateType } from "tmdb-ts";
 import { FirestoreMovie } from "@/interfaces/firebase";
 import { tmdb } from "@/providers/app";
 import { isoToUTC } from "@/utils/dates";
+import { useStore } from "@/stores/store";
 
 async function getMovie(movieId: FirestoreMovie["documentID"]) {
   const json = await tmdb.movies.details(
@@ -32,13 +33,14 @@ async function getMovie(movieId: FirestoreMovie["documentID"]) {
 }
 
 // Rename this function and this file
-export function useMovieCountdowns(movieSubs: FirestoreMovie[]) {
+export function useMovieCountdowns() {
+  const { movieSubs } = useStore();
   return useQueries(
     movieSubs.map((sub) => {
       return {
         queryKey: ["movieSubs", sub.documentID],
         queryFn: () => getMovie(sub.documentID),
       };
-    })
+    }),
   );
 }

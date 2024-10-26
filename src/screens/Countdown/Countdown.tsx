@@ -42,7 +42,7 @@ function Countdown({ route, navigation }: CountdownScreenNavigationProp) {
   const { user, movieSubs, gameSubs, setMovieSubs, setGameSubs } = useStore();
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const movies = useMovieCountdowns(movieSubs);
+  const movies = useMovieCountdowns();
   const gameReleases = useGameCountdowns();
 
   const selectedMovies: any[] = movieSubs.filter((sub) => sub.isSelected);

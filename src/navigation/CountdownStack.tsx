@@ -11,6 +11,8 @@ import Game from "@/screens/Game/Game";
 import GameDiscover from "@/screens/GameDiscover/GameDiscover";
 import MovieDiscover from "@/screens/MovieDiscover/MovieDiscover";
 import { CountdownStackParamList } from "@/types";
+import { MyHeaderRight } from "@/screens/Countdown/components/MyHeaderRight.ios";
+import { DeleteHeader } from "@/screens/Countdown/components/DeleteHeader.ios";
 
 const Stack = createNativeStackNavigator<CountdownStackParamList>();
 export function CountdownStack() {
@@ -22,6 +24,8 @@ export function CountdownStack() {
         options={{
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
+          headerRight: MyHeaderRight,
+          headerLeft: DeleteHeader,
         }}
       />
       <Stack.Screen

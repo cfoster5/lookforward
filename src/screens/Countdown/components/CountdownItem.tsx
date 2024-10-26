@@ -1,5 +1,4 @@
 import { Image } from "expo-image";
-import { IGDB } from "interfaces/igdb";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   interpolate,
@@ -14,58 +13,70 @@ import { RadioButton } from "./RadioButton";
 
 import { reusableStyles } from "@/helpers/styles";
 import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
+import { useMovieCountdowns } from "../api/getMovieCountdowns";
+import { useGameCountdowns } from "../api/getGameCountdowns";
+import { useCountdownStore } from "@/stores/store";
+import { useNavigation } from "@react-navigation/native";
 
-interface Props {
-  item: any;
-  sectionName: "Movies" | "Games";
-  isLastInSection: boolean;
-  showButtons: boolean;
-  isSelected: boolean;
-  handlePress: () => void;
+interface MovieProps {
+  item: ReturnType<typeof useMovieCountdowns>[number]["data"];
+  sectionName: "Movies";
 }
 
-function CountdownItem({
-  item,
-  sectionName,
-  isLastInSection,
-  showButtons,
-  isSelected,
-  handlePress,
-}: Props) {
+interface GameProps {
+  item: ReturnType<typeof useGameCountdowns>[number]["data"];
+  sectionName: "Games";
+}
+
+type Props = (MovieProps | GameProps) & {
+  isLastInSection: boolean;
+};
+
+export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
+  const { showDeleteButton } = useCountdownStore();
+  const navigation = useNavigation();
+  const {
+    movies: selectedMovies,
+    games: selectedGames,
+    toggleSelection,
+  } = useCountdownStore();
   const transformAmount = useSharedValue(-24);
-  transformAmount.value = withTiming(!showButtons ? -24 : 16);
+  transformAmount.value = withTiming(!showDeleteButton ? -24 : 16);
+
+  const isSelected =
+    sectionName === "Movies"
+      ? selectedMovies.findIndex((movie) => movie === item!.documentID) !== -1
+      : selectedGames.findIndex(
+          (selection) => selection === item!.id.toString(),
+        ) !== -1;
 
   function getReleaseDate(): string {
     if (sectionName === "Movies") {
-      if (item.releaseDate) {
-        return isoToUTC(item.releaseDate).toFormat("MM/dd/yyyy");
+      if (item!.releaseDate) {
+        return isoToUTC(item!.releaseDate).toFormat("MM/dd/yyyy");
       } else {
         return "No release date yet";
       }
     } else {
-      if (item.date) {
-        return timestampToUTC(
-          (item as IGDB.ReleaseDate.ReleaseDate).date
-        ).toFormat("MM/dd/yyyy");
+      if (item!.date) {
+        return timestampToUTC(item!.date).toFormat("MM/dd/yyyy");
       } else {
-        return item.human;
+        return item!.human;
       }
     }
   }
 
-  function getCountdownDays(): number {
+  function getCountdownDays(): number | "∞" {
     if (sectionName === "Movies") {
-      if (item.releaseDate) {
-        const diff = isoToUTC(item.releaseDate).diff(now);
+      if (item!.releaseDate) {
+        const diff = isoToUTC(item!.releaseDate).diff(now);
         return Math.ceil(diff.as("days"));
       } else {
         return "∞";
       }
     } else {
-      if ((item as IGDB.ReleaseDate.ReleaseDate).date) {
-        const diff = timestampToUTC(
-          (item as IGDB.ReleaseDate.ReleaseDate).date
-        ).diff(now);
+      if (item!.date) {
+        const diff = timestampToUTC(item!.date).diff(now);
         return Math.ceil(diff.as("days"));
       } else {
         return "∞";
@@ -73,9 +84,49 @@ function CountdownItem({
     }
   }
 
+  function handlePress() {
+    if (sectionName === "Movies") handleMovieAction();
+    else if (sectionName === "Games") handleGameAction();
+  }
+
+  function handleMovieAction() {
+    if (showDeleteButton) {
+      // toggleMovieSelection(item);
+      toggleSelection(item!.documentID, "movies");
+    } else {
+      goToMovie(item);
+    }
+  }
+
+  function goToMovie() {
+    navigation.navigate("Movie", {
+      movieId: item!.id,
+      name: item!.title,
+    });
+  }
+
+  function handleGameAction() {
+    if (showDeleteButton) {
+      // toggleGameSelection(item);
+      toggleSelection(item!.id.toString(), "games");
+    } else {
+      goToGame(item);
+    }
+  }
+
+  function goToGame() {
+    navigation.navigate("Game", {
+      game: {
+        id: item!.game.id,
+        name: item!.game.name,
+        cover: { url: item!.game.cover.url },
+      },
+    });
+  }
+
   const styles = StyleSheet.create({
     rowFront: {
-      overflow: "hidden",
+      // overflow: "hidden",
       backgroundColor: isSelected
         ? PlatformColor("systemGray4")
         : PlatformColor("systemGray6"),
@@ -116,12 +167,12 @@ function CountdownItem({
   let imageSrc = "";
   let title = "";
   if (sectionName === "Movies") {
-    imageSrc = `https://image.tmdb.org/t/p/${PosterSizes.W92}${item.poster_path}`;
-    title = item.title;
+    imageSrc = `https://image.tmdb.org/t/p/${PosterSizes.W92}${item!.poster_path}`;
+    title = item!.title;
   }
   if (sectionName === "Games") {
-    imageSrc = `https:${item.game.cover.url.replace("thumb", "cover_big_2x")}`;
-    title = item.game.name;
+    imageSrc = `https:${item!.game.cover.url.replace("thumb", "cover_big_2x")}`;
+    title = item!.game.name;
   }
 
   const slideStyle = useAnimatedStyle(() => ({
@@ -140,47 +191,41 @@ function CountdownItem({
   }));
 
   return (
-    <Pressable onPress={handlePress}>
-      <View style={styles.rowFront}>
-        <Animated.View style={[styles.slide, slideStyle]}>
-          <Animated.View
-            style={[{ justifyContent: "center" }, radioButtonStyle]}
-          >
-            <RadioButton isSelected={isSelected} />
-          </Animated.View>
-          <View style={{ justifyContent: "center" }}>
-            <Image
-              style={styles.image}
-              source={{ uri: imageSrc }}
-              contentFit="cover"
-            />
-          </View>
-          <View style={styles.middle}>
-            <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{title}</Text>
-            <Text style={{ ...reusableStyles.date }}>{getReleaseDate()}</Text>
-          </View>
-          <View style={styles.countdown}>
-            <Text
-              style={{
-                ...iOSUIKit.title3EmphasizedWhiteObject,
-                color: PlatformColor("systemBlue"),
-              }}
-            >
-              {getCountdownDays()}
-            </Text>
-            <Text
-              style={{
-                ...iOSUIKit.bodyWhiteObject,
-                color: PlatformColor("systemBlue"),
-              }}
-            >
-              days
-            </Text>
-          </View>
+    <Pressable onPress={handlePress} style={styles.rowFront}>
+      <Animated.View style={[styles.slide, slideStyle]}>
+        <Animated.View style={[{ justifyContent: "center" }, radioButtonStyle]}>
+          <RadioButton isSelected={isSelected} />
         </Animated.View>
-      </View>
+        <View style={{ justifyContent: "center" }}>
+          <Image
+            style={styles.image}
+            source={{ uri: imageSrc }}
+            contentFit="cover"
+          />
+        </View>
+        <View style={styles.middle}>
+          <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{title}</Text>
+          <Text style={{ ...reusableStyles.date }}>{getReleaseDate()}</Text>
+        </View>
+        <View style={styles.countdown}>
+          <Text
+            style={{
+              ...iOSUIKit.title3EmphasizedWhiteObject,
+              color: PlatformColor("systemBlue"),
+            }}
+          >
+            {getCountdownDays()}
+          </Text>
+          <Text
+            style={{
+              ...iOSUIKit.bodyWhiteObject,
+              color: PlatformColor("systemBlue"),
+            }}
+          >
+            days
+          </Text>
+        </View>
+      </Animated.View>
     </Pressable>
   );
 }
-
-export default CountdownItem;

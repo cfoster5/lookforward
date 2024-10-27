@@ -126,7 +126,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
 
   const styles = StyleSheet.create({
     rowFront: {
-      // overflow: "hidden",
+      overflow: "hidden",
       backgroundColor: isSelected
         ? PlatformColor("systemGray4")
         : PlatformColor("systemGray6"),

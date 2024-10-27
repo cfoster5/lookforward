@@ -12,6 +12,7 @@ export const DeleteHeader = () => {
     games: selectedGames,
     showDeleteButton,
     toggleDeleteButton,
+    clearSelections,
   } = useCountdownStore();
   const { user } = useStore();
 
@@ -33,7 +34,14 @@ export const DeleteHeader = () => {
     });
     await batch.commit();
     toggleDeleteButton();
-  }, [selectedGames, selectedMovies, toggleDeleteButton, user]);
+    clearSelections();
+  }, [
+    clearSelections,
+    selectedGames,
+    selectedMovies,
+    toggleDeleteButton,
+    user,
+  ]);
 
   return (
     showDeleteButton && (

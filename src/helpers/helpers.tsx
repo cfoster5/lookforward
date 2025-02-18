@@ -51,27 +51,28 @@ export const tmdbMovieGenres = [
 ];
 
 // Converts releases into one game with many releases
-export function composeReleasesToGames(releaseDates: ReleaseDate[]) {
-  const games: (ReleaseDate["game"] & { release_dates: ReleaseDate[] })[] = [];
-  releaseDates.forEach((releaseDate) => {
-    if (Object.prototype.hasOwnProperty.call(releaseDate, "game")) {
-      const game = { ...releaseDate.game, release_dates: [releaseDate] };
-      // check if game has already been added to games array
-      const existingGame = games.find(
-        (game) => game.id === releaseDate.game.id
-      );
-      // if so, add tempReleaseDate to foundGame.release_dates
-      if (existingGame) existingGame.release_dates.push(releaseDate);
-      // if not, add game to games array
-      else games.push(game);
+export function groupReleasesByGame(releaseDates: ReleaseDate[]) {
+  const gameMap = releaseDates.reduce((map, releaseDate) => {
+    if (releaseDate.game) {
+      const gameId = releaseDate.game.id;
+      if (map.has(gameId)) {
+        map.get(gameId)!.release_dates.push(releaseDate);
+      } else {
+        map.set(gameId, {
+          ...releaseDate.game,
+          release_dates: [releaseDate],
+        });
+      }
     }
-  });
-  return games;
+    return map;
+  }, new Map<number, ReleaseDate["game"] & { release_dates: ReleaseDate[] }>());
+
+  return Array.from(gameMap.values());
 }
 
 export async function subToMovie(
   movieId: FirestoreMovie["documentID"],
-  user: string
+  user: string,
 ) {
   try {
     await firestore()
@@ -79,7 +80,7 @@ export async function subToMovie(
       .doc(movieId)
       .set(
         { subscribers: firestore.FieldValue.arrayUnion(user) },
-        { merge: true }
+        { merge: true },
       );
     ReactNativeHapticFeedback.trigger("impactLight", {
       enableVibrateFallback: true,
@@ -93,7 +94,7 @@ export async function subToMovie(
 export async function removeSub(
   collection: string,
   countdownId: string,
-  user: string
+  user: string,
 ) {
   try {
     await firestore()
@@ -110,7 +111,7 @@ export async function removeSub(
 export function calculateWidth(
   headerSpace: number,
   separatingSpace: number,
-  elementCount: number
+  elementCount: number,
 ): number {
   const totalEmptySpace =
     headerSpace + separatingSpace * Math.floor(elementCount);
@@ -120,11 +121,11 @@ export function calculateWidth(
 export function getGameReleaseDate(
   game: Game & {
     release_dates: ReleaseDate[];
-  }
+  },
 ): string {
   // need to filter client-side since combining search and filter on API is not working
   const filteredDates = game?.release_dates.filter(
-    (releaseDate) => releaseDate.region === 2 || releaseDate.region === 8
+    (releaseDate) => releaseDate.region === 2 || releaseDate.region === 8,
   );
   const uniqueDates = [...new Set(filteredDates?.map((date) => date.date))];
   try {

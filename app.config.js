@@ -1,8 +1,10 @@
+import { version } from "./package.json";
+
 export default {
   expo: {
     name: "LookForward",
     slug: "lookforward",
-    version: "6.2.5",
+    version: version,
     orientation: "portrait",
     icon: "./assets/icon.png",
     scheme: "lookforward",

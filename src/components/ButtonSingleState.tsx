@@ -1,9 +1,8 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { useContext } from "react";
 import { PlatformColor, Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import TabStackContext from "../contexts/TabStackContext";
+import { useStore } from "@/stores/store";
 
 export default function ButtonSingleState({
   text,
@@ -18,7 +17,7 @@ export default function ButtonSingleState({
   icon?: string;
   textStyle?: any;
 }) {
-  const { theme } = useContext(TabStackContext);
+  const { theme } = useStore();
   return (
     <Pressable
       onPress={onPress}

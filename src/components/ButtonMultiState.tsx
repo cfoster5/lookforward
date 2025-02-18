@@ -1,8 +1,6 @@
-import { useContext } from "react";
+import { useStore } from "@/stores/store";
 import { PlatformColor, Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-
-import TabStackContext from "../contexts/TabStackContext";
 
 export default function ButtonMultiState({
   text,
@@ -17,7 +15,7 @@ export default function ButtonMultiState({
   test?: any;
   children?: any;
 }) {
-  const { theme } = useContext(TabStackContext);
+  const { theme } = useStore();
   return (
     <Pressable
       onPress={onPress}

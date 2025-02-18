@@ -1,6 +1,5 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
-import { useContext } from "react";
 import {
   FlatList,
   Linking,
@@ -15,8 +14,8 @@ import { LogoSizes, WatchLocale } from "tmdb-ts";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
-import TabStackContext from "@/contexts/TabStackContext";
 import { calculateWidth } from "@/helpers/helpers";
+import { useStore } from "@/stores/store";
 
 function WatchProvidersModal({
   modalRef,
@@ -26,7 +25,7 @@ function WatchProvidersModal({
   providers: WatchLocale["US"];
 }) {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const { theme } = useContext(TabStackContext);
+  const { theme } = useStore();
   const mod = {
     ...horizontalListProps,
     style: { ...horizontalListProps.style, marginTop: 8 },
@@ -119,7 +118,7 @@ function WatchProvidersModal({
                   {...mod}
                 />
               </View>
-            )
+            ),
         )}
         <View
           style={{

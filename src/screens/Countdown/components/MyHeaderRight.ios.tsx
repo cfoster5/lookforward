@@ -1,20 +1,27 @@
-import { PlatformColor, StyleProp, TextStyle, ViewStyle } from "react-native";
+import { PlatformColor } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { useCountdownStore } from "@/stores/store";
+import { iOSUIKit } from "react-native-typography";
 
-type Props = {
-  text: string;
-  handlePress: any;
-  style?: StyleProp<TextStyle | ViewStyle>;
+export const MyHeaderRight = () => {
+  const { showDeleteButton, toggleDeleteButton, clearSelections } =
+    useCountdownStore();
+
+  return (
+    <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+      <Item
+        title={showDeleteButton ? "Done" : "Edit"}
+        buttonStyle={[
+          showDeleteButton ? iOSUIKit.bodyEmphasized : null,
+          { color: PlatformColor("systemBlue") },
+        ]}
+        onPress={() => {
+          toggleDeleteButton();
+          if (showDeleteButton) clearSelections();
+        }}
+      />
+    </HeaderButtons>
+  );
 };
-
-export const MyHeaderRight = ({ text, handlePress, style }: Props) => (
-  <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-    <Item
-      title={text}
-      buttonStyle={[style, { color: PlatformColor("systemBlue") }]}
-      onPress={handlePress}
-    />
-  </HeaderButtons>
-);

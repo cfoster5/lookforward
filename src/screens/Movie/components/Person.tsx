@@ -2,7 +2,6 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
-import { useContext } from "react";
 import {
   PlatformColor,
   Pressable,
@@ -14,12 +13,12 @@ import {
 import { iOSUIKit } from "react-native-typography";
 import { Cast, Crew } from "tmdb-ts";
 
-import TabStackContext from "@/contexts/TabStackContext";
 import {
   CountdownStackParamList,
   FindStackParamList,
   TabNavigationParamList,
 } from "@/types";
+import { useStore } from "@/stores/store";
 
 interface Props {
   navigation:
@@ -35,7 +34,7 @@ interface Props {
 }
 
 function Person({ navigation, person }: Props) {
-  const { theme } = useContext(TabStackContext);
+  const { theme } = useStore();
   const { width: windowWidth } = useWindowDimensions();
 
   const styles = StyleSheet.create({

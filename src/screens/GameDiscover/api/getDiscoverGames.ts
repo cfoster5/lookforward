@@ -1,8 +1,8 @@
 import { useQuery } from "react-query";
 
 import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
-import { composeReleasesToGames } from "@/helpers/helpers";
 import { timestamp } from "@/utils/dates";
+import { groupReleasesByGame } from "@/helpers/helpers";
 
 async function getReleases(filter: string) {
   const response = await fetch(
@@ -14,10 +14,10 @@ async function getReleases(filter: string) {
     ${filter};
     limit 100;
     sort date;`,
-    }
+    },
   );
   const json = await response.json();
-  return composeReleasesToGames(json);
+  return groupReleasesByGame(json);
 }
 
 export function useDiscoverGames({

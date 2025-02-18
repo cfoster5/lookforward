@@ -8,4 +8,7 @@ export interface FirestoreMovie {
 
 export interface FirestoreGame extends FirebaseFirestoreTypes.DocumentData {
   documentID: string;
+  game: { id: number; name: string };
+  subscribers: string[];
+  isSelected?: boolean;
 }

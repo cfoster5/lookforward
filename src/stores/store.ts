@@ -3,39 +3,38 @@ import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { createRef } from "react";
 import { ColorSchemeName } from "react-native";
 import { create } from "zustand";
+import { immer } from "zustand/middleware/immer";
 
-import { FirestoreMovie } from "@/interfaces/firebase";
+import { FirestoreGame, FirestoreMovie } from "@/interfaces/firebase";
 
 const bottomSheetModalRef = createRef<BottomSheetModal>();
 const onboardingModalRef = createRef<BottomSheetModal>();
 const proModalRef = createRef<BottomSheetModal>();
 
-export enum Subs {
-  movieSubs = "movieSubs",
-  gameSubs = "gameSubs",
-}
-
-type Store = {
+type State = {
   user: FirebaseAuthTypes.User | null;
-  setUser: (user: FirebaseAuthTypes.User | null) => void;
   theme: ColorSchemeName;
-  setTheme: (theme: ColorSchemeName) => void;
   movieSubs: FirestoreMovie[];
-  setMovieSubs: (movies: FirestoreMovie[]) => void;
-  gameSubs: any;
-  setGameSubs: (games: any) => void;
+  gameSubs: FirestoreGame[];
   categoryIndex: number;
-  setCategoryIndex: (number: Store["categoryIndex"]) => void;
   bottomSheetModalRef: typeof bottomSheetModalRef;
   onboardingModalRef: typeof onboardingModalRef;
   proModalRef: typeof proModalRef;
   isPro: boolean;
-  setIsPro: (isPro: Store["isPro"]) => void;
   initialSnapPoint: number;
+};
+
+type Actions = {
+  setUser: (user: FirebaseAuthTypes.User | null) => void;
+  setTheme: (theme: ColorSchemeName) => void;
+  setMovieSubs: (movies: FirestoreMovie[]) => void;
+  setGameSubs: (games: FirestoreGame[]) => void;
+  setCategoryIndex: (number: number) => void;
+  setIsPro: (isPro: boolean) => void;
   setInitialSnapPoint: (value: number) => void;
 };
 
-export const useStore = create<Store>((set) => ({
+export const useStore = create<State & Actions>((set) => ({
   user: null,
   setUser: (user) => set(() => ({ user })),
   theme: "dark",
@@ -54,3 +53,40 @@ export const useStore = create<Store>((set) => ({
   initialSnapPoint: 0,
   setInitialSnapPoint: (value) => set(() => ({ initialSnapPoint: value })),
 }));
+
+type CountdownState = {
+  movies: string[];
+  games: string[];
+  showDeleteButton: boolean;
+};
+
+type CountdownActions = {
+  toggleSelection: (documentId: string, section: "movies" | "games") => void;
+  clearSelections: () => void;
+  toggleDeleteButton: () => void;
+};
+
+export const useCountdownStore = create<CountdownState & CountdownActions>()(
+  immer((set) => ({
+    movies: [],
+    games: [],
+    toggleSelection: (documentId: string, section) =>
+      set((state) => {
+        const index = state[section].findIndex(
+          (selection) => selection === documentId,
+        );
+        if (index !== -1) state[section].splice(index, 1);
+        else state[section].push(documentId);
+      }),
+    clearSelections: () =>
+      set((state) => {
+        state.movies = [];
+        state.games = [];
+      }),
+    showDeleteButton: false,
+    toggleDeleteButton: () =>
+      set((state) => {
+        state.showDeleteButton = !state.showDeleteButton;
+      }),
+  })),
+);

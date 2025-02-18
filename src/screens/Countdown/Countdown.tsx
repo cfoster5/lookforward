@@ -15,38 +15,30 @@ import { compareDates, isoToUTC } from "@/utils/dates";
 function Countdown() {
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
-  const tabBarheight = useBottomTabBarHeight();
+  const tabBarHeight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const movies = useMovieCountdowns();
   const gameReleases = useGameCountdowns();
 
-  if (
+  const isLoading =
     movies.some((movie) => movie.isLoading) ||
-    gameReleases.some((release) => release.isLoading)
-  )
-    return <LoadingScreen />;
+    gameReleases.some((release) => release.isLoading);
+
+  if (isLoading) return <LoadingScreen />;
+
+  const contentContainerStyle = {
+    marginHorizontal: 16,
+    paddingTop: Platform.OS === "ios" ? headerHeight + 16 : 16,
+    paddingBottom: Platform.OS === "ios" ? tabBarHeight + 16 : 16,
+  };
+
+  const scrollIndicatorInsets =
+    Platform.OS === "ios" ? { top: 16, bottom: tabBarHeight - 16 } : undefined;
 
   return (
     <SectionList
-      contentContainerStyle={[
-        { marginHorizontal: 16 },
-        Platform.OS === "ios"
-          ? {
-              paddingTop: headerHeight + 16,
-              paddingBottom: tabBarheight + 16,
-            }
-          : { paddingVertical: 16 },
-      ]}
-      // contentContainerStyle={{ paddingTop: 16, paddingBottom: tabBarheight + 16, marginHorizontal: 16 }}
-      scrollIndicatorInsets={
-        Platform.OS === "ios"
-          ? {
-              top: 16,
-              bottom: tabBarheight - 16,
-            }
-          : undefined
-      }
-      // sections={listData}
+      contentContainerStyle={contentContainerStyle}
+      scrollIndicatorInsets={scrollIndicatorInsets}
       sections={[
         {
           data: movies

@@ -1,5 +1,5 @@
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -15,7 +15,7 @@ import { iOSUIKit } from "react-native-typography";
 import { PurchaseOption } from "./PurchaseOption";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
-import TabStackContext from "@/contexts/TabStackContext";
+import { useStore } from "@/stores/store";
 
 type Props = { modalRef: any };
 
@@ -31,7 +31,7 @@ const ItemSeparator = () => (
 
 export const TipModal = ({ modalRef }: Props) => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const { theme } = useContext(TabStackContext);
+  const { theme } = useStore();
   const [packages, setPackages] = useState<PurchasesPackage[]>([]);
   const [isPurchasing, setIsPurchasing] = useState<
     PurchasesPackage["identifier"] | null

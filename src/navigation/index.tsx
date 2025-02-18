@@ -13,7 +13,6 @@ import { HeaderButtonsProvider } from "react-navigation-header-buttons";
 
 import { AuthStack } from "./AuthStack";
 import { TabStack } from "./TabStack";
-import TabStackContext from "../contexts/TabStackContext";
 
 import { ExplorePro } from "@/components/ExplorePro";
 import { OnboardingModal } from "@/components/OnboardingModal";
@@ -69,9 +68,7 @@ function RootNavigator() {
   if (!user) return <AuthStack />;
   return (
     <HeaderButtonsProvider stackType="native">
-      <TabStackContext.Provider value={{ theme: "dark" }}>
-        <TabStack />
-      </TabStackContext.Provider>
+      <TabStack />
     </HeaderButtonsProvider>
   );
 }

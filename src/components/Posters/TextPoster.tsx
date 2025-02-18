@@ -1,12 +1,11 @@
-import { useContext } from "react";
 import { PlatformColor, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import TabStackContext from "../../contexts/TabStackContext";
 import { reusableStyles } from "../../helpers/styles";
+import { useStore } from "@/stores/store";
 
 export function TextPoster({ text, style }: { text: string; style?: any }) {
-  const { theme } = useContext(TabStackContext);
+  const { theme } = useStore();
   return (
     <View
       style={{

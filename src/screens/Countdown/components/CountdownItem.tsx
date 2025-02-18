@@ -16,7 +16,8 @@ import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
 import { useMovieCountdowns } from "../api/getMovieCountdowns";
 import { useGameCountdowns } from "../api/getGameCountdowns";
 import { useCountdownStore } from "@/stores/store";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { CountdownStackParamList } from "@/types/navigation";
 
 interface MovieProps {
   item: ReturnType<typeof useMovieCountdowns>[number]["data"];
@@ -33,22 +34,20 @@ type Props = (MovieProps | GameProps) & {
 };
 
 export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
-  const { showDeleteButton } = useCountdownStore();
-  const navigation = useNavigation();
   const {
+    showDeleteButton,
     movies: selectedMovies,
     games: selectedGames,
     toggleSelection,
   } = useCountdownStore();
+  const navigation = useNavigation<NavigationProp<CountdownStackParamList>>();
   const transformAmount = useSharedValue(-24);
   transformAmount.value = withTiming(!showDeleteButton ? -24 : 16);
 
   const isSelected =
     sectionName === "Movies"
-      ? selectedMovies.findIndex((movie) => movie === item!.documentID) !== -1
-      : selectedGames.findIndex(
-          (selection) => selection === item!.id.toString(),
-        ) !== -1;
+      ? selectedMovies.includes(item!.documentID)
+      : selectedGames.includes(item!.id.toString());
 
   function getReleaseDate(): string {
     if (sectionName === "Movies") {
@@ -94,7 +93,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
       // toggleMovieSelection(item);
       toggleSelection(item!.documentID, "movies");
     } else {
-      goToMovie(item);
+      goToMovie();
     }
   }
 
@@ -110,7 +109,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
       // toggleGameSelection(item);
       toggleSelection(item!.id.toString(), "games");
     } else {
-      goToGame(item);
+      goToGame();
     }
   }
 

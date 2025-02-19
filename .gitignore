@@ -39,3 +39,5 @@ yarn-error.*
 
 # commonly used commands
 docs/scripts.md
+
+ios/

@@ -24,7 +24,9 @@ export default {
       entitlements: {
         "aps-environment": "production",
       },
-      buildNumber: "1",
+      infoPlist: {
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     android: {
       adaptiveIcon: {

@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.3.1](https://github.com/cfoster5/lookforward/compare/v6.3.0...v6.3.1) (2025-02-19)
+
+
+### Bug Fixes
+
+* Add name as param when logging select_promotion for analytics ([18a285d](https://github.com/cfoster5/lookforward/commit/18a285dfe21a1739d45ec69fe04e32708f2b16d9))
+
 ## [6.3.0](https://github.com/cfoster5/lookforward/compare/v6.2.6...v6.3.0) (2025-02-18)
 
 

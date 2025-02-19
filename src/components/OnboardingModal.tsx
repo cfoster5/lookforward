@@ -73,6 +73,7 @@ export const OnboardingModal = ({ modalRef }: Props) => {
             onboardingModalRef.current?.dismiss();
             proModalRef.current?.present();
             await analytics().logEvent("select_promotion", {
+              name: "Pro",
               id: "com.lookforward.pro",
             });
           }}

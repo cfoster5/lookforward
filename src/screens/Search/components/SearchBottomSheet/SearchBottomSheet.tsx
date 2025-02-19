@@ -66,7 +66,7 @@ export const SearchBottomSheet = () => {
       "50%",
       "100%",
     ],
-    [initialSnapPoint, tabBarHeight]
+    [initialSnapPoint, tabBarHeight],
   );
 
   const [searchValue, setSearchValue] = useState("");
@@ -302,6 +302,7 @@ export const SearchBottomSheet = () => {
                 Keyboard.dismiss();
                 proModalRef.current?.present();
                 await analytics().logEvent("select_promotion", {
+                  name: "Pro",
                   id: "com.lookforward.pro",
                 });
               }}

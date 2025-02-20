@@ -71,9 +71,9 @@ export const SearchBottomSheet = () => {
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchValue, 400);
-  const { data: movieData, isLoading: isLoadingMovies } =
+  const { data: movieData, isInitialLoading: isInitialLoadingMovies } =
     useMultiSearch(debouncedSearch);
-  const { data: gamesData, isLoading: isLoadingGames } =
+  const { data: gamesData, isInitialLoading: isInitialLoadingGames } =
     useGamesSearch(debouncedSearch);
 
   const [storedMovies, setStoredMovies] = useMMKVString("recent.movies");
@@ -114,11 +114,11 @@ export const SearchBottomSheet = () => {
     }
   };
 
-  const isLoading = () => {
+  const isInitialLoading = () => {
     if (categoryIndex === 0) {
-      return isLoadingMovies;
+      return isInitialLoadingMovies;
     } else {
-      return isLoadingGames;
+      return isInitialLoadingGames;
     }
   };
 
@@ -183,7 +183,7 @@ export const SearchBottomSheet = () => {
         </View>
 
         {searchValue &&
-          (isLoading() ? (
+          (isInitialLoading() ? (
             <ActivityIndicator size="large" style={{ flex: 1 }} />
           ) : (
             <BottomSheetFlatList

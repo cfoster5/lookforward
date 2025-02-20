@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
 import { useStore } from "@/stores/store";
@@ -14,7 +14,7 @@ async function getGamesSearch(searchValue: string) {
       where release_dates.region = (2,8);
       search "${searchValue}";
       limit 50;`,
-    }
+    },
   );
   const json: (Game & { release_dates: ReleaseDate[] })[] =
     await response.json();
@@ -26,6 +26,6 @@ export function useGamesSearch(searchValue: string) {
   return useQuery(
     ["games", { searchValue }],
     () => getGamesSearch(searchValue),
-    { enabled: categoryIndex === 1 && searchValue !== "" }
+    { enabled: categoryIndex === 1 && searchValue !== "" },
   );
 }

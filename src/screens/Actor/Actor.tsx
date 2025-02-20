@@ -41,7 +41,7 @@ const horizontalMargin = 4;
 
 function sortReleaseDates(
   a: PersonMovieCast | PersonMovieCrew,
-  b: PersonMovieCast | PersonMovieCrew
+  b: PersonMovieCast | PersonMovieCrew,
 ) {
   if (Platform.OS === "ios")
     return b.release_date?.localeCompare(a.release_date);
@@ -57,7 +57,7 @@ function sortReleaseDates(
 function Actor({ route, navigation }: ActorScreenNavigationProp) {
   // const person = useGetPerson(route.params.personId);
   const { personId, name } = route.params;
-  const { data: person, isLoading } = usePerson(route.params.personId);
+  const { data: person, isInitialLoading } = usePerson(route.params.personId);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const ref = useRef<Carousel<any>>(null);
@@ -95,7 +95,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
     .filter((credit) => credit.job === selectedJob)
     .sort(sortReleaseDates);
 
-  if (isLoading) return <LoadingScreen />;
+  if (isInitialLoading) return <LoadingScreen />;
 
   return (
     <FlatList

@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import {
   MoviesPlayingNow,
   PopularMovies,
@@ -40,6 +40,6 @@ export function useMovieData(option: MovieOption) {
       getNextPageParam: (lastPage) =>
         lastPage.page !== lastPage.total_pages ? lastPage.page + 1 : undefined,
       // select: (movieData) => movieData.pages.flatMap((page) => page.results),
-    }
+    },
   );
 }

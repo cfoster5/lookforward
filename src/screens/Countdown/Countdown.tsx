@@ -20,11 +20,11 @@ function Countdown() {
   const movies = useMovieCountdowns();
   const gameReleases = useGameCountdowns();
 
-  const isLoading =
-    movies.some((movie) => movie.isLoading) ||
-    gameReleases.some((release) => release.isLoading);
+  const isInitialLoading =
+    movies.some((movie) => movie.isInitialLoading) ||
+    gameReleases.some((release) => release.isInitialLoading);
 
-  if (isLoading) return <LoadingScreen />;
+  if (isInitialLoading) return <LoadingScreen />;
 
   const contentContainerStyle = {
     marginHorizontal: 16,

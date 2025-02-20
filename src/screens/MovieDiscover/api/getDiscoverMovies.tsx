@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { TMDB_KEY } from "@/constants/ApiKeys";
 
@@ -6,13 +6,13 @@ async function getMovies({ pageParam = 1, queryKey }) {
   const [_key, { ...params }] = queryKey;
   // Remove undefined params or watch_providers when set to 0
   const filteredParamsArrays = Object.entries(params).filter(
-    (param) => param[1]
+    (param) => param[1],
   );
   const queryString = filteredParamsArrays
     .map(([key, value]) => `&${key}=${value}`)
     .join("");
   const response = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}${queryString}&region=US&watch_region=US&page=${pageParam}`
+    `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}${queryString}&region=US&watch_region=US&page=${pageParam}`,
   );
   const json = await response.json();
   return {
@@ -55,6 +55,6 @@ export function useDiscoverMovies({
       getNextPageParam: (lastPage) => lastPage.nextPage,
       select: (movieData) => movieData.pages.flatMap((page) => page.results),
       // keepPreviousData: true,
-    }
+    },
   );
 }

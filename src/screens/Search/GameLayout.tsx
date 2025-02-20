@@ -22,7 +22,7 @@ import { Game, ReleaseDate } from "@/types";
 export function GameLayout({ navigation }) {
   const { top } = useSafeAreaInsets();
   const scrollRef = useRef<FlatList>(null);
-  const { data, isLoading } = useGames();
+  const { data, isInitialLoading } = useGames();
   const { initialSnapPoint } = useStore();
   const tabBarHeight = useBottomTabBarHeight();
 
@@ -52,7 +52,7 @@ export function GameLayout({ navigation }) {
         />
       </View>
 
-      {!isLoading ? (
+      {!isInitialLoading ? (
         <>
           <FlatList
             data={data}

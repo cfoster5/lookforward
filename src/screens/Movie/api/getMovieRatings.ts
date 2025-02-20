@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { MovieDetails } from "tmdb-ts";
 
 import { OMDBMovie } from "../types/omdb";
@@ -8,7 +8,7 @@ import { useStore } from "@/stores/store";
 
 async function getOmdbMovie(id: MovieDetails["imdb_id"]) {
   const response = await fetch(
-    `https://www.omdbapi.com/?apikey=${OMDB_KEY}&i=${id}`
+    `https://www.omdbapi.com/?apikey=${OMDB_KEY}&i=${id}`,
   );
   const json: OMDBMovie = await response.json();
 

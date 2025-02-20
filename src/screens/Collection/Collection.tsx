@@ -40,12 +40,12 @@ export function Collection({
   route,
 }: CollectionScreenNavigationProp) {
   const { collectionId } = route.params;
-  const { data: collection, isLoading } = useCollection(collectionId);
+  const { data: collection, isInitialLoading } = useCollection(collectionId);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
-    (e) => (scrollOffset.value = e.contentOffset.y)
+    (e) => (scrollOffset.value = e.contentOffset.y),
   );
 
   useLayoutEffect(() => {
@@ -60,7 +60,7 @@ export function Collection({
     });
   }, [collection?.name, navigation, collectionId]);
 
-  if (isLoading) return <LoadingScreen />;
+  if (isInitialLoading) return <LoadingScreen />;
 
   return (
     <Animated.FlatList

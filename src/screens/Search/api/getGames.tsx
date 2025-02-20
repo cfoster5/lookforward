@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
 import { ReleaseDate } from "@/types";

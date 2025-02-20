@@ -38,7 +38,7 @@ const CarouselItem = ({ item, index }: CarouselItemProps) => (
             }`
           : `https:${(item as IGDB.Game.Game)?.cover?.url.replace(
               "thumb",
-              "cover_big_2x"
+              "cover_big_2x",
             )}`,
     }}
     style={{
@@ -55,14 +55,14 @@ const CarouselItem = ({ item, index }: CarouselItemProps) => (
 type Props = NativeStackScreenProps<AuthStackParams, "Welcome">;
 
 function Welcome({ navigation }: Props) {
-  const { data: trendingMovies, isLoading } = useTrendingMovies();
+  const { data: trendingMovies, isInitialLoading } = useTrendingMovies();
   // const hypedGames: IGDB.Game.Game[] = useGetHypedGames();
   const { data: hypedGames } = useHypedGames();
   const ref = useRef<Carousel<any>>(null);
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      {!isLoading && hypedGames && (
+      {!isInitialLoading && hypedGames && (
         <>
           <View style={{ alignItems: "center" }}>
             <Text style={iOSUIKit.title3EmphasizedWhite}>

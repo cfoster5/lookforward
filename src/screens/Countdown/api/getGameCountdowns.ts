@@ -1,4 +1,4 @@
-import { useQueries } from "react-query";
+import { useQueries } from "@tanstack/react-query";
 
 import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
 import { useStore } from "@/stores/store";
@@ -39,12 +39,12 @@ async function getGameRelease(releaseId: string) {
 
 export function useGameCountdowns() {
   const { gameSubs } = useStore();
-  return useQueries(
-    gameSubs.map((sub) => {
+  return useQueries({
+    queries: gameSubs.map((sub) => {
       return {
         queryKey: ["gameRelease", sub.documentID],
         queryFn: () => getGameRelease(sub.documentID),
       };
     }),
-  );
+  });
 }

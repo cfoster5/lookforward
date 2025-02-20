@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.4.0](https://github.com/cfoster5/lookforward/compare/v6.3.1...v6.4.0) (2025-02-20)
+
+
+### Features
+
+* Bump Expo to 52 with dependencies ([3a26342](https://github.com/cfoster5/lookforward/commit/3a26342480e8b4bd7ca112f437a2e4b905395c04))
+
 ## [6.3.1](https://github.com/cfoster5/lookforward/compare/v6.3.0...v6.3.1) (2025-02-19)
 
 

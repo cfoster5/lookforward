@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
 import { ReleaseDate } from "@/types";
@@ -23,5 +23,8 @@ async function getGames() {
 }
 
 export function useGames() {
-  return useQuery(["games"], getGames);
+  return useQuery({
+    queryKey: ["games"],
+    queryFn: getGames,
+  });
 }

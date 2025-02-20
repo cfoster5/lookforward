@@ -58,7 +58,7 @@ export function MovieLayout({ navigation }) {
     movies?.filter((movie) =>
       movie.release_date
         ? DateTime.fromFormat(movie.release_date, "yyyy-MM-dd") >= now
-        : null
+        : null,
     );
 
   return (

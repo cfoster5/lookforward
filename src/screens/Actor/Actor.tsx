@@ -41,7 +41,7 @@ const horizontalMargin = 4;
 
 function sortReleaseDates(
   a: PersonMovieCast | PersonMovieCrew,
-  b: PersonMovieCast | PersonMovieCrew
+  b: PersonMovieCast | PersonMovieCrew,
 ) {
   if (Platform.OS === "ios")
     return b.release_date?.localeCompare(a.release_date);

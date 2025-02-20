@@ -1,5 +1,5 @@
 import { ImageBackground, StyleSheet, useWindowDimensions } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
+import { LinearGradient } from "expo-linear-gradient";
 import Animated, {
   interpolate,
   SharedValue,
@@ -54,7 +54,7 @@ export function AnimatedHeaderImage({
                   styles.backdrop.height) /
                 2,
               0,
-            ]
+            ],
           ),
         },
       ],

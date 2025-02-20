@@ -38,7 +38,7 @@ const CarouselItem = ({ item, index }: CarouselItemProps) => (
             }`
           : `https:${(item as IGDB.Game.Game)?.cover?.url.replace(
               "thumb",
-              "cover_big_2x"
+              "cover_big_2x",
             )}`,
     }}
     style={{

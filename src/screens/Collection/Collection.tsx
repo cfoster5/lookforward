@@ -45,7 +45,7 @@ export function Collection({
   const headerHeight = useHeaderHeight();
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
-    (e) => (scrollOffset.value = e.contentOffset.y)
+    (e) => (scrollOffset.value = e.contentOffset.y),
   );
 
   useLayoutEffect(() => {

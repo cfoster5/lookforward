@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
 import { timestamp } from "@/utils/dates";
@@ -31,5 +31,8 @@ export function useDiscoverGames({
   filter += genreId ? ` & game.genres = (${genreId})` : ``;
   // filter += companyId ? `&with_companies=${companyId}` : ``;
   // filter += keywordId ? `&with_keywords=${keywordId}` : ``;
-  return useQuery(["discoverGames", { genreId }], () => getReleases(filter));
+  return useQuery({
+    queryKey: ["discoverGames", { genreId }],
+    queryFn: () => getReleases(filter),
+  });
 }

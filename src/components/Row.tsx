@@ -1,15 +1,22 @@
 import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { PlatformColor, View, Text } from "react-native";
-import { SFSymbol } from "react-native-sfsymbols";
+import { SymbolView, SFSymbol } from "expo-symbols";
 import { iOSUIKit } from "react-native-typography";
 
 type RowProps = {
-  icon: string;
   title: string;
   body: string;
-  useAltIcon?: boolean;
   showDrillIn?: boolean;
-};
+} & (
+  | {
+      useAltIcon: true;
+      icon: SFSymbol;
+    }
+  | {
+      useAltIcon?: false;
+      icon: string;
+    }
+);
 
 export const Row = ({
   icon,
@@ -28,12 +35,11 @@ export const Row = ({
     {!useAltIcon ? (
       <Ionicons name={icon} size={36} color={PlatformColor("systemBlue")} />
     ) : (
-      <SFSymbol
+      <SymbolView
         name={icon}
         size={36}
-        color={PlatformColor("systemBlue")}
-        resizeMode="center"
-        style={{ height: 36, width: 36 }}
+        tintColor={PlatformColor("systemBlue")}
+        resizeMode="scaleAspectFill"
       />
     )}
     <View style={{ paddingLeft: 16, flex: 1, alignItems: "flex-start" }}>

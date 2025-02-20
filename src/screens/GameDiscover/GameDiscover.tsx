@@ -29,7 +29,9 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const { data: games, isLoading } = useDiscoverGames({ genreId: genre.id });
+  const { data: games, isLoading } = useDiscoverGames({
+    genreId: genre.id,
+  });
 
   return !isLoading ? (
     <FlatList

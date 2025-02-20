@@ -59,7 +59,7 @@ function MovieDiscover({
     watchProvider: selectedMovieWatchProvider,
     sortMethod,
   });
-  const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
+  const { data: movieWatchProviders } = useMovieWatchProviders();
   const modalRef = useRef<BottomSheetModal>();
 
   const sortOptions = [
@@ -187,17 +187,17 @@ function MovieDiscover({
               ]
                 .filter(
                   (provider) =>
-                    targetedProviders.indexOf(provider.provider_name) > -1
+                    targetedProviders.indexOf(provider.provider_name) > -1,
                 )
                 .filter(
                   (v, i, a) =>
                     a.findIndex((t) => t.provider_name === v.provider_name) ===
-                    i
+                    i,
                 )
                 .sort((a, b) =>
                   a.provider_name
                     .toLowerCase()
-                    .localeCompare(b.provider_name.toLowerCase())
+                    .localeCompare(b.provider_name.toLowerCase()),
                 )}
               renderItem={({ item }) => (
                 <ButtonMultiState

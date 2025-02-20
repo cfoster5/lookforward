@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   Credits,
   Images,
@@ -24,7 +24,7 @@ interface MyInterface extends MovieDetails {
 
 async function getMovie(movieId: number) {
   const response = await fetch(
-    `https://api.themoviedb.org/3/movie/${movieId}?api_key=${TMDB_KEY}&append_to_response=credits,videos,keywords,recommendations,images,watch/providers,release_dates&include_image_language=en,null`
+    `https://api.themoviedb.org/3/movie/${movieId}?api_key=${TMDB_KEY}&append_to_response=credits,videos,keywords,recommendations,images,watch/providers,release_dates&include_image_language=en,null`,
   );
   const json: MyInterface = await response.json();
 
@@ -32,5 +32,8 @@ async function getMovie(movieId: number) {
 }
 
 export function useMovie(movieId: number) {
-  return useQuery(["movie", movieId], () => getMovie(movieId));
+  return useQuery({
+    queryKey: ["movie", movieId],
+    queryFn: () => getMovie(movieId),
+  });
 }

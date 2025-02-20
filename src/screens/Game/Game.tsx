@@ -110,7 +110,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
 
   useEffect(() => {
     const documentID = gameSubs.find(
-      (releaseDate) => releaseDate.game.id === game.id
+      (releaseDate) => releaseDate.game.id === game.id,
     )?.documentID;
 
     setCountdownId(documentID);

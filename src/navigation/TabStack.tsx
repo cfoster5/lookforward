@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { BlurView } from "@react-native-community/blur";
+import { BlurView } from "expo-blur";
 import firestore from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useEffect } from "react";
@@ -74,7 +74,9 @@ export function TabStack() {
               }
             : undefined,
         tabBarBackground: () =>
-          Platform.OS === "ios" && <BlurView style={StyleSheet.absoluteFill} />,
+          Platform.OS === "ios" && (
+            <BlurView intensity={100} style={StyleSheet.absoluteFill} />
+          ),
       })}
     >
       {/* Is setting headerShown to false the best method? */}

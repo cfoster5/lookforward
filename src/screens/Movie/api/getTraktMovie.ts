@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { MovieDetails } from "tmdb-ts";
 
 import { TRAKT_KEY } from "@/constants/ApiKeys";
@@ -11,7 +11,7 @@ async function getTraktMovie(id: MovieDetails["imdb_id"]) {
       headers: {
         "trakt-api-key": TRAKT_KEY,
       },
-    }
+    },
   );
   const json: ExtendedMovie = await traktResponse.json();
 
@@ -19,7 +19,9 @@ async function getTraktMovie(id: MovieDetails["imdb_id"]) {
 }
 
 export function useTraktMovie(id?: MovieDetails["imdb_id"]) {
-  return useQuery(["traktMovie", id], () => getTraktMovie(id!), {
+  return useQuery({
+    queryKey: ["traktMovie", id],
+    queryFn: () => getTraktMovie(id!),
     enabled: !!id,
   });
 }

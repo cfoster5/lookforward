@@ -30,7 +30,7 @@ export default function App() {
       */
     Purchases.configure({
       apiKey: "appl_qxPtMlTGjvHkhlNlnKlOenNikGN",
-      appUserID: null,
+      appUserID: user?.uid,
       observerMode: false,
       useAmazon: false,
     });
@@ -40,7 +40,7 @@ export default function App() {
       else setIsPro(false);
       // handle any changes to customerInfo
     });
-  }, [setIsPro]);
+  }, [setIsPro, user]);
 
   useEffect(() => {
     async function requestUserPermission() {
@@ -64,7 +64,7 @@ export default function App() {
         await saveTokenToDatabase(token);
         // Listen to whether the token changes
         return messaging().onTokenRefresh(
-          async (token) => await saveTokenToDatabase(token)
+          async (token) => await saveTokenToDatabase(token),
         );
       }
     }

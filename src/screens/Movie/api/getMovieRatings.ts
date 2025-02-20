@@ -21,7 +21,10 @@ async function getOmdbMovie(id: MovieDetails["imdb_id"]) {
 
 export function useMovieRatings(id?: MovieDetails["imdb_id"]) {
   const { isPro } = useStore();
-  return useQuery(["omdbMovie", id], () => getOmdbMovie(id!), {
+  return useQuery({
+    queryKey: ["omdbMovie", id],
+    queryFn: () => getOmdbMovie(id!),
+    // Use `enabled` option here to make sure we only fetch the movie ratings if the user is a pro user and the movie id is provided.
     enabled: isPro && !!id,
     select: (data) => data.Ratings ?? [],
   });

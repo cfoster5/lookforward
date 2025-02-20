@@ -32,5 +32,8 @@ async function getMovie(movieId: number) {
 }
 
 export function useMovie(movieId: number) {
-  return useQuery(["movie", movieId], () => getMovie(movieId));
+  return useQuery({
+    queryKey: ["movie", movieId],
+    queryFn: () => getMovie(movieId),
+  });
 }

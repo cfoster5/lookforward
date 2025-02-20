@@ -23,9 +23,9 @@ async function getGamesSearch(searchValue: string) {
 
 export function useGamesSearch(searchValue: string) {
   const { categoryIndex } = useStore();
-  return useQuery(
-    ["games", { searchValue }],
-    () => getGamesSearch(searchValue),
-    { enabled: categoryIndex === 1 && searchValue !== "" },
-  );
+  return useQuery({
+    queryKey: ["games", { searchValue }],
+    queryFn: () => getGamesSearch(searchValue),
+    enabled: categoryIndex === 1 && searchValue !== "",
+  });
 }

@@ -31,5 +31,8 @@ export function useDiscoverGames({
   filter += genreId ? ` & game.genres = (${genreId})` : ``;
   // filter += companyId ? `&with_companies=${companyId}` : ``;
   // filter += keywordId ? `&with_keywords=${keywordId}` : ``;
-  return useQuery(["discoverGames", { genreId }], () => getReleases(filter));
+  return useQuery({
+    queryKey: ["discoverGames", { genreId }],
+    queryFn: () => getReleases(filter),
+  });
 }

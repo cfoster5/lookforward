@@ -68,7 +68,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const [countdownId, setCountdownId] = useState<FirestoreGame["documentID"]>();
   const { user, gameSubs, bottomSheetModalRef } = useStore();
   const [detailIndex, setDetailIndex] = useState(0);
-  const { data, isInitialLoading } = useGame(game.id);
+  const { data, isLoading } = useGame(game.id);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
 
@@ -181,7 +181,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
         handleCategoryChange={(index: number) => setDetailIndex(index)}
       />
       <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-        {detailIndex === 0 && !isInitialLoading && (
+        {detailIndex === 0 && !isLoading && (
           <>
             <GameCredits
               companies={data?.involved_companies}
@@ -201,7 +201,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
           </>
         )}
         {detailIndex === 1 &&
-          !isInitialLoading &&
+          !isLoading &&
           (data?.videos ? (
             <FlatList
               keyExtractor={(item) => item.id}

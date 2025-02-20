@@ -12,7 +12,9 @@ async function getMovies() {
 }
 
 export function useTrendingMovies() {
-  return useQuery(["trendingMovies"], getMovies, {
+  return useQuery({
+    queryKey: ["trendingMovies"],
+    queryFn: getMovies,
     select: (moviesData) => moviesData.results,
   });
 }

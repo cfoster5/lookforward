@@ -22,5 +22,8 @@ async function getGames() {
 }
 
 export function useHypedGames() {
-  return useQuery(["hypedGames"], getGames);
+  return useQuery({
+    queryKey: ["hypedGames"],
+    queryFn: getGames,
+  });
 }

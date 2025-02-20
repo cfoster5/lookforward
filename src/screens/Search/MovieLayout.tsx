@@ -30,8 +30,7 @@ export function MovieLayout({ navigation }) {
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
   const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
-  const { data, fetchNextPage, hasNextPage, isInitialLoading } =
-    useMovieData(option);
+  const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(option);
   const { top } = useSafeAreaInsets();
   const { initialSnapPoint } = useStore();
   const tabBarHeight = useBottomTabBarHeight();
@@ -94,7 +93,7 @@ export function MovieLayout({ navigation }) {
         </Pressable>
       </View>
 
-      {!isInitialLoading ? (
+      {!isLoading ? (
         <FlatList
           data={option === "Coming Soon" ? upcomingMovies() : movies}
           renderItem={({ item }) => (

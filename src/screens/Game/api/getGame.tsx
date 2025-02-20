@@ -19,6 +19,8 @@ async function getGame(
 }
 
 export const useGame = (gameId: number) =>
-  useQuery(["game", { gameId }], () => getGame(gameId), {
+  useQuery({
+    queryKey: ["game", { gameId }],
+    queryFn: () => getGame(gameId),
     select: (games) => games[0],
   });

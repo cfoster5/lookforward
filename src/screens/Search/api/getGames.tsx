@@ -23,5 +23,8 @@ async function getGames() {
 }
 
 export function useGames() {
-  return useQuery(["games"], getGames);
+  return useQuery({
+    queryKey: ["games"],
+    queryFn: getGames,
+  });
 }

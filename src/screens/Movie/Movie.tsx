@@ -149,10 +149,11 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString(),
   );
-  const { data: movieDetails, isInitialLoading } = useMovie(movieId);
-  const { data: ratings, isInitialLoading: isInitialLoadingRatings } =
-    useMovieRatings(movieDetails?.imdb_id);
-  // const { data: traktDetails, isInitialLoading: isInitialLoadingTrakt } = useTraktMovie(
+  const { data: movieDetails, isLoading } = useMovie(movieId);
+  const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(
+    movieDetails?.imdb_id,
+  );
+  // const { data: traktDetails, isLoading: isLoadingTrakt } = useTraktMovie(
   //   movieDetails?.imdb_id
   // );
   const [detailIndex, setDetailIndex] = useState(0);
@@ -263,7 +264,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     }, []);
   }
 
-  if (isInitialLoading || isInitialLoadingRatings) return <LoadingScreen />;
+  if (isLoading || isLoadingRatings) return <LoadingScreen />;
 
   return (
     <>

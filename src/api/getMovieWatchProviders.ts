@@ -9,7 +9,9 @@ async function getProviders() {
 }
 
 export function useMovieWatchProviders() {
-  return useQuery(["movieWatchProviders"], getProviders, {
+  return useQuery({
+    queryKey: ["movieWatchProviders"],
+    queryFn: getProviders,
     select: (providersData) => providersData.results,
   });
 }

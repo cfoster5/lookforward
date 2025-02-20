@@ -6,4 +6,7 @@ const getPerson = async (personId: number) =>
   await tmdb.people.details(personId, ["movie_credits", "images"], "en-US");
 
 export const usePerson = (personId: number) =>
-  useQuery(["person", personId], () => getPerson(personId));
+  useQuery({
+    queryKey: ["person", personId],
+    queryFn: () => getPerson(personId),
+  });

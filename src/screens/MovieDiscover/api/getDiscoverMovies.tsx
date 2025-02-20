@@ -2,7 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { TMDB_KEY } from "@/constants/ApiKeys";
 
-async function getMovies({ pageParam = 1, queryKey }) {
+async function getMovies({ pageParam, queryKey }) {
   const [_key, { ...params }] = queryKey;
   // Remove undefined params or watch_providers when set to 0
   const filteredParamsArrays = Object.entries(params).filter(
@@ -39,8 +39,8 @@ export function useDiscoverMovies({
     watchProvider = 9;
   }
 
-  return useInfiniteQuery(
-    [
+  return useInfiniteQuery({
+    queryKey: [
       "discoverMovies",
       {
         with_genres: genreId,
@@ -50,11 +50,9 @@ export function useDiscoverMovies({
         sort_by: sortMethod,
       },
     ],
-    getMovies,
-    {
-      getNextPageParam: (lastPage) => lastPage.nextPage,
-      select: (movieData) => movieData.pages.flatMap((page) => page.results),
-      // keepPreviousData: true,
-    },
-  );
+    queryFn: getMovies,
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    select: (movieData) => movieData.pages.flatMap((page) => page.results),
+  });
 }

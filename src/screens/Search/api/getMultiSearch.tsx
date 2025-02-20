@@ -14,9 +14,9 @@ async function getMultiSearch(searchValue: string) {
 
 export function useMultiSearch(searchValue: string) {
   const { categoryIndex } = useStore();
-  return useQuery(
-    ["movieSearch", searchValue],
-    () => getMultiSearch(searchValue),
-    { enabled: categoryIndex === 0 && searchValue !== "" },
-  );
+  return useQuery({
+    queryKey: ["movieSearch", searchValue],
+    queryFn: () => getMultiSearch(searchValue),
+    enabled: categoryIndex === 0 && searchValue !== "",
+  });
 }

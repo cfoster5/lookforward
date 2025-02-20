@@ -30,8 +30,7 @@ export function MovieSearchModal({
   selectedOption: MovieOption;
   setSelectedOption: (option: MovieOption) => void;
 }) {
-  const { data: movieWatchProviders, isInitialLoading } =
-    useMovieWatchProviders();
+  const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
   return (
@@ -64,7 +63,7 @@ export function MovieSearchModal({
         </Text>
         {/* Wrap FlatList in ScrollView with horizontal prop so that scrollEnabled within FlatList can be disabled  */}
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {!isInitialLoading && (
+          {!isLoading && (
             <FlatList
               scrollEnabled={false}
               contentContainerStyle={{

@@ -11,7 +11,7 @@ import { MovieOption } from "../types";
 import { TMDB_KEY } from "@/constants/ApiKeys";
 
 async function getMovies({
-  pageParam = 1,
+  pageParam,
   option,
 }: {
   pageParam: number;
@@ -33,13 +33,11 @@ async function getMovies({
 }
 
 export function useMovieData(option: MovieOption) {
-  return useInfiniteQuery(
-    ["movies", { option }],
-    ({ pageParam }) => getMovies({ pageParam, option }),
-    {
-      getNextPageParam: (lastPage) =>
-        lastPage.page !== lastPage.total_pages ? lastPage.page + 1 : undefined,
-      // select: (movieData) => movieData.pages.flatMap((page) => page.results),
-    },
-  );
+  return useInfiniteQuery({
+    queryKey: ["movies", { option }],
+    queryFn: ({ pageParam }) => getMovies({ pageParam, option }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) =>
+      lastPage.page !== lastPage.total_pages ? lastPage.page + 1 : undefined,
+  });
 }

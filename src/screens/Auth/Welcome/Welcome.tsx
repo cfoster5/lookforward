@@ -55,14 +55,14 @@ const CarouselItem = ({ item, index }: CarouselItemProps) => (
 type Props = NativeStackScreenProps<AuthStackParams, "Welcome">;
 
 function Welcome({ navigation }: Props) {
-  const { data: trendingMovies, isInitialLoading } = useTrendingMovies();
+  const { data: trendingMovies, isLoading } = useTrendingMovies();
   // const hypedGames: IGDB.Game.Game[] = useGetHypedGames();
   const { data: hypedGames } = useHypedGames();
   const ref = useRef<Carousel<any>>(null);
 
   return (
     <SafeAreaView style={{ flex: 1, justifyContent: "center" }}>
-      {!isInitialLoading && hypedGames && (
+      {!isLoading && hypedGames && (
         <>
           <View style={{ alignItems: "center" }}>
             <Text style={iOSUIKit.title3EmphasizedWhite}>

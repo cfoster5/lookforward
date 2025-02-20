@@ -19,7 +19,9 @@ async function getTraktMovie(id: MovieDetails["imdb_id"]) {
 }
 
 export function useTraktMovie(id?: MovieDetails["imdb_id"]) {
-  return useQuery(["traktMovie", id], () => getTraktMovie(id!), {
+  return useQuery({
+    queryKey: ["traktMovie", id],
+    queryFn: () => getTraktMovie(id!),
     enabled: !!id,
   });
 }

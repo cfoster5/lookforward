@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Image } from "expo-image";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
@@ -42,7 +43,10 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
   } = useCountdownStore();
   const navigation = useNavigation<NavigationProp<CountdownStackParamList>>();
   const transformAmount = useSharedValue(-24);
-  transformAmount.value = withTiming(!showDeleteButton ? -24 : 16);
+
+  useEffect(() => {
+    transformAmount.value = withTiming(!showDeleteButton ? -24 : 16);
+  }, [showDeleteButton, transformAmount]);
 
   const isSelected =
     sectionName === "Movies"

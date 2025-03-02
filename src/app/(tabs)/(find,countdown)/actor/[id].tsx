@@ -1,40 +1,32 @@
-import {
-  BottomTabScreenProps,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/elements";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useLayoutEffect, useRef, useState } from "react";
-import { Dimensions, FlatList, Platform, Text, View } from "react-native";
-import { useMMKVString } from "react-native-mmkv";
-import Carousel from "react-native-snap-carousel";
-import { iOSUIKit } from "react-native-typography";
-import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
-
-import { usePerson } from "./api/getPerson";
-import { CarouselItem } from "./components/CarouselItem";
-
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { ExpandableText } from "@/components/ExpandableText";
 import { DynamicShareHeader } from "@/components/Headers";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
-import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
 import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
-import { FindStackParams, BottomTabParams, Recent } from "@/types";
+import { usePerson } from "@/screens/Actor/api/getPerson";
+import { CarouselItem } from "@/screens/Actor/components/CarouselItem";
+import { Recent } from "@/types";
 import { dateToFullLocale, timestamp } from "@/utils/dates";
-
-type ActorScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "Actor">,
-  CompositeScreenProps<
-    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
-    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
-  >
->;
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useHeaderHeight } from "@react-navigation/elements";
+import { useLayoutEffect, useRef, useState } from "react";
+import {
+  FlatList,
+  Platform,
+  Text,
+  useWindowDimensions,
+  View,
+} from "react-native";
+import { Text as ThemedText } from "@/components/Themed";
+import { useMMKVString } from "react-native-mmkv";
+import Carousel from "react-native-snap-carousel";
+import { iOSUIKit } from "react-native-typography";
+import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 
 const width = 200;
 const horizontalMargin = 4;
@@ -54,10 +46,11 @@ function sortReleaseDates(
   }
 }
 
-function Actor({ route, navigation }: ActorScreenNavigationProp) {
-  // const person = useGetPerson(route.params.personId);
-  const { personId, name } = route.params;
-  const { data: person, isLoading } = usePerson(route.params.personId);
+function Actor() {
+  const navigation = useNavigation();
+  const { id: personId, name } = useLocalSearchParams();
+  const { width: windowWidth } = useWindowDimensions();
+  const { data: person, isLoading } = usePerson(Number(personId));
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const ref = useRef<Carousel<any>>(null);
@@ -103,17 +96,11 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
       renderItem={({ item }) => (
         <MoviePoster
           key={item.id.toString()}
-          pressHandler={() =>
-            navigation.push("Movie", {
-              movieId: item.id,
-              name: item.title,
-            })
-          }
           movie={item}
           posterPath={item.poster_path}
           style={{
             width: calculateWidth(16, 16, 2),
-            height: calculateWidth(16, 16, 2) * 1.5,
+            aspectRatio: 2 / 3,
           }}
         />
       )}
@@ -157,7 +144,7 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
               )}
               layout="default"
               loop
-              sliderWidth={Dimensions.get("window").width}
+              sliderWidth={windowWidth}
               itemWidth={width + horizontalMargin * 2}
               // removeClippedSubviews={true}
               containerCustomStyle={{

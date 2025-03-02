@@ -1,63 +1,48 @@
+import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
+import ButtonMultiState from "@/components/ButtonMultiState";
+import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { NativeIconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { targetedProviders } from "@/helpers/helpers";
+import { useDiscoverMovies } from "@/screens/MovieDiscover/api/getDiscoverMovies";
 import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import {
-  BottomTabScreenProps,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect, useRef, useState } from "react";
 import { FlatList, Platform, Text, useWindowDimensions } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { Movie } from "tmdb-ts";
+import { Movie, SortOption } from "tmdb-ts";
 
-import { useDiscoverMovies } from "./api/getDiscoverMovies";
-
-import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
-import ButtonMultiState from "@/components/ButtonMultiState";
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-import { LoadingScreen } from "@/components/LoadingScreen";
-import { MoviePoster } from "@/components/Posters/MoviePoster";
-import { targetedProviders } from "@/helpers/helpers";
-import { FindStackParamList, TabNavigationParamList } from "@/types";
-
-type MovieDiscoverScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParamList, "MovieDiscover">,
-  CompositeScreenProps<
-    BottomTabScreenProps<TabNavigationParamList, "FindTab">,
-    BottomTabScreenProps<TabNavigationParamList, "CountdownTab">
-  >
->;
-
-function MovieDiscover({
-  route,
-  navigation,
-}: MovieDiscoverScreenNavigationProp) {
+function MovieDiscover() {
+  const navigation = useNavigation();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
   const { width: windowWidth } = useWindowDimensions();
-  const { genre, company, keyword, provider } = route.params;
+  const { with_genres, with_companies, with_keywords, with_watch_providers } =
+    useLocalSearchParams();
   const scrollRef = useRef<FlatList>(null);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
-  const [sortMethod, setSortMethod] = useState("popularity.desc");
+  const [sortMethod, setSortMethod] = useState<SortOption>("popularity.desc");
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
-    useState<number>(provider?.provider_id ?? 0);
+    useState<number>(with_watch_providers ?? 0);
+
   const {
     data: movies,
     fetchNextPage,
     hasNextPage,
-    isPreviousData,
+    isLoading,
   } = useDiscoverMovies({
-    genreId: genre?.id,
-    companyId: company?.id,
-    keywordId: keyword?.id,
-    watchProvider: selectedMovieWatchProvider,
-    sortMethod,
+    with_genres,
+    with_companies,
+    with_keywords,
+    with_watch_providers: selectedMovieWatchProvider,
+    sort_by: sortMethod,
   });
   const { data: movieWatchProviders } = useMovieWatchProviders();
   const modalRef = useRef<BottomSheetModal>();
@@ -92,13 +77,14 @@ function MovieDiscover({
     navigation.setOptions({
       headerRight: () => (
         <HeaderButtons
-          HeaderButtonComponent={(props) =>
-            IoniconsHeaderButton({ ...props, iconSize: 23 })
+          HeaderButtonComponent={
+            (props) => NativeIconsHeaderButton({ ...props })
+            // IoniconsHeaderButton({ ...props, iconSize: 23 })
           }
         >
           <Item
-            title="search"
-            iconName="funnel-outline"
+            title="filter"
+            iconName="line.3.horizontal.decrease"
             onPress={() => modalRef.current?.present()}
           />
         </HeaderButtons>
@@ -218,7 +204,7 @@ function MovieDiscover({
     );
   }
 
-  if (isPreviousData) return <LoadingScreen />;
+  if (isLoading) return <LoadingScreen />;
 
   return (
     <>
@@ -249,7 +235,7 @@ function MovieDiscover({
             posterPath={item.poster_path}
             style={{
               width: windowWidth / 2 - 24,
-              height: (windowWidth / 2 - 24) * 1.5,
+              aspectRatio: 2 / 3,
             }}
           />
         )}

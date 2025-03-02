@@ -2,21 +2,25 @@ import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
-import { StatusBar } from "react-native";
 import Purchases from "react-native-purchases";
 
-import Navigation from "./src/navigation";
-import { AppProvider } from "./src/providers/app";
-import { useStore } from "./src/stores/store";
+import { Slot, useNavigationContainerRef } from "expo-router";
+import { useStore } from "@/stores/store";
+import { AppProvider } from "@/providers/app";
+import { StatusBar } from "expo-status-bar";
+import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function App() {
+export default function RootLayout() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const { user, setIsPro } = useStore();
   const [colorScheme] = useState("dark");
+  const navigationRef = useNavigationContainerRef();
+
+  useReactNavigationDevTools(navigationRef);
 
   useEffect(() => {
     /* Enable debug logs before calling `setup`. */
@@ -85,14 +89,18 @@ export default function App() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (!initializing) {
+      SplashScreen.hideAsync();
+    }
+  }, [initializing]);
+
   if (initializing) return null;
 
   return (
     <AppProvider>
-      <Navigation colorScheme={colorScheme} />
-      <StatusBar
-        barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
-      />
+      <Slot />
+      <StatusBar style={"light"} />
     </AppProvider>
   );
 }

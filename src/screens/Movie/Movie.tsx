@@ -30,8 +30,8 @@ import Animated, {
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import {
-  BackdropSizes,
-  PosterSizes,
+  BackdropSize,
+  PosterSize,
   ReleaseDate,
   ReleaseDateType,
 } from "tmdb-ts";
@@ -421,7 +421,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 renderItem={({ item }) => (
                   <Image
                     source={{
-                      uri: `https://image.tmdb.org/t/p/${PosterSizes.W154}${item.logo_path}`,
+                      uri: `https://image.tmdb.org/t/p/${PosterSize.W154}${item.logo_path}`,
                     }}
                     style={{
                       height: calculateWidth(16, 8, 6),
@@ -559,7 +559,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     posterPath={
                       mediaSelections.images === "posters"
                         ? item.file_path
-                        : `https://image.tmdb.org/t/p/${PosterSizes.W780}${item.file_path}`
+                        : `https://image.tmdb.org/t/p/${PosterSize.W780}${item.file_path}`
                     }
                     style={{
                       width:
@@ -634,7 +634,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         borderRadius: 12,
                       }}
                       source={{
-                        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${
+                        uri: `https://image.tmdb.org/t/p/${BackdropSize.W780}${
                           movieDetails!.belongs_to_collection.backdrop_path
                         }`,
                       }}
@@ -696,7 +696,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
       </Animated.ScrollView>
       <ImageView
         images={movieDetails!.images[mediaSelections.images].map((image) => ({
-          uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${image.file_path}`,
+          uri: `https://image.tmdb.org/t/p/${BackdropSize.W780}${image.file_path}`,
         }))}
         imageIndex={showImageViewer.index}
         visible={showImageViewer.isVisible}

@@ -6,7 +6,7 @@ import {
   StyleProp,
   ViewStyle,
 } from "react-native";
-import { Movie, PosterSizes, Recommendation } from "tmdb-ts";
+import { Movie, PosterSize, Recommendation } from "tmdb-ts";
 
 import { TextPoster } from "./TextPoster";
 import PosterButton from "../PosterButton";
@@ -38,7 +38,7 @@ export function MoviePoster({
             style,
           ]}
           source={{
-            uri: `https://image.tmdb.org/t/p/${PosterSizes.W300}${posterPath}`,
+              uri: `https://image.tmdb.org/t/p/${PosterSize.W300}${posterPath}`,
           }}
         />
       ) : (

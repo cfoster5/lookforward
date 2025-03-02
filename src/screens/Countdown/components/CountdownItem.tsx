@@ -8,7 +8,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
-import { PosterSizes } from "tmdb-ts";
+import { PosterSize } from "tmdb-ts";
 
 import { RadioButton } from "./RadioButton";
 
@@ -170,7 +170,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
   let imageSrc = "";
   let title = "";
   if (sectionName === "Movies") {
-    imageSrc = `https://image.tmdb.org/t/p/${PosterSizes.W92}${item!.poster_path}`;
+    imageSrc = `https://image.tmdb.org/t/p/${PosterSize.W92}${item!.poster_path}`;
     title = item!.title;
   }
   if (sectionName === "Games") {

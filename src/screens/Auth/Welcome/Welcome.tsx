@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
-import { PosterSizes, TrendingResults } from "tmdb-ts";
+import { PosterSize, TrendingResults } from "tmdb-ts";
 
 import { useHypedGames } from "./api/getHypedGames";
 import { useTrendingMovies } from "./api/getTrendingMovies";
@@ -33,7 +33,7 @@ const CarouselItem = ({ item, index }: CarouselItemProps) => (
     source={{
       uri:
         index % 2
-          ? `https://image.tmdb.org/t/p/${PosterSizes.W500}${
+          ? `https://image.tmdb.org/t/p/${PosterSize.W500}${
               (item as TrendingResults<"movie">["results"][number]).poster_path
             }`
           : `https:${(item as IGDB.Game.Game)?.cover?.url.replace(

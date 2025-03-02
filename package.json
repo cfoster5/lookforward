@@ -54,7 +54,7 @@
     "react-native-svg": "15.8.0",
     "react-native-typography": "^1.4.1",
     "react-navigation-header-buttons": "^11.0.0",
-    "tmdb-ts": "^1.4.0",
+    "tmdb-ts": "^2.0.1",
     "zustand": "^4.1.4"
   },
   "devDependencies": {

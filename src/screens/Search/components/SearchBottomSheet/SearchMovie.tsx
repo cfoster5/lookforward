@@ -1,6 +1,4 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
 import { PlatformColor, Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
@@ -8,17 +6,17 @@ import { MovieWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
 import { dateToFullLocale } from "@/utils/dates";
+import { useRouter } from "expo-router";
 
 export function SearchMovie({ item }: { item: MovieWithMediaType }) {
-  // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
-  const navigation = useNavigation<StackNavigationProp<any>>();
+  const router = useRouter();
 
   return (
     <Pressable
       onPress={() =>
-        navigation.navigate("Movie", {
-          movieId: item.id,
-          name: item.title,
+        router.navigate({
+          pathname: "/movie/[id]",
+          params: { id: item?.id, name: item?.title },
         })
       }
       style={({ pressed }) => [

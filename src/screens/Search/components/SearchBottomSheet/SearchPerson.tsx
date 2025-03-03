@@ -1,23 +1,21 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
 import { PlatformColor, Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { PersonWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
+import { useRouter } from "expo-router";
 
 export function SearchPerson({ item }: { item: PersonWithMediaType }) {
-  // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
-  const navigation = useNavigation<StackNavigationProp<any>>();
+  const router = useRouter();
 
   return (
     <Pressable
       onPress={() =>
-        navigation.navigate("Actor", {
-          personId: item.id,
-          name: item.name,
+        router.navigate({
+          pathname: "/actor/[id]",
+          params: { id: item.id, name: item.name },
         })
       }
       style={({ pressed }) => [

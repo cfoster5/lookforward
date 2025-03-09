@@ -1,18 +1,6 @@
-import ButtonMultiState from "@/components/ButtonMultiState";
-import { ExpandableText } from "@/components/ExpandableText";
-import { DynamicShareHeader } from "@/components/Headers";
-import { LoadingScreen } from "@/components/LoadingScreen";
-import { MoviePoster } from "@/components/Posters/MoviePoster";
-import { calculateWidth } from "@/helpers/helpers";
-import { reusableStyles } from "@/helpers/styles";
-import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
-import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
-import { usePerson } from "@/screens/Actor/api/getPerson";
-import { CarouselItem } from "@/screens/Actor/components/CarouselItem";
-import { Recent } from "@/types";
-import { dateToFullLocale, timestamp } from "@/utils/dates";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect, useRef, useState } from "react";
 import {
   FlatList,
@@ -21,12 +9,26 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { Text as ThemedText } from "@/components/Themed";
 import { useMMKVString } from "react-native-mmkv";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
 import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+
+import { usePerson } from "@/app/(tabs)/(find,countdown)/actor/api/getPerson";
+import ButtonMultiState from "@/components/ButtonMultiState";
+import { ExpandableText } from "@/components/ExpandableText";
+import { DynamicShareHeader } from "@/components/Headers";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { Text as ThemedText } from "@/components/Themed";
+import { calculateWidth } from "@/helpers/helpers";
+import { reusableStyles } from "@/helpers/styles";
+import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
+import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
+import { Recent } from "@/types";
+import { dateToFullLocale, timestamp } from "@/utils/dates";
+
+import { CarouselItem } from "./components/CarouselItem";
 
 const width = 200;
 const horizontalMargin = 4;

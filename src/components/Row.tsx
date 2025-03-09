@@ -1,6 +1,6 @@
 import Ionicons from "@expo/vector-icons/build/Ionicons";
-import { PlatformColor, View, Text } from "react-native";
 import { SymbolView, SFSymbol } from "expo-symbols";
+import { PlatformColor, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 type RowProps = {

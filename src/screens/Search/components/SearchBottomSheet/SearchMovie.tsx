@@ -1,12 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { PlatformColor, Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { MovieWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
 import { dateToFullLocale } from "@/utils/dates";
-import { useRouter } from "expo-router";
 
 export function SearchMovie({ item }: { item: MovieWithMediaType }) {
   const router = useRouter();

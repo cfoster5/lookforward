@@ -1,11 +1,12 @@
-import { NativeIcon } from "@/components/NativeIcon.ios";
-import { FirestoreMovie } from "@/interfaces/firebase";
-import { useStore } from "@/stores/store";
 import firestore from "@react-native-firebase/firestore";
 import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
+
+import { NativeIcon } from "@/components/NativeIcon.ios";
+import { FirestoreMovie } from "@/interfaces/firebase";
+import { useStore } from "@/stores/store";
 
 export function BlurTabBarBackground() {
   return (

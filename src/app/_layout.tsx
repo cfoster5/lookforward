@@ -1,14 +1,14 @@
+import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
+import { Slot, useNavigationContainerRef } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import Purchases from "react-native-purchases";
 
-import { Slot, useNavigationContainerRef } from "expo-router";
-import { useStore } from "@/stores/store";
 import { AppProvider } from "@/providers/app";
-import { StatusBar } from "expo-status-bar";
-import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
+import { useStore } from "@/stores/store";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

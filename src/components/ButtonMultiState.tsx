@@ -1,6 +1,7 @@
-import { useStore } from "@/stores/store";
 import { PlatformColor, Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { useStore } from "@/stores/store";
 
 export default function ButtonMultiState({
   text,

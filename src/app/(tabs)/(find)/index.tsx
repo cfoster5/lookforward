@@ -1,10 +1,10 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { PlatformColor, View } from "react-native";
 
-import { useStore } from "@/stores/store";
-import { MovieLayout } from "@/screens/Search/MovieLayout";
-import { GameLayout } from "@/screens/Search/GameLayout";
 import { SearchBottomSheet } from "@/screens/Search/components/SearchBottomSheet/SearchBottomSheet";
+import { GameLayout } from "@/screens/Search/GameLayout";
+import { MovieLayout } from "@/screens/Search/MovieLayout";
+import { useStore } from "@/stores/store";
 
 function Search() {
   const { categoryIndex } = useStore();

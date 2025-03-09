@@ -3,9 +3,9 @@ import { Linking, PlatformColor, Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { Video } from "tmdb-ts";
 
-import { calculateWidth } from "../helpers/helpers";
-
 import { Video as GameVideo } from "@/types";
+
+import { calculateWidth } from "../helpers/helpers";
 
 function Trailer({ video }: { video: Video | GameVideo }) {
   return (
@@ -14,7 +14,7 @@ function Trailer({ video }: { video: Video | GameVideo }) {
         Linking.openURL(
           (video as Video).key
             ? `https://www.youtube.com/watch?v=${(video as Video).key}`
-            : `https://www.youtube.com/watch?v=${(video as GameVideo).video_id}`
+            : `https://www.youtube.com/watch?v=${(video as GameVideo).video_id}`,
         )
       }
       style={{ width: calculateWidth(16, 8, 1.5) }}

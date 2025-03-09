@@ -4,12 +4,12 @@ import { Linking, PlatformColor, Pressable, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { LargeBorderlessButton } from "./LargeBorderlessButton";
-import { LargeFilledButton } from "./LargeFilledButton";
-
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
 import { useStore } from "@/stores/store";
+
+import { LargeBorderlessButton } from "./LargeBorderlessButton";
+import { LargeFilledButton } from "./LargeFilledButton";
 
 type Props = { modalRef: any };
 

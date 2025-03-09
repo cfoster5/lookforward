@@ -1,12 +1,13 @@
 import { Image } from "expo-image";
 
-import { TextPoster } from "./TextPoster";
-import { reusableStyles } from "../../helpers/styles";
-import PosterButton from "../PosterButton";
-
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
 import { timestamp } from "@/utils/dates";
+
+import { reusableStyles } from "../../helpers/styles";
+import PosterButton from "../PosterButton";
+
+import { TextPoster } from "./TextPoster";
 
 export function GamePoster({
   game,
@@ -15,7 +16,7 @@ export function GamePoster({
 }) {
   const { gameSubs } = useStore();
   const inCountdown = gameSubs.find(
-    (releaseDate) => releaseDate.game.id === game.id
+    (releaseDate) => releaseDate.game.id === game.id,
   )?.documentID;
   const hasUpcomingRelease =
     game.release_dates.filter((releaseDate) => releaseDate.date >= timestamp)

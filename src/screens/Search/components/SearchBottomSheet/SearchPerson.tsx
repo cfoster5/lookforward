@@ -1,11 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { PlatformColor, Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { PersonWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
-import { useRouter } from "expo-router";
 
 export function SearchPerson({ item }: { item: PersonWithMediaType }) {
   const router = useRouter();

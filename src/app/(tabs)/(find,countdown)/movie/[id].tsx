@@ -1,17 +1,12 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { BlurView } from "expo-blur";
-import {
-  BottomTabScreenProps,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
+import { Link, useLocalSearchParams, useNavigation } from "expo-router";
 import { DateTime } from "luxon";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
-  Dimensions,
   FlatList,
   Platform,
   PlatformColor,
@@ -19,6 +14,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 import ImageView from "react-native-image-viewing";
@@ -31,57 +27,54 @@ import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import {
   BackdropSize,
+  Keywords,
+  MovieDetails,
   PosterSize,
   ReleaseDate,
   ReleaseDateType,
 } from "tmdb-ts";
-
-import { useMovie } from "./api/getMovie";
-import { useMovieRatings } from "./api/getMovieRatings";
-import { useTraktMovie } from "./api/getTraktMovie";
-import { DiscoverListLabel } from "./components/DiscoverListLabel";
-import { MediaSelection } from "./components/MediaSelection";
-import Person from "./components/Person";
-import { Rating } from "./components/Rating";
-import WatchProvidersModal from "./components/WatchProvidersModal";
-import { composeRuntime } from "./utils/composeRuntime";
-import {
-  calculateWidth,
-  removeSub,
-  subToMovie,
-  tmdbMovieGenres,
-} from "../../helpers/helpers";
-import { FirestoreMovie } from "../../interfaces/firebase";
 
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { BlueBullet } from "@/components/BlueBullet";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import CategoryControl from "@/components/CategoryControl/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { NativeIconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { ListLabel } from "@/components/ListLabel";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
+import {
+  calculateWidth,
+  removeSub,
+  subToMovie,
+  tmdbMovieGenres,
+} from "@/helpers/helpers";
 import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
+import { useMovie } from "@/screens/Movie/api/getMovie";
+import { useMovieRatings } from "@/screens/Movie/api/getMovieRatings";
+import { DiscoverListLabel } from "@/screens/Movie/components/DiscoverListLabel";
+import { MediaSelection } from "@/screens/Movie/components/MediaSelection";
+import Person from "@/screens/Movie/components/Person";
+import { Rating } from "@/screens/Movie/components/Rating";
+import WatchProvidersModal from "@/screens/Movie/components/WatchProvidersModal";
+import { composeRuntime } from "@/screens/Movie/utils/composeRuntime";
 import { useStore } from "@/stores/store";
-import { BottomTabParams, FindStackParams, Recent } from "@/types";
+import { Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 
 function ScrollViewWithFlatList({
   data,
   numColumns,
-  navigation,
   navParamKey,
 }: {
-  data: any;
+  data: MovieDetails["production_companies"] | Keywords["keywords"];
   numColumns: number;
-  navigation: any;
-  navParamKey: string;
+  navParamKey: "with_keywords" | "with_companies";
 }) {
   return (
     <ScrollView
@@ -102,21 +95,26 @@ function ScrollViewWithFlatList({
         showsHorizontalScrollIndicator={false}
         data={data}
         renderItem={({ item }) => (
-          <ButtonSingleState
-            text={item.name}
-            onPress={() =>
-              navigation.push("MovieDiscover", {
+          <Link
+            href={{
+              pathname: "movie-discover",
+              params: {
                 screenTitle: item.name,
-                [navParamKey]: item,
-              })
-            }
-            buttonStyle={{
-              backgroundColor: PlatformColor("systemGray5"),
-              borderColor: PlatformColor("systemGray5"),
+                [navParamKey]: item.id,
+              },
             }}
-          />
+            asChild
+          >
+            <ButtonSingleState
+              key={item.id}
+              text={item.name}
+              buttonStyle={{
+                backgroundColor: PlatformColor("systemGray5"),
+                borderColor: PlatformColor("systemGray5"),
+              }}
+            />
+          </Link>
         )}
-        keyExtractor={(item) => item.id.toString()}
       />
     </ScrollView>
   );
@@ -135,16 +133,9 @@ export function getReleaseDate(releaseDates: ReleaseDate[]) {
   );
 }
 
-type MovieScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "Movie">,
-  CompositeScreenProps<
-    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
-    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
-  >
->;
-
-function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
-  const { movieId, name } = route.params;
+function MovieScreen() {
+  const navigation = useNavigation();
+  const { id: movieId, name } = useLocalSearchParams();
   const { user, movieSubs, isPro } = useStore();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString(),
@@ -159,6 +150,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const [detailIndex, setDetailIndex] = useState(0);
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
+  const { width } = useWindowDimensions();
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
     (e) => (scrollOffset.value = e.contentOffset.y),
@@ -211,10 +203,10 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+        <HeaderButtons HeaderButtonComponent={NativeIconsHeaderButton}>
           <Item
-            title="search"
-            iconName={isSubbed ? "checkmark-outline" : "add-outline"}
+            title="toggleSub"
+            iconName={isSubbed ? "checkmark" : "plus"}
             onPress={() =>
               !isSubbed
                 ? subToMovie(movieId.toString(), user!.uid)
@@ -223,7 +215,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
           />
           <Item
             title="share"
-            iconName="share-outline"
+            iconName="square.and.arrow.up"
             onPress={() => onShare(name, `movie/${movieId}?name=${name}`)}
           />
         </HeaderButtons>
@@ -356,24 +348,31 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             {movieDetails!.genres.map((genre, index) => (
-              <ButtonSingleState
+              <Link
                 key={index}
-                text={genre.name}
-                onPress={() =>
-                  navigation.push("MovieDiscover", {
+                href={{
+                  pathname: "movie-discover",
+                  params: {
                     screenTitle: genre.name,
-                    genre,
-                  })
-                }
-                buttonStyle={{
-                  paddingHorizontal: 16,
-                  flexDirection: "row",
-                  backgroundColor: PlatformColor("systemGray5"),
-                  borderColor: PlatformColor("systemGray5"),
+                    with_genres: genre.id,
+                  },
                 }}
-                icon={tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon}
-                textStyle={{ alignSelf: "center" }}
-              />
+                asChild
+              >
+                <ButtonSingleState
+                  text={genre.name}
+                  buttonStyle={{
+                    paddingHorizontal: 16,
+                    flexDirection: "row",
+                    backgroundColor: PlatformColor("systemGray5"),
+                    borderColor: PlatformColor("systemGray5"),
+                  }}
+                  icon={
+                    tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon
+                  }
+                  textStyle={{ alignSelf: "center" }}
+                />
+              </Link>
             ))}
           </View>
 
@@ -461,11 +460,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 ? movieDetails!.credits.cast
                 : composeGroupedJobCredits() ?? []
               ).map((person) => (
-                <Person
-                  key={person.credit_id}
-                  navigation={navigation}
-                  person={person}
-                />
+                <Person key={person.credit_id} person={person} />
               ))}
             </>
           )}
@@ -589,8 +584,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                           )
                         : 2
                     }
-                    navigation={navigation}
-                    navParamKey="company"
+                    navParamKey="with_companies"
                   />
                 </>
               )}
@@ -602,8 +596,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     numColumns={Math.ceil(
                       movieDetails!.keywords.keywords.length / 2,
                     )}
-                    navigation={navigation}
-                    navParamKey="keyword"
+                    navParamKey="with_keywords"
                   />
                 </>
               )}
@@ -627,7 +620,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   >
                     <Image
                       style={{
-                        width: Dimensions.get("screen").width - 32,
+                        width: width - 32,
                         aspectRatio: 16 / 9,
                         borderWidth: 1,
                         borderColor: PlatformColor("separator"),
@@ -646,7 +639,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         {
                           bottom:
                             // use lineHeight to account for font size + space above/below
-                            (Dimensions.get("screen").width - 32) / 1.78 -
+                            (width - 32) / 1.78 -
                             iOSUIKit.bodyObject.lineHeight -
                             16,
                         },
@@ -672,12 +665,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     data={movieDetails!.recommendations.results}
                     renderItem={({ item }) => (
                       <MoviePoster
-                        pressHandler={() =>
-                          navigation.push("Movie", {
-                            movieId: item.id,
-                            name: item.title,
-                          })
-                        }
                         movie={item}
                         posterPath={item.poster_path}
                         style={{

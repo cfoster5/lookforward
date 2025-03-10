@@ -190,9 +190,9 @@ function Actor() {
                   }
                 }
               })
-              .map((credit, i) => (
+              .map((credit) => (
                 <ButtonMultiState
-                  key={i}
+                  key={credit.id}
                   text={credit.job}
                   selectedVal={selectedJob}
                   onPress={() => setSelectedJob(credit.job)}

@@ -123,15 +123,19 @@ export function getGameReleaseDate(
     release_dates: ReleaseDate[];
   },
 ): string {
-  // need to filter client-side since combining search and filter on API is not working
-  const filteredDates = game?.release_dates.filter(
-    (releaseDate) => releaseDate.region === 2 || releaseDate.region === 8,
-  );
-  const uniqueDates = [...new Set(filteredDates?.map((date) => date.date))];
+  const uniqueDates = new Set<number>();
+
+  for (const releaseDate of game.release_dates) {
+    if (releaseDate.region === 2 || releaseDate.region === 8) {
+      uniqueDates.add(releaseDate.date);
+    }
+  }
+
   try {
-    if (uniqueDates.length === 1) {
-      // return timestampToUTC(uniqueDates[0]).toFormat("MMMM d, yyyy");
-      return timestampToUTC(uniqueDates[0]).toLocaleString(DateTime.DATE_FULL);
+    if (uniqueDates.size === 1) {
+      return timestampToUTC([...uniqueDates][0]).toLocaleString(
+        DateTime.DATE_FULL,
+      );
     } else {
       return "Multiple dates";
     }

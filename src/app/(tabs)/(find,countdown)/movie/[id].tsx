@@ -239,21 +239,19 @@ function MovieScreen() {
   }, [movieDetails]);
 
   function composeGroupedJobCredits() {
-    // Iterate over each crew object
-    return movieDetails?.credits.crew.reduce((acc, obj, index) => {
-      const existingIndex = acc.findIndex((item) => item.name === obj.name);
-      // If object is found by name, push current obj job in job array
-      if (existingIndex !== -1) {
-        acc[existingIndex].job.push(obj.job);
+    // Group crew members by name and aggregate job roles into an array.
+    // Output is a new array where each crew member appears only once, with their job property containing an array of all jobs they performed.
+    const jobMap = new Map();
+
+    movieDetails?.credits.crew.forEach((crewMember) => {
+      if (jobMap.has(crewMember.name)) {
+        jobMap.get(crewMember.name).job.push(crewMember.job);
       } else {
-        // If object is not found by name, create new person obj and set job
-        // property to array with job as first element
-        const newObj = { ...obj };
-        newObj.job = [newObj.job];
-        acc.push(newObj);
+        jobMap.set(crewMember.name, { ...crewMember, job: [crewMember.job] });
       }
-      return acc;
-    }, []);
+    });
+
+    return Array.from(jobMap.values());
   }
 
   if (isLoading || isLoadingRatings) return <LoadingScreen />;
@@ -458,7 +456,7 @@ function MovieScreen() {
 
               {(creditsSelection === "Cast"
                 ? movieDetails!.credits.cast
-                : composeGroupedJobCredits() ?? []
+                : composeGroupedJobCredits()
               ).map((person) => (
                 <Person key={person.credit_id} person={person} />
               ))}

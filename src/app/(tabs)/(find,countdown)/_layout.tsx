@@ -35,7 +35,7 @@ function SharedLayout({ children }) {
         })}
       />
       <Stack.Screen
-        name="movie-discover/index"
+        name="movie-discover"
         options={({ route }) => ({
           title: route.params.screenTitle,
           headerTransparent: Platform.OS === "ios",

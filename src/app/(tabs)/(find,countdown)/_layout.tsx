@@ -1,5 +1,6 @@
 import { Stack } from "expo-router";
 import { Platform } from "react-native";
+
 import { MultiItemHeader } from "@/components/Headers";
 
 export const unstable_settings = {
@@ -37,6 +38,16 @@ function SharedLayout({ children }) {
         name="movie-discover/index"
         options={({ route }) => ({
           title: route.params.screenTitle,
+          headerTransparent: Platform.OS === "ios",
+          headerBlurEffect: "dark",
+          // Add a placeholder button without the `onPress` to avoid flicker
+          headerRight: MultiItemHeader,
+        })}
+      />
+      <Stack.Screen
+        name="movie-collection/[id]"
+        options={({ route }) => ({
+          title: route.params.name,
           headerTransparent: Platform.OS === "ios",
           headerBlurEffect: "dark",
           // Add a placeholder button without the `onPress` to avoid flicker

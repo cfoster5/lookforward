@@ -247,24 +247,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     }
   }, [movieDetails]);
 
-  function composeGroupedJobCredits() {
-    // Iterate over each crew object
-    return movieDetails?.credits.crew.reduce((acc, obj, index) => {
-      const existingIndex = acc.findIndex((item) => item.name === obj.name);
-      // If object is found by name, push current obj job in job array
-      if (existingIndex !== -1) {
-        acc[existingIndex].job.push(obj.job);
-      } else {
-        // If object is not found by name, create new person obj and set job
-        // property to array with job as first element
-        const newObj = { ...obj };
-        newObj.job = [newObj.job];
-        acc.push(newObj);
-      }
-      return acc;
-    }, []);
-  }
-
   if (isLoading || isLoadingRatings) return <LoadingScreen />;
 
   return (

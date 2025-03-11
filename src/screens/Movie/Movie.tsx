@@ -45,6 +45,7 @@ import Person from "./components/Person";
 import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
 import { composeRuntime } from "./utils/composeRuntime";
+import { composeGroupedJobCredits } from "./utils/composeGroupedJobCredits";
 import {
   calculateWidth,
   removeSub,
@@ -459,7 +460,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
               {(creditsSelection === "Cast"
                 ? movieDetails!.credits.cast
-                : composeGroupedJobCredits() ?? []
+                : composeGroupedJobCredits(movieDetails)
               ).map((person) => (
                 <Person
                   key={person.credit_id}

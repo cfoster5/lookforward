@@ -1,5 +1,6 @@
-import { tmdb } from "@/providers/app";
 import { useQuery } from "@tanstack/react-query";
+
+import { tmdb } from "@/providers/app";
 
 const getPerson = async (personId: Parameters<typeof tmdb.people.details>[0]) =>
   await tmdb.people.details(personId, ["movie_credits", "images"], "en-US");

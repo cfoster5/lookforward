@@ -1,10 +1,6 @@
-import {
-  BottomTabScreenProps,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect } from "react";
 import { Platform, View } from "react-native";
 import Animated, {
@@ -12,9 +8,6 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
-import { DetailedCollection } from "tmdb-ts";
-
-import { useCollection } from "./api/getCollection";
 
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { ExpandableText } from "@/components/ExpandableText";
@@ -23,24 +16,13 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
-import { FindStackParams, BottomTabParams } from "@/types";
 
-// import { useGetCollection } from "./api/useGetCollection";
+import { useCollection } from "./api/getCollection";
 
-type CollectionScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "Collection">,
-  CompositeScreenProps<
-    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
-    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
-  >
->;
-
-export function Collection({
-  navigation,
-  route,
-}: CollectionScreenNavigationProp) {
-  const { collectionId } = route.params;
-  const { data: collection, isLoading } = useCollection(collectionId);
+export default function Collection() {
+  const { id: collectionId } = useLocalSearchParams();
+  const navigation = useNavigation();
+  const { data: collection, isLoading } = useCollection(Number(collectionId));
   const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
   const scrollOffset = useSharedValue(0);
@@ -50,6 +32,7 @@ export function Collection({
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      // Relies on dynamic data that is only available within the component's scope
       // eslint-disable-next-line react/no-unstable-nested-components
       headerRight: () => (
         <DynamicShareHeader
@@ -58,7 +41,7 @@ export function Collection({
         />
       ),
     });
-  }, [collection?.name, navigation, collectionId]);
+  }, [collection?.name, collectionId, navigation]);
 
   if (isLoading) return <LoadingScreen />;
 
@@ -86,19 +69,13 @@ export function Collection({
       onScroll={scrollHandler}
       scrollEventThrottle={16}
       data={collection!.parts}
-      renderItem={({ item }: { item: DetailedCollection["parts"][number] }) => (
+      renderItem={({ item }) => (
         <MoviePoster
-          pressHandler={() =>
-            navigation.push("Movie", {
-              movieId: item.id,
-              name: item.title,
-            })
-          }
           movie={item}
           posterPath={item.poster_path}
           style={{
             width: calculateWidth(16, 16, 2),
-            height: calculateWidth(16, 16, 2) * 1.5,
+            aspectRatio: 2 / 3,
           }}
         />
       )}
@@ -120,9 +97,7 @@ export function Collection({
             }
           : undefined
       }
-      keyExtractor={(movie: DetailedCollection["parts"][number]) =>
-        movie.id.toString()
-      }
+      keyExtractor={(movie) => movie.id.toString()}
     />
   );
 }

@@ -1,5 +1,14 @@
 # Changelog
 
+## [6.4.1](https://github.com/cfoster5/lookforward/compare/v6.4.0...v6.4.1) (2025-03-11)
+
+
+### Performance Improvements
+
+* Create composeGroupedJobCredits function ([26ebb29](https://github.com/cfoster5/lookforward/commit/26ebb29ddae910fd535b41923a2881c7f54db72d))
+* Improve release date filtering logic in getGameReleaseDate function ([c15c78e](https://github.com/cfoster5/lookforward/commit/c15c78e4187efdf56aaf6c6d4ded50a5fd71a7e5))
+* Use composeGroupedJobCredits utility function ([1b24d8c](https://github.com/cfoster5/lookforward/commit/1b24d8cb39fb33922d012a54526c55990f6a1279))
+
 ## [6.4.0](https://github.com/cfoster5/lookforward/compare/v6.3.1...v6.4.0) (2025-02-20)
 
 

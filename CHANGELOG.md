@@ -1,5 +1,14 @@
 # Changelog
 
+## [6.3.2](https://github.com/cfoster5/lookforward/compare/v6.3.1...v6.3.2) (2025-03-12)
+
+
+### Performance Improvements
+
+* Create composeGroupedJobCredits utility to aggregate crew job roles ([7ad2649](https://github.com/cfoster5/lookforward/commit/7ad264955a5132d08d0527a60de1a404951bf29f))
+* Extract unique job sorting logic into getUniqueSortedCrewJobs function ([03a580d](https://github.com/cfoster5/lookforward/commit/03a580d7b30b5ac53688e7a96ec7db76d109dc23))
+* Improve release date filtering logic in getGameReleaseDate function ([789678e](https://github.com/cfoster5/lookforward/commit/789678e7454f0e939ca63083971ab2ad7806c069))
+
 ## [6.3.1](https://github.com/cfoster5/lookforward/compare/v6.3.0...v6.3.1) (2025-02-19)
 
 

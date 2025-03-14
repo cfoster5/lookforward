@@ -41,7 +41,7 @@ const horizontalMargin = 4;
 
 function sortReleaseDates(
   a: PersonMovieCast | PersonMovieCrew,
-  b: PersonMovieCast | PersonMovieCrew
+  b: PersonMovieCast | PersonMovieCrew,
 ) {
   if (Platform.OS === "ios")
     return b.release_date?.localeCompare(a.release_date);
@@ -52,6 +52,22 @@ function sortReleaseDates(
       return 0;
     }
   }
+}
+
+// Filter and sort the crew credits by job, ensuring each job appears only once.
+function getUniqueSortedCrewJobs(crew?: PersonMovieCrew[]) {
+  return crew
+    ?.reduce((acc: PersonMovieCrew[], v) => {
+      if (!acc.some((t) => t.job === v.job)) {
+        acc.push(v);
+      }
+      return acc;
+    }, [])
+    .sort((a, b) =>
+      a.job.localeCompare(b.job, undefined, {
+        sensitivity: "base",
+      }),
+    );
 }
 
 function Actor({ route, navigation }: ActorScreenNavigationProp) {
@@ -187,28 +203,16 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
               selectedVal={selectedJob}
               onPress={() => setSelectedJob("Actor")}
             />
-            {person?.movie_credits.crew
-              .filter((v, i, a) => a.findIndex((t) => t.job === v.job) === i)
-              .sort((a, b) => {
-                const jobA = a.job.toLowerCase();
-                const jobB = b.job.toLowerCase();
-                if (Platform.OS === "ios") return jobA.localeCompare(jobB);
-                else {
-                  if (jobA !== jobB) {
-                    return jobA < jobB ? -1 : 1;
-                  } else {
-                    return 0;
-                  }
-                }
-              })
-              .map((credit) => (
+            {getUniqueSortedCrewJobs(person?.movie_credits.crew)?.map(
+              (credit) => (
                 <ButtonMultiState
                   key={credit.id}
                   text={credit.job}
                   selectedVal={selectedJob}
                   onPress={() => setSelectedJob(credit.job)}
                 />
-              ))}
+              ),
+            )}
           </View>
         </>
       }

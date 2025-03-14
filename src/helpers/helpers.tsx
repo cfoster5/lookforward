@@ -122,7 +122,10 @@ export function getGameReleaseDate(
   game: Game & {
     release_dates: ReleaseDate[];
   },
-): string {
+) {
+  if (!game || !game.release_dates) {
+    return "TBD";
+  }
   const uniqueDates = new Set<number>();
 
   for (const releaseDate of game.release_dates) {
@@ -131,15 +134,15 @@ export function getGameReleaseDate(
     }
   }
 
-  try {
-    if (uniqueDates.size === 1) {
+  if (uniqueDates.size === 1) {
+    try {
       return timestampToUTC([...uniqueDates][0]).toLocaleString(
         DateTime.DATE_FULL,
       );
-    } else {
-      return "Multiple dates";
+    } catch (error) {
+      console.log(`error for ${JSON.stringify(game)}`, error);
     }
-  } catch {
-    return "TBD";
+  } else {
+    return "Multiple dates";
   }
 }

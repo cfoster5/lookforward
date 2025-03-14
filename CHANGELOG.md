@@ -1,5 +1,24 @@
 # Changelog
 
+## [6.4.0](https://github.com/cfoster5/lookforward/compare/v6.3.1...v6.4.0) (2025-03-14)
+
+
+### Features
+
+* Bump Expo to 52 and bump [@react-native-firebase](https://github.com/react-native-firebase) ([b4841c7](https://github.com/cfoster5/lookforward/commit/b4841c7f7d9a9dadeb432082e51789cd9c16305f))
+
+
+### Bug Fixes
+
+* Handle undefined game or release dates in getGameReleaseDate function ([deb8b2a](https://github.com/cfoster5/lookforward/commit/deb8b2a721b4bbedd3721e466f7e9ee3b14e59f0))
+* Implement useBottomTabOverflow hook to correct scroll bar running under tab bar ([0383bcf](https://github.com/cfoster5/lookforward/commit/0383bcfd92ca0d02427eb09fb40316bf3da58592))
+
+
+### Performance Improvements
+
+* Improve release date filtering logic in getGameReleaseDate function ([21ef30a](https://github.com/cfoster5/lookforward/commit/21ef30a5874368231b787c31d8c71b303eae2ab1))
+* Optimize job credits aggregation in movie screen ([31ad808](https://github.com/cfoster5/lookforward/commit/31ad808073d16564a268ebed7e105107ecaf962e))
+
 ## [6.3.1](https://github.com/cfoster5/lookforward/compare/v6.3.0...v6.3.1) (2025-02-19)
 
 

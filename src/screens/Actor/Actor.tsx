@@ -1,8 +1,4 @@
-import {
-  BottomTabScreenProps,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useLayoutEffect, useRef, useState } from "react";
@@ -27,6 +23,7 @@ import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { FindStackParams, BottomTabParams, Recent } from "@/types";
 import { dateToFullLocale, timestamp } from "@/utils/dates";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 type ActorScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParams, "Actor">,
@@ -71,11 +68,9 @@ function getUniqueSortedCrewJobs(crew?: PersonMovieCrew[]) {
 }
 
 function Actor({ route, navigation }: ActorScreenNavigationProp) {
-  // const person = useGetPerson(route.params.personId);
   const { personId, name } = route.params;
   const { data: person, isLoading } = usePerson(route.params.personId);
-  const tabBarheight = useBottomTabBarHeight();
-  const headerHeight = useHeaderHeight();
+  const paddingBottom = useBottomTabOverflow();
   const ref = useRef<Carousel<any>>(null);
   const [selectedJob, setSelectedJob] = useState("Actor");
 
@@ -133,27 +128,19 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
           }}
         />
       )}
-      keyExtractor={(item, index) => item.id.toString()}
+      keyExtractor={(item) => item.id.toString()}
       numColumns={2}
-      contentContainerStyle={[
-        {
-          marginHorizontal: 16,
-        },
-        Platform.OS === "ios"
-          ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
-          : undefined,
-      ]}
+      automaticallyAdjustsScrollIndicatorInsets
+      contentInsetAdjustmentBehavior="automatic"
+      contentInset={{ bottom: paddingBottom }}
+      scrollIndicatorInsets={{ bottom: paddingBottom }}
+      contentContainerStyle={{
+        marginHorizontal: 16,
+      }}
       columnWrapperStyle={{
         justifyContent: "space-between",
         marginBottom: 16,
       }}
-      scrollIndicatorInsets={
-        Platform.OS === "ios"
-          ? {
-              bottom: tabBarheight - 16,
-            }
-          : undefined
-      }
       // do not use arrow functions for header and footer components
       // fixed issue where carousel would re-render
       // https://stackoverflow.com/a/70232246/5648619

@@ -1,21 +1,10 @@
-import {
-  BottomTabScreenProps,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { FirestoreGame } from "interfaces/firebase";
 import { useEffect, useLayoutEffect, useState, Fragment } from "react";
-import {
-  Platform,
-  PlatformColor,
-  ScrollView,
-  View,
-  FlatList,
-  Text,
-} from "react-native";
+import { PlatformColor, ScrollView, View, FlatList, Text } from "react-native";
 import { useMMKVString } from "react-native-mmkv";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -35,6 +24,7 @@ import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
 import { timestamp } from "@/utils/dates";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 type GameScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParamList, "Game">,
@@ -69,8 +59,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const { user, gameSubs, bottomSheetModalRef } = useStore();
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
-  const tabBarheight = useBottomTabBarHeight();
-  const headerHeight = useHeaderHeight();
+  const paddingBottom = useBottomTabOverflow();
 
   const [storedGames, setStoredGames] = useMMKVString("recent.games");
   const composeRecentGames = useComposeRecentItems(storedGames);
@@ -110,7 +99,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
 
   useEffect(() => {
     const documentID = gameSubs.find(
-      (releaseDate) => releaseDate.game.id === game.id
+      (releaseDate) => releaseDate.game.id === game.id,
     )?.documentID;
 
     setCountdownId(documentID);
@@ -118,14 +107,10 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
 
   return (
     <ScrollView
-      contentContainerStyle={
-        Platform.OS === "ios"
-          ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
-          : undefined
-      }
-      scrollIndicatorInsets={
-        Platform.OS === "ios" ? { bottom: tabBarheight - 16 } : undefined
-      }
+      automaticallyAdjustsScrollIndicatorInsets
+      contentInsetAdjustmentBehavior="automatic"
+      contentInset={{ bottom: paddingBottom }}
+      scrollIndicatorInsets={{ bottom: paddingBottom }}
     >
       {game?.cover?.url && (
         <Image

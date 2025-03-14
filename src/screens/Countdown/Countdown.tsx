@@ -1,5 +1,3 @@
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { useScrollToTop } from "@react-navigation/native";
 import { useRef } from "react";
 import { Platform, PlatformColor, SectionList, View } from "react-native";
@@ -11,12 +9,12 @@ import { SectionHeader } from "./components/SectionHeader";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { compareDates, isoToUTC } from "@/utils/dates";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 function Countdown() {
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
-  const tabBarHeight = useBottomTabBarHeight();
-  const headerHeight = useHeaderHeight();
+  const paddingBottom = useBottomTabOverflow();
   const movies = useMovieCountdowns();
   const gameReleases = useGameCountdowns();
 
@@ -26,19 +24,16 @@ function Countdown() {
 
   if (isLoading) return <LoadingScreen />;
 
-  const contentContainerStyle = {
-    marginHorizontal: 16,
-    paddingTop: Platform.OS === "ios" ? headerHeight + 16 : 16,
-    paddingBottom: Platform.OS === "ios" ? tabBarHeight + 16 : 16,
-  };
-
-  const scrollIndicatorInsets =
-    Platform.OS === "ios" ? { top: 16, bottom: tabBarHeight - 16 } : undefined;
-
   return (
     <SectionList
-      contentContainerStyle={contentContainerStyle}
-      scrollIndicatorInsets={scrollIndicatorInsets}
+      contentContainerStyle={{
+        marginHorizontal: 16,
+        ...Platform.select({ ios: { paddingVertical: 16 } }),
+      }}
+      automaticallyAdjustsScrollIndicatorInsets
+      contentInsetAdjustmentBehavior="automatic"
+      contentInset={{ bottom: paddingBottom }}
+      scrollIndicatorInsets={{ bottom: paddingBottom }}
       sections={[
         {
           data: movies

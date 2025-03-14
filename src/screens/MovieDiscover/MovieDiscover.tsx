@@ -1,14 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import {
-  BottomTabScreenProps,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useLayoutEffect, useRef, useState } from "react";
-import { FlatList, Platform, Text, useWindowDimensions } from "react-native";
+import { FlatList, Text, useWindowDimensions } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -25,6 +21,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { targetedProviders } from "@/helpers/helpers";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 type MovieDiscoverScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParamList, "MovieDiscover">,
@@ -42,8 +39,7 @@ function MovieDiscover({
   const { width: windowWidth } = useWindowDimensions();
   const { genre, company, keyword, provider } = route.params;
   const scrollRef = useRef<FlatList>(null);
-  const tabBarheight = useBottomTabBarHeight();
-  const headerHeight = useHeaderHeight();
+  const paddingBottom = useBottomTabOverflow();
   const [sortMethod, setSortMethod] = useState("popularity.desc");
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
     useState<number>(provider?.provider_id ?? 0);
@@ -59,7 +55,7 @@ function MovieDiscover({
     watchProvider: selectedMovieWatchProvider,
     sortMethod,
   });
-  const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
+  const { data: movieWatchProviders } = useMovieWatchProviders();
   const modalRef = useRef<BottomSheetModal>();
 
   const sortOptions = [
@@ -187,17 +183,17 @@ function MovieDiscover({
               ]
                 .filter(
                   (provider) =>
-                    targetedProviders.indexOf(provider.provider_name) > -1
+                    targetedProviders.indexOf(provider.provider_name) > -1,
                 )
                 .filter(
                   (v, i, a) =>
                     a.findIndex((t) => t.provider_name === v.provider_name) ===
-                    i
+                    i,
                 )
                 .sort((a, b) =>
                   a.provider_name
                     .toLowerCase()
-                    .localeCompare(b.provider_name.toLowerCase())
+                    .localeCompare(b.provider_name.toLowerCase()),
                 )}
               renderItem={({ item }) => (
                 <ButtonMultiState
@@ -223,19 +219,6 @@ function MovieDiscover({
   return (
     <>
       <FlatList
-        contentContainerStyle={{
-          paddingTop: Platform.OS === "ios" ? headerHeight + 16 : 16,
-          paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
-          marginHorizontal: 16,
-        }}
-        scrollIndicatorInsets={
-          Platform.OS === "ios"
-            ? {
-                top: 16,
-                bottom: tabBarheight - 16,
-              }
-            : undefined
-        }
         data={movies}
         renderItem={({ item }: { item: Movie }) => (
           <MoviePoster
@@ -253,6 +236,11 @@ function MovieDiscover({
             }}
           />
         )}
+        automaticallyAdjustsScrollIndicatorInsets
+        contentInsetAdjustmentBehavior="automatic"
+        contentInset={{ bottom: paddingBottom }}
+        scrollIndicatorInsets={{ bottom: paddingBottom }}
+        contentContainerStyle={{ marginHorizontal: 16, paddingTop: 16 }}
         numColumns={2}
         columnWrapperStyle={{
           justifyContent: "space-between",

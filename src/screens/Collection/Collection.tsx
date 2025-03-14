@@ -1,12 +1,8 @@
-import {
-  BottomTabScreenProps,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useLayoutEffect } from "react";
-import { Platform, View } from "react-native";
+import { View } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -24,6 +20,7 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
 import { FindStackParams, BottomTabParams } from "@/types";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 // import { useGetCollection } from "./api/useGetCollection";
 
@@ -41,11 +38,10 @@ export function Collection({
 }: CollectionScreenNavigationProp) {
   const { collectionId } = route.params;
   const { data: collection, isLoading } = useCollection(collectionId);
-  const tabBarheight = useBottomTabBarHeight();
-  const headerHeight = useHeaderHeight();
+  const paddingBottom = useBottomTabOverflow();
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
-    (e) => (scrollOffset.value = e.contentOffset.y)
+    (e) => (scrollOffset.value = e.contentOffset.y),
   );
 
   useLayoutEffect(() => {
@@ -103,23 +99,17 @@ export function Collection({
         />
       )}
       numColumns={2}
-      contentContainerStyle={[
-        { marginHorizontal: 16 },
-        Platform.OS === "ios"
-          ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
-          : undefined,
-      ]}
+      contentContainerStyle={{
+        marginHorizontal: 16,
+      }}
+      automaticallyAdjustsScrollIndicatorInsets
+      contentInsetAdjustmentBehavior="automatic"
+      contentInset={{ bottom: paddingBottom }}
+      scrollIndicatorInsets={{ bottom: paddingBottom }}
       columnWrapperStyle={{
         justifyContent: "space-between",
         marginBottom: 16,
       }}
-      scrollIndicatorInsets={
-        Platform.OS === "ios"
-          ? {
-              bottom: tabBarheight - 16,
-            }
-          : undefined
-      }
       keyExtractor={(movie: DetailedCollection["parts"][number]) =>
         movie.id.toString()
       }

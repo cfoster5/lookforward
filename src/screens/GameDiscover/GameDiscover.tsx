@@ -1,8 +1,4 @@
-import {
-  BottomTabScreenProps,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
-import { useHeaderHeight } from "@react-navigation/elements";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useRef } from "react";
@@ -18,6 +14,7 @@ import {
   ReleaseDate,
   TabNavigationParamList,
 } from "@/types";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 type GameDiscoverScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParamList, "GameDiscover">,
@@ -25,28 +22,21 @@ type GameDiscoverScreenNavigationProp = CompositeScreenProps<
 >;
 
 function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
-  const { genre, company, keyword } = route.params;
+  const { genre } = route.params;
   const scrollRef = useRef<FlatList>(null);
-  const tabBarheight = useBottomTabBarHeight();
-  const headerHeight = useHeaderHeight();
+  const paddingBottom = useBottomTabOverflow();
   const { data: games, isLoading } = useDiscoverGames({ genreId: genre.id });
 
   return !isLoading ? (
     <FlatList
       contentContainerStyle={{
-        paddingTop: Platform.OS === "ios" ? headerHeight + 16 : 16,
-        paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
         marginHorizontal: 16,
+        ...Platform.select({ ios: { paddingTop: 16 } }),
       }}
-      scrollIndicatorInsets={
-        Platform.OS === "ios"
-          ? {
-              top: 16,
-              bottom: tabBarheight - 16,
-            }
-          : undefined
-      }
-      indicatorStyle="white"
+      automaticallyAdjustsScrollIndicatorInsets
+      contentInsetAdjustmentBehavior="automatic"
+      contentInset={{ bottom: paddingBottom }}
+      scrollIndicatorInsets={{ bottom: paddingBottom }}
       data={games}
       renderItem={({
         item: game,
@@ -63,7 +53,7 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
         marginBottom: 16,
       }}
       ref={scrollRef}
-      keyExtractor={(item, index) => item.id.toString()}
+      keyExtractor={(item) => item.id.toString()}
       initialNumToRender={6}
     />
   ) : (

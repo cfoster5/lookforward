@@ -1,9 +1,6 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { BlurView } from "@react-native-community/blur";
-import {
-  BottomTabScreenProps,
-  useBottomTabBarHeight,
-} from "@react-navigation/bottom-tabs";
+import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -38,7 +35,6 @@ import {
 
 import { useMovie } from "./api/getMovie";
 import { useMovieRatings } from "./api/getMovieRatings";
-import { useTraktMovie } from "./api/getTraktMovie";
 import { DiscoverListLabel } from "./components/DiscoverListLabel";
 import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
@@ -51,7 +47,6 @@ import {
   subToMovie,
   tmdbMovieGenres,
 } from "../../helpers/helpers";
-import { FirestoreMovie } from "../../interfaces/firebase";
 
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { BlueBullet } from "@/components/BlueBullet";
@@ -72,6 +67,7 @@ import { BottomTabParams, FindStackParams, Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 import { composeGroupedJobCredits } from "./utils/composeGroupedJobCredits";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 function ScrollViewWithFlatList({
   data,
@@ -158,8 +154,8 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   //   movieDetails?.imdb_id
   // );
   const [detailIndex, setDetailIndex] = useState(0);
-  const tabBarheight = useBottomTabBarHeight();
   const headerHeight = useHeaderHeight();
+  const paddingBottom = useBottomTabOverflow();
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
     (e) => (scrollOffset.value = e.contentOffset.y),
@@ -254,18 +250,13 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
       <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}
-        contentContainerStyle={
-          Platform.OS === "ios"
-            ? { paddingTop: headerHeight, paddingBottom: tabBarheight }
-            : undefined
-        }
-        scrollIndicatorInsets={
-          Platform.OS === "ios"
-            ? {
-                bottom: tabBarheight - 32,
-              }
-            : undefined
-        }
+        automaticallyAdjustsScrollIndicatorInsets
+        contentInsetAdjustmentBehavior="automatic"
+        contentInset={{ bottom: paddingBottom }}
+        scrollIndicatorInsets={{ bottom: paddingBottom }}
+        contentContainerStyle={Platform.select({
+          ios: { paddingTop: headerHeight },
+        })}
         showsVerticalScrollIndicator={detailIndex === 0}
       >
         {movieDetails!.backdrop_path && (
@@ -398,7 +389,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         []),
                       ...(movieDetails!["watch/providers"].results.US?.buy ||
                         []),
-                    ].map((item, key) => [item["provider_id"], item]),
+                    ].map((item) => [item["provider_id"], item]),
                   ).values(),
                 ]}
                 renderItem={({ item }) => (

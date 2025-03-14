@@ -58,7 +58,7 @@ export function MovieLayout({ navigation }) {
     movies?.filter((movie) =>
       movie.release_date
         ? DateTime.fromFormat(movie.release_date, "yyyy-MM-dd") >= now
-        : null
+        : null,
     );
 
   return (
@@ -144,7 +144,6 @@ export function MovieLayout({ navigation }) {
 const styles = StyleSheet.create({
   flatlistContentContainer: {
     marginHorizontal: 16,
-    // paddingBottom: Platform.OS === "ios" ? tabBarheight : undefined,
   },
   flatlistColumnWrapper: {
     justifyContent: "space-between",

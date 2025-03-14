@@ -71,6 +71,7 @@ import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams, Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
+import { composeGroupedJobCredits } from "./utils/composeGroupedJobCredits";
 
 function ScrollViewWithFlatList({
   data,
@@ -124,14 +125,14 @@ function ScrollViewWithFlatList({
 
 export function getReleaseDate(releaseDates: ReleaseDate[]) {
   const nonPremiereDates = releaseDates.filter(
-    (release) => release.type !== ReleaseDateType.Premiere
+    (release) => release.type !== ReleaseDateType.Premiere,
   );
   const sortedNonPremiereDates = nonPremiereDates.sort(
     ({ release_date: a }, { release_date: b }) =>
-      compareDates(isoToUTC(a), isoToUTC(b))
+      compareDates(isoToUTC(a), isoToUTC(b)),
   );
   return isoToUTC(sortedNonPremiereDates[0].release_date).toLocaleString(
-    DateTime.DATE_FULL
+    DateTime.DATE_FULL,
   );
 }
 
@@ -147,11 +148,11 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { movieId, name } = route.params;
   const { user, movieSubs, isPro } = useStore();
   const isSubbed = movieSubs.find(
-    (sub) => sub.documentID === movieId.toString()
+    (sub) => sub.documentID === movieId.toString(),
   );
   const { data: movieDetails, isLoading } = useMovie(movieId);
   const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(
-    movieDetails?.imdb_id
+    movieDetails?.imdb_id,
   );
   // const { data: traktDetails, isLoading: isLoadingTrakt } = useTraktMovie(
   //   movieDetails?.imdb_id
@@ -161,7 +162,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const headerHeight = useHeaderHeight();
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
-    (e) => (scrollOffset.value = e.contentOffset.y)
+    (e) => (scrollOffset.value = e.contentOffset.y),
   );
   const [mediaSelections, setMediaSelections] = useState<{
     videos: "Trailer" | "Teaser";
@@ -183,13 +184,13 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const composeRecentMovies = useComposeRecentItems(storedMovies);
 
   const usReleaseDates = movieDetails?.release_dates.results.find(
-    (result) => result.iso_3166_1 === "US"
+    (result) => result.iso_3166_1 === "US",
   )?.release_dates;
 
   // Get cert of first release date where cert is defined
   // Does not consider multiple ratings such as Battle of the Five Armies where Extended Edition is R
   const certification = usReleaseDates?.find(
-    (releaseDate) => releaseDate.certification
+    (releaseDate) => releaseDate.certification,
   )?.certification;
 
   const runtime = composeRuntime(movieDetails?.runtime);
@@ -234,7 +235,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   useEffect(() => {
     if (movieDetails) {
       const videos = movieDetails.videos.results.some(
-        (result) => result.type === "Trailer"
+        (result) => result.type === "Trailer",
       )
         ? "Trailer"
         : "Teaser";
@@ -245,24 +246,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
       setMediaSelections({ videos, images });
     }
   }, [movieDetails]);
-
-  function composeGroupedJobCredits() {
-    // Iterate over each crew object
-    return movieDetails?.credits.crew.reduce((acc, obj, index) => {
-      const existingIndex = acc.findIndex((item) => item.name === obj.name);
-      // If object is found by name, push current obj job in job array
-      if (existingIndex !== -1) {
-        acc[existingIndex].job.push(obj.job);
-      } else {
-        // If object is not found by name, create new person obj and set job
-        // property to array with job as first element
-        const newObj = { ...obj };
-        newObj.job = [newObj.job];
-        acc.push(newObj);
-      }
-      return acc;
-    }, []);
-  }
 
   if (isLoading || isLoadingRatings) return <LoadingScreen />;
 
@@ -415,7 +398,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         []),
                       ...(movieDetails!["watch/providers"].results.US?.buy ||
                         []),
-                    ].map((item, key) => [item["provider_id"], item])
+                    ].map((item, key) => [item["provider_id"], item]),
                   ).values(),
                 ]}
                 renderItem={({ item }) => (
@@ -459,7 +442,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
               {(creditsSelection === "Cast"
                 ? movieDetails!.credits.cast
-                : composeGroupedJobCredits() ?? []
+                : composeGroupedJobCredits(movieDetails?.credits.crew)
               ).map((person) => (
                 <Person
                   key={person.credit_id}
@@ -474,12 +457,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             <View>
               {movieDetails!.videos.results.some(
                 (result) =>
-                  result.type === "Trailer" || result.type === "Teaser"
+                  result.type === "Trailer" || result.type === "Teaser",
               ) ? (
                 <>
                   <View style={{ flexDirection: "row" }}>
                     {movieDetails!.videos.results.some(
-                      (result) => result.type === "Trailer"
+                      (result) => result.type === "Trailer",
                     ) && (
                       <MediaSelection
                         option="Trailers"
@@ -493,7 +476,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                       />
                     )}
                     {movieDetails!.videos.results.some(
-                      (result) => result.type === "Teaser"
+                      (result) => result.type === "Teaser",
                     ) && (
                       <MediaSelection
                         option="Teasers"
@@ -510,7 +493,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   <FlatList
                     keyExtractor={(item) => item.id}
                     data={movieDetails!.videos.results.filter(
-                      (result) => result.type === mediaSelections.videos
+                      (result) => result.type === mediaSelections.videos,
                     )}
                     renderItem={({ item }) => <Trailer video={item} />}
                     {...horizontalListProps}
@@ -585,7 +568,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     numColumns={
                       movieDetails!.production_companies.length > 2
                         ? Math.ceil(
-                            movieDetails!.production_companies.length / 2
+                            movieDetails!.production_companies.length / 2,
                           )
                         : 2
                     }
@@ -600,7 +583,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   <ScrollViewWithFlatList
                     data={movieDetails!.keywords.keywords}
                     numColumns={Math.ceil(
-                      movieDetails!.keywords.keywords.length / 2
+                      movieDetails!.keywords.keywords.length / 2,
                     )}
                     navigation={navigation}
                     navParamKey="keyword"

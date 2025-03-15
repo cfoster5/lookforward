@@ -1,4 +1,3 @@
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useRef } from "react";
 import {
   FlatList,
@@ -18,13 +17,14 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { GamePoster } from "@/components/Posters/GamePoster";
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 export function GameLayout({ navigation }) {
   const { top } = useSafeAreaInsets();
   const scrollRef = useRef<FlatList>(null);
   const { data, isLoading } = useGames();
   const { initialSnapPoint } = useStore();
-  const tabBarHeight = useBottomTabBarHeight();
+  const bottomTabOverflow = useBottomTabOverflow();
 
   return (
     <>
@@ -66,14 +66,17 @@ export function GameLayout({ navigation }) {
               </Pressable>
             )}
             numColumns={2}
-            contentContainerStyle={styles.flatlistContentContainer}
+            contentContainerStyle={[
+              styles.flatlistContentContainer,
+              { paddingBottom: bottomTabOverflow + initialSnapPoint },
+            ]}
             columnWrapperStyle={styles.flatlistColumnWrapper}
             ref={scrollRef}
             keyExtractor={(item) => item.id.toString()}
             initialNumToRender={6}
             // scrollIndicatorInsets={scrollIndicatorInsets}
             showsVerticalScrollIndicator={false}
-            contentInset={{ bottom: tabBarHeight + initialSnapPoint }}
+            contentInsetAdjustmentBehavior="automatic"
           />
           <GamePlatformPicker />
         </>

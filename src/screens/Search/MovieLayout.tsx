@@ -1,5 +1,4 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useScrollToTop } from "@react-navigation/native";
 import { DateTime } from "luxon";
 import { useRef, useState } from "react";
@@ -23,6 +22,7 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { useStore } from "@/stores/store";
 import { now } from "@/utils/dates";
 import { calculateWidth } from "@/helpers/helpers";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 export function MovieLayout({ navigation }) {
   const modalRef = useRef<BottomSheetModal>();
@@ -32,7 +32,7 @@ export function MovieLayout({ navigation }) {
   const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(option);
   const { top } = useSafeAreaInsets();
   const { initialSnapPoint } = useStore();
-  const tabBarHeight = useBottomTabBarHeight();
+  const bottomTabOverflow = useBottomTabOverflow();
 
   const movies = data?.pages.flatMap((page) => page.results);
 
@@ -112,16 +112,18 @@ export function MovieLayout({ navigation }) {
             />
           )}
           numColumns={2}
-          contentContainerStyle={styles.flatlistContentContainer}
+          contentContainerStyle={[
+            styles.flatlistContentContainer,
+            { paddingBottom: bottomTabOverflow + initialSnapPoint },
+          ]}
           columnWrapperStyle={styles.flatlistColumnWrapper}
           ref={scrollRef}
           keyExtractor={(item) => item.id.toString()}
           initialNumToRender={6}
-          // scrollIndicatorInsets={scrollIndicatorInsets}
           showsVerticalScrollIndicator={false}
           onEndReached={() => (hasNextPage ? fetchNextPage() : null)}
           onEndReachedThreshold={1.5}
-          contentInset={{ bottom: tabBarHeight + initialSnapPoint }}
+          contentInsetAdjustmentBehavior="automatic"
         />
       ) : (
         <LoadingScreen />

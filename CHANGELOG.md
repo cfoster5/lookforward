@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.4.1](https://github.com/cfoster5/lookforward/compare/v6.4.0...v6.4.1) (2025-03-15)
+
+
+### Bug Fixes
+
+* Update poster dimensions and improve width calculation logic ([f6a1119](https://github.com/cfoster5/lookforward/commit/f6a1119327805ad9693f6f92fb1c2509be5ace92))
+
 ## [6.4.0](https://github.com/cfoster5/lookforward/compare/v6.3.1...v6.4.0) (2025-03-14)
 
 

@@ -4,11 +4,10 @@ import { MovieDetails } from "tmdb-ts";
 import { OMDBMovie } from "../types/omdb";
 
 import { OMDB_KEY } from "@/constants/ApiKeys";
-import { useStore } from "@/stores/store";
 
 async function getOmdbMovie(id: MovieDetails["imdb_id"]) {
   const response = await fetch(
-    `https://www.omdbapi.com/?apikey=${OMDB_KEY}&i=${id}`
+    `https://www.omdbapi.com/?apikey=${OMDB_KEY}&i=${id}`,
   );
   const json: OMDBMovie = await response.json();
 
@@ -20,9 +19,8 @@ async function getOmdbMovie(id: MovieDetails["imdb_id"]) {
 }
 
 export function useMovieRatings(id?: MovieDetails["imdb_id"]) {
-  const { isPro } = useStore();
   return useQuery(["omdbMovie", id], () => getOmdbMovie(id!), {
-    enabled: isPro && !!id,
+    enabled: !!id,
     select: (data) => data.Ratings ?? [],
   });
 }

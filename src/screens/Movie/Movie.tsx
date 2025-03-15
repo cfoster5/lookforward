@@ -32,6 +32,7 @@ import {
   ReleaseDate,
   ReleaseDateType,
 } from "tmdb-ts";
+import analytics from "@react-native-firebase/analytics";
 
 import { useMovie } from "./api/getMovie";
 import { useMovieRatings } from "./api/getMovieRatings";
@@ -68,6 +69,7 @@ import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 import { composeGroupedJobCredits } from "./utils/composeGroupedJobCredits";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 
 function ScrollViewWithFlatList({
   data,
@@ -142,7 +144,7 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { movieId, name } = route.params;
-  const { user, movieSubs, isPro } = useStore();
+  const { user, movieSubs, isPro, proModalRef } = useStore();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString(),
   );
@@ -288,18 +290,33 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               <Text style={styles.secondarySubhedEmphasized}>
                 {certification}
               </Text>
-              {isPro && movieDetails!.revenue > 0 && (
+              {movieDetails!.revenue > 0 && (
                 <>
                   <BlueBullet />
-                  <Text style={styles.secondarySubhedEmphasized}>
-                    ${movieDetails!.revenue.toLocaleString()}
-                  </Text>
+                  {!isPro ? (
+                    <>
+                      <Text style={styles.secondarySubhedEmphasized}>$</Text>
+                      <View
+                        style={{
+                          width: 44 * 2,
+                          // backgroundColor: "rgba(120, 120, 120, 0.12)",
+                          backgroundColor: PlatformColor("placeholderText"),
+                          opacity: 0.5,
+                          borderRadius: 4,
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <Text style={styles.secondarySubhedEmphasized}>
+                      ${movieDetails!.revenue.toLocaleString()}
+                    </Text>
+                  )}
                 </>
               )}
             </View>
           )}
 
-          {isPro && ratings && ratings?.length > 0 && (
+          {ratings && ratings?.length > 0 && (
             <View style={{ marginTop: 16, flexDirection: "row" }}>
               {ratings.map((rating) => (
                 <Rating
@@ -309,6 +326,20 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 />
               ))}
             </View>
+          )}
+
+          {!isPro && (
+            <LargeBorderlessButton
+              handlePress={async () => {
+                proModalRef.current?.present();
+                await analytics().logEvent("select_promotion", {
+                  name: "Pro",
+                  id: "com.lookforward.pro",
+                });
+              }}
+              text="Explore Pro Features"
+              style={{ paddingBottom: 0 }}
+            />
           )}
 
           {movieDetails!.tagline && (

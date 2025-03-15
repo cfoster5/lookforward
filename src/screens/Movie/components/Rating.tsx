@@ -3,6 +3,7 @@ import { PlatformColor, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { OMDBMovie } from "../types/omdb";
+import { useStore } from "@/stores/store";
 
 export const Rating = ({
   source,
@@ -11,6 +12,7 @@ export const Rating = ({
   source: OMDBMovie["Ratings"][number]["Source"];
   rating: OMDBMovie["Ratings"][number]["Value"];
 }) => {
+  const { isPro } = useStore();
   const imageMap = {
     "Internet Movie Database": {
       path: require("../assets/IMDb_Logo_Rectangle_Gold.png"),
@@ -45,9 +47,21 @@ export const Rating = ({
         contentFit="fill"
         source={imageMap[source].path}
       />
-      <Text style={[iOSUIKit.body, { color: PlatformColor("label") }]}>
-        {rating}
-      </Text>
+      {!isPro ? (
+        <View
+          style={{
+            width: 44,
+            // backgroundColor: "rgba(120, 120, 120, 0.12)",
+            backgroundColor: PlatformColor("placeholderText"),
+            opacity: 0.5,
+            borderRadius: 4,
+          }}
+        />
+      ) : (
+        <Text style={[iOSUIKit.body, { color: PlatformColor("label") }]}>
+          {rating}
+        </Text>
+      )}
     </View>
   );
 };

@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.5.0](https://github.com/cfoster5/lookforward/compare/v6.4.1...v6.5.0) (2025-03-15)
+
+
+### Features
+
+* Enhance Pro features visibility in Movie screen ([e6548ad](https://github.com/cfoster5/lookforward/commit/e6548adc1e7f5314e4604b94c790bf7ff97afc2a))
+
+
+### Bug Fixes
+
+* Correct spacing above and below lists for movie and game search screens ([eadb114](https://github.com/cfoster5/lookforward/commit/eadb1144bff6b9e8c341876688f4f49ad1ffd6fe))
+
 ## [6.4.1](https://github.com/cfoster5/lookforward/compare/v6.4.0...v6.4.1) (2025-03-15)
 
 

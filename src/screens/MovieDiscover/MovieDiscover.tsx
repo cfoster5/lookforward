@@ -4,7 +4,7 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useLayoutEffect, useRef, useState } from "react";
-import { FlatList, Text, useWindowDimensions } from "react-native";
+import { FlatList, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -19,7 +19,7 @@ import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
-import { targetedProviders } from "@/helpers/helpers";
+import { calculateWidth, targetedProviders } from "@/helpers/helpers";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
@@ -36,7 +36,6 @@ function MovieDiscover({
   navigation,
 }: MovieDiscoverScreenNavigationProp) {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const { width: windowWidth } = useWindowDimensions();
   const { genre, company, keyword, provider } = route.params;
   const scrollRef = useRef<FlatList>(null);
   const paddingBottom = useBottomTabOverflow();
@@ -231,8 +230,8 @@ function MovieDiscover({
             movie={item}
             posterPath={item.poster_path}
             style={{
-              width: windowWidth / 2 - 24,
-              height: (windowWidth / 2 - 24) * 1.5,
+              width: calculateWidth(16, 16, 2),
+              aspectRatio: 2 / 3,
             }}
           />
         )}

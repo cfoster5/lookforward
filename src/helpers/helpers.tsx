@@ -108,14 +108,16 @@ export async function removeSub(
   }
 }
 
+// Calculates the width of each element based on the available window width,
+// header space, separating space, and the number of elements.
 export function calculateWidth(
   headerSpace: number,
   separatingSpace: number,
   elementCount: number,
-): number {
-  const totalEmptySpace =
-    headerSpace + separatingSpace * Math.floor(elementCount);
-  return (Dimensions.get("window").width - totalEmptySpace) / elementCount;
+) {
+  const { width: windowWidth } = Dimensions.get("window");
+  const totalEmptySpace = headerSpace + separatingSpace * elementCount;
+  return (windowWidth - totalEmptySpace) / elementCount;
 }
 
 export function getGameReleaseDate(

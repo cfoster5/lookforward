@@ -94,7 +94,7 @@ export function Collection({
           posterPath={item.poster_path}
           style={{
             width: calculateWidth(16, 16, 2),
-            height: calculateWidth(16, 16, 2) * 1.5,
+            aspectRatio: 2 / 3,
           }}
         />
       )}

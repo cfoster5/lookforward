@@ -16,6 +16,7 @@ export function TextPoster({ text, style }: { text: string; style?: any }) {
         alignItems: "center",
         justifyContent: "center",
         aspectRatio: 3 / 4,
+        padding: 16,
         ...style,
       }}
     >

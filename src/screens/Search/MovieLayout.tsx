@@ -9,7 +9,6 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  useWindowDimensions,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -23,9 +22,9 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { useStore } from "@/stores/store";
 import { now } from "@/utils/dates";
+import { calculateWidth } from "@/helpers/helpers";
 
 export function MovieLayout({ navigation }) {
-  const { width: windowWidth } = useWindowDimensions();
   const modalRef = useRef<BottomSheetModal>();
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
@@ -107,7 +106,7 @@ export function MovieLayout({ navigation }) {
               movie={item}
               posterPath={item.poster_path}
               style={{
-                width: windowWidth / 2 - 24,
+                width: calculateWidth(16, 16, 2),
                 aspectRatio: 2 / 3,
               }}
             />

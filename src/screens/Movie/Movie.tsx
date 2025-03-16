@@ -67,7 +67,6 @@ import { onShare } from "@/utils/share";
 import { composeGroupedJobCredits } from "./utils/composeGroupedJobCredits";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
-import { useRecentMoviesStore } from "@/stores/recents";
 import useAddRecent from "@/hooks/useAddRecent";
 
 function ScrollViewWithFlatList({

@@ -34,7 +34,7 @@ import useDebounce from "../../hooks/useDebounce";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { calculateWidth } from "@/helpers/helpers";
 import { useStore } from "@/stores/store";
-import { useRecentMoviesStore } from "@/stores/recents";
+import { useRecentItemsStore } from "@/stores/recents";
 
 const ListHeader = () => (
   <Text
@@ -75,7 +75,7 @@ export const SearchBottomSheet = () => {
   const { data: gamesData, isLoading: isLoadingGames } =
     useGamesSearch(debouncedSearch);
   const { recentMovies, recentPeople, recentGames, resetItems } =
-    useRecentMoviesStore();
+    useRecentItemsStore();
 
   const shouldShowTitle = () => {
     if (categoryIndex === 0) {

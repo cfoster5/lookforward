@@ -22,7 +22,6 @@ import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
 import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
-import { useRecentMoviesStore } from "@/stores/recents";
 import useAddRecent from "@/hooks/useAddRecent";
 
 type GameScreenNavigationProp = CompositeScreenProps<
@@ -59,7 +58,6 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
   const paddingBottom = useBottomTabOverflow();
-  const { addRecent } = useRecentMoviesStore();
 
   useLayoutEffect(() => {
     navigation.setOptions({

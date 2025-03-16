@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { Recent } from "@/types";
-import { useRecentMoviesStore } from "@/stores/recents";
+import { useRecentItemsStore } from "@/stores/recents";
 
 const useAddRecent = (
   key: "recentMovies" | "recentPeople" | "recentGames",
   recentItem: Recent,
 ) => {
-  const { addRecent } = useRecentMoviesStore();
+  const { addRecent } = useRecentItemsStore();
 
   useEffect(() => {
     if (recentItem.img_path !== undefined) {

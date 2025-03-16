@@ -24,7 +24,7 @@ type RecentItemsActions = {
   addRecent: (key: RecentKey, recent: Recent) => void;
 };
 
-export const useRecentMoviesStore = create<
+export const useRecentItemsStore = create<
   RecentItemsState & RecentItemsActions
 >()(
   persist(

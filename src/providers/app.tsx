@@ -9,6 +9,7 @@ import { TMDB } from "tmdb-ts";
 
 import { TMDB_TOKEN } from "@/constants/ApiKeys";
 import { useStore } from "@/stores/store";
+import { useMMKVDevTools } from "@dev-plugins/react-native-mmkv";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ export function AppProvider({ children }: AppProviderProps) {
   // const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
   const { setUser } = useStore();
   useReactQueryDevTools(queryClient);
+  useMMKVDevTools();
 
   // useEffect(() => {
   //   const unsubscribe = auth().onAuthStateChanged((user) => setUser(user));

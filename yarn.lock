@@ -1678,6 +1678,11 @@
     "@types/conventional-commits-parser" "^5.0.0"
     chalk "^5.3.0"
 
+"@dev-plugins/react-native-mmkv@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@dev-plugins/react-native-mmkv/-/react-native-mmkv-0.1.0.tgz#d9754f1df030eb0ccc80aa781318d51992fa0ab8"
+  integrity sha512-b1Hv2V/p9bDHEcFkk38VKH02klSSyoWMr3UbujmfeAUULxeisKo3g9x4EnwUdjhdBqoDiMzNupmIFUhbvz/XyA==
+
 "@dev-plugins/react-navigation@^0.0.5":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@dev-plugins/react-navigation/-/react-navigation-0.0.5.tgz#7fcbc58595c775a71010311cd94e583d9f3b2334"

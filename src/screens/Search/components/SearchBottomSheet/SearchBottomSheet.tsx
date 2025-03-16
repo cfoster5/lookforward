@@ -19,7 +19,6 @@ import {
   View,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { useMMKVString } from "react-native-mmkv";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
@@ -34,8 +33,8 @@ import useDebounce from "../../hooks/useDebounce";
 
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { calculateWidth } from "@/helpers/helpers";
-import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
 import { useStore } from "@/stores/store";
+import { useRecentMoviesStore } from "@/stores/recents";
 
 const ListHeader = () => (
   <Text
@@ -75,22 +74,14 @@ export const SearchBottomSheet = () => {
     useMultiSearch(debouncedSearch);
   const { data: gamesData, isLoading: isLoadingGames } =
     useGamesSearch(debouncedSearch);
-
-  const [storedMovies, setStoredMovies] = useMMKVString("recent.movies");
-  const [storedPeople, setStoredPeople] = useMMKVString("recent.people");
-  const [storedGames, setStoredGames] = useMMKVString("recent.games");
-
-  const composeRecentMovies = useComposeRecentItems(storedMovies);
-  const composeRecentPeople = useComposeRecentItems(storedPeople);
-  const composeRecentGames = useComposeRecentItems(storedGames);
+  const { recentMovies, recentPeople, recentGames, resetItems } =
+    useRecentMoviesStore();
 
   const shouldShowTitle = () => {
     if (categoryIndex === 0) {
-      return (
-        composeRecentMovies().length > 0 || composeRecentPeople().length > 0
-      );
+      return recentMovies.length > 0 || recentPeople.length > 0;
     } else {
-      return composeRecentGames().length > 0;
+      return recentGames.length > 0;
     }
   };
 
@@ -125,11 +116,11 @@ export const SearchBottomSheet = () => {
   function handleClearPress(sectionTitle: string) {
     if (categoryIndex === 0) {
       if (sectionTitle === "Titles") {
-        setStoredMovies(undefined);
+        resetItems("recentMovies");
       } else {
-        setStoredPeople(undefined);
+        resetItems("recentPeople");
       }
-    } else setStoredGames(undefined);
+    } else resetItems("recentGames");
   }
 
   const onLayout = (event: LayoutChangeEvent) => {
@@ -219,8 +210,12 @@ export const SearchBottomSheet = () => {
                     {
                       items:
                         categoryIndex === 0
-                          ? composeRecentMovies()
-                          : composeRecentGames(),
+                          ? recentMovies.sort(
+                              (a, b) => b.last_viewed - a.last_viewed,
+                            )
+                          : recentGames.sort(
+                              (a, b) => b.last_viewed - a.last_viewed,
+                            ),
                     },
                   ],
                 },
@@ -228,7 +223,12 @@ export const SearchBottomSheet = () => {
                   title: "People",
                   data: [
                     {
-                      items: categoryIndex === 0 ? composeRecentPeople() : [],
+                      items:
+                        categoryIndex === 0
+                          ? recentPeople.sort(
+                              (a, b) => b.last_viewed - a.last_viewed,
+                            )
+                          : [],
                     },
                   ],
                 },

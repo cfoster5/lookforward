@@ -6,7 +6,7 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { DateTime } from "luxon";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -19,7 +19,6 @@ import {
   View,
 } from "react-native";
 import ImageView from "react-native-image-viewing";
-import { useMMKVString } from "react-native-mmkv";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -61,8 +60,6 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
-import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
-import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams, Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
@@ -70,6 +67,8 @@ import { onShare } from "@/utils/share";
 import { composeGroupedJobCredits } from "./utils/composeGroupedJobCredits";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
+import { useRecentMoviesStore } from "@/stores/recents";
+import useAddRecent from "@/hooks/useAddRecent";
 
 function ScrollViewWithFlatList({
   data,
@@ -178,9 +177,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
   const modalRef = useRef<BottomSheetModal>();
 
-  const [storedMovies, setStoredMovies] = useMMKVString("recent.movies");
-  const composeRecentMovies = useComposeRecentItems(storedMovies);
-
   const usReleaseDates = movieDetails?.release_dates.results.find(
     (result) => result.iso_3166_1 === "US",
   )?.release_dates;
@@ -192,20 +188,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   )?.certification;
 
   const runtime = composeRuntime(movieDetails?.runtime);
-
-  const recentMovie: Recent = {
-    id: movieId,
-    name,
-    img_path: movieDetails?.poster_path,
-    last_viewed: timestamp,
-    media_type: "movie",
-  };
-
-  useUpdateRecentItems(composeRecentMovies, recentMovie, setStoredMovies, [
-    movieId,
-    name,
-    movieDetails?.poster_path,
-  ]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -229,6 +211,21 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
       ),
     });
   }, [isSubbed, movieId, name, navigation, user]);
+
+  // Memoize object to avoid unnecessary recalculations and re-renders.
+  // Improves performance by ensuring that the object is only recalculated when its dependencies change.
+  const recentMovie: Recent = useMemo(
+    () => ({
+      id: movieId,
+      name,
+      img_path: movieDetails?.poster_path,
+      last_viewed: timestamp,
+      media_type: "movie",
+    }),
+    [movieId, name, movieDetails?.poster_path],
+  );
+
+  useAddRecent("recentMovies", recentMovie);
 
   useEffect(() => {
     if (movieDetails) {

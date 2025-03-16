@@ -1,9 +1,8 @@
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, FlatList, Platform, Text, View } from "react-native";
-import { useMMKVString } from "react-native-mmkv";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
 import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
@@ -19,11 +18,10 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
-import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
-import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { FindStackParams, BottomTabParams, Recent } from "@/types";
 import { dateToFullLocale, timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+import useAddRecent from "@/hooks/useAddRecent";
 
 type ActorScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParams, "Actor">,
@@ -74,21 +72,6 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
   const ref = useRef<Carousel<any>>(null);
   const [selectedJob, setSelectedJob] = useState("Actor");
 
-  const [storedPeople, setStoredPeople] = useMMKVString("recent.people");
-  const composeRecentPeople = useComposeRecentItems(storedPeople);
-
-  const recentPerson: Recent = {
-    id: personId,
-    name,
-    img_path: person?.profile_path,
-    last_viewed: timestamp,
-  };
-
-  useUpdateRecentItems(composeRecentPeople, recentPerson, setStoredPeople, [
-    personId,
-    person?.profile_path,
-  ]);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       // eslint-disable-next-line react/no-unstable-nested-components
@@ -100,6 +83,20 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
       ),
     });
   }, [name, navigation, personId]);
+
+  // Memoize object to avoid unnecessary recalculations and re-renders.
+  // Improves performance by ensuring that the object is only recalculated when its dependencies change.
+  const recentPerson: Recent = useMemo(
+    () => ({
+      id: personId,
+      name,
+      img_path: person?.profile_path,
+      last_viewed: timestamp,
+    }),
+    [personId, name, person?.profile_path],
+  );
+
+  useAddRecent("recentPeople", recentPerson);
 
   const castCredits = person?.movie_credits.cast.sort(sortReleaseDates);
   const crewCredits = person?.movie_credits.crew

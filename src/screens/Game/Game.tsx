@@ -3,9 +3,8 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { FirestoreGame } from "interfaces/firebase";
-import { useEffect, useLayoutEffect, useState, Fragment } from "react";
+import { useEffect, useLayoutEffect, useState, Fragment, useMemo } from "react";
 import { PlatformColor, ScrollView, View, FlatList, Text } from "react-native";
-import { useMMKVString } from "react-native-mmkv";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -19,12 +18,12 @@ import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
-import { useComposeRecentItems } from "@/hooks/useComposeRecentItems";
-import { useUpdateRecentItems } from "@/hooks/useUpdateRecentItems";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
 import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+import { useRecentMoviesStore } from "@/stores/recents";
+import useAddRecent from "@/hooks/useAddRecent";
 
 type GameScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParamList, "Game">,
@@ -60,19 +59,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
   const paddingBottom = useBottomTabOverflow();
-
-  const [storedGames, setStoredGames] = useMMKVString("recent.games");
-  const composeRecentGames = useComposeRecentItems(storedGames);
-
-  const recentGame: Recent = {
-    id: game.id,
-    name: game.name,
-    img_path: game.cover?.url ?? "",
-    last_viewed: timestamp,
-    media_type: "game",
-  };
-
-  useUpdateRecentItems(composeRecentGames, recentGame, setStoredGames, [game]);
+  const { addRecent } = useRecentMoviesStore();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -96,6 +83,21 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
       ),
     });
   }, [bottomSheetModalRef, countdownId, game, navigation, user, data]);
+
+  // Memoize object to avoid unnecessary recalculations and re-renders.
+  // Improves performance by ensuring that the object is only recalculated when its dependencies change.
+  const recentGame: Recent = useMemo(
+    () => ({
+      id: game.id,
+      name: game.name,
+      img_path: game.cover?.url ?? "",
+      last_viewed: timestamp,
+      media_type: "game",
+    }),
+    [game.cover?.url, game.id, game.name],
+  );
+
+  useAddRecent("recentGames", recentGame);
 
   useEffect(() => {
     const documentID = gameSubs.find(

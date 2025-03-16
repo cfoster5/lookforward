@@ -4,6 +4,7 @@ import firestore from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useEffect } from "react";
 import { Platform, StyleSheet } from "react-native";
+import * as StoreReview from "expo-store-review";
 
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
@@ -12,10 +13,12 @@ import { FirestoreMovie } from "../interfaces/firebase";
 
 import { useStore } from "@/stores/store";
 import { TabNavigationParamList } from "@/types";
+import { useAppConfigStore } from "@/stores/appConfig";
 
 const Tab = createBottomTabNavigator<TabNavigationParamList>();
 export function TabStack() {
-  const { user, setMovieSubs, setGameSubs } = useStore();
+  const { user, setMovieSubs, setGameSubs, movieSubs, gameSubs } = useStore();
+  const { hasRequestedReview, setHasRequestedReview } = useAppConfigStore();
 
   useEffect(() => {
     const movieSubscription = firestore()
@@ -50,6 +53,25 @@ export function TabStack() {
       gameSubscription();
     };
   }, [setGameSubs, setMovieSubs, user]);
+
+  useEffect(() => {
+    async function requestReview() {
+      if (movieSubs.length + gameSubs.length >= 5 && !hasRequestedReview) {
+        const isAvailable = await StoreReview.isAvailableAsync();
+        if (isAvailable) {
+          await StoreReview.requestReview();
+          setHasRequestedReview();
+        }
+      }
+    }
+
+    requestReview();
+  }, [
+    gameSubs.length,
+    movieSubs.length,
+    hasRequestedReview,
+    setHasRequestedReview,
+  ]);
 
   return (
     <Tab.Navigator

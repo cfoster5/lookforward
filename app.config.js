@@ -27,6 +27,7 @@ export default {
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
       },
+      appStoreUrl: "https://apps.apple.com/app/id1492748952",
     },
     android: {
       adaptiveIcon: {

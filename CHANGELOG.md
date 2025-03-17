@@ -1,5 +1,19 @@
 # Changelog
 
+## [6.6.0](https://github.com/cfoster5/lookforward/compare/v6.5.0...v6.6.0) (2025-03-17)
+
+
+### Features
+
+* Add app review request prompt and add app config store; closes [#109](https://github.com/cfoster5/lookforward/issues/109) ([7fdd920](https://github.com/cfoster5/lookforward/commit/7fdd9201b25cb6b61e70118da8db699bd7dab5f7))
+* Replace usage of useMMKVString with Zustand middleware for managing storage of recent items ([275a824](https://github.com/cfoster5/lookforward/commit/275a824a8631b202b3142ec22e921be01b59a9ac))
+* Show onboarding modal if never tracked, even for logged in users; closes [#17](https://github.com/cfoster5/lookforward/issues/17) ([9b513b8](https://github.com/cfoster5/lookforward/commit/9b513b8693c63269a92049ab4ab4098f5672659d))
+
+
+### Bug Fixes
+
+* Add GamePlatformPicker component to Game screen; fixes [#38](https://github.com/cfoster5/lookforward/issues/38) ([00b3da4](https://github.com/cfoster5/lookforward/commit/00b3da421373b7f9ed8195e2caf15ff733150b57))
+
 ## [6.5.0](https://github.com/cfoster5/lookforward/compare/v6.4.1...v6.5.0) (2025-03-15)
 
 

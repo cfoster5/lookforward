@@ -2,23 +2,36 @@ import { Ionicons } from "@expo/vector-icons";
 import { BlurView } from "@react-native-community/blur";
 import firestore from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import * as StoreReview from "expo-store-review";
 import { useEffect } from "react";
 import { Platform, StyleSheet } from "react-native";
-import * as StoreReview from "expo-store-review";
+
+import { useAppConfigStore } from "@/stores/appConfig";
+import { useStore } from "@/stores/store";
+import { TabNavigationParamList } from "@/types";
+
+import { FirestoreMovie } from "../interfaces/firebase";
 
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
 import { SettingsStack } from "./SettingsStack";
-import { FirestoreMovie } from "../interfaces/firebase";
-
-import { useStore } from "@/stores/store";
-import { TabNavigationParamList } from "@/types";
-import { useAppConfigStore } from "@/stores/appConfig";
 
 const Tab = createBottomTabNavigator<TabNavigationParamList>();
 export function TabStack() {
-  const { user, setMovieSubs, setGameSubs, movieSubs, gameSubs } = useStore();
-  const { hasRequestedReview, setHasRequestedReview } = useAppConfigStore();
+  const {
+    user,
+    setMovieSubs,
+    setGameSubs,
+    movieSubs,
+    gameSubs,
+    onboardingModalRef,
+  } = useStore();
+  const {
+    hasRequestedReview,
+    setHasRequestedReview,
+    hasSeenOnboardingModal,
+    setHasSeenOnboardingModal,
+  } = useAppConfigStore();
 
   useEffect(() => {
     const movieSubscription = firestore()
@@ -72,6 +85,13 @@ export function TabStack() {
     hasRequestedReview,
     setHasRequestedReview,
   ]);
+
+  useEffect(() => {
+    if (!hasSeenOnboardingModal) {
+      onboardingModalRef.current?.present();
+      setHasSeenOnboardingModal();
+    }
+  }, [hasSeenOnboardingModal, onboardingModalRef, setHasSeenOnboardingModal]);
 
   return (
     <Tab.Navigator

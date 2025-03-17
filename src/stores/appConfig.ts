@@ -1,6 +1,7 @@
-import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
+
 import { timestamp } from "@/utils/dates";
 
 const storage = new MMKV();
@@ -14,10 +15,12 @@ const zustandStorage: StateStorage = {
 type AppConfigState = {
   hasRequestedReview: boolean;
   lastRequestedReviewTimestamp: number;
+  hasSeenOnboardingModal: boolean;
 };
 
 type AppConfigActions = {
   setHasRequestedReview: () => void;
+  setHasSeenOnboardingModal: () => void;
 };
 
 export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
@@ -25,10 +28,15 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
     (set) => ({
       hasRequestedReview: false,
       lastRequestedReviewTimestamp: 0,
+      hasSeenOnboardingModal: false,
       setHasRequestedReview: () =>
         set(() => ({
           hasRequestedReview: true,
           lastRequestedReviewTimestamp: timestamp,
+        })),
+      setHasSeenOnboardingModal: () =>
+        set(() => ({
+          hasSeenOnboardingModal: true,
         })),
     }),
     {

@@ -7,17 +7,13 @@ import {
   KeyboardAvoidingView,
   PlatformColor,
   Pressable,
-  PressableProps,
   Text,
   TextInput,
   View,
-  ViewStyle,
-  StyleProp,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { LargeFilledButton } from "@/components/LargeFilledButton";
-import { useStore } from "@/stores/store";
 import { AuthStackParams } from "@/types";
 
 type Props = NativeStackScreenProps<AuthStackParams, "Create Account">;
@@ -25,17 +21,15 @@ type Props = NativeStackScreenProps<AuthStackParams, "Create Account">;
 function CreateAccount({ navigation, route }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { onboardingModalRef } = useStore();
 
   async function createAccount() {
     try {
       await auth().createUserWithEmailAndPassword(email, password);
-      onboardingModalRef.current?.present();
     } catch (error) {
       if (error.code === "auth/email-already-in-use") {
         Alert.alert(
           "Email Already in Use",
-          "That email address is already in use!"
+          "That email address is already in use!",
         );
       }
       if (error.code === "auth/invalid-email") {

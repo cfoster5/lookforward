@@ -22,19 +22,20 @@ import { FlatList } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
+import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
+import { calculateWidth } from "@/helpers/helpers";
+import { useRecentItemsStore } from "@/stores/recents";
+import { useStore } from "@/stores/store";
+
+import { useGamesSearch } from "../../api/getGamesSearch";
+import { useMultiSearch } from "../../api/getMultiSearch";
+import useDebounce from "../../hooks/useDebounce";
+
 import { RecentPerson } from "./RecentPerson";
 import { RecentTitle } from "./RecentTitle";
 import { SearchGame } from "./SearchGame";
 import { SearchMovie } from "./SearchMovie";
 import { SearchPerson } from "./SearchPerson";
-import { useGamesSearch } from "../../api/getGamesSearch";
-import { useMultiSearch } from "../../api/getMultiSearch";
-import useDebounce from "../../hooks/useDebounce";
-
-import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
-import { calculateWidth } from "@/helpers/helpers";
-import { useStore } from "@/stores/store";
-import { useRecentItemsStore } from "@/stores/recents";
 
 const ListHeader = () => (
   <Text
@@ -298,7 +299,6 @@ export const SearchBottomSheet = () => {
           ) : (
             <LargeBorderlessButton
               handlePress={async () => {
-                // onboardingModalRef.current?.dismiss();
                 Keyboard.dismiss();
                 proModalRef.current?.present();
                 await analytics().logEvent("select_promotion", {

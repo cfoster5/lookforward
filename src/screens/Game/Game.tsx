@@ -23,6 +23,7 @@ import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
 import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 import useAddRecent from "@/hooks/useAddRecent";
+import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 
 type GameScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParamList, "Game">,
@@ -106,100 +107,103 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
   }, [game.id, gameSubs]);
 
   return (
-    <ScrollView
-      automaticallyAdjustsScrollIndicatorInsets
-      contentInsetAdjustmentBehavior="automatic"
-      contentInset={{ bottom: paddingBottom }}
-      scrollIndicatorInsets={{ bottom: paddingBottom }}
-    >
-      {game?.cover?.url && (
-        <Image
-          style={{ aspectRatio: 16 / 9 }}
-          source={{
-            uri: `https:${game.cover.url.replace("thumb", "screenshot_big")}`,
-          }}
-        />
-      )}
-      <View style={{ margin: 16, marginBottom: 0 }}>
-        <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-          {game.name}
-        </ThemedText>
-        <Text
-          style={[
-            iOSUIKit.subheadEmphasized,
-            { color: PlatformColor("secondaryLabel") },
-          ]}
-        >
-          {getGameReleaseDate(data)}
-        </Text>
-
-        <ExpandableText text={data?.summary} />
-
-        <View
-          style={{
-            flexDirection: "row",
-            paddingBottom: 16,
-            flexWrap: "wrap",
-          }}
-        >
-          {data?.genres?.map((genre, i) => (
-            <ButtonSingleState
-              key={i}
-              text={genre.name}
-              onPress={() =>
-                navigation.push("GameDiscover", {
-                  genre,
-                  screenTitle: genre.name,
-                })
-              }
-              buttonStyle={{
-                backgroundColor: PlatformColor("systemGray5"),
-                borderColor: PlatformColor("systemGray5"),
-              }}
-            />
-          ))}
-        </View>
-      </View>
-      <CategoryControl
-        buttons={["Credits", "Trailers"]}
-        categoryIndex={detailIndex}
-        handleCategoryChange={(index: number) => setDetailIndex(index)}
-      />
-      <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
-        {detailIndex === 0 && !isLoading && (
-          <>
-            <GameCredits
-              companies={data?.involved_companies}
-              type="publisher"
-              title="Published by"
-            />
-            <GameCredits
-              companies={data?.involved_companies}
-              type="developer"
-              title="Developed by"
-            />
-            <GameCredits
-              companies={data?.involved_companies}
-              type="supporting"
-              title="Supported by"
-            />
-          </>
+    <>
+      <ScrollView
+        automaticallyAdjustsScrollIndicatorInsets
+        contentInsetAdjustmentBehavior="automatic"
+        contentInset={{ bottom: paddingBottom }}
+        scrollIndicatorInsets={{ bottom: paddingBottom }}
+      >
+        {game?.cover?.url && (
+          <Image
+            style={{ aspectRatio: 16 / 9 }}
+            source={{
+              uri: `https:${game.cover.url.replace("thumb", "screenshot_big")}`,
+            }}
+          />
         )}
-        {detailIndex === 1 &&
-          !isLoading &&
-          (data?.videos ? (
-            <FlatList
-              keyExtractor={(item) => item.id}
-              data={data!.videos}
-              renderItem={({ item }) => <Trailer video={item} />}
-              {...horizontalListProps}
-            />
-          ) : (
-            <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
-              No trailers yet! Come back later!
-            </ThemedText>
-          ))}
-      </View>
-    </ScrollView>
+        <View style={{ margin: 16, marginBottom: 0 }}>
+          <ThemedText style={iOSUIKit.largeTitleEmphasized}>
+            {game.name}
+          </ThemedText>
+          <Text
+            style={[
+              iOSUIKit.subheadEmphasized,
+              { color: PlatformColor("secondaryLabel") },
+            ]}
+          >
+            {getGameReleaseDate(data)}
+          </Text>
+
+          <ExpandableText text={data?.summary} />
+
+          <View
+            style={{
+              flexDirection: "row",
+              paddingBottom: 16,
+              flexWrap: "wrap",
+            }}
+          >
+            {data?.genres?.map((genre, i) => (
+              <ButtonSingleState
+                key={i}
+                text={genre.name}
+                onPress={() =>
+                  navigation.push("GameDiscover", {
+                    genre,
+                    screenTitle: genre.name,
+                  })
+                }
+                buttonStyle={{
+                  backgroundColor: PlatformColor("systemGray5"),
+                  borderColor: PlatformColor("systemGray5"),
+                }}
+              />
+            ))}
+          </View>
+        </View>
+        <CategoryControl
+          buttons={["Credits", "Trailers"]}
+          categoryIndex={detailIndex}
+          handleCategoryChange={(index: number) => setDetailIndex(index)}
+        />
+        <View style={{ marginHorizontal: 16, marginBottom: 16 }}>
+          {detailIndex === 0 && !isLoading && (
+            <>
+              <GameCredits
+                companies={data?.involved_companies}
+                type="publisher"
+                title="Published by"
+              />
+              <GameCredits
+                companies={data?.involved_companies}
+                type="developer"
+                title="Developed by"
+              />
+              <GameCredits
+                companies={data?.involved_companies}
+                type="supporting"
+                title="Supported by"
+              />
+            </>
+          )}
+          {detailIndex === 1 &&
+            !isLoading &&
+            (data?.videos ? (
+              <FlatList
+                keyExtractor={(item) => item.id}
+                data={data!.videos}
+                renderItem={({ item }) => <Trailer video={item} />}
+                {...horizontalListProps}
+              />
+            ) : (
+              <ThemedText style={{ ...iOSUIKit.bodyObject, paddingTop: 16 }}>
+                No trailers yet! Come back later!
+              </ThemedText>
+            ))}
+        </View>
+      </ScrollView>
+      <GamePlatformPicker />
+    </>
   );
 }

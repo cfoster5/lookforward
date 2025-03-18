@@ -1,13 +1,21 @@
 import Ionicons from "@expo/vector-icons/build/Ionicons";
+import { SFSymbol, SymbolView } from "expo-symbols";
 import { PlatformColor, View, Text } from "react-native";
-import { SFSymbol } from "react-native-sfsymbols";
 import { iOSUIKit } from "react-native-typography";
 
-type RowProps = {
-  icon: string;
+type IconProps = {
+  icon: keyof (typeof Ionicons)["glyphMap"];
+  useAltIcon: undefined;
+};
+
+type AltIconProps = {
+  icon: SFSymbol;
+  useAltIcon: true;
+};
+
+type RowProps = (AltIconProps | IconProps) & {
   title: string;
   body: string;
-  useAltIcon?: boolean;
   showDrillIn?: boolean;
 };
 
@@ -28,11 +36,11 @@ export const Row = ({
     {!useAltIcon ? (
       <Ionicons name={icon} size={36} color={PlatformColor("systemBlue")} />
     ) : (
-      <SFSymbol
+      <SymbolView
         name={icon}
         size={36}
         color={PlatformColor("systemBlue")}
-        resizeMode="center"
+        resizeMode="scaleAspectFill"
         style={{ height: 36, width: 36 }}
       />
     )}

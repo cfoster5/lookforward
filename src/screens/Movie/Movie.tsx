@@ -1,9 +1,10 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { BlurView } from "@react-native-community/blur";
+import analytics from "@react-native-firebase/analytics";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { DateTime } from "luxon";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
@@ -31,7 +32,32 @@ import {
   ReleaseDate,
   ReleaseDateType,
 } from "tmdb-ts";
-import analytics from "@react-native-firebase/analytics";
+
+import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
+import { BlueBullet } from "@/components/BlueBullet";
+import ButtonSingleState from "@/components/ButtonSingleState";
+import CategoryControl from "@/components/CategoryControl/CategoryControl";
+import { ExpandableText } from "@/components/ExpandableText";
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
+import { ListLabel } from "@/components/ListLabel";
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { Text as ThemedText } from "@/components/Themed";
+import Trailer from "@/components/Trailer";
+import { horizontalListProps } from "@/constants/HorizontalListProps";
+import {
+  calculateWidth,
+  removeSub,
+  subToMovie,
+  tmdbMovieGenres,
+} from "@/helpers/helpers";
+import useAddRecent from "@/hooks/useAddRecent";
+import { useStore } from "@/stores/store";
+import { BottomTabParams, FindStackParams, Recent } from "@/types";
+import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
+import { onShare } from "@/utils/share";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useMovie } from "./api/getMovie";
 import { useMovieRatings } from "./api/getMovieRatings";
@@ -40,34 +66,8 @@ import { MediaSelection } from "./components/MediaSelection";
 import Person from "./components/Person";
 import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
-import { composeRuntime } from "./utils/composeRuntime";
-import {
-  calculateWidth,
-  removeSub,
-  subToMovie,
-  tmdbMovieGenres,
-} from "../../helpers/helpers";
-
-import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
-import { BlueBullet } from "@/components/BlueBullet";
-import ButtonSingleState from "@/components/ButtonSingleState";
-import CategoryControl from "@/components/CategoryControl/CategoryControl";
-import { ExpandableText } from "@/components/ExpandableText";
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-import { ListLabel } from "@/components/ListLabel";
-import { LoadingScreen } from "@/components/LoadingScreen";
-import { MoviePoster } from "@/components/Posters/MoviePoster";
-import { Text as ThemedText } from "@/components/Themed";
-import Trailer from "@/components/Trailer";
-import { horizontalListProps } from "@/constants/HorizontalListProps";
-import { useStore } from "@/stores/store";
-import { BottomTabParams, FindStackParams, Recent } from "@/types";
-import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
-import { onShare } from "@/utils/share";
 import { composeGroupedJobCredits } from "./utils/composeGroupedJobCredits";
-import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
-import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
-import useAddRecent from "@/hooks/useAddRecent";
+import { composeRuntime } from "./utils/composeRuntime";
 
 function ScrollViewWithFlatList({
   data,
@@ -641,6 +641,8 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                       }}
                     />
                     <BlurView
+                      tint="dark"
+                      intensity={100}
                       style={[
                         StyleSheet.absoluteFill,
                         {

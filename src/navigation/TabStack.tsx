@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { BlurView } from "@react-native-community/blur";
 import firestore from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { BlurView } from "expo-blur";
 import * as StoreReview from "expo-store-review";
 import { useEffect } from "react";
 import { Platform, StyleSheet } from "react-native";
@@ -15,6 +15,20 @@ import { FirestoreMovie } from "../interfaces/firebase";
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
 import { SettingsStack } from "./SettingsStack";
+
+function BlurTabBarBackground() {
+  return (
+    <BlurView
+      // TODO: Use systemChromeMaterialDark when same can be applied to Search modals
+      // System chrome material automatically adapts to the system's theme
+      // and matches the native tab bar appearance on iOS.
+      // tint="systemChromeMaterial"
+      tint="dark"
+      intensity={100}
+      style={StyleSheet.absoluteFill}
+    />
+  );
+}
 
 const Tab = createBottomTabNavigator<TabNavigationParamList>();
 export function TabStack() {
@@ -115,8 +129,7 @@ export function TabStack() {
                 position: "absolute",
               }
             : undefined,
-        tabBarBackground: () =>
-          Platform.OS === "ios" && <BlurView style={StyleSheet.absoluteFill} />,
+        tabBarBackground: BlurTabBarBackground,
       })}
     >
       {/* Is setting headerShown to false the best method? */}

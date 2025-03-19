@@ -3,10 +3,10 @@ import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
-import { FirestoreMovie } from "../interfaces/firebase";
-
 import { Game, ReleaseDate } from "@/types";
 import { timestampToUTC } from "@/utils/dates";
+
+import { FirestoreMovie } from "../interfaces/firebase";
 
 export const targetedProviders = [
   "Any",
@@ -116,7 +116,9 @@ export function calculateWidth(
   elementCount: number,
 ) {
   const { width: windowWidth } = Dimensions.get("window");
-  const totalEmptySpace = headerSpace + separatingSpace * elementCount;
+  // Use Math.floor() to ensure that any fractional space after the last element is ignored
+  const totalEmptySpace =
+    headerSpace + separatingSpace * Math.floor(elementCount);
   return (windowWidth - totalEmptySpace) / elementCount;
 }
 

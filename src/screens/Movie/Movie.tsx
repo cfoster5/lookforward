@@ -109,8 +109,10 @@ function ScrollViewWithFlatList({
               })
             }
             buttonStyle={{
-              backgroundColor: PlatformColor("systemGray5"),
-              borderColor: PlatformColor("systemGray5"),
+              backgroundColor: PlatformColor(
+                "secondarySystemGroupedBackground",
+              ),
+              borderColor: PlatformColor("secondarySystemGroupedBackground"),
             }}
           />
         )}

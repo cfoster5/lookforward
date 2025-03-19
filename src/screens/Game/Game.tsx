@@ -8,22 +8,22 @@ import { PlatformColor, ScrollView, View, FlatList, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
-import { useGame } from "./api/getGame";
-
 import ButtonSingleState from "@/components/ButtonSingleState";
 import CategoryControl from "@/components/CategoryControl/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
+import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
+import useAddRecent from "@/hooks/useAddRecent";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
 import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
-import useAddRecent from "@/hooks/useAddRecent";
-import { GamePlatformPicker } from "@/components/GamePlatformPicker";
+
+import { useGame } from "./api/getGame";
 
 type GameScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParamList, "Game">,
@@ -155,8 +155,12 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
                   })
                 }
                 buttonStyle={{
-                  backgroundColor: PlatformColor("systemGray5"),
-                  borderColor: PlatformColor("systemGray5"),
+                  backgroundColor: PlatformColor(
+                    "secondarySystemGroupedBackground",
+                  ),
+                  borderColor: PlatformColor(
+                    "secondarySystemGroupedBackground",
+                  ),
                 }}
               />
             ))}

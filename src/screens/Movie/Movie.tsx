@@ -372,8 +372,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 buttonStyle={{
                   paddingHorizontal: 16,
                   flexDirection: "row",
-                  backgroundColor: PlatformColor("systemGray5"),
-                  borderColor: PlatformColor("systemGray5"),
+                  backgroundColor: PlatformColor(
+                    "secondarySystemGroupedBackground",
+                  ),
+                  borderColor: PlatformColor(
+                    "secondarySystemGroupedBackground",
+                  ),
                 }}
                 icon={tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon}
                 textStyle={{ alignSelf: "center" }}

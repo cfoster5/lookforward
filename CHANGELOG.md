@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.7.0](https://github.com/cfoster5/lookforward/compare/v6.6.0...v6.7.0) (2025-03-19)
+
+
+### Features
+
+* Add dropdown menu for cast/crew, trailers/teasers, & posters/backdrops selection for movies ([483c140](https://github.com/cfoster5/lookforward/commit/483c1408fe1770579b1b12de227808a0517e7cf5))
+
 ## [6.6.0](https://github.com/cfoster5/lookforward/compare/v6.5.0...v6.6.0) (2025-03-17)
 
 

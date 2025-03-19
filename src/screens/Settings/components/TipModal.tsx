@@ -12,10 +12,10 @@ import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { PurchaseOption } from "./PurchaseOption";
-
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { useStore } from "@/stores/store";
+
+import { PurchaseOption } from "./PurchaseOption";
 
 type Props = { modalRef: any };
 
@@ -63,8 +63,8 @@ export const TipModal = ({ modalRef }: Props) => {
         ListHeaderComponent={
           <Text
             style={[
-              { paddingBottom: 32 },
-              theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body,
+              iOSUIKit.body,
+              { color: PlatformColor("label"), paddingBottom: 32 },
             ]}
           >
             If you're feeling generous and would like to support LookForward's

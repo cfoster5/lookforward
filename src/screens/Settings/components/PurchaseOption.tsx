@@ -10,8 +10,6 @@ import {
 import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { iOSUIKit } from "react-native-typography";
 
-import { reusableStyles } from "@/helpers/styles";
-
 function Icon({ title }) {
   let name = "";
   let color = "";
@@ -75,14 +73,10 @@ export const PurchaseOption = ({
       <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
         <Icon title={title} />
         <Text
-          style={
-            // theme === "dark"
-            //   ? {
-            //       ...iOSUIKit.bodyWhiteObject,
-            //     }
-            //   : iOSUIKit.body
-            [iOSUIKit.bodyWhite, { paddingLeft: 16 }]
-          }
+          style={[
+            iOSUIKit.body,
+            { color: PlatformColor("label"), paddingLeft: 16 },
+          ]}
         >
           {title}
         </Text>
@@ -90,7 +84,9 @@ export const PurchaseOption = ({
       {isPurchasing === identifier ? (
         <ActivityIndicator />
       ) : (
-        <Text style={reusableStyles.date}>{priceString}</Text>
+        <Text style={[iOSUIKit.body, { color: PlatformColor("label") }]}>
+          {priceString}
+        </Text>
       )}
     </Pressable>
   );

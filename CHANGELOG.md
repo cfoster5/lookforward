@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.7.1](https://github.com/cfoster5/lookforward/compare/v6.7.0...v6.7.1) (2025-03-19)
+
+
+### Bug Fixes
+
+* Update width calculation on posters by flooring element count to avoid fractional space ([4d6b1ab](https://github.com/cfoster5/lookforward/commit/4d6b1ab3dcbff37a10e9b9643d16949339b32759))
+
 ## [6.7.0](https://github.com/cfoster5/lookforward/compare/v6.6.0...v6.7.0) (2025-03-19)
 
 

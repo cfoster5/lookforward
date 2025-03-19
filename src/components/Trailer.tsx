@@ -30,6 +30,7 @@ function Trailer({ video }: TrailerProps) {
         contentFit="cover"
       />
       <Text
+        numberOfLines={2}
         style={[
           iOSUIKit.subhead,
           { color: PlatformColor("label"), marginTop: 8 },

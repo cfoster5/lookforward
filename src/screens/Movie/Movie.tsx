@@ -61,8 +61,9 @@ import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useMovie } from "./api/getMovie";
 import { useMovieRatings } from "./api/getMovieRatings";
+import { ApplePillButton } from "./components/ApplePillButton";
 import { DiscoverListLabel } from "./components/DiscoverListLabel";
-import { MediaSelection } from "./components/MediaSelection";
+import { DropdownMenu } from "./components/DropdownMenu";
 import Person from "./components/Person";
 import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
@@ -161,11 +162,11 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     (e) => (scrollOffset.value = e.contentOffset.y),
   );
   const [mediaSelections, setMediaSelections] = useState<{
-    videos: "Trailer" | "Teaser";
-    images: "posters" | "backdrops";
+    videos: { value: "Trailer" | "Teaser"; label: "Trailers" | "Teasers" };
+    images: { value: "posters" | "backdrops"; label: "Posters" | "Backdrops" };
   }>({
-    videos: "Trailer",
-    images: "posters",
+    videos: { value: "Trailer", label: "Trailers" },
+    images: { value: "posters", label: "Posters" },
   });
   const [showImageViewer, setShowImageViewer] = useState({
     isVisible: false,
@@ -231,11 +232,13 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
       const videos = movieDetails.videos.results.some(
         (result) => result.type === "Trailer",
       )
-        ? "Trailer"
-        : "Teaser";
+        ? { value: "Trailer", label: "Trailers" }
+        : { value: "Teaser", label: "Teasers" };
 
       const images =
-        movieDetails.images.posters.length > 0 ? "posters" : "backdrops";
+        movieDetails.images.posters.length > 0
+          ? { value: "posters", label: "Posters" }
+          : { value: "backdrops", label: "Backdrops" };
 
       setMediaSelections({ videos, images });
     }
@@ -448,14 +451,16 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
           {detailIndex === 0 && (
             <>
               <View style={{ flexDirection: "row" }}>
-                {["Cast", "Crew"].map((element, i) => (
-                  <MediaSelection
-                    key={i}
-                    option={element}
-                    action={() => setCreditsSelection(element)}
-                    creditsSelection={creditsSelection}
-                  />
-                ))}
+                {/* Wrap with a View with flexDirection to not take full width of screen*/}
+                <DropdownMenu
+                  options={[
+                    { value: "Cast", label: "Cast" },
+                    { value: "Crew", label: "Crew" },
+                  ]}
+                  handleSelect={setCreditsSelection}
+                >
+                  <ApplePillButton text={creditsSelection} />
+                </DropdownMenu>
               </View>
 
               {(creditsSelection === "Cast"
@@ -479,39 +484,34 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               ) ? (
                 <>
                   <View style={{ flexDirection: "row" }}>
-                    {movieDetails!.videos.results.some(
-                      (result) => result.type === "Trailer",
-                    ) && (
-                      <MediaSelection
-                        option="Trailers"
-                        action={() =>
-                          setMediaSelections({
-                            ...mediaSelections,
-                            videos: "Trailer",
-                          })
-                        }
-                        mediaSelections={mediaSelections}
-                      />
-                    )}
-                    {movieDetails!.videos.results.some(
-                      (result) => result.type === "Teaser",
-                    ) && (
-                      <MediaSelection
-                        option="Teasers"
-                        action={() =>
-                          setMediaSelections({
-                            ...mediaSelections,
-                            videos: "Teaser",
-                          })
-                        }
-                        mediaSelections={mediaSelections}
-                      />
-                    )}
+                    {/* Wrap with a View with flexDirection to not take full width of screen*/}
+                    <DropdownMenu
+                      options={[
+                        ...(movieDetails!.videos.results.some(
+                          (result) => result.type === "Trailer",
+                        )
+                          ? [{ value: "Trailer", label: "Trailers" }]
+                          : []),
+                        ...(movieDetails!.videos.results.some(
+                          (result) => result.type === "Teaser",
+                        )
+                          ? [{ value: "Teaser", label: "Teasers" }]
+                          : []),
+                      ]}
+                      handleSelect={(value, label) =>
+                        setMediaSelections({
+                          ...mediaSelections,
+                          videos: { value, label },
+                        })
+                      }
+                    >
+                      <ApplePillButton text={mediaSelections.videos.label} />
+                    </DropdownMenu>
                   </View>
                   <FlatList
                     keyExtractor={(item) => item.id}
                     data={movieDetails!.videos.results.filter(
-                      (result) => result.type === mediaSelections.videos,
+                      (result) => result.type === mediaSelections.videos.value,
                     )}
                     renderItem={({ item }) => <Trailer video={item} />}
                     {...horizontalListProps}
@@ -522,58 +522,63 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   No trailers yet! Come back later!
                 </ThemedText>
               )}
-
-              <View style={{ flexDirection: "row" }}>
-                {movieDetails!.images.posters.length > 0 && (
-                  <MediaSelection
-                    option="Posters"
-                    action={() =>
-                      setMediaSelections({
-                        ...mediaSelections,
-                        images: "posters",
-                      })
-                    }
-                    mediaSelections={mediaSelections}
+              {movieDetails!.images.posters.length > 0 ||
+              movieDetails!.images.backdrops.length > 0 ? (
+                <>
+                  <View style={{ flexDirection: "row" }}>
+                    {/* Wrap with a View with flexDirection to not take full width of screen*/}
+                    <DropdownMenu
+                      options={[
+                        ...(movieDetails!.images.posters.length > 0
+                          ? [{ value: "posters", label: "Posters" }]
+                          : []),
+                        ...(movieDetails!.images.backdrops.length > 0
+                          ? [{ value: "backdrops", label: "Backdrops" }]
+                          : []),
+                      ]}
+                      handleSelect={(value, label) =>
+                        setMediaSelections({
+                          ...mediaSelections,
+                          images: { value, label },
+                        })
+                      }
+                    >
+                      <ApplePillButton text={mediaSelections.images.label} />
+                    </DropdownMenu>
+                  </View>
+                  <FlatList
+                    keyExtractor={(item) => item.file_path}
+                    data={movieDetails!.images[mediaSelections.images.value]}
+                    renderItem={({ item, index }) => (
+                      <MoviePoster
+                        pressHandler={() =>
+                          setShowImageViewer({ isVisible: true, index })
+                        }
+                        posterPath={
+                          mediaSelections.images.value === "posters"
+                            ? item.file_path
+                            : `https://image.tmdb.org/t/p/${PosterSizes.W780}${item.file_path}`
+                        }
+                        style={{
+                          width:
+                            mediaSelections.images.value === "posters"
+                              ? calculateWidth(16, 8, 2.5)
+                              : calculateWidth(16, 8, 1.5),
+                          aspectRatio:
+                            mediaSelections.images.value === "posters"
+                              ? 2 / 3
+                              : 16 / 9,
+                        }}
+                      />
+                    )}
+                    {...horizontalListProps}
                   />
-                )}
-                {movieDetails!.images.backdrops.length > 0 && (
-                  <MediaSelection
-                    option="Backdrops"
-                    action={() =>
-                      setMediaSelections({
-                        ...mediaSelections,
-                        images: "backdrops",
-                      })
-                    }
-                    mediaSelections={mediaSelections}
-                  />
-                )}
-              </View>
-              <FlatList
-                keyExtractor={(item) => item.file_path}
-                data={movieDetails!.images[mediaSelections.images]}
-                renderItem={({ item, index }) => (
-                  <MoviePoster
-                    pressHandler={() =>
-                      setShowImageViewer({ isVisible: true, index })
-                    }
-                    posterPath={
-                      mediaSelections.images === "posters"
-                        ? item.file_path
-                        : `https://image.tmdb.org/t/p/${PosterSizes.W780}${item.file_path}`
-                    }
-                    style={{
-                      width:
-                        mediaSelections.images === "posters"
-                          ? calculateWidth(16, 8, 2.5)
-                          : calculateWidth(16, 8, 1.5),
-                      aspectRatio:
-                        mediaSelections.images === "posters" ? 2 / 3 : 16 / 9,
-                    }}
-                  />
-                )}
-                {...horizontalListProps}
-              />
+                </>
+              ) : (
+                <ThemedText style={[iOSUIKit.body, { paddingTop: 16 }]}>
+                  No images yet! Come back later!
+                </ThemedText>
+              )}
             </View>
           )}
           {detailIndex === 2 && (
@@ -697,9 +702,11 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         </View>
       </Animated.ScrollView>
       <ImageView
-        images={movieDetails!.images[mediaSelections.images].map((image) => ({
-          uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${image.file_path}`,
-        }))}
+        images={movieDetails!.images[mediaSelections.images.value].map(
+          (image) => ({
+            uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${image.file_path}`,
+          }),
+        )}
         imageIndex={showImageViewer.index}
         visible={showImageViewer.isVisible}
         onRequestClose={() =>

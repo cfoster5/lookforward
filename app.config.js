@@ -4,6 +4,7 @@ export default {
   expo: {
     name: "LookForward",
     slug: "lookforward",
+    owner: "cfoster",
     version: version,
     orientation: "portrait",
     icon: "./assets/icon.png",

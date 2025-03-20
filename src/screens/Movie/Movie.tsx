@@ -46,6 +46,7 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
+import { getReleaseDatesByCountry } from "@/helpers/getReleaseDatesByCountry";
 import {
   calculateWidth,
   removeSub,
@@ -179,9 +180,10 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
   const modalRef = useRef<BottomSheetModal>();
 
-  const usReleaseDates = movieDetails?.release_dates.results.find(
-    (result) => result.iso_3166_1 === "US",
-  )?.release_dates;
+  const usReleaseDates = getReleaseDatesByCountry(
+    movieDetails?.release_dates,
+    "US",
+  );
 
   // Get cert of first release date where cert is defined
   // Does not consider multiple ratings such as Battle of the Five Armies where Extended Edition is R

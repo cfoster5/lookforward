@@ -1,6 +1,7 @@
 import { useQueries } from "react-query";
 import { ReleaseDateType } from "tmdb-ts";
 
+import { getReleaseDatesByCountry } from "@/helpers/getReleaseDatesByCountry";
 import { FirestoreMovie } from "@/interfaces/firebase";
 import { tmdb } from "@/providers/app";
 import { useStore } from "@/stores/store";
@@ -13,12 +14,10 @@ async function getMovie(movieId: FirestoreMovie["documentID"]) {
     "en-US",
   );
 
-  const usRelease = json.release_dates.results.find(
-    (result) => result.iso_3166_1 === "US",
-  );
+  const usReleaseDates = getReleaseDatesByCountry(json.release_dates, "US");
 
-  const sortedNonPremiereDates = usRelease?.release_dates
-    .filter((release) => release.type !== ReleaseDateType.Premiere)
+  const sortedNonPremiereDates = usReleaseDates
+    ?.filter((release) => release.type !== ReleaseDateType.Premiere)
     .sort(({ release_date: a }, { release_date: b }) =>
       compareDates(isoToUTC(a), isoToUTC(b)),
     );

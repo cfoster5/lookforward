@@ -1,4 +1,4 @@
-import SegmentedControl from "@react-native-community/segmented-control";
+import SegmentedControl from "@react-native-segmented-control/segmented-control";
 
 interface Props {
   buttons: string[];

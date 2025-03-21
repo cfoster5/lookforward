@@ -1,9 +1,17 @@
 import * as Menu from "zeego/dropdown-menu";
 
+import {
+  CreditSelectionProps,
+  ImageSelectionProps,
+  VideoSelectionProps,
+} from "../types";
+
+type Option = CreditSelectionProps | VideoSelectionProps | ImageSelectionProps;
+
 type MenuProps = {
   children: React.ReactElement;
-  options: { value: string; label: string }[];
-  handleSelect: (value: string, label) => void;
+  options: Option[];
+  handleSelect: (value: Option["value"], label: Option["label"]) => void;
 };
 
 export function DropdownMenu({ children, options, handleSelect }: MenuProps) {

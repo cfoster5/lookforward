@@ -68,6 +68,11 @@ import { DropdownMenu } from "./components/DropdownMenu";
 import Person from "./components/Person";
 import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
+import {
+  CreditSelectionProps,
+  ImageSelectionProps,
+  VideoSelectionProps,
+} from "./types";
 import { composeGroupedJobCredits } from "./utils/composeGroupedJobCredits";
 import { composeRuntime } from "./utils/composeRuntime";
 
@@ -164,19 +169,23 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const scrollHandler = useAnimatedScrollHandler(
     (e) => (scrollOffset.value = e.contentOffset.y),
   );
-  const [mediaSelections, setMediaSelections] = useState<{
-    videos: { value: "Trailer" | "Teaser"; label: "Trailers" | "Teasers" };
-    images: { value: "posters" | "backdrops"; label: "Posters" | "Backdrops" };
-  }>({
-    videos: { value: "Trailer", label: "Trailers" },
-    images: { value: "posters", label: "Posters" },
+  const [videoSelection, setVideoSelection] = useState<VideoSelectionProps>({
+    value: "Trailer",
+    label: "Trailers",
+  });
+  const [imageSelection, setImageSelection] = useState<ImageSelectionProps>({
+    value: "posters",
+    label: "Posters",
   });
   const [showImageViewer, setShowImageViewer] = useState({
     isVisible: false,
     index: 0,
   });
 
-  const [creditsSelection, setCreditsSelection] = useState("Cast");
+  const [creditSelection, setCreditSelection] = useState<CreditSelectionProps>({
+    value: "Cast",
+    label: "Cast",
+  });
 
   const modalRef = useRef<BottomSheetModal>();
 
@@ -233,18 +242,17 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
   useEffect(() => {
     if (movieDetails) {
-      const videos = movieDetails.videos.results.some(
-        (result) => result.type === "Trailer",
-      )
+      setVideoSelection(
+        movieDetails.videos.results.some((result) => result.type === "Trailer")
         ? { value: "Trailer", label: "Trailers" }
-        : { value: "Teaser", label: "Teasers" };
+          : { value: "Teaser", label: "Teasers" },
+      );
 
-      const images =
+      setImageSelection(
         movieDetails.images.posters.length > 0
           ? { value: "posters", label: "Posters" }
-          : { value: "backdrops", label: "Backdrops" };
-
-      setMediaSelections({ videos, images });
+          : { value: "backdrops", label: "Backdrops" },
+      );
     }
   }, [movieDetails]);
 
@@ -465,13 +473,15 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     { value: "Cast", label: "Cast" },
                     { value: "Crew", label: "Crew" },
                   ]}
-                  handleSelect={setCreditsSelection}
+                  handleSelect={(value, label) =>
+                    setCreditSelection({ value, label } as CreditSelectionProps)
+                  }
                 >
-                  <ApplePillButton text={creditsSelection} />
+                  <ApplePillButton text={creditSelection.label} />
                 </DropdownMenu>
               </View>
 
-              {(creditsSelection === "Cast"
+              {(creditSelection.value === "Cast"
                 ? movieDetails!.credits.cast
                 : composeGroupedJobCredits(movieDetails?.credits.crew)
               ).map((person) => (
@@ -507,19 +517,19 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                           : []),
                       ]}
                       handleSelect={(value, label) =>
-                        setMediaSelections({
-                          ...mediaSelections,
-                          videos: { value, label },
-                        })
+                        setVideoSelection({
+                          value,
+                          label,
+                        } as VideoSelectionProps)
                       }
                     >
-                      <ApplePillButton text={mediaSelections.videos.label} />
+                      <ApplePillButton text={videoSelection.label} />
                     </DropdownMenu>
                   </View>
                   <FlatList
                     keyExtractor={(item) => item.id}
                     data={movieDetails!.videos.results.filter(
-                      (result) => result.type === mediaSelections.videos.value,
+                      (result) => result.type === videoSelection.value,
                     )}
                     renderItem={({ item }) => <Trailer video={item} />}
                     {...horizontalListProps}
@@ -545,37 +555,35 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                           : []),
                       ]}
                       handleSelect={(value, label) =>
-                        setMediaSelections({
-                          ...mediaSelections,
-                          images: { value, label },
-                        })
+                        setImageSelection({
+                          value,
+                          label,
+                        } as ImageSelectionProps)
                       }
                     >
-                      <ApplePillButton text={mediaSelections.images.label} />
+                      <ApplePillButton text={imageSelection.label} />
                     </DropdownMenu>
                   </View>
                   <FlatList
                     keyExtractor={(item) => item.file_path}
-                    data={movieDetails!.images[mediaSelections.images.value]}
+                    data={movieDetails!.images[imageSelection.value]}
                     renderItem={({ item, index }) => (
                       <MoviePoster
                         pressHandler={() =>
                           setShowImageViewer({ isVisible: true, index })
                         }
                         posterPath={
-                          mediaSelections.images.value === "posters"
+                          imageSelection.value === "posters"
                             ? item.file_path
                             : `https://image.tmdb.org/t/p/${PosterSizes.W780}${item.file_path}`
                         }
                         style={{
                           width:
-                            mediaSelections.images.value === "posters"
+                            imageSelection.value === "posters"
                               ? calculateWidth(16, 8, 2.5)
                               : calculateWidth(16, 8, 1.5),
                           aspectRatio:
-                            mediaSelections.images.value === "posters"
-                              ? 2 / 3
-                              : 16 / 9,
+                            imageSelection.value === "posters" ? 2 / 3 : 16 / 9,
                         }}
                       />
                     )}
@@ -710,11 +718,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         </View>
       </Animated.ScrollView>
       <ImageView
-        images={movieDetails!.images[mediaSelections.images.value].map(
-          (image) => ({
+        images={movieDetails!.images[imageSelection.value].map((image) => ({
             uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${image.file_path}`,
-          }),
-        )}
+        }))}
         imageIndex={showImageViewer.index}
         visible={showImageViewer.isVisible}
         onRequestClose={() =>

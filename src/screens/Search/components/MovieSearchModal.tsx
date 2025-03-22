@@ -7,14 +7,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { MovieOption } from "../types";
-
 import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
 import ButtonMultiState from "@/components/ButtonMultiState";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { targetedProviders } from "@/helpers/helpers";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
+
+import { MovieOption } from "../types";
 
 export function MovieSearchModal({
   navigation,
@@ -33,6 +33,29 @@ export function MovieSearchModal({
   const { data: movieWatchProviders, isLoading } = useMovieWatchProviders();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
+  // Convert targeted providers to a Set for faster lookups.
+  const targetedSet = new Set(targetedProviders);
+
+  // Use a Set to keep track of seen provider names
+  const seen = new Set();
+  const filteredProviders = [];
+
+  // Single pass for filtering and deduplication
+  for (const provider of movieWatchProviders || []) {
+    if (
+      targetedSet.has(provider.provider_name) &&
+      !seen.has(provider.provider_name)
+    ) {
+      seen.add(provider.provider_name);
+      filteredProviders.push(provider);
+    }
+  }
+
+  // Sort the filtered results
+  filteredProviders.sort((a, b) =>
+    a.provider_name.toLowerCase().localeCompare(b.provider_name.toLowerCase()),
+  );
+
   return (
     <DynamicHeightModal modalRef={modalRef}>
       <BottomSheetView style={{ paddingBottom: safeBottomArea }}>
@@ -41,7 +64,6 @@ export function MovieSearchModal({
           contentContainerStyle={{ paddingLeft: 16, paddingRight: 8 }}
           showsHorizontalScrollIndicator={false}
           data={Object.values(MovieOption)}
-          // renderItem={({ item }) => <Option option={item} />}
           renderItem={({ item }) => (
             <ButtonMultiState
               text={item}
@@ -74,21 +96,7 @@ export function MovieSearchModal({
               numColumns={Math.ceil(targetedProviders.length / 3)}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
-              data={movieWatchProviders
-                .filter(
-                  (provider) =>
-                    targetedProviders.indexOf(provider.provider_name) > -1
-                )
-                .filter(
-                  (v, i, a) =>
-                    a.findIndex((t) => t.provider_name === v.provider_name) ===
-                    i
-                )
-                .sort((a, b) =>
-                  a.provider_name
-                    .toLowerCase()
-                    .localeCompare(b.provider_name.toLowerCase())
-                )}
+              data={filteredProviders}
               renderItem={({ item }) => (
                 <ButtonSingleState
                   key={item.provider_id}

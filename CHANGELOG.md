@@ -1,5 +1,25 @@
 # Changelog
 
+## [6.8.0](https://github.com/cfoster5/lookforward/compare/v6.7.1...v6.8.0) (2025-03-23)
+
+
+### Features
+
+* Add ContextMenu for Countdown toggle and sharing movies from SearchBottomSheet ([13fb403](https://github.com/cfoster5/lookforward/commit/13fb4031d83c3988c1dfb3fdc7b03699eecf6318))
+* Add ContextMenu for sharing and individually removing recent items; closes [#114](https://github.com/cfoster5/lookforward/issues/114) ([21ea1bf](https://github.com/cfoster5/lookforward/commit/21ea1bf76a528d56b534faf3c0289f12f3398507))
+* Add ContextMenu for sharing people from SearchBottomSheet ([2d89828](https://github.com/cfoster5/lookforward/commit/2d8982896810d059f286da4dc12784c929b3c42f))
+* Add countdown toggle for movies in RecentTitle component ([7e7845e](https://github.com/cfoster5/lookforward/commit/7e7845e152ab06474cb1420459663ffee70ac18d))
+
+
+### Bug Fixes
+
+* Update linking config to correct links not opening correctly ([1385437](https://github.com/cfoster5/lookforward/commit/138543732b12efaec91f2faaecd6ddf1de550a77))
+
+
+### Performance Improvements
+
+* Optimize movie watch providers filtering and sorting in MovieSearchModal ([917ee4b](https://github.com/cfoster5/lookforward/commit/917ee4bbddd44da14feba8fe3ab7d5b261324d1a))
+
 ## [6.7.1](https://github.com/cfoster5/lookforward/compare/v6.7.0...v6.7.1) (2025-03-19)
 
 

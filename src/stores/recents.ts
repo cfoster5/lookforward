@@ -23,6 +23,7 @@ type RecentKey = "recentMovies" | "recentPeople" | "recentGames";
 type RecentItemsActions = {
   resetItems: (key: RecentKey) => void;
   addRecent: (key: RecentKey, recent: Recent) => void;
+  removeRecent: (key: RecentKey, recent: Recent) => void;
 };
 
 export const useRecentItemsStore = create<
@@ -58,6 +59,18 @@ export const useRecentItemsStore = create<
                   ...currentList.slice(0, index),
                   ...currentList.slice(index + 1),
                 ];
+
+          return { [key]: newState };
+        }),
+      removeRecent: (key, recent) =>
+        set((state) => {
+          const currentList = state[key];
+          const index = currentList.findIndex((item) => item.id === recent.id);
+          if (index === -1) return state;
+          const newState = [
+            ...currentList.slice(0, index),
+            ...currentList.slice(index + 1),
+          ];
 
           return { [key]: newState };
         }),

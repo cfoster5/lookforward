@@ -1,6 +1,7 @@
-import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
+import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
+
 import { Recent } from "@/types";
 
 const storage = new MMKV();
@@ -39,14 +40,25 @@ export const useRecentItemsStore = create<
       },
       addRecent: (key, recent) =>
         set((state) => {
-          const index = state[key].findIndex((item) => item.id === recent.id);
-          const newState = [...state[key]];
-          if (index === -1) newState.unshift(recent);
-          else if (index !== 0) {
-            // No action if item is already at beginning
-            newState.splice(index, 1);
-            newState.unshift(recent);
-          }
+          const currentList = state[key];
+          const index = currentList.findIndex(
+            // Convert the id to a number
+            // id is a string when coming from a deep link
+            (item) => item.id === Number(recent.id),
+          );
+          // If the item is already at the beginning, no changes are needed
+          if (index === 0) return state;
+
+          // Create a new array only if changes are needed
+          const newState =
+            index === -1
+              ? [recent, ...currentList]
+              : [
+                  recent,
+                  ...currentList.slice(0, index),
+                  ...currentList.slice(index + 1),
+                ];
+
           return { [key]: newState };
         }),
     }),

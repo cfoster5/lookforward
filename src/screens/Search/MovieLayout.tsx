@@ -13,16 +13,16 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { MoviePoster } from "@/components/Posters/MoviePoster";
+import { calculateWidth } from "@/helpers/helpers";
+import { useStore } from "@/stores/store";
+import { now } from "@/utils/dates";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+
 import { useMovieData } from "./api/getMovies";
 import { MovieSearchModal } from "./components/MovieSearchModal";
 import { MovieOption } from "./types";
-
-import { LoadingScreen } from "@/components/LoadingScreen";
-import { MoviePoster } from "@/components/Posters/MoviePoster";
-import { useStore } from "@/stores/store";
-import { now } from "@/utils/dates";
-import { calculateWidth } from "@/helpers/helpers";
-import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 export function MovieLayout({ navigation }) {
   const modalRef = useRef<BottomSheetModal>();
@@ -118,7 +118,7 @@ export function MovieLayout({ navigation }) {
           ]}
           columnWrapperStyle={styles.flatlistColumnWrapper}
           ref={scrollRef}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item, index) => item.id.toString() + index.toString()}
           initialNumToRender={6}
           showsVerticalScrollIndicator={false}
           onEndReached={() => (hasNextPage ? fetchNextPage() : null)}

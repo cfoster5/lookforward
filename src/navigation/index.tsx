@@ -11,12 +11,12 @@ import { useEffect } from "react";
 import { ColorSchemeName } from "react-native";
 import { HeaderButtonsProvider } from "react-navigation-header-buttons";
 
-import { AuthStack } from "./AuthStack";
-import { TabStack } from "./TabStack";
-
 import { ExplorePro } from "@/components/ExplorePro";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { useStore } from "@/stores/store";
+
+import { AuthStack } from "./AuthStack";
+import { TabStack } from "./TabStack";
 
 export default function Navigation({
   colorScheme,
@@ -30,7 +30,7 @@ export default function Navigation({
     prefixes: [Linking.createURL("/"), "https://getlookforward.app"],
     config: {
       screens: {
-        FindTabStack: {
+        FindTab: {
           initialRouteName: "Find",
           screens: {
             Find: "find",

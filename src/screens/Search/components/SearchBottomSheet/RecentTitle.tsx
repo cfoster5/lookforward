@@ -6,18 +6,38 @@ import { iOSUIKit } from "react-native-typography";
 
 import { calculateWidth } from "@/helpers/helpers";
 import { useRecentItemsStore } from "@/stores/recents";
+import { useStore } from "@/stores/store";
 import { Recent } from "@/types";
 import { onShare } from "@/utils/share";
+
+import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
 
 import { ContextMenu } from "./ContextMenu";
 
 export function RecentTitle({ item }: { item: Recent }) {
   // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
   const navigation = useNavigation<StackNavigationProp<any>>();
+  const { user, movieSubs } = useStore();
   const { removeRecent } = useRecentItemsStore();
+
+  const isMovieSub = () =>
+    item.id && movieSubs.some((sub) => sub.documentID === item.id.toString());
 
   return (
     <ContextMenu
+      handleCountdownToggle={
+        item.media_type === "movie"
+          ? {
+              action: () =>
+                isMovieSub()
+                  ? removeCountdownItem("movies", item.id, user)
+                  : addCountdownItem("movies", item.id, user),
+              buttonText: isMovieSub()
+                ? "Remove from Countdown"
+                : "Add to Countdown",
+            }
+          : undefined
+      }
       handleShareSelect={
         item.media_type === "movie"
           ? () => onShare(item.name, `movie/${item.id}?name=${item.name}`)

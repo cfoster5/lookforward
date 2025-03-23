@@ -4,12 +4,13 @@ import { Linking, PlatformColor, Pressable, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { LargeBorderlessButton } from "./LargeBorderlessButton";
-import { LargeFilledButton } from "./LargeFilledButton";
-
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
+import { ContextMenu } from "@/screens/Search/components/SearchBottomSheet/ContextMenu";
 import { useStore } from "@/stores/store";
+
+import { LargeBorderlessButton } from "./LargeBorderlessButton";
+import { LargeFilledButton } from "./LargeFilledButton";
 
 type Props = { modalRef: any };
 
@@ -39,11 +40,13 @@ export const OnboardingModal = ({ modalRef }: Props) => {
         >
           Getting Started
         </Text>
-        <Row
-          icon="search"
-          title="Find"
-          body="Discover movie and game releases by searching for title, cast, or crew."
-        />
+        <ContextMenu isOnboarding>
+          <Row
+            icon="search"
+            title="Find"
+            body="Discover movie and game releases by searching for title, cast, or crew. Holding down on an item will give you more options. Give it a try!"
+          />
+        </ContextMenu>
         <Row
           icon="timer-outline"
           title="Countdown"

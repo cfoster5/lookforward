@@ -5,11 +5,13 @@ export function ContextMenu({
   handleShareSelect,
   handleRemoveSelect,
   handleCountdownToggle,
+  isOnboarding,
 }: {
   children?: React.ReactNode;
   handleShareSelect?: () => void;
   handleRemoveSelect?: () => void;
   handleCountdownToggle?: { action: () => void; buttonText: string };
+  isOnboarding?: boolean;
 }) {
   return (
     <Menu.Root>
@@ -31,6 +33,11 @@ export function ContextMenu({
         {handleRemoveSelect && (
           <Menu.Item key="remove" onSelect={handleRemoveSelect}>
             <Menu.ItemTitle>Remove from History</Menu.ItemTitle>
+          </Menu.Item>
+        )}
+        {isOnboarding && (
+          <Menu.Item key="remove" onSelect={handleRemoveSelect}>
+            <Menu.ItemTitle>You did it!</Menu.ItemTitle>
           </Menu.Item>
         )}
       </Menu.Content>

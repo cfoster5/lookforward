@@ -45,7 +45,7 @@ const ListHeader = () => (
       { color: PlatformColor("label"), marginBottom: 16 },
     ]}
   >
-    Recently Viewed
+    History
   </Text>
 );
 

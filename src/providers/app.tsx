@@ -1,3 +1,4 @@
+import { useMMKVDevTools } from "@dev-plugins/react-native-mmkv";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import auth from "@react-native-firebase/auth";
@@ -7,13 +8,19 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { TMDB } from "tmdb-ts";
 
-import { TMDB_TOKEN } from "@/constants/ApiKeys";
+import { IGDB_AWS_KEY, TMDB_TOKEN } from "@/constants/ApiKeys";
 import { useStore } from "@/stores/store";
-import { useMMKVDevTools } from "@dev-plugins/react-native-mmkv";
+import { IGDB_API } from "@/types/igdb";
 
 const queryClient = new QueryClient();
 
 export const tmdb = new TMDB(TMDB_TOKEN);
+
+export const igdb = new IGDB_API({
+  baseUrl:
+    "https://k0o7ncaic1.execute-api.us-east-2.amazonaws.com/production/v4",
+  baseApiParams: { headers: { "x-api-key": IGDB_AWS_KEY } },
+});
 
 type AppProviderProps = {
   children: React.ReactNode;

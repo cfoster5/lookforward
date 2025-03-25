@@ -1,40 +1,13 @@
 import { useQueries } from "react-query";
 
-import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
+import { igdb } from "@/providers/app";
 import { useStore } from "@/stores/store";
+import { ReleaseDate } from "@/types/igdb";
 
-type ReleaseDate = {
-  date: number;
-  game: {
-    cover: {
-      id: number;
-      alpha_channel: boolean;
-      animated: boolean;
-      game: number;
-      height: number;
-      image_id: string;
-      url: string;
-      width: number;
-      checksum: string;
-    };
-    id: number;
-    name: string;
-  };
-  human: string;
-  id: number;
-};
-
-async function getGameRelease(releaseId: string) {
-  const response = await fetch(
-    "https://k0o7ncaic1.execute-api.us-east-2.amazonaws.com/production/v4/release_dates",
-    {
-      method: "POST",
-      headers: { "x-api-key": IGDB_AWS_KEY },
-      body: `fields human, date, game.name, game.cover.*; where id = ${releaseId};`,
-    },
-  );
-  const json: ReleaseDate[] = await response.json();
-  return json[0];
+async function getGameRelease(releaseId: ReleaseDate["id"]) {
+  const query = `fields human, date, game.name, game.cover.*; where id = ${releaseId};`;
+  const response = await igdb.releaseDates.retreiveReleaseDate(query);
+  return response.data[0];
 }
 
 export function useGameCountdowns() {
@@ -42,8 +15,8 @@ export function useGameCountdowns() {
   return useQueries(
     gameSubs.map((sub) => {
       return {
-        queryKey: ["gameRelease", sub.documentID],
-        queryFn: () => getGameRelease(sub.documentID),
+        queryKey: ["gameRelease", Number(sub.documentID)],
+        queryFn: () => getGameRelease(Number(sub.documentID)),
       };
     }),
   );

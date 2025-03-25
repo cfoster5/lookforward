@@ -3,7 +3,7 @@ import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
-import { Game, ReleaseDate } from "@/types";
+import { ReleaseDate, Games } from "@/types/igdb";
 import { timestampToUTC } from "@/utils/dates";
 
 import { FirestoreMovie } from "../interfaces/firebase";
@@ -123,7 +123,7 @@ export function calculateWidth(
 }
 
 export function getGameReleaseDate(
-  game: Game & {
+  game: Games & {
     release_dates: ReleaseDate[];
   },
 ) {

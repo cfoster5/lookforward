@@ -6,7 +6,7 @@ import {
   WatchProviders,
 } from "tmdb-ts";
 
-import { Game, ReleaseDate } from "./igdb";
+import { Games, ReleaseDate } from "./igdb";
 
 export type TabNavigationParamList = {
   FindTab: undefined;
@@ -37,7 +37,7 @@ type MovieScreens = {
 };
 
 type GameScreens = {
-  Game: { game: Game & { release_dates: ReleaseDate[] } };
+  Game: { game: Games & { release_dates: ReleaseDate[] } };
   GameDiscover: {
     screenTitle: string;
     genre?: any;

@@ -1,31 +1,24 @@
 import { useQuery } from "react-query";
 
-import { IGDB_AWS_KEY } from "@/constants/ApiKeys";
+import { igdb } from "@/providers/app";
 import { useStore } from "@/stores/store";
-import { Game, ReleaseDate } from "@/types";
 
 async function getGamesSearch(searchValue: string) {
-  const response = await fetch(
-    "https://k0o7ncaic1.execute-api.us-east-2.amazonaws.com/production/v4/games",
-    {
-      method: "POST",
-      headers: { "x-api-key": IGDB_AWS_KEY },
-      body: `fields name, cover.*, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name;
+  const query = `fields name, cover.*, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name;
       where release_dates.region = (2,8);
       search "${searchValue}";
-      limit 50;`,
-    }
-  );
-  const json: (Game & { release_dates: ReleaseDate[] })[] =
-    await response.json();
-  return json;
+      limit 50;`;
+
+  const response = await igdb.games.retreiveGames(query);
+  return response.data;
 }
 
 export function useGamesSearch(searchValue: string) {
   const { categoryIndex } = useStore();
+
   return useQuery(
     ["games", { searchValue }],
     () => getGamesSearch(searchValue),
-    { enabled: categoryIndex === 1 && searchValue !== "" }
+    { enabled: categoryIndex === 1 && searchValue !== "" },
   );
 }

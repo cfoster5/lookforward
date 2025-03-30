@@ -47,6 +47,7 @@ export default {
           },
         },
       ],
+      "expo-localization",
     ],
     experiments: {
       tsconfigPaths: true,

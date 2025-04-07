@@ -2,7 +2,6 @@
 module.exports = {
   extends: [
     "expo",
-    "prettier",
     "eslint:recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
@@ -11,8 +10,8 @@ module.exports = {
     "plugin:react/recommended",
     "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended",
   ],
-  plugins: ["prettier"],
   rules: {
     "prettier/prettier": "warn",
     "react/no-unstable-nested-components": ["warn"],

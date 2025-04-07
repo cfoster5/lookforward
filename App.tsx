@@ -36,46 +36,59 @@ export default function App() {
   }, [setIsPro, user]);
 
   useEffect(() => {
+    // Check for a valid user before proceeding
+    if (!user) {
+      setInitializing(false);
+      return;
+    }
+
+    let unsubscribe: (() => void) | undefined;
+
     async function requestUserPermission() {
-      const authStatus = await messaging().requestPermission();
-      const enabled =
-        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-      const docSnapshot = await firestore()
-        .collection("users")
-        .doc(user!.uid)
-        .get();
-      if (enabled) {
-        if (!docSnapshot.data()?.notifications) {
-          // Only set notification preferences to true if they haven't been set before
-          await firestore()
-            .collection("users")
-            .doc(user!.uid)
-            .update({ notifications: { day: true, week: true } });
+      try {
+        const authStatus = await messaging().requestPermission();
+        const enabled =
+          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+        if (enabled) {
+          const userRef = firestore().collection("users").doc(user!.uid);
+          const docSnapshot = await userRef.get();
+          if (!docSnapshot.data()?.notifications) {
+            // Only set notification preferences to true if they haven't been set before
+            await userRef.update({ notifications: { day: true, week: true } });
+          }
+          const token = await messaging().getToken();
+          await saveTokenToDatabase(token);
+          // Listen to token refresh changes and store the unsubscribe function
+          unsubscribe = messaging().onTokenRefresh(async (token) => {
+            await saveTokenToDatabase(token);
+          });
         }
-        const token = await messaging().getToken();
-        await saveTokenToDatabase(token);
-        // Listen to whether the token changes
-        return messaging().onTokenRefresh(
-          async (token) => await saveTokenToDatabase(token),
-        );
+      } catch (error) {
+        console.error("Error in messaging useEffect:", error);
+      } finally {
+        setInitializing(false);
       }
     }
 
     async function saveTokenToDatabase(token: string) {
-      // Add the token to the users datastore
-      await firestore()
-        .collection("users")
-        .doc(user!.uid)
-        .update({ deviceToken: token });
+      try {
+        await firestore()
+          .collection("users")
+          .doc(user!.uid)
+          .update({ deviceToken: token });
+      } catch (error) {
+        console.error("Error saving token to database:", error);
+      }
     }
 
-    if (user) {
-      requestUserPermission();
-      setInitializing(false);
-    } else {
-      setInitializing(false);
-    }
+    requestUserPermission();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
   }, [user]);
 
   if (initializing) return null;

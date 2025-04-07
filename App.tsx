@@ -22,16 +22,10 @@ export default function App() {
     /* Enable debug logs before calling `setup`. */
     Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
 
-    /*
-      Initialize the RevenueCat Purchases SDK.
-      - observerMode is false, so Purchases will automatically handle finishing transactions. Read more about Observer Mode here: https://docs.revenuecat.com/docs/observer-mode
-      - useAmazon is false, so it will use the Play Store in Android and App Store in iOS by default.
-      */
+    // Initialize the RevenueCat Purchases SDK.
     Purchases.configure({
       apiKey: "appl_qxPtMlTGjvHkhlNlnKlOenNikGN",
       appUserID: user?.uid,
-      observerMode: false,
-      useAmazon: false,
     });
 
     Purchases.addCustomerInfoUpdateListener((info) => {

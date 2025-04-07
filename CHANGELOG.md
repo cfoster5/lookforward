@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.9.0](https://github.com/cfoster5/lookforward/compare/v6.8.0...v6.9.0) (2025-04-07)
+
+
+### Features
+
+* Add DropdownMenu and ApplePillButton to SearchBottomSheet to switch between movies and games ([f993526](https://github.com/cfoster5/lookforward/commit/f993526bde4d616d619dbb1b0fad00789811c732))
+
 ## [6.8.0](https://github.com/cfoster5/lookforward/compare/v6.7.1...v6.8.0) (2025-03-23)
 
 

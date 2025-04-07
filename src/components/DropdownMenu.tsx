@@ -4,9 +4,18 @@ import {
   CreditSelectionProps,
   ImageSelectionProps,
   VideoSelectionProps,
-} from "../types";
+} from "@/screens/Movie/types";
 
-type Option = CreditSelectionProps | VideoSelectionProps | ImageSelectionProps;
+type SearchSelectionProps = {
+  value: "Movies" | "Games";
+  label: "Movies" | "Games";
+};
+
+type Option =
+  | CreditSelectionProps
+  | VideoSelectionProps
+  | ImageSelectionProps
+  | SearchSelectionProps;
 
 type MenuProps = {
   children: React.ReactElement;

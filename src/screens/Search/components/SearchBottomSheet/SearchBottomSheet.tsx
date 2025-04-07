@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import BottomSheet, {
   BottomSheetFlatList,
   BottomSheetTextInput,
@@ -12,7 +11,6 @@ import {
   LayoutChangeEvent,
   Platform,
   PlatformColor,
-  Pressable,
   SectionList,
   StyleSheet,
   Text,
@@ -22,6 +20,8 @@ import { FlatList } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
+import { ApplePillButton } from "@/components/ApplePillButton";
+import { DropdownMenu } from "@/components/DropdownMenu";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { calculateWidth } from "@/helpers/helpers";
 import { useRecentItemsStore } from "@/stores/recents";
@@ -146,22 +146,32 @@ export const SearchBottomSheet = () => {
             style={styles.textInput}
             value={searchValue}
           />
-          <Pressable
-            onPress={() => {
-              setCategoryIndex(categoryIndex === 0 ? 1 : 0);
+          <DropdownMenu
+            options={[
+              { value: "Movies", label: "Movies" },
+              { value: "Games", label: "Games" },
+            ]}
+            handleSelect={(value, label) => {
+              setCategoryIndex(value === "Movies" ? 0 : 1);
               setSearchValue("");
             }}
-            style={{ justifyContent: "center", minWidth: 44, minHeight: 44 }}
           >
-            <Ionicons
-              name={
-                categoryIndex === 0 ? "film-outline" : "game-controller-outline"
-              }
-              size={36}
-              color={PlatformColor("systemBlue")}
-              style={{ marginLeft: 12, marginBottom: 16 }}
+            <ApplePillButton
+              // text={categoryIndex === 0 ? "Movies" : "Games"}
+              iconName={categoryIndex === 0 ? "film" : "gamepadcontroller"}
+              style={{
+                backgroundColor: PlatformColor("tertiarySystemFill"),
+                marginTop: 0,
+                marginLeft: 12,
+                paddingHorizontal: 12,
+                paddingRight: 0,
+                alignSelf: "stretch",
+                flex: 1,
+                // 46 from inspecting BottomSheetTextInput
+                minHeight: 46,
+              }}
             />
-          </Pressable>
+          </DropdownMenu>
         </View>
 
         {searchValue &&

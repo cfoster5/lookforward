@@ -34,9 +34,11 @@ import {
 } from "tmdb-ts";
 
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
+import { ApplePillButton } from "@/components/ApplePillButton";
 import { BlueBullet } from "@/components/BlueBullet";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import CategoryControl from "@/components/CategoryControl/CategoryControl";
+import { DropdownMenu } from "@/components/DropdownMenu";
 import { ExpandableText } from "@/components/ExpandableText";
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
@@ -62,9 +64,7 @@ import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useMovie } from "./api/getMovie";
 import { useMovieRatings } from "./api/getMovieRatings";
-import { ApplePillButton } from "./components/ApplePillButton";
 import { DiscoverListLabel } from "./components/DiscoverListLabel";
-import { DropdownMenu } from "./components/DropdownMenu";
 import Person from "./components/Person";
 import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
@@ -244,7 +244,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     if (movieDetails) {
       setVideoSelection(
         movieDetails.videos.results.some((result) => result.type === "Trailer")
-        ? { value: "Trailer", label: "Trailers" }
+          ? { value: "Trailer", label: "Trailers" }
           : { value: "Teaser", label: "Teasers" },
       );
 
@@ -719,7 +719,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
       </Animated.ScrollView>
       <ImageView
         images={movieDetails!.images[imageSelection.value].map((image) => ({
-            uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${image.file_path}`,
+          uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${image.file_path}`,
         }))}
         imageIndex={showImageViewer.index}
         visible={showImageViewer.isVisible}

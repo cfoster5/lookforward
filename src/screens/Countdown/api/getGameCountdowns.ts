@@ -4,7 +4,7 @@ import { igdb } from "@/providers/app";
 import { useStore } from "@/stores/store";
 import { ReleaseDate } from "@/types/igdb";
 
-async function getGameRelease(releaseId: ReleaseDate["id"]) {
+export async function getGameRelease(releaseId: ReleaseDate["id"]) {
   const query = `fields human, date, game.name, game.cover.*; where id = ${releaseId};`;
   const response = await igdb.releaseDates.retreiveReleaseDate(query);
   return response.data[0];

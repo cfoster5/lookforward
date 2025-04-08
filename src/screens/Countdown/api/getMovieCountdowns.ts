@@ -7,7 +7,7 @@ import { tmdb } from "@/providers/app";
 import { useStore } from "@/stores/store";
 import { compareDates, isoToUTC } from "@/utils/dates";
 
-async function getMovie(movieId: FirestoreMovie["documentID"]) {
+export async function getMovie(movieId: FirestoreMovie["documentID"]) {
   const json = await tmdb.movies.details(
     Number(movieId),
     ["release_dates"],

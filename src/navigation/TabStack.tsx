@@ -5,7 +5,10 @@ import { BlurView } from "expo-blur";
 import * as StoreReview from "expo-store-review";
 import { useEffect } from "react";
 import { Platform, StyleSheet } from "react-native";
+import { useQueryClient } from "react-query";
 
+import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
+import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useStore } from "@/stores/store";
 import { TabNavigationParamList } from "@/types";
@@ -106,6 +109,27 @@ export function TabStack() {
       setHasSeenOnboardingModal();
     }
   }, [hasSeenOnboardingModal, onboardingModalRef, setHasSeenOnboardingModal]);
+
+  const queryClient = useQueryClient();
+
+  // Prefetch movie and game relase date details and place them in the cache
+  useEffect(() => {
+    movieSubs.forEach((sub) => {
+      queryClient.prefetchQuery({
+        queryKey: ["movieSubs", sub.documentID],
+        queryFn: () => getMovie(sub.documentID),
+      });
+    });
+  }, [movieSubs, queryClient]);
+
+  useEffect(() => {
+    gameSubs.map((sub) => {
+      queryClient.prefetchQuery({
+        queryKey: ["gameRelease", Number(sub.documentID)],
+        queryFn: () => getGameRelease(Number(sub.documentID)),
+      });
+    });
+  }, [gameSubs, queryClient]);
 
   return (
     <Tab.Navigator

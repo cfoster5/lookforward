@@ -11,8 +11,6 @@ import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { Movie } from "tmdb-ts";
 
-import { useDiscoverMovies } from "./api/getDiscoverMovies";
-
 import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
@@ -22,6 +20,8 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth, targetedProviders } from "@/helpers/helpers";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+
+import { useDiscoverMovies } from "./api/getDiscoverMovies";
 
 type MovieDiscoverScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParamList, "MovieDiscover">,
@@ -46,7 +46,7 @@ function MovieDiscover({
     data: movies,
     fetchNextPage,
     hasNextPage,
-    isPreviousData,
+    isLoading,
   } = useDiscoverMovies({
     genreId: genre?.id,
     companyId: company?.id,
@@ -213,7 +213,7 @@ function MovieDiscover({
     );
   }
 
-  if (isPreviousData) return <LoadingScreen />;
+  if (isLoading) return <LoadingScreen />;
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { groupReleasesByGame } from "@/helpers/helpers";
 import { igdb } from "@/providers/app";
@@ -25,5 +25,8 @@ export function useDiscoverGames({
   filter += genreId ? ` & game.genres = (${genreId})` : ``;
   // filter += companyId ? `&with_companies=${companyId}` : ``;
   // filter += keywordId ? `&with_keywords=${keywordId}` : ``;
-  return useQuery(["discoverGames", { genreId }], () => getReleases(filter));
+  return useQuery({
+    queryKey: ["discoverGames", filter],
+    queryFn: () => getReleases(filter),
+  });
 }

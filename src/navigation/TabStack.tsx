@@ -1,11 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import firestore from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useQueryClient } from "@tanstack/react-query";
 import { BlurView } from "expo-blur";
 import * as StoreReview from "expo-store-review";
 import { useEffect } from "react";
 import { Platform, StyleSheet } from "react-native";
-import { useQueryClient } from "react-query";
 
 import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
 import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";

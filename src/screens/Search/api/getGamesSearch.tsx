@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { igdb } from "@/providers/app";
 import { useStore } from "@/stores/store";
@@ -16,9 +16,9 @@ async function getGamesSearch(searchValue: string) {
 export function useGamesSearch(searchValue: string) {
   const { categoryIndex } = useStore();
 
-  return useQuery(
-    ["games", { searchValue }],
-    () => getGamesSearch(searchValue),
-    { enabled: categoryIndex === 1 && searchValue !== "" },
-  );
+  return useQuery({
+    queryKey: ["games", { searchValue }],
+    queryFn: () => getGamesSearch(searchValue),
+    enabled: categoryIndex === 1 && searchValue !== "",
+  });
 }

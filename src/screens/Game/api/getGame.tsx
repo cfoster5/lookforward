@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { igdb } from "@/providers/app";
 import { Games } from "@/types/igdb";
@@ -12,6 +12,8 @@ async function getGame(gameId: Games["id"]) {
 }
 
 export const useGame = (gameId: Games["id"]) =>
-  useQuery(["game", { gameId }], () => getGame(gameId), {
+  useQuery({
+    queryKey: ["game", { gameId }],
+    queryFn: () => getGame(gameId),
     select: (games) => games[0],
   });

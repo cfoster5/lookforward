@@ -1,4 +1,4 @@
-import { useQueries } from "react-query";
+import { useQueries } from "@tanstack/react-query";
 
 import { igdb } from "@/providers/app";
 import { useStore } from "@/stores/store";
@@ -12,12 +12,10 @@ export async function getGameRelease(releaseId: ReleaseDate["id"]) {
 
 export function useGameCountdowns() {
   const { gameSubs } = useStore();
-  return useQueries(
-    gameSubs.map((sub) => {
-      return {
-        queryKey: ["gameRelease", Number(sub.documentID)],
-        queryFn: () => getGameRelease(Number(sub.documentID)),
-      };
-    }),
-  );
+  return useQueries({
+    queries: gameSubs.map((sub) => ({
+      queryKey: ["gameRelease", Number(sub.documentID)],
+      queryFn: () => getGameRelease(Number(sub.documentID)),
+    })),
+  });
 }

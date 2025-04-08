@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { groupReleasesByGame } from "@/helpers/helpers";
 import { igdb } from "@/providers/app";
@@ -11,5 +11,5 @@ async function getGames() {
 }
 
 export function useGames() {
-  return useQuery(["games"], getGames);
+  return useQuery({ queryKey: ["games"], queryFn: getGames });
 }

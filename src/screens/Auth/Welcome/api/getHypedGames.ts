@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { igdb } from "@/providers/app";
 import { timestamp } from "@/utils/dates";
@@ -18,5 +18,5 @@ async function getGames() {
 }
 
 export function useHypedGames() {
-  return useQuery(["hypedGames"], getGames);
+  return useQuery({ queryKey: ["hypedGames"], queryFn: getGames });
 }

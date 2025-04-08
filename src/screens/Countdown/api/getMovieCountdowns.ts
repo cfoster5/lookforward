@@ -1,4 +1,4 @@
-import { useQueries } from "react-query";
+import { useQueries } from "@tanstack/react-query";
 import { ReleaseDateType } from "tmdb-ts";
 
 import { getReleaseDatesByCountry } from "@/helpers/getReleaseDatesByCountry";
@@ -34,12 +34,10 @@ export async function getMovie(movieId: FirestoreMovie["documentID"]) {
 // Rename this function and this file
 export function useMovieCountdowns() {
   const { movieSubs } = useStore();
-  return useQueries(
-    movieSubs.map((sub) => {
-      return {
-        queryKey: ["movieSubs", sub.documentID],
-        queryFn: () => getMovie(sub.documentID),
-      };
-    }),
-  );
+  return useQueries({
+    queries: movieSubs.map((sub) => ({
+      queryKey: ["movieSubs", sub.documentID],
+      queryFn: () => getMovie(sub.documentID),
+    })),
+  });
 }

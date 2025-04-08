@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.9.1](https://github.com/cfoster5/lookforward/compare/v6.9.0...v6.9.1) (2025-04-08)
+
+
+### Performance Improvements
+
+* Prefetch subbed movie and game release details ([8ad79d7](https://github.com/cfoster5/lookforward/commit/8ad79d700299b2a365e354683b5588e683756562))
+
 ## [6.9.0](https://github.com/cfoster5/lookforward/compare/v6.8.0...v6.9.0) (2025-04-07)
 
 

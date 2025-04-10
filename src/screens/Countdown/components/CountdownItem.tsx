@@ -1,5 +1,7 @@
-import { useEffect } from "react";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { Image } from "expo-image";
+import { DateTime } from "luxon";
+import { useEffect } from "react";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   interpolate,
@@ -10,15 +12,14 @@ import Animated, {
 import { iOSUIKit } from "react-native-typography";
 import { PosterSizes } from "tmdb-ts";
 
-import { RadioButton } from "./RadioButton";
-
-import { reusableStyles } from "@/helpers/styles";
-import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
-import { useMovieCountdowns } from "../api/getMovieCountdowns";
-import { useGameCountdowns } from "../api/getGameCountdowns";
 import { useCountdownStore } from "@/stores/store";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { CountdownStackParamList } from "@/types/navigation";
+import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
+
+import { useGameCountdowns } from "../api/getGameCountdowns";
+import { useMovieCountdowns } from "../api/getMovieCountdowns";
+
+import { RadioButton } from "./RadioButton";
 
 interface MovieProps {
   item: ReturnType<typeof useMovieCountdowns>[number]["data"];
@@ -53,37 +54,27 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
       ? selectedMovies.includes(item!.documentID)
       : selectedGames.includes(item!.id.toString());
 
-  function getReleaseDate(): string {
+  function getFormattedDate(): string {
     if (sectionName === "Movies") {
-      if (item!.releaseDate) {
-        return isoToUTC(item!.releaseDate).toFormat("MM/dd/yyyy");
-      } else {
-        return "No release date yet";
-      }
+      return item!.releaseDate
+        ? isoToUTC(item!.releaseDate).toLocaleString(DateTime.DATE_MED)
+        : "TBD";
     } else {
-      if (item!.date) {
-        return timestampToUTC(item!.date).toFormat("MM/dd/yyyy");
-      } else {
-        return item!.human;
-      }
+      return item!.date
+        ? timestampToUTC(item!.date).toFormat("MM/dd/yyyy")
+        : item!.human;
     }
   }
 
-  function getCountdownDays(): number | "∞" {
+  function getDaysUntil(): number | "∞" {
     if (sectionName === "Movies") {
-      if (item!.releaseDate) {
-        const diff = isoToUTC(item!.releaseDate).diff(now);
-        return Math.ceil(diff.as("days"));
-      } else {
-        return "∞";
-      }
+      return item!.releaseDate
+        ? Math.ceil(isoToUTC(item!.releaseDate).diff(now).as("days"))
+        : "∞";
     } else {
-      if (item!.date) {
-        const diff = timestampToUTC(item!.date).diff(now);
-        return Math.ceil(diff.as("days"));
-      } else {
-        return "∞";
-      }
+      return item!.date
+        ? Math.ceil(timestampToUTC(item!.date).diff(now).as("days"))
+        : "∞";
     }
   }
 
@@ -129,6 +120,10 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
 
   const styles = StyleSheet.create({
     rowFront: {
+      borderBottomLeftRadius:
+        sectionName === "Games" && isLastInSection ? 10 : 0,
+      borderBottomRightRadius:
+        sectionName === "Games" && isLastInSection ? 10 : 0,
       overflow: "hidden",
       backgroundColor: isSelected
         ? PlatformColor("systemGray4")
@@ -140,12 +135,14 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
       flexWrap: "wrap",
     },
     image: {
-      width: 92 / 1.75,
-      height: 132 / 1.75,
-      borderRadius: 12,
+      width: 60,
+      aspectRatio: sectionName === "Movies" ? 2 / 3 : 3 / 4,
+      borderRadius: 6,
       marginLeft: 16,
       marginTop: 8,
       marginBottom: 8,
+      borderWidth: StyleSheet.hairlineWidth,
+      borderColor: PlatformColor("separator"),
     },
     middle: {
       borderColor: PlatformColor("separator"),
@@ -170,7 +167,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
   let imageSrc = "";
   let title = "";
   if (sectionName === "Movies") {
-    imageSrc = `https://image.tmdb.org/t/p/${PosterSizes.W92}${item!.poster_path}`;
+    imageSrc = `https://image.tmdb.org/t/p/${PosterSizes.W300}${item!.poster_path}`;
     title = item!.title;
   }
   if (sectionName === "Games") {
@@ -179,12 +176,8 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
   }
 
   const slideStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        // translateX: transformAmount.value,
-        translateX: interpolate(transformAmount.value, [-24, 16], [-24, 16]),
-      },
-    ],
+    // No need for interpolation here, since the value maps directly to the desired values
+    transform: [{ translateX: transformAmount.value }],
   }));
 
   const radioButtonStyle = useAnimatedStyle(() => ({
@@ -199,7 +192,19 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
         <Animated.View style={[{ justifyContent: "center" }, radioButtonStyle]}>
           <RadioButton isSelected={isSelected} />
         </Animated.View>
-        <View style={{ justifyContent: "center" }}>
+        <View
+          style={{
+            justifyContent: "center",
+            // Extracted from Figma, decide to keep or not
+            shadowOffset: {
+              width: 0,
+              height: 1,
+            },
+            shadowRadius: 4,
+            shadowColor: "rgba(0, 0, 0, 0.15)",
+            shadowOpacity: 1,
+          }}
+        >
           <Image
             style={styles.image}
             source={{ uri: imageSrc }}
@@ -207,24 +212,31 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
           />
         </View>
         <View style={styles.middle}>
-          <Text style={{ ...iOSUIKit.bodyWhiteObject }}>{title}</Text>
-          <Text style={{ ...reusableStyles.date }}>{getReleaseDate()}</Text>
+          <Text
+            style={[iOSUIKit.body, { color: PlatformColor("label") }]}
+            numberOfLines={2}
+          >
+            {title}
+          </Text>
+          <Text
+            style={[
+              iOSUIKit.subhead,
+              { color: PlatformColor("secondaryLabel") },
+            ]}
+          >
+            {getFormattedDate()}
+          </Text>
         </View>
         <View style={styles.countdown}>
           <Text
-            style={{
-              ...iOSUIKit.title3EmphasizedWhiteObject,
-              color: PlatformColor("systemBlue"),
-            }}
+            style={[
+              iOSUIKit.bodyEmphasized,
+              { color: PlatformColor("systemBlue") },
+            ]}
           >
-            {getCountdownDays()}
+            {getDaysUntil()}
           </Text>
-          <Text
-            style={{
-              ...iOSUIKit.bodyWhiteObject,
-              color: PlatformColor("systemBlue"),
-            }}
-          >
+          <Text style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}>
             days
           </Text>
         </View>

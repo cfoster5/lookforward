@@ -73,18 +73,8 @@ function Countdown() {
           style={{
             height: 16,
             backgroundColor: PlatformColor("systemGray6"),
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-          }}
-        />
-      }
-      ListFooterComponent={
-        <View
-          style={{
-            height: 16,
-            backgroundColor: PlatformColor("systemGray6"),
-            borderBottomLeftRadius: 8,
-            borderBottomRightRadius: 8,
+            borderTopLeftRadius: 10,
+            borderTopRightRadius: 10,
           }}
         />
       }

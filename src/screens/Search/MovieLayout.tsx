@@ -1,6 +1,5 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useScrollToTop } from "@react-navigation/native";
-import { DateTime } from "luxon";
 import { useRef, useState } from "react";
 import {
   FlatList,
@@ -17,7 +16,6 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth } from "@/helpers/helpers";
 import { useStore } from "@/stores/store";
-import { now } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useMovieData } from "./api/getMovies";
@@ -33,32 +31,6 @@ export function MovieLayout({ navigation }) {
   const { top } = useSafeAreaInsets();
   const { initialSnapPoint } = useStore();
   const bottomTabOverflow = useBottomTabOverflow();
-
-  const movies = data?.pages.flatMap((page) => page.results);
-
-  // useEffect(() => {
-  //   // Manually get second page on load to fix cases where empty space is rendered before scrolling
-  //   if (data?.pages.filter((page) => page.page === 2).length === 0) {
-  //     fetchNextPage({ pageParam: 2 });
-  //   }
-  // }, [data, fetchNextPage]);
-
-  // useEffect(() => {
-  //   modalRef.current?.dismiss();
-  //   // https://stackoverflow.com/a/64232399/5648619
-  //   if (scrollRef !== null && scrollRef.current !== null && movies) {
-  //     if (typeof scrollRef.current.scrollToIndex === "function") {
-  //       scrollRef.current?.scrollToIndex({ index: 0 });
-  //     }
-  //   }
-  // }, [option]);
-
-  const upcomingMovies = () =>
-    movies?.filter((movie) =>
-      movie.release_date
-        ? DateTime.fromFormat(movie.release_date, "yyyy-MM-dd") >= now
-        : null,
-    );
 
   return (
     <>
@@ -94,7 +66,7 @@ export function MovieLayout({ navigation }) {
 
       {!isLoading ? (
         <FlatList
-          data={option === "Coming Soon" ? upcomingMovies() : movies}
+          data={data}
           renderItem={({ item }) => (
             <MoviePoster
               pressHandler={() =>

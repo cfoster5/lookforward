@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.10.0](https://github.com/cfoster5/lookforward/compare/v6.9.1...v6.10.0) (2025-04-10)
+
+
+### Features
+
+* Increase hit region of More button on Search screen for movies ([761a0e0](https://github.com/cfoster5/lookforward/commit/761a0e0ba9c0bd9246d88cab7bbcfcfd6b516b04))
+
 ## [6.9.1](https://github.com/cfoster5/lookforward/compare/v6.9.0...v6.9.1) (2025-04-08)
 
 

@@ -12,14 +12,12 @@ import { useStore } from "@/stores/store";
 import { LargeBorderlessButton } from "./LargeBorderlessButton";
 import { LargeFilledButton } from "./LargeFilledButton";
 
-type Props = { modalRef: any };
-
-export const OnboardingModal = ({ modalRef }: Props) => {
+export const OnboardingModal = () => {
   const { onboardingModalRef, proModalRef } = useStore();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
   return (
-    <DynamicHeightModal modalRef={modalRef}>
+    <DynamicHeightModal modalRef={onboardingModalRef}>
       <BottomSheetView
         style={{
           justifyContent: "center",

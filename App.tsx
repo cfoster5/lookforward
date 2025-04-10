@@ -15,8 +15,7 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const { user, setIsPro } = useStore();
-  const [colorScheme] = useState("dark");
+  const { user, setIsPro, theme } = useStore();
 
   useEffect(() => {
     /* Enable debug logs before calling `setup`. */
@@ -95,9 +94,9 @@ export default function App() {
 
   return (
     <AppProvider>
-      <Navigation colorScheme={colorScheme} />
+      <Navigation />
       <StatusBar
-        barStyle={colorScheme === "dark" ? "light-content" : "dark-content"}
+        barStyle={theme === "dark" ? "light-content" : "dark-content"}
       />
     </AppProvider>
   );

@@ -8,7 +8,6 @@ import {
 import * as Linking from "expo-linking";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { ColorSchemeName } from "react-native";
 import { HeaderButtonsProvider } from "react-navigation-header-buttons";
 
 import { ExplorePro } from "@/components/ExplorePro";
@@ -18,14 +17,10 @@ import { useStore } from "@/stores/store";
 import { AuthStack } from "./AuthStack";
 import { TabStack } from "./TabStack";
 
-export default function Navigation({
-  colorScheme,
-}: {
-  colorScheme: ColorSchemeName;
-}) {
+export default function Navigation() {
   const navigationRef = useNavigationContainerRef();
   useReactNavigationDevTools(navigationRef);
-  const { onboardingModalRef, proModalRef } = useStore();
+  const { theme } = useStore();
   const linking = {
     prefixes: [Linking.createURL("/"), "https://getlookforward.app"],
     config: {
@@ -46,12 +41,12 @@ export default function Navigation({
   return (
     <NavigationContainer
       ref={navigationRef}
-      theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      theme={theme === "dark" ? DarkTheme : DefaultTheme}
       linking={linking}
       // fallback={<Text>Loading...</Text>}
     >
-      <OnboardingModal modalRef={onboardingModalRef} />
-      <ExplorePro modalRef={proModalRef} />
+      <OnboardingModal />
+      <ExplorePro />
       <RootNavigator />
     </NavigationContainer>
   );

@@ -16,18 +16,16 @@ import Purchases, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { LargeFilledButton } from "./LargeFilledButton";
-import { SubscriptionOption } from "./SubscriptionOption";
-
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
 import { useStore } from "@/stores/store";
 
-type Props = { modalRef: any };
+import { LargeFilledButton } from "./LargeFilledButton";
+import { SubscriptionOption } from "./SubscriptionOption";
 
-export const ExplorePro = ({ modalRef }: Props) => {
+export const ExplorePro = () => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const { setIsPro } = useStore();
+  const { setIsPro, proModalRef } = useStore();
   const [products, setProducts] = useState<PurchasesOffering>();
   // const [selectedProduct, setSelectedProduct] = useState<PurchasesPackage>();
   const [isPurchasing, setIsPurchasing] = useState(false);
@@ -60,14 +58,14 @@ export const ExplorePro = ({ modalRef }: Props) => {
     try {
       const { customerInfo } = await Purchases.purchasePackage(
         // selectedProduct!
-        products?.lifetime!
+        products?.lifetime!,
       );
       if (typeof customerInfo.entitlements.active.pro !== "undefined") {
         // Unlock that great "pro" content
         setIsPro(true);
         Alert.alert(
           "Thank you!",
-          "Thank you so much for your support. Please enjoy your Pro content."
+          "Thank you so much for your support. Please enjoy your Pro content.",
         );
       }
     } catch (error) {
@@ -93,7 +91,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
   }
 
   return (
-    <DynamicHeightModal modalRef={modalRef}>
+    <DynamicHeightModal modalRef={proModalRef}>
       <BottomSheetView
         style={{
           justifyContent: "center",
@@ -207,7 +205,7 @@ export const ExplorePro = ({ modalRef }: Props) => {
             }}
             onPress={() =>
               Linking.openURL(
-                "https://www.apple.com/legal/internet-services/itunes/dev/stdeula"
+                "https://www.apple.com/legal/internet-services/itunes/dev/stdeula",
               )
             }
           >

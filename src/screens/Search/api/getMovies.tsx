@@ -1,44 +1,59 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import {
-  MoviesPlayingNow,
-  PopularMovies,
-  TrendingResults,
-  UpcomingMovies,
-} from "tmdb-ts";
+import { DateTime } from "luxon";
 
-import { TMDB_KEY } from "@/constants/ApiKeys";
+import { tmdb } from "@/providers/app";
+import { now } from "@/utils/dates";
 
 import { MovieOption } from "../types";
 
-async function getMovies({
-  pageParam,
-  option,
-}: {
+type GetMoviesParams = {
   pageParam: number;
   option: MovieOption;
-}) {
-  const endpoints = {
-    [MovieOption.ComingSoon]: `https://api.themoviedb.org/3/movie/upcoming?api_key=${TMDB_KEY}&language=en-US&page=${pageParam}&region=US`,
-    [MovieOption.NowPlaying]: `https://api.themoviedb.org/3/movie/now_playing?api_key=${TMDB_KEY}&language=en-US&page=${pageParam}&region=US`,
-    [MovieOption.Popular]: `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_KEY}&language=en-US&page=${pageParam}&region=US`,
-    [MovieOption.Trending]: `https://api.themoviedb.org/3/trending/movie/day?api_key=${TMDB_KEY}&page=${pageParam}`,
+};
+
+async function getMovies({ pageParam, option }: GetMoviesParams) {
+  const options = {
+    language: "en-US",
+    page: pageParam,
   };
-  const response = await fetch(endpoints[option]);
-  const json:
-    | UpcomingMovies
-    | MoviesPlayingNow
-    | PopularMovies
-    | TrendingResults<"movie"> = await response.json();
-  return json;
+
+  const endpoints = {
+    [MovieOption.ComingSoon]: tmdb.movies.upcoming({
+      ...options,
+      region: "US",
+    }),
+    [MovieOption.NowPlaying]: tmdb.movies.nowPlaying({
+      ...options,
+      region: "US",
+    }),
+    [MovieOption.Popular]: tmdb.movies.popular({
+      ...options,
+    }),
+    [MovieOption.Trending]: tmdb.trending.trending("movie", "day", {
+      ...options,
+    }),
+  };
+
+  return await endpoints[option];
 }
 
 export function useMovieData(option: MovieOption) {
   return useInfiniteQuery({
-    queryKey: ["movies", { option }],
+    queryKey: ["movies", option],
     queryFn: ({ pageParam }) => getMovies({ pageParam, option }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) =>
-      lastPage.page !== lastPage.total_pages ? lastPage.page + 1 : undefined,
-    // select: (movieData) => movieData.pages.flatMap((page) => page.results),
+      lastPage.page < lastPage.total_pages ? lastPage.page + 1 : undefined,
+    select: (data) => {
+      const movies = data.pages.flatMap((page) => page.results);
+      // Upcoming endpoint contains re-releases, especially for Theatrical (limited) / Type 2; Filter these out
+      return option === MovieOption.ComingSoon
+        ? movies.filter(
+            (movie) =>
+              movie.release_date &&
+              DateTime.fromFormat(movie.release_date, "yyyy-MM-dd") >= now,
+          )
+        : movies;
+    },
   });
 }

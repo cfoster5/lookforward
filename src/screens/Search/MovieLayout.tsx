@@ -80,9 +80,9 @@ export function MovieLayout({ navigation }) {
         <Pressable
           onPress={() => modalRef.current?.present()}
           style={{
-            minWidth: 44,
+            minWidth: 60,
             minHeight: 44,
-            alignItems: "center",
+            alignItems: "flex-end",
             justifyContent: "center",
           }}
         >

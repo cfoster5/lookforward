@@ -2,14 +2,13 @@ import { useScrollToTop } from "@react-navigation/native";
 import { useRef } from "react";
 import { Platform, PlatformColor, SectionList, View } from "react-native";
 
+import { LoadingScreen } from "@/components/LoadingScreen";
+import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+
 import { useGameCountdowns } from "./api/getGameCountdowns";
 import { useMovieCountdowns } from "./api/getMovieCountdowns";
 import { CountdownItem } from "./components/CountdownItem";
 import { SectionHeader } from "./components/SectionHeader";
-
-import { LoadingScreen } from "@/components/LoadingScreen";
-import { compareDates, isoToUTC } from "@/utils/dates";
-import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 function Countdown() {
   const scrollRef = useRef<SectionList>(null);
@@ -24,6 +23,23 @@ function Countdown() {
 
   if (isLoading) return <LoadingScreen />;
 
+  // Precompute flattened and sorted data
+  const flattenedMovies = movies
+    .flatMap((movie) => movie.data)
+    .sort((a, b) => {
+      if (!a?.releaseDate) return 1; // Place undefined dates at the end
+      if (!b?.releaseDate) return -1; // Place undefined dates at the end
+      return a.releaseDate.localeCompare(b.releaseDate); // Lexicographical comparison
+    });
+
+  const flattenedGames = gameReleases
+    .flatMap((release) => release.data)
+    .sort((a, b) => {
+      if (!a?.date) return 1; // Place undefined dates at the end
+      if (!b?.date) return -1; // Place undefined dates at the end
+      return a.date - b.date; // Numeric comparison for valid dates
+    });
+
   return (
     <SectionList
       contentContainerStyle={{
@@ -35,20 +51,8 @@ function Countdown() {
       contentInset={{ bottom: paddingBottom }}
       scrollIndicatorInsets={{ bottom: paddingBottom }}
       sections={[
-        {
-          data: movies
-            .flatMap((movie) => movie.data)
-            .sort((a, b) =>
-              compareDates(isoToUTC(a!.releaseDate), isoToUTC(b!.releaseDate)),
-            ),
-          title: "Movies",
-        },
-        {
-          data: gameReleases
-            .flatMap((release) => release.data)
-            .sort((a, b) => a!.date - b!.date),
-          title: "Games",
-        },
+        { data: flattenedMovies, title: "Movies" },
+        { data: flattenedGames, title: "Games" },
       ]}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}
@@ -58,9 +62,8 @@ function Countdown() {
           sectionName={section.title}
           isLastInSection={
             section.title === "Movies"
-              ? index + 1 === movies.flatMap((movie) => movie.data).length
-              : index + 1 ===
-                gameReleases.flatMap((release) => release.data).length
+              ? index + 1 === flattenedMovies.length
+              : index + 1 === flattenedGames.length
           }
         />
       )}

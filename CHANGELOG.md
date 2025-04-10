@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.9.2](https://github.com/cfoster5/lookforward/compare/v6.9.1...v6.9.2) (2025-04-10)
+
+
+### Performance Improvements
+
+* Optimize movie data fetching and filtering logic in getMovies and MovieLayout components ([b138d49](https://github.com/cfoster5/lookforward/commit/b138d49668f91a6f6cbb2da5986a9e8147302ea6))
+
 ## [6.9.1](https://github.com/cfoster5/lookforward/compare/v6.9.0...v6.9.1) (2025-04-08)
 
 

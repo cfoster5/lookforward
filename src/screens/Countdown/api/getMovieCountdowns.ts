@@ -36,7 +36,7 @@ export function useMovieCountdowns() {
   const { movieSubs } = useStore();
   return useQueries({
     queries: movieSubs.map((sub) => ({
-      queryKey: ["movieSubs", sub.documentID],
+      queryKey: ["movieSub", sub.documentID],
       queryFn: () => getMovie(sub.documentID),
     })),
   });

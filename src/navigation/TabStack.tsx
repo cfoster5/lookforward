@@ -116,7 +116,7 @@ export function TabStack() {
   useEffect(() => {
     movieSubs.forEach((sub) => {
       queryClient.prefetchQuery({
-        queryKey: ["movieSubs", sub.documentID],
+        queryKey: ["movieSub", sub.documentID],
         queryFn: () => getMovie(sub.documentID),
       });
     });

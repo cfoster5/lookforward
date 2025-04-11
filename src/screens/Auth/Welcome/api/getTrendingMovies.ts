@@ -1,20 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
-import { TrendingResults } from "tmdb-ts";
 
-import { TMDB_KEY } from "@/constants/ApiKeys";
+import { tmdb } from "@/providers/app";
 
-async function getMovies() {
-  const response = await fetch(
-    `https://api.themoviedb.org/3/trending/movie/week?api_key=${TMDB_KEY}`,
-  );
-  const json: TrendingResults<"movie"> = await response.json();
-  return json;
-}
+const getTrendingMovies = async () =>
+  await tmdb.trending.trending("movie", "week");
 
 export function useTrendingMovies() {
   return useQuery({
     queryKey: ["trendingMovies"],
-    queryFn: getMovies,
+    queryFn: getTrendingMovies,
     select: (moviesData) => moviesData.results,
   });
 }

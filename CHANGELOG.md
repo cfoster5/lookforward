@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.10.0](https://github.com/cfoster5/lookforward/compare/v6.9.1...v6.10.0) (2025-04-20)
+
+
+### Features
+
+* Add YouTube player directly within app for trailers ([13d482e](https://github.com/cfoster5/lookforward/commit/13d482e15a147b9209c28573c404f1e423476e73))
+
+
+### Performance Improvements
+
+* Optimize movie data fetching and filtering logic in getMovies and MovieLayout components ([b138d49](https://github.com/cfoster5/lookforward/commit/b138d49668f91a6f6cbb2da5986a9e8147302ea6))
+
 ## [6.9.1](https://github.com/cfoster5/lookforward/compare/v6.9.0...v6.9.1) (2025-04-08)
 
 

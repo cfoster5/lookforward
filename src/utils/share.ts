@@ -1,21 +1,23 @@
 import { Alert, Share } from "react-native";
 
+import { tryCatch } from "./try-catch";
+
 export const onShare = async (title: string, urlSegment: string) => {
-  try {
-    const result = await Share.share({
-      message: title,
-      url: `lookforward://${urlSegment}`,
-    });
-    if (result.action === Share.sharedAction) {
-      if (result.activityType) {
-        // shared with activity type of result.activityType
-      } else {
-        // shared
-      }
-    } else if (result.action === Share.dismissedAction) {
-      // dismissed
-    }
-  } catch (error: any) {
+  const { data, error } = await tryCatch(
+    Share.share({ url: `https://getlookforward.app/${urlSegment}` }),
+  );
+
+  if (error) {
     Alert.alert(error.message);
+    return { error };
   }
+
+  const { action, activityType } = data;
+  if (action === Share.sharedAction) {
+    // optionally do something with activityType
+    return { action, activityType };
+  }
+
+  // dismissedAction or any other action
+  return { action };
 };

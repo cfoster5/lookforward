@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.11.0](https://github.com/cfoster5/lookforward/compare/v6.10.0...v6.11.0) (2025-04-22)
+
+
+### Features
+
+* Update link sharing for better sharing experience ([5fdf8e7](https://github.com/cfoster5/lookforward/commit/5fdf8e782ac3b77a764d3504cc1f324f3d3f7b56))
+
 ## [6.10.0](https://github.com/cfoster5/lookforward/compare/v6.9.1...v6.10.0) (2025-04-20)
 
 

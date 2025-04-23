@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.12.0](https://github.com/cfoster5/lookforward/compare/v6.11.0...v6.12.0) (2025-04-23)
+
+
+### Features
+
+* integrate Google Mobile Ads SDK and add ad banners to various screens ([c06cea6](https://github.com/cfoster5/lookforward/commit/c06cea628c75a6bd68c67606fd967081ee79c1de))
+
 ## [6.11.0](https://github.com/cfoster5/lookforward/compare/v6.10.0...v6.11.0) (2025-04-22)
 
 

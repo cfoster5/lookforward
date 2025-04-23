@@ -115,6 +115,12 @@ export const ExplorePro = () => {
           Pro Features
         </Text>
         <Row
+          icon="megaphone"
+          title="No Ads"
+          body="Enjoy an ad-free experience."
+          useAltIcon
+        />
+        <Row
           icon="star"
           title="Movie Ratings"
           body="Find ratings from IMDb, Rotten Tomatoes, and Metacritic."

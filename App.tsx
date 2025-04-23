@@ -3,6 +3,7 @@ import messaging from "@react-native-firebase/messaging";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
+import mobileAds from "react-native-google-mobile-ads";
 import Purchases from "react-native-purchases";
 
 import Navigation from "./src/navigation";
@@ -16,6 +17,12 @@ export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const { user, setIsPro, theme } = useStore();
+
+  // Initialize Google Mobile Ads SDK
+  useEffect(() => {
+    const initializeAds = async () => await mobileAds().initialize();
+    initializeAds();
+  }, []);
 
   useEffect(() => {
     /* Enable debug logs before calling `setup`. */

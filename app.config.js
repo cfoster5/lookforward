@@ -47,6 +47,12 @@ export default {
           },
         },
       ],
+      [
+        "react-native-google-mobile-ads",
+        {
+          iosAppId: "ca-app-pub-3102803309311035~6554147947",
+        },
+      ],
     ],
     experiments: {
       tsconfigPaths: true,

@@ -1,3 +1,4 @@
+import analytics from "@react-native-firebase/analytics";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -5,6 +6,7 @@ import { Image } from "expo-image";
 import { FirestoreGame } from "interfaces/firebase";
 import { useEffect, useLayoutEffect, useState, Fragment, useMemo } from "react";
 import { PlatformColor, ScrollView, View, FlatList, Text } from "react-native";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -13,8 +15,10 @@ import CategoryControl from "@/components/CategoryControl/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
+import { BANNER_AD_UNIT_ID } from "@/constants/AdUnits";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
@@ -55,7 +59,8 @@ const GameCredits = ({ companies, type, title }: GameCreditsProp) =>
 export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const { game } = route.params;
   const [countdownId, setCountdownId] = useState<FirestoreGame["documentID"]>();
-  const { user, gameSubs, bottomSheetModalRef } = useStore();
+  const { user, gameSubs, bottomSheetModalRef, isPro, proModalRef } =
+    useStore();
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
   const paddingBottom = useBottomTabOverflow();
@@ -134,6 +139,29 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
           >
             {getGameReleaseDate(data)}
           </Text>
+
+          {!isPro && (
+            <>
+              <LargeBorderlessButton
+                handlePress={async () => {
+                  proModalRef.current?.present();
+                  await analytics().logEvent("select_promotion", {
+                    name: "Pro",
+                    id: "com.lookforward.pro",
+                  });
+                }}
+                text="Explore Pro Features"
+                style={{ paddingBottom: 0 }}
+              />
+              <View style={{ alignItems: "center", paddingTop: 16 }}>
+                <BannerAd
+                  unitId={BANNER_AD_UNIT_ID}
+                  size={BannerAdSize.BANNER}
+                  requestOptions={{ requestNonPersonalizedAdsOnly: true }}
+                />
+              </View>
+            </>
+          )}
 
           <ExpandableText text={data?.summary} />
 

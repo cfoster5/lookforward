@@ -28,7 +28,7 @@ function Trailer({ video }: TrailerProps) {
   const playerHeight = (screenWidth / 16) * 9;
   const playing = modalVisible;
   const videoId = (video as MovieVideo).key || (video as GameVideo).video_id;
-  const { top: safeTopArea, right: safeRightArea } = useSafeAreaInsets();
+  const { top: topInset, left: leftInset } = useSafeAreaInsets();
 
   const styles = StyleSheet.create({
     container: {
@@ -39,9 +39,9 @@ function Trailer({ video }: TrailerProps) {
     },
     closeButton: {
       position: "absolute",
-      top: safeTopArea,
-      right: safeRightArea,
-      padding: 16,
+      top: topInset,
+      left: leftInset,
+      paddingLeft: 16,
     },
   });
 

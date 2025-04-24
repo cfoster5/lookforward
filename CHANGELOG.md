@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.13.0](https://github.com/cfoster5/lookforward/compare/v6.12.0...v6.13.0) (2025-04-24)
+
+
+### Features
+
+* migrate to new image gallery for movies ([3f72fda](https://github.com/cfoster5/lookforward/commit/3f72fdaad7aed3a790c264250e84f19fe2247951))
+* move trailer close button to left side of screen to match new image gallery ([e099868](https://github.com/cfoster5/lookforward/commit/e0998686a96971f0ae4a20a584de02c62f1f5f59))
+
 ## [6.12.0](https://github.com/cfoster5/lookforward/compare/v6.11.0...v6.12.0) (2025-04-23)
 
 

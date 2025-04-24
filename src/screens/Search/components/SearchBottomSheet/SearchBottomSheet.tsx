@@ -124,6 +124,7 @@ export const SearchBottomSheet = () => {
 
   return (
     <BottomSheet
+      enableDynamicSizing={false}
       bottomInset={tabBarHeight}
       topInset={top}
       snapPoints={snapPoints}

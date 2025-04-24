@@ -20,7 +20,6 @@ import {
   View,
 } from "react-native";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
-import ImageView from "react-native-image-viewing";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -67,6 +66,7 @@ import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 import { useMovie } from "./api/getMovie";
 import { useMovieRatings } from "./api/getMovieRatings";
 import { DiscoverListLabel } from "./components/DiscoverListLabel";
+import { ImageGallery } from "./components/ImageGallery";
 import Person from "./components/Person";
 import { Rating } from "./components/Rating";
 import WatchProvidersModal from "./components/WatchProvidersModal";
@@ -179,11 +179,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     value: "posters",
     label: "Posters",
   });
-  const [showImageViewer, setShowImageViewer] = useState({
-    isVisible: false,
-    index: 0,
-  });
-
   const [creditSelection, setCreditSelection] = useState<CreditSelectionProps>({
     value: "Cast",
     label: "Cast",
@@ -575,30 +570,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                       <ApplePillButton text={imageSelection.label} />
                     </DropdownMenu>
                   </View>
-                  <FlatList
-                    keyExtractor={(item) => item.file_path}
-                    data={movieDetails!.images[imageSelection.value]}
-                    renderItem={({ item, index }) => (
-                      <MoviePoster
-                        pressHandler={() =>
-                          setShowImageViewer({ isVisible: true, index })
-                        }
-                        posterPath={
-                          imageSelection.value === "posters"
-                            ? item.file_path
-                            : `https://image.tmdb.org/t/p/${PosterSizes.W780}${item.file_path}`
-                        }
-                        style={{
-                          width:
-                            imageSelection.value === "posters"
-                              ? calculateWidth(16, 8, 2.5)
-                              : calculateWidth(16, 8, 1.5),
-                          aspectRatio:
-                            imageSelection.value === "posters" ? 2 / 3 : 16 / 9,
-                        }}
-                      />
-                    )}
-                    {...horizontalListProps}
+                  <ImageGallery
+                    images={movieDetails!.images}
+                    selection={imageSelection}
                   />
                 </>
               ) : (
@@ -728,16 +702,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
           )}
         </View>
       </Animated.ScrollView>
-      <ImageView
-        images={movieDetails!.images[imageSelection.value].map((image) => ({
-          uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${image.file_path}`,
-        }))}
-        imageIndex={showImageViewer.index}
-        visible={showImageViewer.isVisible}
-        onRequestClose={() =>
-          setShowImageViewer({ isVisible: false, index: 0 })
-        }
-      />
       <WatchProvidersModal
         modalRef={modalRef}
         providers={movieDetails!["watch/providers"].results.US}

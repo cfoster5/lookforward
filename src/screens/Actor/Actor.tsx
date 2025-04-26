@@ -7,9 +7,6 @@ import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
 import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
 
-import { usePerson } from "./api/getPerson";
-import { CarouselItem } from "./components/CarouselItem";
-
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { ExpandableText } from "@/components/ExpandableText";
 import { DynamicShareHeader } from "@/components/Headers";
@@ -18,10 +15,13 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
+import useAddRecent from "@/hooks/useAddRecent";
 import { FindStackParams, BottomTabParams, Recent } from "@/types";
 import { dateToFullLocale, timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
-import useAddRecent from "@/hooks/useAddRecent";
+
+import { usePerson } from "./api/getPerson";
+import { CarouselItem } from "./components/CarouselItem";
 
 type ActorScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParams, "Actor">,

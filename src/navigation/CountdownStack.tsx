@@ -1,18 +1,18 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Platform } from "react-native";
 
-import Actor from "../screens/Actor/Actor";
-import { Collection } from "../screens/Collection/Collection";
-import Countdown from "../screens/Countdown/Countdown";
-import Movie from "../screens/Movie/Movie";
-
 import { MultiItemHeader, ShareHeader } from "@/components/Headers";
+import { DeleteHeader } from "@/screens/Countdown/components/DeleteHeader.ios";
+import { MyHeaderRight } from "@/screens/Countdown/components/MyHeaderRight.ios";
 import Game from "@/screens/Game/Game";
 import GameDiscover from "@/screens/GameDiscover/GameDiscover";
 import MovieDiscover from "@/screens/MovieDiscover/MovieDiscover";
 import { CountdownStackParamList } from "@/types";
-import { MyHeaderRight } from "@/screens/Countdown/components/MyHeaderRight.ios";
-import { DeleteHeader } from "@/screens/Countdown/components/DeleteHeader.ios";
+
+import Actor from "../screens/Actor/Actor";
+import { Collection } from "../screens/Collection/Collection";
+import Countdown from "../screens/Countdown/Countdown";
+import Movie from "../screens/Movie/Movie";
 
 const Stack = createNativeStackNavigator<CountdownStackParamList>();
 export function CountdownStack() {

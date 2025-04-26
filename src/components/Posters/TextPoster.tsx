@@ -1,8 +1,9 @@
 import { PlatformColor, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import { reusableStyles } from "../../helpers/styles";
 import { useStore } from "@/stores/store";
+
+import { reusableStyles } from "../../helpers/styles";
 
 export function TextPoster({ text, style }: { text: string; style?: any }) {
   const { theme } = useStore();

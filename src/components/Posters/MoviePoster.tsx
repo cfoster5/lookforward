@@ -8,8 +8,9 @@ import {
 } from "react-native";
 import { Movie, PosterSizes, Recommendation } from "tmdb-ts";
 
-import { TextPoster } from "./TextPoster";
 import PosterButton from "../PosterButton";
+
+import { TextPoster } from "./TextPoster";
 
 export function MoviePoster({
   pressHandler,

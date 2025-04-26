@@ -10,14 +10,14 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { useGames } from "./api/getGames";
-
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { GamePoster } from "@/components/Posters/GamePoster";
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+
+import { useGames } from "./api/getGames";
 
 export function GameLayout({ navigation }) {
   const { top } = useSafeAreaInsets();

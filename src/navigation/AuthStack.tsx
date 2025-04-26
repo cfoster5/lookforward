@@ -1,11 +1,11 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import { AuthStackParams } from "@/types";
+
 import CreateAccount from "../screens/Auth/CreateAccount";
 import Login from "../screens/Auth/Login";
 import PasswordReset from "../screens/Auth/PasswordReset";
 import Welcome from "../screens/Auth/Welcome/Welcome";
-
-import { AuthStackParams } from "@/types";
 
 const Stack = createNativeStackNavigator<AuthStackParams>();
 export function AuthStack() {

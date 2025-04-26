@@ -3,11 +3,11 @@ import { CompositeNavigationProp, RouteProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackNavigationProp } from "@react-navigation/stack";
 
+import { SettingsStackParamList, TabNavigationParamList } from "@/types";
+
 import AccountScreen from "../screens/AccountScreen/AccountScreen";
 import DeleteAccountScreen from "../screens/DeleteAccountScreen/DeleteAccountScreen";
 import Settings from "../screens/Settings/Settings";
-
-import { SettingsStackParamList, TabNavigationParamList } from "@/types";
 
 type SettingsStackNavProp = CompositeNavigationProp<
   StackNavigationProp<SettingsStackParamList, "Settings">,

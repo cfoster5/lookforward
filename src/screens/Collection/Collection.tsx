@@ -10,8 +10,6 @@ import Animated, {
 import { iOSUIKit } from "react-native-typography";
 import { DetailedCollection } from "tmdb-ts";
 
-import { useCollection } from "./api/getCollection";
-
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { ExpandableText } from "@/components/ExpandableText";
 import { DynamicShareHeader } from "@/components/Headers";
@@ -21,6 +19,8 @@ import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
 import { FindStackParams, BottomTabParams } from "@/types";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+
+import { useCollection } from "./api/getCollection";
 
 // import { useGetCollection } from "./api/useGetCollection";
 

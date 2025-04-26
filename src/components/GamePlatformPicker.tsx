@@ -5,12 +5,13 @@ import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { DynamicHeightModal } from "./DynamicHeightModal";
-import { reusableStyles } from "../helpers/styles";
-
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
 import { timestampToUTC } from "@/utils/dates";
+
+import { reusableStyles } from "../helpers/styles";
+
+import { DynamicHeightModal } from "./DynamicHeightModal";
 
 type RenderItemProps = {
   handlePress: () => void;
@@ -58,7 +59,7 @@ export function GamePlatformPicker() {
     game: Game & {
       release_dates: ReleaseDate[];
     },
-    releaseDate: ReleaseDate
+    releaseDate: ReleaseDate,
   ) {
     // console.log("releaseDate", releaseDate);
     // console.log(game);
@@ -72,7 +73,7 @@ export function GamePlatformPicker() {
             game: { id, name },
             subscribers: firestore.FieldValue.arrayUnion(user!.uid),
           },
-          { merge: true }
+          { merge: true },
         );
       ReactNativeHapticFeedback.trigger("impactLight", {
         enableVibrateFallback: true,
@@ -91,7 +92,7 @@ export function GamePlatformPicker() {
           // need to filter client-side since combining search and filter on API is not working
           data={data?.release_dates.filter(
             (release_date) =>
-              release_date.region === 2 || release_date.region === 8
+              release_date.region === 2 || release_date.region === 8,
           )}
           renderItem={({ item: releaseDate }) => (
             <RenderItem

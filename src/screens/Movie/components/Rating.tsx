@@ -2,8 +2,9 @@ import { Image } from "expo-image";
 import { PlatformColor, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import { OMDBMovie } from "../types/omdb";
 import { useStore } from "@/stores/store";
+
+import { OMDBMovie } from "../types/omdb";
 
 export const Rating = ({
   source,

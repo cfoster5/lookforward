@@ -37,7 +37,7 @@ function PosterButton({ movieId, game }: Props) {
           .doc(movieId)
           .set(
             { subscribers: firestore.FieldValue.arrayUnion(user!.uid) },
-            { merge: true }
+            { merge: true },
           );
         Animated.timing(transformAnim, {
           toValue: 1,
@@ -48,7 +48,7 @@ function PosterButton({ movieId, game }: Props) {
           ReactNativeHapticFeedback.trigger("impactLight", {
             enableVibrateFallback: true,
             ignoreAndroidSystemSettings: false,
-          })
+          }),
         );
       } catch (error) {
         console.error("Error writing document: ", error);
@@ -88,7 +88,7 @@ function PosterButton({ movieId, game }: Props) {
 
   function toggleGameSub() {
     const gameId = gameSubs.find(
-      (releaseDate) => releaseDate.game.id === game!.id
+      (releaseDate) => releaseDate.game.id === game!.id,
     )?.documentID;
     return isGameSub()
       ? deleteItem("gameReleases", gameId)

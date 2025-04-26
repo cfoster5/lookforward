@@ -6,12 +6,12 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { PlatformColor, View } from "react-native";
 
-import { GameLayout } from "./GameLayout";
-import { MovieLayout } from "./MovieLayout";
-import { SearchBottomSheet } from "./components/SearchBottomSheet/SearchBottomSheet";
-
 import { useStore } from "@/stores/store";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
+
+import { SearchBottomSheet } from "./components/SearchBottomSheet/SearchBottomSheet";
+import { GameLayout } from "./GameLayout";
+import { MovieLayout } from "./MovieLayout";
 
 type FindScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParamList, "Find">,

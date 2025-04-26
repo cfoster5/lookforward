@@ -1,10 +1,11 @@
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-import { useStore, useCountdownStore } from "@/stores/store";
 import firestore from "@react-native-firebase/firestore";
 import { useCallback } from "react";
 import { PlatformColor } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
+import { useStore, useCountdownStore } from "@/stores/store";
 
 export const DeleteHeader = () => {
   const {

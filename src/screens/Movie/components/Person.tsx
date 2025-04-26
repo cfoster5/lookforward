@@ -13,12 +13,12 @@ import {
 import { iOSUIKit } from "react-native-typography";
 import { Cast, Crew } from "tmdb-ts";
 
+import { useStore } from "@/stores/store";
 import {
   CountdownStackParamList,
   FindStackParamList,
   TabNavigationParamList,
 } from "@/types";
-import { useStore } from "@/stores/store";
 
 interface Props {
   navigation:

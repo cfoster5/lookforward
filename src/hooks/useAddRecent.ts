@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { Recent } from "@/types";
+
 import { useRecentItemsStore } from "@/stores/recents";
+import { Recent } from "@/types";
 
 const useAddRecent = (
   key: "recentMovies" | "recentPeople" | "recentGames",

@@ -4,8 +4,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useRef } from "react";
 import { FlatList, Platform, Pressable } from "react-native";
 
-import { useDiscoverGames } from "./api/getDiscoverGames";
-
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { GamePoster } from "@/components/Posters/GamePoster";
 import {
@@ -15,6 +13,8 @@ import {
   TabNavigationParamList,
 } from "@/types";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+
+import { useDiscoverGames } from "./api/getDiscoverGames";
 
 type GameDiscoverScreenNavigationProp = CompositeScreenProps<
   NativeStackScreenProps<FindStackParamList, "GameDiscover">,

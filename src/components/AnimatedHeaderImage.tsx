@@ -54,7 +54,7 @@ export function AnimatedHeaderImage({
                   styles.backdrop.height) /
                 2,
               0,
-            ]
+            ],
           ),
         },
       ],

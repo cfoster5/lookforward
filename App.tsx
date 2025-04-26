@@ -4,7 +4,9 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
 import mobileAds from "react-native-google-mobile-ads";
-import Purchases from "react-native-purchases";
+
+import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
+import { useRevenueCat } from "@/hooks/useRevenueCat";
 
 import Navigation from "./src/navigation";
 import { AppProvider } from "./src/providers/app";
@@ -16,30 +18,16 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const { user, setIsPro, theme } = useStore();
+  const { user, isPro, setIsPro, theme } = useStore();
+
+  useFirebaseAnalyticsCheck();
 
   // Initialize Google Mobile Ads SDK
   useEffect(() => {
-    const initializeAds = async () => await mobileAds().initialize();
-    initializeAds();
-  }, []);
+    if (!isPro) mobileAds().initialize();
+  }, [isPro]);
 
-  useEffect(() => {
-    /* Enable debug logs before calling `setup`. */
-    Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
-
-    // Initialize the RevenueCat Purchases SDK.
-    Purchases.configure({
-      apiKey: "appl_qxPtMlTGjvHkhlNlnKlOenNikGN",
-      appUserID: user?.uid,
-    });
-
-    Purchases.addCustomerInfoUpdateListener((info) => {
-      if (info.entitlements.active.pro) setIsPro(true);
-      else setIsPro(false);
-      // handle any changes to customerInfo
-    });
-  }, [setIsPro, user]);
+  useRevenueCat(user, setIsPro);
 
   useEffect(() => {
     // Check for a valid user before proceeding
@@ -47,6 +35,8 @@ export default function App() {
       setInitializing(false);
       return;
     }
+
+    const uid = user.uid;
 
     let unsubscribe: (() => void) | undefined;
 
@@ -57,7 +47,7 @@ export default function App() {
           authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
           authStatus === messaging.AuthorizationStatus.PROVISIONAL;
         if (enabled) {
-          const userRef = firestore().collection("users").doc(user!.uid);
+          const userRef = firestore().collection("users").doc(uid);
           const docSnapshot = await userRef.get();
           if (!docSnapshot.data()?.notifications) {
             // Only set notification preferences to true if they haven't been set before
@@ -81,7 +71,7 @@ export default function App() {
       try {
         await firestore()
           .collection("users")
-          .doc(user!.uid)
+          .doc(uid)
           .update({ deviceToken: token });
       } catch (error) {
         console.error("Error saving token to database:", error);
@@ -96,6 +86,10 @@ export default function App() {
       }
     };
   }, [user]);
+
+  useEffect(() => {
+    if (!initializing) SplashScreen.hideAsync().catch(console.warn);
+  }, [initializing]);
 
   if (initializing) return null;
 

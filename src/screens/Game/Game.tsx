@@ -11,7 +11,7 @@ import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import ButtonSingleState from "@/components/ButtonSingleState";
-import CategoryControl from "@/components/CategoryControl/CategoryControl";
+import { CategoryControl } from "@/components/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";

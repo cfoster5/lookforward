@@ -10,6 +10,7 @@ export default {
     icon: "./assets/icon.png",
     scheme: "lookforward",
     userInterfaceStyle: "dark",
+    newArchEnabled: true,
     splash: {
       image: "./assets/splash.png",
       resizeMode: "contain",

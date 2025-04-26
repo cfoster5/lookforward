@@ -38,18 +38,13 @@ export const PurchaseOption = ({
   setIsPurchasing,
 }: Props) => {
   const {
-    product: { title, description, priceString, identifier },
+    product: { title, priceString, identifier },
   } = purchasePackage;
 
   async function handlePress() {
     setIsPurchasing(identifier);
     try {
-      const { customerInfo } = await Purchases.purchasePackage(purchasePackage);
-      // if (
-      //   typeof purchaserInfo.entitlements.active[ENTITLEMENT_ID] !== "undefined"
-      // ) {
-      //   navigation.goBack();
-      // }
+      await Purchases.purchasePackage(purchasePackage);
     } catch (error) {
       if (!error.userCancelled) {
         Alert.alert("Error purchasing package", error.message);

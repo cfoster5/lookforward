@@ -9,10 +9,7 @@ import {
   ActivityIndicator,
   Linking,
 } from "react-native";
-import Purchases, {
-  PurchasesOffering,
-  PurchasesPackage,
-} from "react-native-purchases";
+import Purchases, { PurchasesOffering } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
@@ -21,7 +18,6 @@ import { Row } from "@/components/Row";
 import { useStore } from "@/stores/store";
 
 import { LargeFilledButton } from "./LargeFilledButton";
-import { SubscriptionOption } from "./SubscriptionOption";
 
 export const ExplorePro = () => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();

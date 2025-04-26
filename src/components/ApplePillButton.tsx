@@ -1,4 +1,3 @@
-import { Ionicons } from "@expo/vector-icons";
 import { SymbolView } from "expo-symbols";
 import { PlatformColor, Pressable, Text, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";

@@ -13,7 +13,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
-import { useStore } from "@/stores/store";
 
 import { PurchaseOption } from "./PurchaseOption";
 
@@ -31,7 +30,6 @@ const ItemSeparator = () => (
 
 export const TipModal = ({ modalRef }: Props) => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const { theme } = useStore();
   const [packages, setPackages] = useState<PurchasesPackage[]>([]);
   const [isPurchasing, setIsPurchasing] = useState<
     PurchasesPackage["identifier"] | null

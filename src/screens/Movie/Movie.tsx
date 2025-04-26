@@ -215,7 +215,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
           <Item
             title="share"
             iconName="share-outline"
-            onPress={() => onShare(name, `movie/${movieId}?name=${name}`)}
+            onPress={() =>
+              onShare(`movie/${movieId}?name=${name}`, "headerButton")
+            }
           />
         </HeaderButtons>
       ),

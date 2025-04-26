@@ -18,12 +18,12 @@ export const MultiItemHeader = () => (
   </HeaderButtons>
 );
 
-export const DynamicShareHeader = ({ title, urlSegment }) => (
+export const DynamicShareHeader = ({ urlSegment }) => (
   <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
     <Item
       title="share"
       iconName="share-outline"
-      onPress={() => onShare(title, urlSegment)}
+      onPress={() => onShare(urlSegment, "headerButton")}
     />
   </HeaderButtons>
 );

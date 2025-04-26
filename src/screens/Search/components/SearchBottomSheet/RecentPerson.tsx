@@ -19,7 +19,7 @@ export function RecentPerson({ item }: { item: Recent }) {
   return (
     <ContextMenu
       handleShareSelect={() =>
-        onShare(item.name, `person/${item.id}?name=${item.name}`)
+        onShare(`person/${item.id}?name=${item.name}`, "recent")
       }
       handleRemoveSelect={() => removeRecent("recentPeople", item)}
     >

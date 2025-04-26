@@ -33,7 +33,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
         buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
       }}
       handleShareSelect={() =>
-        onShare(item.title, `movie/${item.id}?name=${item.title}`)
+        onShare(`movie/${item.id}?name=${item.title}`, "search")
       }
     >
       <Pressable

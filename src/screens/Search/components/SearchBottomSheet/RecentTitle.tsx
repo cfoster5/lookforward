@@ -40,7 +40,7 @@ export function RecentTitle({ item }: { item: Recent }) {
       }
       handleShareSelect={
         item.media_type === "movie"
-          ? () => onShare(item.name, `movie/${item.id}?name=${item.name}`)
+          ? () => onShare(`movie/${item.id}?name=${item.name}`, "recent")
           : undefined
       }
       handleRemoveSelect={() =>

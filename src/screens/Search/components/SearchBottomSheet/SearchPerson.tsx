@@ -18,7 +18,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
   return (
     <ContextMenu
       handleShareSelect={() =>
-        onShare(item.name, `person/${item.id}?name=${item.name}`)
+        onShare(`person/${item.id}?name=${item.name}`, "search")
       }
     >
       <Pressable

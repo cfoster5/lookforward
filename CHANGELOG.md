@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.14.0](https://github.com/cfoster5/lookforward/compare/v6.13.0...v6.14.0) (2025-04-26)
+
+
+### Features
+
+* add analytics for sharing ([2185535](https://github.com/cfoster5/lookforward/commit/2185535267b109d081a538448879cdf256d4beef))
+* enable React Native's new architecture ([#127](https://github.com/cfoster5/lookforward/issues/127)) ([e3f040e](https://github.com/cfoster5/lookforward/commit/e3f040ef2c346b53993f27d1709e7ab291703da3))
+
 ## [6.13.0](https://github.com/cfoster5/lookforward/compare/v6.12.0...v6.13.0) (2025-04-24)
 
 

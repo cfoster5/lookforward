@@ -8,8 +8,6 @@ import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Keyboard,
-  LayoutChangeEvent,
-  Platform,
   PlatformColor,
   SectionList,
   StyleSheet,
@@ -116,12 +114,7 @@ export const SearchBottomSheet = () => {
     }
   };
 
-  const onLayout = (event: LayoutChangeEvent) => {
-    const { height } = event.nativeEvent.layout;
-    // 24 is height of handle indicator component
-    setInitialSnapPoint(height + 24 + styles.textInput.marginBottom);
-  };
-
+  const onLayout = () => setInitialSnapPoint(tabBarHeight + 8);
   return (
     <BottomSheet
       enableDynamicSizing={false}
@@ -129,10 +122,7 @@ export const SearchBottomSheet = () => {
       topInset={top}
       snapPoints={snapPoints}
       backgroundStyle={{
-        backgroundColor:
-          Platform.OS === "ios"
-            ? PlatformColor("secondarySystemBackground")
-            : "gray",
+        backgroundColor: PlatformColor("secondarySystemBackground"),
       }}
       handleIndicatorStyle={{
         backgroundColor: PlatformColor("systemGray"),

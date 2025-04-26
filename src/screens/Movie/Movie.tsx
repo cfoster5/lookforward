@@ -37,7 +37,7 @@ import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { ApplePillButton } from "@/components/ApplePillButton";
 import { BlueBullet } from "@/components/BlueBullet";
 import ButtonSingleState from "@/components/ButtonSingleState";
-import CategoryControl from "@/components/CategoryControl/CategoryControl";
+import { CategoryControl } from "@/components/CategoryControl";
 import { DropdownMenu } from "@/components/DropdownMenu";
 import { ExpandableText } from "@/components/ExpandableText";
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";

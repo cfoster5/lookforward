@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { MovieDetails } from "tmdb-ts";
 
 import { TRAKT_KEY } from "@/constants/ApiKeys";
-import { ExtendedMovie } from "@/interfaces/trakt/index";
+import { ExtendedMovie } from "@/interfaces/trakt";
 
 async function getTraktMovie(id: MovieDetails["imdb_id"]) {
   const traktResponse = await fetch(

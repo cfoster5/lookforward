@@ -54,7 +54,7 @@ function PasswordReset({ navigation }: Props) {
               marginBottom: 8,
             }}
           >
-            We'll send a link to reset your password
+            {`We'll send a link to reset your password`}
           </Text>
           <TextInput
             style={{

@@ -67,8 +67,7 @@ export const TipModal = ({ modalRef }: Props) => {
               { color: PlatformColor("label"), paddingBottom: 32 },
             ]}
           >
-            If you're feeling generous and would like to support LookForward's
-            development further, any tip helps!
+            {`If you're feeling generous and would like to support LookForward's development further, any tip helps!`}
           </Text>
         }
         renderItem={({ item }) => (

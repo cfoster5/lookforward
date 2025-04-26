@@ -5,12 +5,12 @@ import messaging from "@react-native-firebase/messaging";
 import { useEffect, useRef, useState } from "react";
 import { Linking, Platform, Text, View } from "react-native";
 
+import { reusableStyles } from "@/helpers/styles";
+import { useStore } from "@/stores/store";
+
 import { NotificationSetting } from "./components/NotificationSetting";
 import { SettingNavButton } from "./components/SettingNavButton";
 import { TipModal } from "./components/TipModal";
-
-import { reusableStyles } from "@/helpers/styles";
-import { useStore } from "@/stores/store";
 
 function Settings({ navigation }) {
   const { user, onboardingModalRef, proModalRef } = useStore();
@@ -87,7 +87,7 @@ function Settings({ navigation }) {
           <Text
             style={{ ...reusableStyles.date, paddingTop: 8, paddingLeft: 16 }}
           >
-            Please enable notifications in your device's settings
+            {`Please enable notifications in your device's settings`}
           </Text>
         )}
         {Platform.OS === "ios" && (

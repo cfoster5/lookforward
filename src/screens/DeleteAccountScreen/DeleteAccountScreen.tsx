@@ -37,7 +37,7 @@ export const DeleteAccountScreen = ({ navigation }) => {
           },
         ]}
       >
-        Complete your deletion request by entering "DELETE".
+        {`Complete your deletion request by entering "DELETE"`}.
       </Text>
       <TextInput
         style={{
@@ -72,7 +72,7 @@ export const DeleteAccountScreen = ({ navigation }) => {
                     style: "destructive",
                     onPress: () => deleteAccount(),
                   },
-                ]
+                ],
               )
             : null
         }

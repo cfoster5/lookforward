@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-export const SettingsItem = ({
+const SettingsItem = ({
   handlePress,
   text,
   style,
@@ -40,7 +40,7 @@ export const SettingsItem = ({
   </Pressable>
 );
 
-export const AccountScreen = ({ navigation }) => {
+const AccountScreen = ({ navigation }) => {
   function signOut() {
     auth()
       .signOut()

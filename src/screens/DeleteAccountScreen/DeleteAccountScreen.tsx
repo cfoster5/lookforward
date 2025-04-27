@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-export const DeleteAccountScreen = ({ navigation }) => {
+const DeleteAccountScreen = () => {
   const [password, setPassword] = useState("");
   function deleteAccount() {
     auth()

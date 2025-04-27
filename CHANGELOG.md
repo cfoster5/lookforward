@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.15.0](https://github.com/cfoster5/lookforward/compare/v6.14.0...v6.15.0) (2025-04-27)
+
+
+### Features
+
+* add context menu for MoviePoster and Person components ([554597a](https://github.com/cfoster5/lookforward/commit/554597abd5ed219f967d9b3c822754178d0c61f9))
+
+
+### Bug Fixes
+
+* correct recent items and people being clipped when they scaled up when opening the context menu ([948fa8d](https://github.com/cfoster5/lookforward/commit/948fa8d3febf5d36da99fe49e01c27304b9ee86a))
+
 ## [6.14.0](https://github.com/cfoster5/lookforward/compare/v6.13.0...v6.14.0) (2025-04-26)
 
 

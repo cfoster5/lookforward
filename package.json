@@ -9,6 +9,7 @@
     "web": "expo start --web",
     "postinstall": "husky",
     "lint": "expo lint",
+    "lint:file": "expo lint > lint.log 2>&1 || true",
     "test": "jest --watchAll"
   },
   "dependencies": {

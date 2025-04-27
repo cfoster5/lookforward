@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.15.1](https://github.com/cfoster5/lookforward/compare/v6.15.0...v6.15.1) (2025-04-27)
+
+
+### Bug Fixes
+
+* correct extra spacing for recent movies SectionList between History and People labels ([d36e0f9](https://github.com/cfoster5/lookforward/commit/d36e0f90c518ca1ace86f619643e3ad9a711727a))
+* correct onPress happening during or before onLongPress, ([03aad4b](https://github.com/cfoster5/lookforward/commit/03aad4bb7a64eca4d1755db5b77675b18e9523a1))
+
 ## [6.15.0](https://github.com/cfoster5/lookforward/compare/v6.14.0...v6.15.0) (2025-04-27)
 
 

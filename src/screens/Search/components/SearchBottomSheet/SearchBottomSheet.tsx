@@ -128,6 +128,29 @@ export const SearchBottomSheet = () => {
   };
 
   const onLayout = () => setInitialSnapPoint(tabBarHeight + 8);
+
+  const composeRecentSections = () => {
+    if (categoryIndex === 0) {
+      const titles = recentMovies.sort((a, b) => b.last_viewed - a.last_viewed);
+      const people = recentPeople.sort((a, b) => b.last_viewed - a.last_viewed);
+      // Conditionally include non-empty sections
+      // Using the spread operator on an empty array will not add anything
+      return [
+        ...(titles.length
+          ? [{ title: "Titles", data: [{ items: titles }] }]
+          : []),
+        ...(people.length
+          ? [{ title: "People", data: [{ items: people }] }]
+          : []),
+      ];
+    } else {
+      const games = recentGames.sort((a, b) => b.last_viewed - a.last_viewed);
+      return games.length
+        ? [{ title: "Titles", data: [{ items: games }] }]
+        : [];
+    }
+  };
+
   return (
     <BottomSheet
       enableDynamicSizing={false}
@@ -198,36 +221,7 @@ export const SearchBottomSheet = () => {
           (isPro ? (
             <SectionList
               ListHeaderComponent={shouldShowTitle() ? ListHeader : undefined}
-              sections={[
-                {
-                  title: "Titles",
-                  data: [
-                    {
-                      items:
-                        categoryIndex === 0
-                          ? recentMovies.sort(
-                              (a, b) => b.last_viewed - a.last_viewed,
-                            )
-                          : recentGames.sort(
-                              (a, b) => b.last_viewed - a.last_viewed,
-                            ),
-                    },
-                  ],
-                },
-                {
-                  title: "People",
-                  data: [
-                    {
-                      items:
-                        categoryIndex === 0
-                          ? recentPeople.sort(
-                              (a, b) => b.last_viewed - a.last_viewed,
-                            )
-                          : [],
-                    },
-                  ],
-                },
-              ]}
+              sections={composeRecentSections()}
               renderItem={({ section, item }) => (
                 <FlatList
                   data={item.items}
@@ -245,7 +239,10 @@ export const SearchBottomSheet = () => {
                   keyExtractor={(item) => item.id?.toString()}
                   keyboardShouldPersistTaps="handled"
                   showsHorizontalScrollIndicator={false}
-                  style={{ marginHorizontal: -12 }}
+                  style={[
+                    { marginHorizontal: -12 },
+                    section.title === "Titles" ? { marginBottom: 8 } : {},
+                  ]}
                 />
               )}
               renderSectionHeader={({ section }) =>

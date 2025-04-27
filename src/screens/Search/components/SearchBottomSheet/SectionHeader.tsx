@@ -32,23 +32,14 @@ export const SectionHeader = ({ text, categoryIndex }: SectionHeaderProps) => {
       <Text
         style={[
           iOSUIKit.subheadEmphasized,
-          {
-            color: PlatformColor("secondaryLabel"),
-            marginTop: text !== "Titles" ? 8 : 0,
-          },
+          { color: PlatformColor("secondaryLabel") },
         ]}
       >
         {text}
       </Text>
       <Pressable onPress={() => handleClearPress(text)}>
         <Text
-          style={[
-            iOSUIKit.subhead,
-            {
-              color: PlatformColor("systemBlue"),
-              marginTop: text !== "Titles" ? 8 : 0,
-            },
-          ]}
+          style={[iOSUIKit.subhead, { color: PlatformColor("systemBlue") }]}
         >
           Clear
         </Text>

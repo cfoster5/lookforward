@@ -57,7 +57,7 @@ export function MoviePoster({
         style={buttonStyle}
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click
-        onLongPress={null}
+        onLongPress={() => {}} // A callback that does nothing
       >
         {movie && <PosterButton movieId={movie.id.toString()} />}
         {posterPath ? (

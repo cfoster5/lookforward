@@ -32,7 +32,7 @@ export function RecentPerson({ item }: { item: Recent }) {
         }
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click
-        onLongPress={null}
+        onLongPress={() => {}} // A callback that does nothing
         style={{ paddingVertical: 8 }}
       >
         <View

@@ -62,8 +62,6 @@ const ListHeader = () => (
 
 const HorizontalSpacer = () => <View style={{ width: 12 }} />;
 
-const SectionSeparator = () => <View style={{ height: 8 }} />;
-
 export const SearchBottomSheet = () => {
   const tabBarHeight = useBottomTabBarHeight();
   const { top } = useSafeAreaInsets();
@@ -250,7 +248,6 @@ export const SearchBottomSheet = () => {
                   style={{ marginHorizontal: -12 }}
                 />
               )}
-              SectionSeparatorComponent={SectionSeparator}
               renderSectionHeader={({ section }) =>
                 section.data[0].items.length > 0 ? (
                   <SectionHeader

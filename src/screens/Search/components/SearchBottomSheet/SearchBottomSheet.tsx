@@ -38,6 +38,17 @@ import { SearchMovie } from "./SearchMovie";
 import { SearchPerson } from "./SearchPerson";
 import { SectionHeader } from "./SectionHeader";
 
+const ItemSeparator = () => (
+  <View
+    style={{
+      height: StyleSheet.hairlineWidth,
+      backgroundColor: PlatformColor("separator"),
+      marginLeft: calculateWidth(12, 12, 3.5) + 12,
+      marginRight: 12,
+    }}
+  />
+);
+
 const ListHeader = () => (
   <Text
     style={[
@@ -48,6 +59,10 @@ const ListHeader = () => (
     History
   </Text>
 );
+
+const HorizontalSpacer = () => <View style={{ width: 12 }} />;
+
+const SectionSeparator = () => <View style={{ height: 8 }} />;
 
 export const SearchBottomSheet = () => {
   const tabBarHeight = useBottomTabBarHeight();
@@ -174,17 +189,7 @@ export const SearchBottomSheet = () => {
             <BottomSheetFlatList
               data={getSearchData()}
               renderItem={({ item }) => getRenderItem(item)}
-              ItemSeparatorComponent={() => (
-                <View
-                  style={{
-                    height: StyleSheet.hairlineWidth,
-                    backgroundColor: PlatformColor("separator"),
-                    // marginVertical: 6,
-                    marginLeft: calculateWidth(12, 12, 3.5) + 12,
-                    marginRight: 12,
-                  }}
-                />
-              )}
+              ItemSeparatorComponent={ItemSeparator}
               keyExtractor={(result) => result.id.toString()}
               keyboardShouldPersistTaps="handled"
               style={{ marginRight: -12, marginLeft: -12 }}
@@ -194,9 +199,7 @@ export const SearchBottomSheet = () => {
         {!searchValue &&
           (isPro ? (
             <SectionList
-              ListHeaderComponent={
-                shouldShowTitle() ? <ListHeader /> : undefined
-              }
+              ListHeaderComponent={shouldShowTitle() ? ListHeader : undefined}
               sections={[
                 {
                   title: "Titles",
@@ -237,9 +240,9 @@ export const SearchBottomSheet = () => {
                       <RecentPerson item={item} />
                     )
                   }
-                  ItemSeparatorComponent={() => <View style={{ width: 12 }} />}
-                  ListHeaderComponent={() => <View style={{ width: 12 }} />}
-                  ListFooterComponent={() => <View style={{ width: 12 }} />}
+                  ItemSeparatorComponent={HorizontalSpacer}
+                  ListHeaderComponent={HorizontalSpacer}
+                  ListFooterComponent={HorizontalSpacer}
                   horizontal
                   keyExtractor={(item) => item.id?.toString()}
                   keyboardShouldPersistTaps="handled"
@@ -247,7 +250,7 @@ export const SearchBottomSheet = () => {
                   style={{ marginHorizontal: -12 }}
                 />
               )}
-              SectionSeparatorComponent={() => <View style={{ height: 8 }} />}
+              SectionSeparatorComponent={SectionSeparator}
               renderSectionHeader={({ section }) =>
                 section.data[0].items.length > 0 ? (
                   <SectionHeader

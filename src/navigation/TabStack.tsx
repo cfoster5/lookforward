@@ -1,9 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import firestore from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import type { RouteProp } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
 import { BlurView } from "expo-blur";
 import * as StoreReview from "expo-store-review";
+import type { ComponentProps } from "react";
 import { useEffect } from "react";
 import { Platform, StyleSheet } from "react-native";
 
@@ -18,6 +20,29 @@ import { FirestoreMovie } from "../interfaces/firebase";
 import { CountdownStack } from "./CountdownStack";
 import { FindStack } from "./FindStack";
 import { SettingsStack } from "./SettingsStack";
+
+type TabBarIconProps = {
+  route: RouteProp<TabNavigationParamList, keyof TabNavigationParamList>;
+  color: string;
+  size: number;
+};
+const TabBarIcon = ({ route, color, size }: TabBarIconProps) => {
+  let iconName: ComponentProps<typeof Ionicons>["name"] | undefined;
+  switch (route.name) {
+    case "FindTab":
+      iconName = "search";
+      break;
+    case "CountdownTab":
+      iconName = "timer-outline";
+      break;
+    case "SettingsTab":
+      iconName = "cog";
+      break;
+    default:
+      iconName = undefined;
+  }
+  return <Ionicons name={iconName} size={size} color={color} />;
+};
 
 function BlurTabBarBackground() {
   return (
@@ -134,19 +159,7 @@ export function TabStack() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName = "";
-          if (route.name === "FindTab") {
-            iconName = "search";
-          } else if (route.name === "CountdownTab") {
-            iconName = "timer-outline";
-          } else if (route.name === "SettingsTab") {
-            iconName = "cog";
-          }
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-        // tabBarActiveTintColor: PlatformColor("systemBlue"),
-        // tabBarInactiveTintColor: "gray",
+        tabBarIcon: ({ color, size }) => TabBarIcon({ route, color, size }),
         tabBarStyle:
           Platform.OS === "ios"
             ? {

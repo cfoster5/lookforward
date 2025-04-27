@@ -45,7 +45,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
         }
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click
-        onLongPress={() => console.log("Long Pressed")}
+        onLongPress={null}
         style={({ pressed }) => [
           {
             flexDirection: "row",

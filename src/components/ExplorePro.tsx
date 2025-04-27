@@ -52,9 +52,13 @@ export const ExplorePro = () => {
     setIsPurchasing(true);
     // Using Offerings/Packages
     try {
+      if (!products?.lifetime) {
+        console.error("No lifetime package available");
+        return;
+      }
       const { customerInfo } = await Purchases.purchasePackage(
         // selectedProduct!
-        products?.lifetime!,
+        products.lifetime,
       );
       if (typeof customerInfo.entitlements.active.pro !== "undefined") {
         // Unlock that great "pro" content

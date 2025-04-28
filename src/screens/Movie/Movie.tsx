@@ -57,6 +57,7 @@ import {
   tmdbMovieGenres,
 } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
+import { useAppConfigStore } from "@/stores/appConfig";
 import { useStore } from "@/stores/store";
 import { BottomTabParams, FindStackParams, Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
@@ -154,6 +155,7 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { movieId, name } = route.params;
   const { user, movieSubs, isPro, proModalRef } = useStore();
+  const { requestNonPersonalizedAdsOnly } = useAppConfigStore();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString(),
   );
@@ -355,7 +357,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 <BannerAd
                   unitId={BANNER_AD_UNIT_ID}
                   size={BannerAdSize.BANNER}
-                  requestOptions={{ requestNonPersonalizedAdsOnly: true }}
+                  requestOptions={{ requestNonPersonalizedAdsOnly }}
                 />
               </View>
             </>

@@ -16,11 +16,15 @@ type AppConfigState = {
   hasRequestedReview: boolean;
   lastRequestedReviewTimestamp: number;
   hasSeenOnboardingModal: boolean;
+  requestNonPersonalizedAdsOnly: boolean;
 };
 
 type AppConfigActions = {
   setHasRequestedReview: () => void;
   setHasSeenOnboardingModal: () => void;
+  setRequestNonPersonalizedAdsOnly: (
+    requestNonPersonalizedAdsOnly: boolean,
+  ) => void;
 };
 
 export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
@@ -29,6 +33,7 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
       hasRequestedReview: false,
       lastRequestedReviewTimestamp: 0,
       hasSeenOnboardingModal: false,
+      requestNonPersonalizedAdsOnly: true,
       setHasRequestedReview: () =>
         set(() => ({
           hasRequestedReview: true,
@@ -37,6 +42,12 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
       setHasSeenOnboardingModal: () =>
         set(() => ({
           hasSeenOnboardingModal: true,
+        })),
+      setRequestNonPersonalizedAdsOnly: (
+        requestNonPersonalizedAdsOnly: boolean,
+      ) =>
+        set(() => ({
+          requestNonPersonalizedAdsOnly,
         })),
     }),
     {

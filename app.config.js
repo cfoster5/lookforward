@@ -52,6 +52,14 @@ export default {
         "react-native-google-mobile-ads",
         {
           iosAppId: "ca-app-pub-3102803309311035~6554147947",
+          delayAppMeasurementInit: true,
+        },
+      ],
+      [
+        "expo-tracking-transparency",
+        {
+          userTrackingPermission:
+            "This identifier will be used to deliver personalized ads to you.",
         },
       ],
     ],

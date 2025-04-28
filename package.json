@@ -43,6 +43,7 @@
     "expo-store-review": "~8.0.1",
     "expo-symbols": "~0.2.2",
     "expo-system-ui": "~4.0.9",
+    "expo-tracking-transparency": "~5.1.1",
     "immer": "^10.1.1",
     "luxon": "^2.4.0",
     "postinstall-postinstall": "^2.1.0",

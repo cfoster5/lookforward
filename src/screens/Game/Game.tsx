@@ -22,6 +22,7 @@ import { BANNER_AD_UNIT_ID } from "@/constants/AdUnits";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
+import { useAppConfigStore } from "@/stores/appConfig";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
 import { timestamp } from "@/utils/dates";
@@ -61,6 +62,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const [countdownId, setCountdownId] = useState<FirestoreGame["documentID"]>();
   const { user, gameSubs, bottomSheetModalRef, isPro, proModalRef } =
     useStore();
+  const { requestNonPersonalizedAdsOnly } = useAppConfigStore();
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
   const paddingBottom = useBottomTabOverflow();
@@ -157,7 +159,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
                 <BannerAd
                   unitId={BANNER_AD_UNIT_ID}
                   size={BannerAdSize.BANNER}
-                  requestOptions={{ requestNonPersonalizedAdsOnly: true }}
+                  requestOptions={{ requestNonPersonalizedAdsOnly }}
                 />
               </View>
             </>

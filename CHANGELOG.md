@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.16.0](https://github.com/cfoster5/lookforward/compare/v6.15.2...v6.16.0) (2025-04-29)
+
+
+### Features
+
+* clarify purchase message to indicate lifetime access ([af0412f](https://github.com/cfoster5/lookforward/commit/af0412fb005cbe69d4868a7f1a090be1cfb1545b))
+
 ## [6.15.2](https://github.com/cfoster5/lookforward/compare/v6.15.1...v6.15.2) (2025-04-29)
 
 

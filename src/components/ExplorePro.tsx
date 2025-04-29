@@ -172,7 +172,7 @@ export const ExplorePro = () => {
                 { color: "white", textAlign: "center" },
               ]}
             >
-              Unlock for {products?.lifetime?.product.priceString}
+              Unlock forever for {products?.lifetime?.product.priceString}
               {/* Unlock for {selectedProduct?.product.priceString} */}
             </Text>
           )}

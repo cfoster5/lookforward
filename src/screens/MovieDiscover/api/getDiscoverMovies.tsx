@@ -3,7 +3,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { TMDB_KEY } from "@/constants/ApiKeys";
 
 async function getMovies({ pageParam, queryKey }) {
-  const [{ ...params }] = queryKey;
+  const params = queryKey[1];
   // Remove undefined params or watch_providers when set to 0
   const filteredParamsArrays = Object.entries(params).filter(
     (param) => param[1],

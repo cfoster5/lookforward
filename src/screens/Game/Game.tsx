@@ -4,7 +4,7 @@ import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { FirestoreGame } from "interfaces/firebase";
-import { useEffect, useLayoutEffect, useState, Fragment, useMemo } from "react";
+import { useLayoutEffect, useState, Fragment, useMemo } from "react";
 import { PlatformColor, ScrollView, View, FlatList, Text } from "react-native";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import { iOSUIKit } from "react-native-typography";
@@ -58,9 +58,9 @@ const GameCredits = ({ companies, type, title }: GameCreditsProp) =>
 
 export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const { game } = route.params;
-  const [countdownId, setCountdownId] = useState<FirestoreGame["documentID"]>();
   const { user, gameSubs, bottomSheetModalRef, isPro, proModalRef } =
     useStore();
+  const countdownId = gameSubs.find((s) => s.game.id === game.id)?.documentID;
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
   const paddingBottom = useBottomTabOverflow();
@@ -102,14 +102,6 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
   );
 
   useAddRecent("recentGames", recentGame);
-
-  useEffect(() => {
-    const documentID = gameSubs.find(
-      (releaseDate) => releaseDate.game.id === game.id,
-    )?.documentID;
-
-    setCountdownId(documentID);
-  }, [game.id, gameSubs]);
 
   return (
     <>

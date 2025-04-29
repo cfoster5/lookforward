@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.15.2](https://github.com/cfoster5/lookforward/compare/v6.15.1...v6.15.2) (2025-04-29)
+
+
+### Bug Fixes
+
+* correct regression from last update where discoverMovies params weren't being accounted for ([1921045](https://github.com/cfoster5/lookforward/commit/1921045a05bf9bfdf5d2a0c121dad932d62fa36a))
+
 ## [6.15.1](https://github.com/cfoster5/lookforward/compare/v6.15.0...v6.15.1) (2025-04-27)
 
 

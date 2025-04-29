@@ -58,7 +58,7 @@ import {
 } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
 import { useStore } from "@/stores/store";
-import { BottomTabParams, FindStackParams, Recent } from "@/types";
+import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
@@ -144,10 +144,10 @@ export function getReleaseDate(releaseDates: ReleaseDate[]) {
 }
 
 type MovieScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "Movie">,
+  NativeStackScreenProps<FindStackParamList, "Movie">,
   CompositeScreenProps<
-    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
-    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
+    BottomTabScreenProps<TabNavigationParamList, "FindTab">,
+    BottomTabScreenProps<TabNavigationParamList, "CountdownTab">
   >
 >;
 
@@ -255,7 +255,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     }
   }, [movieDetails]);
 
-  if (isLoading || isLoadingRatings) return <LoadingScreen />;
+  if (isLoading || !movieDetails || isLoadingRatings) return <LoadingScreen />;
 
   return (
     <>
@@ -271,15 +271,15 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         })}
         showsVerticalScrollIndicator={detailIndex === 0}
       >
-        {movieDetails!.backdrop_path && (
+        {movieDetails.backdrop_path && (
           <AnimatedHeaderImage
             scrollOffset={scrollOffset}
-            path={movieDetails!.backdrop_path}
+            path={movieDetails.backdrop_path}
           />
         )}
         <View style={{ margin: 16 }}>
           <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-            {movieDetails!.title}
+            {movieDetails.title}
           </ThemedText>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.secondarySubhedEmphasized}>
@@ -289,7 +289,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             </Text>
             <BlueBullet />
             <Text style={styles.secondarySubhedEmphasized}>
-              {movieDetails!.status}
+              {movieDetails.status}
             </Text>
           </View>
 
@@ -300,7 +300,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               <Text style={styles.secondarySubhedEmphasized}>
                 {certification}
               </Text>
-              {movieDetails!.revenue > 0 && (
+              {movieDetails.revenue > 0 && (
                 <>
                   <BlueBullet />
                   {!isPro ? (
@@ -318,7 +318,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     </>
                   ) : (
                     <Text style={styles.secondarySubhedEmphasized}>
-                      ${movieDetails!.revenue.toLocaleString()}
+                      ${movieDetails.revenue.toLocaleString()}
                     </Text>
                   )}
                 </>
@@ -361,7 +361,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             </>
           )}
 
-          {movieDetails!.tagline && (
+          {movieDetails.tagline && (
             <Text
               style={[
                 iOSUIKit.body,
@@ -372,14 +372,14 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 },
               ]}
             >
-              {movieDetails!.tagline}
+              {movieDetails.tagline}
             </Text>
           )}
 
-          <ExpandableText text={movieDetails!.overview} />
+          <ExpandableText text={movieDetails.overview} />
 
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-            {movieDetails!.genres.map((genre, index) => (
+            {movieDetails.genres.map((genre, index) => (
               <ButtonSingleState
                 key={index}
                 text={genre.name}
@@ -405,9 +405,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             ))}
           </View>
 
-          {(movieDetails!["watch/providers"].results.US?.flatrate?.length > 0 ||
-            movieDetails!["watch/providers"].results.US?.rent?.length > 0 ||
-            movieDetails!["watch/providers"].results.US?.buy?.length > 0) && (
+          {(movieDetails["watch/providers"].results.US?.flatrate?.length > 0 ||
+            movieDetails["watch/providers"].results.US?.rent?.length > 0 ||
+            movieDetails["watch/providers"].results.US?.buy?.length > 0) && (
             <>
               <View
                 style={{
@@ -437,11 +437,11 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 data={[
                   ...new Map(
                     [
-                      ...(movieDetails!["watch/providers"].results.US
+                      ...(movieDetails["watch/providers"].results.US
                         ?.flatrate || []),
-                      ...(movieDetails!["watch/providers"].results.US?.rent ||
+                      ...(movieDetails["watch/providers"].results.US?.rent ||
                         []),
-                      ...(movieDetails!["watch/providers"].results.US?.buy ||
+                      ...(movieDetails["watch/providers"].results.US?.buy ||
                         []),
                     ].map((item) => [item["provider_id"], item]),
                   ).values(),
@@ -490,7 +490,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               </View>
 
               {(creditSelection.value === "Cast"
-                ? movieDetails!.credits.cast
+                ? movieDetails.credits.cast
                 : composeGroupedJobCredits(movieDetails?.credits.crew)
               ).map((person) => (
                 <Person
@@ -504,7 +504,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
           {detailIndex === 1 && (
             <View>
-              {movieDetails!.videos.results.some(
+              {movieDetails.videos.results.some(
                 (result) =>
                   result.type === "Trailer" || result.type === "Teaser",
               ) ? (
@@ -513,12 +513,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     {/* Wrap with a View with flexDirection to not take full width of screen*/}
                     <DropdownMenu
                       options={[
-                        ...(movieDetails!.videos.results.some(
+                        ...(movieDetails.videos.results.some(
                           (result) => result.type === "Trailer",
                         )
                           ? [{ value: "Trailer", label: "Trailers" }]
                           : []),
-                        ...(movieDetails!.videos.results.some(
+                        ...(movieDetails.videos.results.some(
                           (result) => result.type === "Teaser",
                         )
                           ? [{ value: "Teaser", label: "Teasers" }]
@@ -536,7 +536,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   </View>
                   <FlatList
                     keyExtractor={(item) => item.id}
-                    data={movieDetails!.videos.results.filter(
+                    data={movieDetails.videos.results.filter(
                       (result) => result.type === videoSelection.value,
                     )}
                     renderItem={({ item }) => <Trailer video={item} />}
@@ -548,17 +548,17 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   No trailers yet! Come back later!
                 </ThemedText>
               )}
-              {movieDetails!.images.posters.length > 0 ||
-              movieDetails!.images.backdrops.length > 0 ? (
+              {movieDetails.images.posters.length > 0 ||
+              movieDetails.images.backdrops.length > 0 ? (
                 <>
                   <View style={{ flexDirection: "row" }}>
                     {/* Wrap with a View with flexDirection to not take full width of screen*/}
                     <DropdownMenu
                       options={[
-                        ...(movieDetails!.images.posters.length > 0
+                        ...(movieDetails.images.posters.length > 0
                           ? [{ value: "posters", label: "Posters" }]
                           : []),
-                        ...(movieDetails!.images.backdrops.length > 0
+                        ...(movieDetails.images.backdrops.length > 0
                           ? [{ value: "backdrops", label: "Backdrops" }]
                           : []),
                       ]}
@@ -573,7 +573,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     </DropdownMenu>
                   </View>
                   <ImageGallery
-                    images={movieDetails!.images}
+                    images={movieDetails.images}
                     selection={imageSelection}
                   />
                 </>
@@ -586,15 +586,15 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
           )}
           {detailIndex === 2 && (
             <>
-              {movieDetails!.production_companies.length > 0 && (
+              {movieDetails.production_companies.length > 0 && (
                 <>
                   <DiscoverListLabel text="Production" />
                   <ScrollViewWithFlatList
-                    data={movieDetails!.production_companies}
+                    data={movieDetails.production_companies}
                     numColumns={
-                      movieDetails!.production_companies.length > 2
+                      movieDetails.production_companies.length > 2
                         ? Math.ceil(
-                            movieDetails!.production_companies.length / 2,
+                            movieDetails.production_companies.length / 2,
                           )
                         : 2
                     }
@@ -603,13 +603,13 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                   />
                 </>
               )}
-              {movieDetails!.keywords.keywords.length > 0 && (
+              {movieDetails.keywords.keywords.length > 0 && (
                 <>
                   <DiscoverListLabel text="Keywords" />
                   <ScrollViewWithFlatList
-                    data={movieDetails!.keywords.keywords}
+                    data={movieDetails.keywords.keywords}
                     numColumns={Math.ceil(
-                      movieDetails!.keywords.keywords.length / 2,
+                      movieDetails.keywords.keywords.length / 2,
                     )}
                     navigation={navigation}
                     navParamKey="keyword"
@@ -617,14 +617,14 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 </>
               )}
 
-              {movieDetails!.belongs_to_collection && (
+              {movieDetails.belongs_to_collection && (
                 <>
                   <DiscoverListLabel text="Collection" />
                   <Pressable
                     onPress={() =>
                       navigation.push("Collection", {
-                        name: movieDetails!.belongs_to_collection.name,
-                        collectionId: movieDetails!.belongs_to_collection?.id,
+                        name: movieDetails.belongs_to_collection.name,
+                        collectionId: movieDetails.belongs_to_collection?.id,
                       })
                     }
                     style={{
@@ -643,9 +643,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         borderRadius: 12,
                       }}
                       source={{
-                        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${
-                          movieDetails!.belongs_to_collection.backdrop_path
-                        }`,
+                        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${movieDetails.belongs_to_collection.backdrop_path}`,
                       }}
                     />
                     <BlurView
@@ -668,18 +666,18 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         { margin: 8, position: "absolute" },
                       ]}
                     >
-                      {movieDetails!.belongs_to_collection.name}
+                      {movieDetails.belongs_to_collection.name}
                     </ThemedText>
                   </Pressable>
                 </>
               )}
 
-              {movieDetails!.recommendations.results.length > 0 && (
+              {movieDetails.recommendations.results.length > 0 && (
                 <>
                   <DiscoverListLabel text="Recommended" />
                   <FlatList
                     keyExtractor={(item) => item.id.toString()}
-                    data={movieDetails!.recommendations.results}
+                    data={movieDetails.recommendations.results}
                     renderItem={({ item }) => (
                       <MoviePoster
                         pressHandler={() =>
@@ -706,7 +704,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
       </Animated.ScrollView>
       <WatchProvidersModal
         modalRef={modalRef}
-        providers={movieDetails!["watch/providers"].results.US}
+        providers={movieDetails["watch/providers"].results.US}
       />
     </>
   );

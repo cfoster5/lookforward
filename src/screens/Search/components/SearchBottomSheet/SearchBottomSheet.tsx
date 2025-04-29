@@ -217,8 +217,29 @@ export const SearchBottomSheet = () => {
             />
           ))}
 
-        {!searchValue &&
-          (isPro ? (
+        {!searchValue && (
+          <>
+            {!isPro && (
+              <LargeBorderlessButton
+                handlePress={async () => {
+                  Keyboard.dismiss();
+                  proModalRef.current?.present();
+                  await analytics().logEvent("select_promotion", {
+                    name: "Pro",
+                    id: "com.lookforward.pro",
+                  });
+                }}
+                text="Explore Pro Features"
+                style={{ paddingTop: 0 }}
+              />
+              // {/* <View style={{ alignItems: "center" }}>
+              //   <BannerAd
+              //     unitId={BANNER_AD_UNIT_ID}
+              //     size={BannerAdSize.BANNER}
+              //     requestOptions={{ requestNonPersonalizedAdsOnly: true }}
+              //   />
+              // </View> */}
+            )}
             <SectionList
               ListHeaderComponent={shouldShowTitle() ? ListHeader : undefined}
               sections={composeRecentSections()}
@@ -258,29 +279,8 @@ export const SearchBottomSheet = () => {
               style={{ marginHorizontal: -12, paddingHorizontal: 12 }}
               keyboardShouldPersistTaps="handled"
             />
-          ) : (
-            <>
-              <LargeBorderlessButton
-                handlePress={async () => {
-                  Keyboard.dismiss();
-                  proModalRef.current?.present();
-                  await analytics().logEvent("select_promotion", {
-                    name: "Pro",
-                    id: "com.lookforward.pro",
-                  });
-                }}
-                text="Explore Pro Features"
-                style={{ paddingTop: 0 }}
-              />
-              <View style={{ alignItems: "center" }}>
-                <BannerAd
-                  unitId={BANNER_AD_UNIT_ID}
-                  size={BannerAdSize.BANNER}
-                  requestOptions={{ requestNonPersonalizedAdsOnly: true }}
-                />
-              </View>
-            </>
-          ))}
+          </>
+        )}
       </View>
     </BottomSheet>
   );

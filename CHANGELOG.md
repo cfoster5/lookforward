@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.17.0](https://github.com/cfoster5/lookforward/compare/v6.16.0...v6.17.0) (2025-04-29)
+
+
+### Features
+
+* add blurred preview of recent history for Pro ([98b7371](https://github.com/cfoster5/lookforward/commit/98b7371d9dd81605d103f2e7c1b7dd6a2b88628d))
+
+
+### Bug Fixes
+
+* update color prop to tintColor for SymbolView in Row component ([bf9a568](https://github.com/cfoster5/lookforward/commit/bf9a56850b466ec4de9c6836d72c3e95bdc9925e))
+
 ## [6.16.0](https://github.com/cfoster5/lookforward/compare/v6.15.2...v6.16.0) (2025-04-29)
 
 

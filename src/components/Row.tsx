@@ -39,7 +39,7 @@ export const Row = ({
       <SymbolView
         name={icon}
         size={36}
-        color={PlatformColor("systemBlue")}
+        tintColor={PlatformColor("systemBlue")}
         resizeMode="scaleAspectFill"
         style={{ height: 36, width: 36 }}
       />

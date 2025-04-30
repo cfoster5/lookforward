@@ -18,7 +18,7 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const { user, isPro, setIsPro, theme } = useStore();
+  const { user, isPro, theme } = useStore();
 
   useFirebaseAnalyticsCheck();
 
@@ -27,7 +27,7 @@ export default function App() {
     if (!isPro) mobileAds().initialize();
   }, [isPro]);
 
-  useRevenueCat(user, setIsPro);
+  useRevenueCat();
 
   useEffect(() => {
     // Check for a valid user before proceeding

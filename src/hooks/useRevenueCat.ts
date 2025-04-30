@@ -1,11 +1,10 @@
-import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import { useEffect } from "react";
 import Purchases from "react-native-purchases";
 
-export function useRevenueCat(
-  user: FirebaseAuthTypes.User | null,
-  setIsPro: (isPro: boolean) => void,
-) {
+import { useStore } from "@/stores/store";
+
+export function useRevenueCat() {
+  const { user, setIsPro } = useStore();
   useEffect(() => {
     /* Enable debug logs before calling `setup`. */
     if (__DEV__) Purchases.setLogLevel(Purchases.LOG_LEVEL.VERBOSE);
@@ -21,5 +20,5 @@ export function useRevenueCat(
       setIsPro(!!info.entitlements.active.pro);
       // handle any changes to customerInfo
     });
-  }, [setIsPro, user]);
+  }, [user, setIsPro]);
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.18.0](https://github.com/cfoster5/lookforward/compare/v6.17.0...v6.18.0) (2025-04-30)
+
+
+### Features
+
+* add price and headline to top of Pro modal ([9d0f289](https://github.com/cfoster5/lookforward/commit/9d0f289d3c786b5111eb2dc970c1baf635395d0e))
+
 ## [6.17.0](https://github.com/cfoster5/lookforward/compare/v6.16.0...v6.17.0) (2025-04-29)
 
 

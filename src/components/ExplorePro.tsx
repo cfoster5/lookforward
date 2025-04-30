@@ -114,6 +114,26 @@ export const ExplorePro = () => {
         >
           Pro Features
         </Text>
+        <Text
+          style={[
+            iOSUIKit.title3Emphasized,
+            { color: PlatformColor("systemBlue"), textAlign: "center" },
+          ]}
+        >
+          {products?.lifetime?.product.priceString}
+        </Text>
+        <Text
+          style={[
+            iOSUIKit.title3,
+            {
+              color: PlatformColor("label"),
+              textAlign: "center",
+              paddingBottom: 16,
+            },
+          ]}
+        >
+          Unlock once. Enjoy forever.
+        </Text>
         <Row
           icon="megaphone"
           title="No Ads"

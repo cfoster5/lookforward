@@ -230,7 +230,6 @@ export const SearchBottomSheet = () => {
                   });
                 }}
                 text="Explore Pro Features"
-                style={{ paddingTop: 0 }}
               />
               // {/* <View style={{ alignItems: "center" }}>
               //   <BannerAd

@@ -7,5 +7,6 @@
       "@/*": ["src/*"]
     },
     "moduleSuffixes": [".android", ".ios", ""]
-  }
+  },
+  "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
 }

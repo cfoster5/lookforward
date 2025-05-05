@@ -1,28 +1,19 @@
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useLocalSearchParams, useRouter, useSegments } from "expo-router";
 import { useRef } from "react";
 import { FlatList, Platform, Pressable } from "react-native";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { GamePoster } from "@/components/Posters/GamePoster";
-import {
-  FindStackParamList,
-  Game,
-  ReleaseDate,
-  TabNavigationParamList,
-} from "@/types";
+import { useDiscoverGames } from "@/screens/GameDiscover/api/getDiscoverGames";
+import { Games, ReleaseDate } from "@/types/igdb";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
-import { useDiscoverGames } from "./api/getDiscoverGames";
-
-type GameDiscoverScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParamList, "GameDiscover">,
-  BottomTabScreenProps<TabNavigationParamList, "FindTab">
->;
-
-function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
-  const { genre } = route.params;
+export default function GameDiscover() {
+  const segments = useSegments();
+  const stack = segments[1] as "(find)" | "(countdown)";
+  const router = useRouter();
+  const { genre: genreString } = useLocalSearchParams();
+  const genre = genreString ? JSON.parse(genreString) : undefined;
   const scrollRef = useRef<FlatList>(null);
   const paddingBottom = useBottomTabOverflow();
   const { data: games, isLoading } = useDiscoverGames({ genreId: genre.id });
@@ -41,9 +32,16 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
       renderItem={({
         item: game,
       }: {
-        item: Game & { release_dates: ReleaseDate[] };
+        item: Games & { release_dates: ReleaseDate[] };
       }) => (
-        <Pressable onPress={() => navigation.push("Game", { game })}>
+        <Pressable
+          onPress={() =>
+            router.push(`/(tabs)/${stack}/game/[id]`, {
+              id: game.id,
+              game: JSON.stringify(game),
+            })
+          }
+        >
           <GamePoster game={game} />
         </Pressable>
       )}
@@ -60,5 +58,3 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
     <LoadingScreen />
   );
 }
-
-export default GameDiscover;

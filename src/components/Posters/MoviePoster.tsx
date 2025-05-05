@@ -48,9 +48,7 @@ export function MoviePoster({
             : addCountdownItem("movies", movie!.id, user),
         buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
       }}
-      handleShareSelect={() =>
-        onShare(`movie/${movie!.id}?name=${movie!.title}`, "poster")
-      }
+      handleShareSelect={() => onShare(`movie/${movie!.id}`, "poster")}
     >
       <Pressable
         onPress={pressHandler}

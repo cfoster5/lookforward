@@ -1,8 +1,7 @@
 import analytics from "@react-native-firebase/analytics";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { PlatformColor, Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
@@ -18,8 +17,7 @@ import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
 import { ContextMenu } from "./ContextMenu";
 
 export function RecentTitle({ item }: { item: Recent }) {
-  // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
-  const navigation = useNavigation<StackNavigationProp<any>>();
+  const router = useRouter();
   const { user, movieSubs, isPro, proModalRef } = useStore();
   const { removeRecent } = useRecentItemsStore();
 
@@ -179,7 +177,7 @@ export function RecentTitle({ item }: { item: Recent }) {
       }
       handleShareSelect={
         item.media_type === "movie"
-          ? () => onShare(`movie/${item.id}?name=${item.name}`, "recent")
+          ? () => onShare(`movie/${item.id}`, "recent")
           : undefined
       }
       handleRemoveSelect={() =>
@@ -192,15 +190,22 @@ export function RecentTitle({ item }: { item: Recent }) {
       <Pressable
         onPress={() =>
           item.media_type === "movie"
-            ? navigation.navigate("Movie", {
-                movieId: item.id,
-                name: item.name,
-              })
-            : navigation.navigate("Game", {
-                game: {
+            ? router.navigate({
+                pathname: "/(tabs)/(find)/movie/[id]",
+                params: {
                   id: item.id,
                   name: item.name,
-                  cover: { url: item.img_path },
+                },
+              })
+            : router.navigate({
+                pathname: "/(tabs)/(find)/game/[id]",
+                params: {
+                  id: item.id,
+                  game: JSON.stringify({
+                    id: item.id,
+                    name: item.name,
+                    cover: { url: item.img_path },
+                  }),
                 },
               })
         }

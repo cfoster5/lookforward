@@ -1,9 +1,11 @@
 import analytics from "@react-native-firebase/analytics";
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
-import { FirestoreGame } from "interfaces/firebase";
+import {
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+  useSegments,
+} from "expo-router";
 import { useLayoutEffect, useState, Fragment, useMemo } from "react";
 import { PlatformColor, ScrollView, View, FlatList, Text } from "react-native";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
@@ -22,17 +24,11 @@ import { BANNER_AD_UNIT_ID } from "@/constants/AdUnits";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
+import { useGame } from "@/screens/Game/api/getGame";
 import { useStore } from "@/stores/store";
-import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
+import { Recent } from "@/types";
 import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
-
-import { useGame } from "./api/getGame";
-
-type GameScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParamList, "Game">,
-  BottomTabScreenProps<TabNavigationParamList, "FindTab">
->;
 
 type GameData = NonNullable<ReturnType<typeof useGame>["data"]>;
 
@@ -56,8 +52,13 @@ const GameCredits = ({ companies, type, title }: GameCreditsProp) =>
     </ThemedText>
   );
 
-export default function Game({ navigation, route }: GameScreenNavigationProp) {
-  const { game } = route.params;
+export default function Game() {
+  const segments = useSegments();
+  const stack = segments[1] as "(find)" | "(countdown)";
+  const router = useRouter();
+  const navigation = useNavigation();
+  const { game: gameString } = useLocalSearchParams();
+  const game = gameString ? JSON.parse(gameString) : undefined;
   const { user, gameSubs, bottomSheetModalRef, isPro, proModalRef } =
     useStore();
   const countdownId = gameSubs.find((s) => s.game.id === game.id)?.documentID;
@@ -169,9 +170,12 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
                 key={i}
                 text={genre.name}
                 onPress={() =>
-                  navigation.push("GameDiscover", {
-                    genre,
-                    screenTitle: genre.name,
+                  router.push({
+                    pathname: `/(tabs)/${stack}/game-discover`,
+                    params: {
+                      genre: JSON.stringify(genre),
+                      screenTitle: genre.name,
+                    },
                   })
                 }
                 buttonStyle={{

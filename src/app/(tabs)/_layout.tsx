@@ -1,48 +1,17 @@
-import { Ionicons } from "@expo/vector-icons";
 import firestore from "@react-native-firebase/firestore";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import type { RouteProp } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
 import { BlurView } from "expo-blur";
+import { Tabs } from "expo-router";
 import * as StoreReview from "expo-store-review";
-import type { ComponentProps } from "react";
+import { SymbolView } from "expo-symbols";
 import { useEffect } from "react";
 import { Platform, StyleSheet } from "react-native";
 
+import { FirestoreMovie } from "@/interfaces/firebase";
 import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
 import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useStore } from "@/stores/store";
-import { TabNavigationParamList } from "@/types";
-
-import { FirestoreMovie } from "../interfaces/firebase";
-
-import { CountdownStack } from "./CountdownStack";
-import { FindStack } from "./FindStack";
-import { SettingsStack } from "./SettingsStack";
-
-type TabBarIconProps = {
-  route: RouteProp<TabNavigationParamList, keyof TabNavigationParamList>;
-  color: string;
-  size: number;
-};
-const TabBarIcon = ({ route, color, size }: TabBarIconProps) => {
-  let iconName: ComponentProps<typeof Ionicons>["name"] | undefined;
-  switch (route.name) {
-    case "FindTab":
-      iconName = "search";
-      break;
-    case "CountdownTab":
-      iconName = "timer-outline";
-      break;
-    case "SettingsTab":
-      iconName = "cog";
-      break;
-    default:
-      iconName = undefined;
-  }
-  return <Ionicons name={iconName} size={size} color={color} />;
-};
 
 function BlurTabBarBackground() {
   return (
@@ -58,8 +27,7 @@ function BlurTabBarBackground() {
   );
 }
 
-const Tab = createBottomTabNavigator<TabNavigationParamList>();
-export function TabStack() {
+export default function TabStack() {
   const {
     user,
     setMovieSubs,
@@ -157,34 +125,47 @@ export function TabStack() {
   }, [gameSubs, queryClient]);
 
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => TabBarIcon({ route, color, size }),
-        tabBarStyle:
-          Platform.OS === "ios"
-            ? {
-                position: "absolute",
-              }
-            : undefined,
+    <Tabs
+      screenOptions={() => ({
+        tabBarStyle: Platform.select({ ios: { position: "absolute" } }),
         tabBarBackground: BlurTabBarBackground,
       })}
     >
       {/* Is setting headerShown to false the best method? */}
-      <Tab.Screen
-        name="FindTab"
-        component={FindStack}
-        options={{ headerShown: false, tabBarLabel: "Find" }}
+      <Tabs.Screen
+        name="(find)"
+        options={{
+          headerShown: false,
+          tabBarLabel: "Find",
+          tabBarIcon: ({ ...props }) => (
+            <SymbolView
+              {...props}
+              name="magnifyingglass"
+              tintColor={props.color}
+            />
+          ),
+        }}
       />
-      <Tab.Screen
-        name="CountdownTab"
-        component={CountdownStack}
-        options={{ headerShown: false, tabBarLabel: "Countdown" }}
+      <Tabs.Screen
+        name="(countdown)"
+        options={{
+          headerShown: false,
+          tabBarLabel: "Countdown",
+          tabBarIcon: ({ ...props }) => (
+            <SymbolView {...props} name="timer" tintColor={props.color} />
+          ),
+        }}
       />
-      <Tab.Screen
-        name="SettingsTab"
-        component={SettingsStack}
-        options={{ headerShown: false, tabBarLabel: "Settings" }}
+      <Tabs.Screen
+        name="(settings)"
+        options={{
+          headerShown: false,
+          tabBarLabel: "Settings",
+          tabBarIcon: ({ ...props }) => (
+            <SymbolView {...props} name="gear" tintColor={props.color} />
+          ),
+        }}
       />
-    </Tab.Navigator>
+    </Tabs>
   );
 }

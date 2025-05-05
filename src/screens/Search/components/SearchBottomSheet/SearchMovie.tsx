@@ -1,7 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { PlatformColor, Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { MovieWithMediaType } from "tmdb-ts";
@@ -16,8 +15,7 @@ import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
 import { ContextMenu } from "./ContextMenu";
 
 export function SearchMovie({ item }: { item: MovieWithMediaType }) {
-  // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
-  const navigation = useNavigation<StackNavigationProp<any>>();
+  const router = useRouter();
   const { user, movieSubs } = useStore();
 
   const isMovieSub = () =>
@@ -32,15 +30,16 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
             : addCountdownItem("movies", item.id, user),
         buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
       }}
-      handleShareSelect={() =>
-        onShare(`movie/${item.id}?name=${item.title}`, "search")
-      }
+      handleShareSelect={() => onShare(`movie/${item.id}`, "search")}
     >
       <Pressable
         onPress={() =>
-          navigation.navigate("Movie", {
-            movieId: item.id,
-            name: item.title,
+          router.navigate({
+            pathname: "/(tabs)/(find)/movie/[id]",
+            params: {
+              id: item.id,
+              name: item.title,
+            },
           })
         }
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781

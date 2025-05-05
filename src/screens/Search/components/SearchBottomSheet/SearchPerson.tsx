@@ -1,7 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { PlatformColor, Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { PersonWithMediaType } from "tmdb-ts";
@@ -12,20 +11,20 @@ import { onShare } from "@/utils/share";
 import { ContextMenu } from "./ContextMenu";
 
 export function SearchPerson({ item }: { item: PersonWithMediaType }) {
-  // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
-  const navigation = useNavigation<StackNavigationProp<any>>();
+  const router = useRouter();
 
   return (
     <ContextMenu
-      handleShareSelect={() =>
-        onShare(`person/${item.id}?name=${item.name}`, "search")
-      }
+      handleShareSelect={() => onShare(`person/${item.id}`, "search")}
     >
       <Pressable
         onPress={() =>
-          navigation.navigate("Actor", {
-            personId: item.id,
-            name: item.name,
+          router.navigate({
+            pathname: "/(tabs)/(find)/person/[id]",
+            params: {
+              id: item.id,
+              name: item.name,
+            },
           })
         }
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781

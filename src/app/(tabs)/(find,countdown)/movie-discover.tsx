@@ -1,8 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import {
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+  useSegments,
+} from "expo-router";
 import { useLayoutEffect, useRef, useState } from "react";
 import { FlatList, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -18,25 +21,26 @@ import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth, targetedProviders } from "@/helpers/helpers";
-import { FindStackParamList, TabNavigationParamList } from "@/types";
+import { useDiscoverMovies } from "@/screens/MovieDiscover/api/getDiscoverMovies";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
-import { useDiscoverMovies } from "./api/getDiscoverMovies";
-
-type MovieDiscoverScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParamList, "MovieDiscover">,
-  CompositeScreenProps<
-    BottomTabScreenProps<TabNavigationParamList, "FindTab">,
-    BottomTabScreenProps<TabNavigationParamList, "CountdownTab">
-  >
->;
-
-function MovieDiscover({
-  route,
-  navigation,
-}: MovieDiscoverScreenNavigationProp) {
+export default function MovieDiscover() {
+  const segments = useSegments();
+  const stack = segments[1] as "(find)" | "(countdown)";
+  const navigation = useNavigation();
+  const router = useRouter();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const { genre, company, keyword, provider } = route.params;
+  const {
+    genre: genreString,
+    company: companyString,
+    keyword: keywordString,
+    provider: providerString,
+  } = useLocalSearchParams();
+
+  const genre = genreString ? JSON.parse(genreString) : undefined;
+  const company = companyString ? JSON.parse(companyString) : undefined;
+  const keyword = keywordString ? JSON.parse(keywordString) : undefined;
+  const provider = providerString ? JSON.parse(providerString) : undefined;
   const scrollRef = useRef<FlatList>(null);
   const paddingBottom = useBottomTabOverflow();
   const [sortMethod, setSortMethod] = useState("popularity.desc");
@@ -222,9 +226,9 @@ function MovieDiscover({
         renderItem={({ item }: { item: Movie }) => (
           <MoviePoster
             pressHandler={() =>
-              navigation.push("Movie", {
-                movieId: item.id,
-                name: item.title,
+              router.push({
+                pathname: `/(tabs)/${stack}/movie/[id]`,
+                params: { id: item.id },
               })
             }
             movie={item}
@@ -255,5 +259,3 @@ function MovieDiscover({
     </>
   );
 }
-
-export default MovieDiscover;

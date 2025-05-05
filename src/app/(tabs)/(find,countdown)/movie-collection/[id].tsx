@@ -1,6 +1,9 @@
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import {
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+  useSegments,
+} from "expo-router";
 import { useLayoutEffect } from "react";
 import { View } from "react-native";
 import Animated, {
@@ -17,27 +20,18 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
-import { FindStackParams, BottomTabParams } from "@/types";
+import { useCollection } from "@/screens/Collection/api/getCollection";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
-
-import { useCollection } from "./api/getCollection";
 
 // import { useGetCollection } from "./api/useGetCollection";
 
-type CollectionScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "Collection">,
-  CompositeScreenProps<
-    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
-    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
-  >
->;
-
-export function Collection({
-  navigation,
-  route,
-}: CollectionScreenNavigationProp) {
-  const { collectionId } = route.params;
-  const { data: collection, isLoading } = useCollection(collectionId);
+export default function Collection() {
+  const segments = useSegments();
+  const stack = segments[1] as "(find)" | "(countdown)";
+  const navigation = useNavigation();
+  const router = useRouter();
+  const { id } = useLocalSearchParams();
+  const { data: collection, isLoading } = useCollection(id);
   const paddingBottom = useBottomTabOverflow();
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
@@ -50,11 +44,11 @@ export function Collection({
       headerRight: () => (
         <DynamicShareHeader
           title={collection?.name}
-          urlSegment={`collection/${collectionId}?name=${collection?.name}`}
+          urlSegment={`movie-collection/${id}`}
         />
       ),
     });
-  }, [collection?.name, navigation, collectionId]);
+  }, [collection?.name, navigation, id]);
 
   if (isLoading) return <LoadingScreen />;
 
@@ -85,9 +79,9 @@ export function Collection({
       renderItem={({ item }: { item: DetailedCollection["parts"][number] }) => (
         <MoviePoster
           pressHandler={() =>
-            navigation.push("Movie", {
-              movieId: item.id,
-              name: item.title,
+            router.push({
+              pathname: `/(tabs)/${stack}/movie/[id]`,
+              params: { id: item.id },
             })
           }
           movie={item}

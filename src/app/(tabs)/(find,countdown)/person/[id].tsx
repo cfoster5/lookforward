@@ -1,6 +1,9 @@
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import {
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+  useSegments,
+} from "expo-router";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Dimensions, FlatList, Platform, Text, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
@@ -16,20 +19,10 @@ import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
 import useAddRecent from "@/hooks/useAddRecent";
-import { FindStackParams, BottomTabParams, Recent } from "@/types";
+import { usePerson } from "@/screens/Actor/api/getPerson";
+import { CarouselItem } from "@/screens/Actor/components/CarouselItem";
 import { dateToFullLocale, timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
-
-import { usePerson } from "./api/getPerson";
-import { CarouselItem } from "./components/CarouselItem";
-
-type ActorScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "Actor">,
-  CompositeScreenProps<
-    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
-    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
-  >
->;
 
 const width = 200;
 const horizontalMargin = 4;
@@ -65,35 +58,35 @@ function getUniqueSortedCrewJobs(crew?: PersonMovieCrew[]) {
     );
 }
 
-function Actor({ route, navigation }: ActorScreenNavigationProp) {
-  const { personId, name } = route.params;
-  const { data: person, isLoading } = usePerson(route.params.personId);
+export default function Actor() {
+  const segments = useSegments();
+  const stack = segments[1] as "(find)" | "(countdown)";
+  const navigation = useNavigation();
+  const router = useRouter();
+  const { id } = useLocalSearchParams();
+  const { data: person, isLoading } = usePerson(id);
   const paddingBottom = useBottomTabOverflow();
   const ref = useRef<Carousel<any>>(null);
   const [selectedJob, setSelectedJob] = useState("Actor");
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      title: person?.name,
       // eslint-disable-next-line react/no-unstable-nested-components
-      headerRight: () => (
-        <DynamicShareHeader
-          title={name}
-          urlSegment={`person/${personId}?name=${name}`}
-        />
-      ),
+      headerRight: () => <DynamicShareHeader urlSegment={`person/${id}`} />,
     });
-  }, [name, navigation, personId]);
+  }, [navigation, id, person?.name]);
 
   // Memoize object to avoid unnecessary recalculations and re-renders.
   // Improves performance by ensuring that the object is only recalculated when its dependencies change.
   const recentPerson: Recent = useMemo(
     () => ({
-      id: personId,
-      name,
+      id: id,
+      name: person?.name,
       img_path: person?.profile_path,
       last_viewed: timestamp,
     }),
-    [personId, name, person?.profile_path],
+    [id, person?.name, person?.profile_path],
   );
 
   useAddRecent("recentPeople", recentPerson);
@@ -112,9 +105,9 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
         <MoviePoster
           key={item.id.toString()}
           pressHandler={() =>
-            navigation.push("Movie", {
-              movieId: item.id,
-              name: item.title,
+            router.push({
+              pathname: `/(tabs)/${stack}/movie/[id]`,
+              params: { id: item.id },
             })
           }
           movie={item}
@@ -203,5 +196,3 @@ function Actor({ route, navigation }: ActorScreenNavigationProp) {
     />
   );
 }
-
-export default Actor;

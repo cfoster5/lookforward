@@ -1,11 +1,17 @@
 import { useMMKVDevTools } from "@dev-plugins/react-native-mmkv";
+import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import auth from "@react-native-firebase/auth";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useNavigationContainerRef } from "expo-router";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import { TMDB } from "tmdb-ts";
 
 import { IGDB_AWS_KEY, TMDB_TOKEN } from "@/constants/ApiKeys";
@@ -28,14 +34,11 @@ type AppProviderProps = {
 
 export function AppProvider({ children }: AppProviderProps) {
   // const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
-  const { setUser } = useStore();
+  const { setUser, theme } = useStore();
+  const navigationRef = useNavigationContainerRef();
+  useReactNavigationDevTools(navigationRef);
   useReactQueryDevTools(queryClient);
   useMMKVDevTools();
-
-  // useEffect(() => {
-  //   const unsubscribe = auth().onAuthStateChanged((user) => setUser(user));
-  //   return unsubscribe; // unsubscribe on unmount
-  // });
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged((user) => setUser(user));
@@ -43,11 +46,11 @@ export function AppProvider({ children }: AppProviderProps) {
   }, [setUser]);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
-        <SafeAreaProvider>
+        <ThemeProvider value={theme === "dark" ? DarkTheme : DefaultTheme}>
           <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
-        </SafeAreaProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>
   );

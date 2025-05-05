@@ -3,14 +3,13 @@ import { useRef } from "react";
 import { Platform, PlatformColor, SectionList, View } from "react-native";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { useGameCountdowns } from "@/screens/Countdown/api/getGameCountdowns";
+import { useMovieCountdowns } from "@/screens/Countdown/api/getMovieCountdowns";
+import { CountdownItem } from "@/screens/Countdown/components/CountdownItem";
+import { SectionHeader } from "@/screens/Countdown/components/SectionHeader";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
-import { useGameCountdowns } from "./api/getGameCountdowns";
-import { useMovieCountdowns } from "./api/getMovieCountdowns";
-import { CountdownItem } from "./components/CountdownItem";
-import { SectionHeader } from "./components/SectionHeader";
-
-function Countdown() {
+export default function Countdown() {
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
   const paddingBottom = useBottomTabOverflow();
@@ -82,5 +81,3 @@ function Countdown() {
     />
   );
 }
-
-export default Countdown;

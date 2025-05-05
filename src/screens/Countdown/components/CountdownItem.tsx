@@ -1,5 +1,5 @@
-import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { DateTime } from "luxon";
 import { useEffect } from "react";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
@@ -13,7 +13,6 @@ import { iOSUIKit } from "react-native-typography";
 import { PosterSizes } from "tmdb-ts";
 
 import { useCountdownStore } from "@/stores/store";
-import { CountdownStackParamList } from "@/types/navigation";
 import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
 
 import { useGameCountdowns } from "../api/getGameCountdowns";
@@ -36,13 +35,13 @@ type Props = (MovieProps | GameProps) & {
 };
 
 export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
+  const router = useRouter();
   const {
     showDeleteButton,
     movies: selectedMovies,
     games: selectedGames,
     toggleSelection,
   } = useCountdownStore();
-  const navigation = useNavigation<NavigationProp<CountdownStackParamList>>();
   const transformAmount = useSharedValue(-24);
 
   useEffect(() => {
@@ -93,9 +92,12 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
   }
 
   function goToMovie() {
-    navigation.navigate("Movie", {
-      movieId: item!.id,
-      name: item!.title,
+    router.navigate({
+      pathname: "/(tabs)/(countdown)/movie/[id]",
+      params: {
+        id: item!.id,
+        name: item!.title,
+      },
     });
   }
 
@@ -109,11 +111,15 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
   }
 
   function goToGame() {
-    navigation.navigate("Game", {
-      game: {
-        id: item!.game.id,
-        name: item!.game.name,
-        cover: { url: item!.game.cover.url },
+    router.navigate({
+      pathname: "/(tabs)/(countdown)/game/[id]",
+      params: {
+        id: item!.id,
+        game: JSON.stringify({
+          id: item!.game.id,
+          name: item!.game.name,
+          cover: { url: item!.game.cover.url },
+        }),
       },
     });
   }

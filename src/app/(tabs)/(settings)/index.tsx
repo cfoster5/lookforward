@@ -2,17 +2,17 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import analytics from "@react-native-firebase/analytics";
 import firestore from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
+import { Link } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Linking, Platform, Text, View } from "react-native";
 
 import { reusableStyles } from "@/helpers/styles";
+import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
+import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
+import { TipModal } from "@/screens/Settings/components/TipModal";
 import { useStore } from "@/stores/store";
 
-import { NotificationSetting } from "./components/NotificationSetting";
-import { SettingNavButton } from "./components/SettingNavButton";
-import { TipModal } from "./components/TipModal";
-
-function Settings({ navigation }) {
+export default function Settings() {
   const { user, onboardingModalRef, proModalRef } = useStore();
   const [hasPermissions, setHasPermissions] = useState(true);
   const [notifications, setNotifications] = useState({
@@ -90,56 +90,50 @@ function Settings({ navigation }) {
             {`Please enable notifications in your device's settings`}
           </Text>
         )}
-        {Platform.OS === "ios" && (
-          <>
-            <SettingNavButton
-              handlePress={async () => {
-                proModalRef.current?.present();
-                await analytics().logEvent("select_promotion", {
-                  name: "Pro",
-                  id: "com.lookforward.pro",
-                });
-              }}
-              text="Explore Pro Features"
-            />
-            <SettingNavButton
-              handlePress={async () => {
-                modalRef.current?.present();
-                await analytics().logEvent("select_promotion", {
-                  name: "Tip Jar",
-                  items: [
-                    { id: "com.lookforward.tip1" },
-                    { id: "com.lookforward.tip3" },
-                    { id: "com.lookforward.tip5" },
-                  ],
-                });
-              }}
-              text="Tip Jar"
-              buttonStyle={{ marginTop: 0 }}
-            />
-            <SettingNavButton
-              handlePress={() => {
-                Linking.openURL(
-                  `itms-apps://itunes.apple.com/app/viewContentsUserReviews/id1492748952?action=write-review`,
-                );
-              }}
-              text="Write a Review"
-              buttonStyle={{ marginTop: 0 }}
-            />
-            <SettingNavButton
-              handlePress={() => onboardingModalRef.current?.present()}
-              text="Show Getting Started"
-            />
-          </>
-        )}
-        <SettingNavButton
-          handlePress={() => navigation.navigate("Account")}
-          text="Account"
-        />
+        <>
+          <SettingNavButton
+            onPress={async () => {
+              proModalRef.current?.present();
+              await analytics().logEvent("select_promotion", {
+                name: "Pro",
+                id: "com.lookforward.pro",
+              });
+            }}
+            text="Explore Pro Features"
+            isFirstInGroup={true}
+          />
+          <SettingNavButton
+            onPress={async () => {
+              modalRef.current?.present();
+              await analytics().logEvent("select_promotion", {
+                name: "Tip Jar",
+                items: [
+                  { id: "com.lookforward.tip1" },
+                  { id: "com.lookforward.tip3" },
+                  { id: "com.lookforward.tip5" },
+                ],
+              });
+            }}
+            text="Tip Jar"
+            isFirstInGroup={false}
+          />
+          <Link
+            href="itms-apps://itunes.apple.com/app/viewContentsUserReviews/id1492748952?action=write-review"
+            asChild
+          >
+            <SettingNavButton text="Write a Review" isFirstInGroup={false} />
+          </Link>
+          <SettingNavButton
+            onPress={() => onboardingModalRef.current?.present()}
+            text="Show Getting Started"
+            isFirstInGroup={true}
+          />
+        </>
+        <Link href="/(tabs)/(settings)/account" asChild>
+          <SettingNavButton text="Account" isFirstInGroup={true} />
+        </Link>
       </View>
-      {Platform.OS === "ios" && <TipModal modalRef={modalRef} />}
+      <TipModal modalRef={modalRef} />
     </>
   );
 }
-
-export default Settings;

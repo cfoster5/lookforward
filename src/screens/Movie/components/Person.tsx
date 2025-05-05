@@ -1,7 +1,5 @@
-import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
-import { CompositeNavigationProp } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
+import { useRouter, useSegments } from "expo-router";
 import {
   PlatformColor,
   Pressable,
@@ -15,27 +13,16 @@ import { Cast, Crew } from "tmdb-ts";
 
 import { ContextMenu } from "@/screens/Search/components/SearchBottomSheet/ContextMenu";
 import { useStore } from "@/stores/store";
-import {
-  CountdownStackParamList,
-  FindStackParamList,
-  TabNavigationParamList,
-} from "@/types";
 import { onShare } from "@/utils/share";
 
-interface Props {
-  navigation:
-    | CompositeNavigationProp<
-        StackNavigationProp<FindStackParamList, "Movie">,
-        BottomTabNavigationProp<TabNavigationParamList, "FindTab">
-      >
-    | CompositeNavigationProp<
-        StackNavigationProp<CountdownStackParamList, "Movie">,
-        BottomTabNavigationProp<TabNavigationParamList, "CountdownTab">
-      >;
+type Props = {
   person: Cast | Crew;
-}
+};
 
-function Person({ navigation, person }: Props) {
+function Person({ person }: Props) {
+  const segments = useSegments();
+  const stack = segments[1] as "(find)" | "(countdown)";
+  const router = useRouter();
   const { theme } = useStore();
   const { width: windowWidth } = useWindowDimensions();
 
@@ -51,9 +38,7 @@ function Person({ navigation, person }: Props) {
 
   return (
     <ContextMenu
-      handleShareSelect={() =>
-        onShare(`person/${person.id}?name=${person.name}`, "movie")
-      }
+      handleShareSelect={() => onShare(`person/${person.id}`, "movie")}
     >
       <Pressable
         style={{
@@ -63,9 +48,12 @@ function Person({ navigation, person }: Props) {
           marginTop: 16,
         }}
         onPress={() =>
-          navigation.push("Actor", {
-            personId: person.id,
-            name: person.name,
+          router.push({
+            pathname: `/(tabs)/${stack}/person/[id]`,
+            params: {
+              id: person.id,
+              name: person.name,
+            },
           })
         }
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781

@@ -1,5 +1,6 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useScrollToTop } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import {
   FlatList,
@@ -22,7 +23,8 @@ import { useMovieData } from "./api/getMovies";
 import { MovieSearchModal } from "./components/MovieSearchModal";
 import { MovieOption } from "./types";
 
-export function MovieLayout({ navigation }) {
+export function MovieLayout() {
+  const router = useRouter();
   const modalRef = useRef<BottomSheetModal>();
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
@@ -70,9 +72,9 @@ export function MovieLayout({ navigation }) {
           renderItem={({ item }) => (
             <MoviePoster
               pressHandler={() =>
-                navigation.push("Movie", {
-                  movieId: item.id,
-                  name: item.title,
+                router.push({
+                  pathname: "/(tabs)/(find)/movie/[id]",
+                  params: { id: item.id },
                 })
               }
               movie={item}
@@ -101,7 +103,7 @@ export function MovieLayout({ navigation }) {
         <LoadingScreen />
       )}
       <MovieSearchModal
-        navigation={navigation}
+        // navigation={navigation}
         modalRef={modalRef}
         selectedOption={option}
         setSelectedOption={(option) => {

@@ -1,7 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { PlatformColor, Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -13,12 +12,16 @@ export function SearchGame({
 }: {
   item: Game & { release_dates: ReleaseDate[] };
 }) {
-  // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
-  const navigation = useNavigation<StackNavigationProp<any>>();
+  const router = useRouter();
 
   return (
     <Pressable
-      onPress={() => navigation.navigate("Game", { game: item })}
+      onPress={() =>
+        router.navigate({
+          pathname: "/(tabs)/(find)/game/[id]",
+          params: { id: item.id, game: JSON.stringify(item) },
+        })
+      }
       style={({ pressed }) => [
         {
           flexDirection: "row",

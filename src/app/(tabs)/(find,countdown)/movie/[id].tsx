@@ -1,11 +1,14 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import analytics from "@react-native-firebase/analytics";
-import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
-import { CompositeScreenProps } from "@react-navigation/native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
+import {
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+  useSegments,
+} from "expo-router";
 import { DateTime } from "luxon";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
@@ -57,38 +60,38 @@ import {
   tmdbMovieGenres,
 } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
+import { useMovie } from "@/screens/Movie/api/getMovie";
+import { useMovieRatings } from "@/screens/Movie/api/getMovieRatings";
+import { DiscoverListLabel } from "@/screens/Movie/components/DiscoverListLabel";
+import { ImageGallery } from "@/screens/Movie/components/ImageGallery";
+import Person from "@/screens/Movie/components/Person";
+import { Rating } from "@/screens/Movie/components/Rating";
+import WatchProvidersModal from "@/screens/Movie/components/WatchProvidersModal";
+import {
+  VideoSelectionProps,
+  ImageSelectionProps,
+  CreditSelectionProps,
+} from "@/screens/Movie/types";
+import { composeGroupedJobCredits } from "@/screens/Movie/utils/composeGroupedJobCredits";
+import { composeRuntime } from "@/screens/Movie/utils/composeRuntime";
 import { useStore } from "@/stores/store";
-import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
+import { Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
-import { useMovie } from "./api/getMovie";
-import { useMovieRatings } from "./api/getMovieRatings";
-import { DiscoverListLabel } from "./components/DiscoverListLabel";
-import { ImageGallery } from "./components/ImageGallery";
-import Person from "./components/Person";
-import { Rating } from "./components/Rating";
-import WatchProvidersModal from "./components/WatchProvidersModal";
-import {
-  CreditSelectionProps,
-  ImageSelectionProps,
-  VideoSelectionProps,
-} from "./types";
-import { composeGroupedJobCredits } from "./utils/composeGroupedJobCredits";
-import { composeRuntime } from "./utils/composeRuntime";
-
 function ScrollViewWithFlatList({
   data,
   numColumns,
-  navigation,
   navParamKey,
 }: {
   data: any;
   numColumns: number;
-  navigation: any;
   navParamKey: string;
 }) {
+  const segments = useSegments();
+  const stack = segments[1];
+  const router = useRouter();
   return (
     <ScrollView
       horizontal
@@ -111,9 +114,12 @@ function ScrollViewWithFlatList({
           <ButtonSingleState
             text={item.name}
             onPress={() =>
-              navigation.push("MovieDiscover", {
-                screenTitle: item.name,
-                [navParamKey]: item,
+              router.push({
+                pathname: `/(tabs)/${stack}/movie-discover`,
+                params: {
+                  screenTitle: item.name,
+                  [navParamKey]: JSON.stringify(item),
+                },
               })
             }
             buttonStyle={{
@@ -143,21 +149,15 @@ export function getReleaseDate(releaseDates: ReleaseDate[]) {
   );
 }
 
-type MovieScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParamList, "Movie">,
-  CompositeScreenProps<
-    BottomTabScreenProps<TabNavigationParamList, "FindTab">,
-    BottomTabScreenProps<TabNavigationParamList, "CountdownTab">
-  >
->;
-
-function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
-  const { movieId, name } = route.params;
+export default function MovieScreen() {
+  const segments = useSegments();
+  const stack = segments[1] as "(find)" | "(countdown)";
+  const navigation = useNavigation();
+  const { id } = useLocalSearchParams();
+  const router = useRouter();
   const { user, movieSubs, isPro, proModalRef } = useStore();
-  const isSubbed = movieSubs.find(
-    (sub) => sub.documentID === movieId.toString(),
-  );
-  const { data: movieDetails, isLoading } = useMovie(movieId);
+  const isSubbed = movieSubs.find((sub) => sub.documentID === id);
+  const { data: movieDetails, isLoading } = useMovie(id);
   const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(
     movieDetails?.imdb_id,
   );
@@ -190,6 +190,8 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
     movieDetails?.release_dates,
     "US",
   );
+  // Narrow belongs_to_collection to a local variable so TS can refine its type
+  const collection = movieDetails?.belongs_to_collection;
 
   // Get cert of first release date where cert is defined
   // Does not consider multiple ratings such as Battle of the Five Armies where Extended Edition is R
@@ -201,6 +203,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
+      title: movieDetails?.title,
       headerRight: () => (
         <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
           <Item
@@ -208,33 +211,31 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             iconName={isSubbed ? "checkmark-outline" : "add-outline"}
             onPress={() =>
               !isSubbed
-                ? subToMovie(movieId.toString(), user!.uid)
-                : removeSub("movies", movieId.toString(), user!.uid)
+                ? subToMovie(id, user!.uid)
+                : removeSub("movies", id, user!.uid)
             }
           />
           <Item
             title="share"
             iconName="share-outline"
-            onPress={() =>
-              onShare(`movie/${movieId}?name=${name}`, "headerButton")
-            }
+            onPress={() => onShare(`movie/${id}`, "headerButton")}
           />
         </HeaderButtons>
       ),
     });
-  }, [isSubbed, movieId, name, navigation, user]);
+  }, [isSubbed, id, navigation, user, movieDetails?.title]);
 
   // Memoize object to avoid unnecessary recalculations and re-renders.
   // Improves performance by ensuring that the object is only recalculated when its dependencies change.
   const recentMovie: Recent = useMemo(
     () => ({
-      id: movieId,
-      name,
+      id: id,
+      name: movieDetails?.title,
       img_path: movieDetails?.poster_path,
       last_viewed: timestamp,
       media_type: "movie",
     }),
-    [movieId, name, movieDetails?.poster_path],
+    [id, movieDetails],
   );
 
   useAddRecent("recentMovies", recentMovie);
@@ -384,9 +385,12 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 key={index}
                 text={genre.name}
                 onPress={() =>
-                  navigation.push("MovieDiscover", {
-                    screenTitle: genre.name,
-                    genre,
+                  router.push({
+                    pathname: `/(tabs)/${stack}/movie-discover`,
+                    params: {
+                      screenTitle: genre.name,
+                      genre: JSON.stringify(genre),
+                    },
                   })
                 }
                 buttonStyle={{
@@ -493,11 +497,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                 ? movieDetails.credits.cast
                 : composeGroupedJobCredits(movieDetails?.credits.crew)
               ).map((person) => (
-                <Person
-                  key={person.credit_id}
-                  navigation={navigation}
-                  person={person}
-                />
+                <Person key={person.credit_id} person={person} />
               ))}
             </>
           )}
@@ -598,7 +598,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                           )
                         : 2
                     }
-                    navigation={navigation}
                     navParamKey="company"
                   />
                 </>
@@ -611,20 +610,22 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     numColumns={Math.ceil(
                       movieDetails.keywords.keywords.length / 2,
                     )}
-                    navigation={navigation}
                     navParamKey="keyword"
                   />
                 </>
               )}
 
-              {movieDetails.belongs_to_collection && (
+              {collection && (
                 <>
                   <DiscoverListLabel text="Collection" />
                   <Pressable
                     onPress={() =>
-                      navigation.push("Collection", {
-                        name: movieDetails.belongs_to_collection.name,
-                        collectionId: movieDetails.belongs_to_collection?.id,
+                      router.push({
+                        pathname: `/(tabs)/${stack}/movie-collection/[id]`,
+                        params: {
+                          name: collection.name,
+                          id: collection.id,
+                        },
                       })
                     }
                     style={{
@@ -643,7 +644,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         borderRadius: 12,
                       }}
                       source={{
-                        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${movieDetails.belongs_to_collection.backdrop_path}`,
+                        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${collection.backdrop_path}`,
                       }}
                     />
                     <BlurView
@@ -666,7 +667,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                         { margin: 8, position: "absolute" },
                       ]}
                     >
-                      {movieDetails.belongs_to_collection.name}
+                      {collection.name}
                     </ThemedText>
                   </Pressable>
                 </>
@@ -681,9 +682,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     renderItem={({ item }) => (
                       <MoviePoster
                         pressHandler={() =>
-                          navigation.push("Movie", {
-                            movieId: item.id,
-                            name: item.title,
+                          router.push({
+                            pathname: `/(tabs)/${stack}/movie/[id]`,
+                            params: { id: item.id },
                           })
                         }
                         movie={item}
@@ -716,5 +717,3 @@ const styles = StyleSheet.create({
     color: PlatformColor("secondaryLabel"),
   },
 });
-
-export default MovieScreen;

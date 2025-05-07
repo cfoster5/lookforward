@@ -1,5 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
-import firestore from "@react-native-firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "@react-native-firebase/firestore";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import type { RouteProp } from "@react-navigation/native";
 import { useQueryClient } from "@tanstack/react-query";
@@ -76,30 +82,33 @@ export function TabStack() {
   } = useAppConfigStore();
 
   useEffect(() => {
-    const movieSubscription = firestore()
-      .collection("movies")
-      .where("subscribers", "array-contains", user!.uid)
-      .onSnapshot((documentSnapshot) => {
-        const movieSubsData: FirestoreMovie[] = documentSnapshot.docs.map(
-          (doc) => ({
-            ...doc.data(),
-            subscribers: doc.data()["subscribers"],
-            documentID: doc.id,
-          }),
-        );
-        setMovieSubs(movieSubsData);
-      });
-
-    const gameSubscription = firestore()
-      .collection("gameReleases")
-      .where("subscribers", "array-contains", user!.uid)
-      .onSnapshot((documentSnapshot) => {
-        const gameSubsData = documentSnapshot.docs.map((doc) => ({
+    const db = getFirestore();
+    const moviesQuery = query(
+      collection(db, "movies"),
+      where("subscribers", "array-contains", user!.uid),
+    );
+    const movieSubscription = onSnapshot(moviesQuery, (documentSnapshot) => {
+      const movieSubsData: FirestoreMovie[] = documentSnapshot.docs.map(
+        (doc) => ({
           ...doc.data(),
+          subscribers: doc.data()["subscribers"],
           documentID: doc.id,
-        }));
-        setGameSubs(gameSubsData);
-      });
+        }),
+      );
+      setMovieSubs(movieSubsData);
+    });
+
+    const gameQuery = query(
+      collection(db, "gameReleases"),
+      where("subscribers", "array-contains", user!.uid),
+    );
+    const gameSubscription = onSnapshot(gameQuery, (documentSnapshot) => {
+      const gameSubsData = documentSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        documentID: doc.id,
+      }));
+      setGameSubs(gameSubsData);
+    });
 
     // Stop listening for updates when no longer required
     return () => {

@@ -1,4 +1,4 @@
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics } from "@react-native-firebase/analytics";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { BlurView } from "expo-blur";
@@ -26,7 +26,7 @@ export function RecentPerson({ item }: { item: Recent }) {
       <Pressable
         onPress={() => {
           proModalRef.current?.present();
-          analytics().logEvent("select_promotion", {
+          getAnalytics().logEvent("select_promotion", {
             name: "Pro",
             id: "com.lookforward.pro",
           });

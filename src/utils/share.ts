@@ -1,4 +1,4 @@
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics } from "@react-native-firebase/analytics";
 import { Alert, Share } from "react-native";
 
 import { tryCatch } from "./try-catch";
@@ -16,7 +16,7 @@ export const onShare = async (urlSegment: string, method: string) => {
   const { action, activityType } = data;
   if (action === Share.sharedAction) {
     // optionally do something with activityType
-    await analytics().logShare({
+    await getAnalytics().logShare({
       content_type: "url",
       item_id: urlSegment,
       method,

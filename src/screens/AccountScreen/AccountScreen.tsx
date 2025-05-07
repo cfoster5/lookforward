@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import auth from "@react-native-firebase/auth";
+import { getAuth } from "@react-native-firebase/auth";
 import {
   Alert,
   PlatformColor,
@@ -42,7 +42,7 @@ const SettingsItem = ({
 
 const AccountScreen = ({ navigation }) => {
   function signOut() {
-    auth()
+    getAuth()
       .signOut()
       .then(() => console.log("User signed out!"));
   }

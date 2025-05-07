@@ -1,4 +1,4 @@
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics } from "@react-native-firebase/analytics";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -137,7 +137,7 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
               <LargeBorderlessButton
                 handlePress={async () => {
                   proModalRef.current?.present();
-                  await analytics().logEvent("select_promotion", {
+                  await getAnalytics().logEvent("select_promotion", {
                     name: "Pro",
                     id: "com.lookforward.pro",
                   });

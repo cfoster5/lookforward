@@ -1,5 +1,5 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics } from "@react-native-firebase/analytics";
 import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { CompositeScreenProps } from "@react-navigation/native";
@@ -343,7 +343,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
               <LargeBorderlessButton
                 handlePress={async () => {
                   proModalRef.current?.present();
-                  await analytics().logEvent("select_promotion", {
+                  await getAnalytics().logEvent("select_promotion", {
                     name: "Pro",
                     id: "com.lookforward.pro",
                   });

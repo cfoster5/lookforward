@@ -2,7 +2,7 @@ import BottomSheet, {
   BottomSheetFlatList,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics } from "@react-native-firebase/analytics";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useMemo, useState } from "react";
 import {
@@ -76,7 +76,8 @@ export const SearchBottomSheet = () => {
 
   const snapPoints = useMemo(
     () => [
-      initialSnapPoint !== 0 ? initialSnapPoint : tabBarHeight,
+      // Snap point 0 is invalid, so we use the tabBarHeight until initialSnapPoint is set
+      initialSnapPoint || tabBarHeight,
       "50%",
       "100%",
     ],
@@ -127,8 +128,6 @@ export const SearchBottomSheet = () => {
     }
   };
 
-  const onLayout = () => setInitialSnapPoint(tabBarHeight + 8);
-
   const composeRecentSections = () => {
     if (categoryIndex === 0) {
       const titles = recentMovies.sort((a, b) => b.last_viewed - a.last_viewed);
@@ -167,7 +166,7 @@ export const SearchBottomSheet = () => {
       <View style={{ marginHorizontal: 12, flex: 1 }}>
         <View style={{ flexDirection: "row" }}>
           <BottomSheetTextInput
-            onLayout={onLayout}
+            onLayout={(event) => setInitialSnapPoint(tabBarHeight + 8)}
             onChangeText={(value) => setSearchValue(value)}
             placeholder={categoryIndex === 0 ? "Movies & People" : "Games"}
             placeholderTextColor={PlatformColor("secondaryLabel")}
@@ -224,7 +223,7 @@ export const SearchBottomSheet = () => {
                 handlePress={async () => {
                   Keyboard.dismiss();
                   proModalRef.current?.present();
-                  await analytics().logEvent("select_promotion", {
+                  await getAnalytics().logEvent("select_promotion", {
                     name: "Pro",
                     id: "com.lookforward.pro",
                   });

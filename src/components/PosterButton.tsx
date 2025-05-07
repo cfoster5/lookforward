@@ -1,5 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
-import firestore from "@react-native-firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "@react-native-firebase/firestore";
 import { useRef } from "react";
 import { Animated, Easing, PlatformColor, Pressable, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
@@ -32,13 +40,13 @@ function PosterButton({ movieId, game }: Props) {
       easing: Easing.inOut(Easing.ease),
     }).start(async () => {
       try {
-        await firestore()
-          .collection("movies")
-          .doc(movieId)
-          .set(
-            { subscribers: firestore.FieldValue.arrayUnion(user!.uid) },
-            { merge: true },
-          );
+        const db = getFirestore();
+        const docRef = doc(db, "movies", movieId!);
+        await setDoc(
+          docRef,
+          { subscribers: arrayUnion(user!.uid) },
+          { merge: true },
+        );
         Animated.timing(transformAnim, {
           toValue: 1,
           duration: 50,
@@ -64,12 +72,11 @@ function PosterButton({ movieId, game }: Props) {
       easing: Easing.inOut(Easing.ease),
     }).start(async () => {
       try {
-        await firestore()
-          .collection(collection)
-          .doc(docId)
-          .update({
-            subscribers: firestore.FieldValue.arrayRemove(user!.uid),
-          });
+        const db = getFirestore();
+        const docRef = doc(db, collection, docId);
+        await updateDoc(docRef, {
+          subscribers: arrayRemove(user!.uid),
+        });
         Animated.timing(transformAnim, {
           toValue: 1,
           duration: 50,

@@ -1,9 +1,17 @@
-import firestore from "@react-native-firebase/firestore";
-import messaging from "@react-native-firebase/messaging";
+import {
+  getMessaging,
+  AuthorizationStatus,
+} from "@react-native-firebase/messaging";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
 import mobileAds from "react-native-google-mobile-ads";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  updateDoc,
+} from "@react-native-firebase/firestore";
 
 import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
@@ -42,21 +50,24 @@ export default function App() {
 
     async function requestUserPermission() {
       try {
-        const authStatus = await messaging().requestPermission();
+        const authStatus = await getMessaging().requestPermission();
         const enabled =
-          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+          authStatus === AuthorizationStatus.AUTHORIZED ||
+          authStatus === AuthorizationStatus.PROVISIONAL;
         if (enabled) {
-          const userRef = firestore().collection("users").doc(uid);
-          const docSnapshot = await userRef.get();
+          const db = getFirestore();
+          const userRef = doc(db, "users", uid);
+          const docSnapshot = await getDoc(userRef);
           if (!docSnapshot.data()?.notifications) {
             // Only set notification preferences to true if they haven't been set before
-            await userRef.update({ notifications: { day: true, week: true } });
+            await updateDoc(userRef, {
+              notifications: { day: true, week: true },
+            });
           }
-          const token = await messaging().getToken();
+          const token = await getMessaging().getToken();
           await saveTokenToDatabase(token);
           // Listen to token refresh changes and store the unsubscribe function
-          unsubscribe = messaging().onTokenRefresh(async (token) => {
+          unsubscribe = getMessaging().onTokenRefresh(async (token) => {
             await saveTokenToDatabase(token);
           });
         }
@@ -69,10 +80,9 @@ export default function App() {
 
     async function saveTokenToDatabase(token: string) {
       try {
-        await firestore()
-          .collection("users")
-          .doc(uid)
-          .update({ deviceToken: token });
+        const db = getFirestore();
+        const userRef = doc(db, "users", uid);
+        await updateDoc(userRef, { deviceToken: token });
       } catch (error) {
         console.error("Error saving token to database:", error);
       }

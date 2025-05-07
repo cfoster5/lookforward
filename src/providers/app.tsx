@@ -1,7 +1,7 @@
 import { useMMKVDevTools } from "@dev-plugins/react-native-mmkv";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import auth from "@react-native-firebase/auth";
+import { getAuth } from "@react-native-firebase/auth";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -38,7 +38,7 @@ export function AppProvider({ children }: AppProviderProps) {
   // });
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged((user) => setUser(user));
+    const subscriber = getAuth().onAuthStateChanged((user) => setUser(user));
     return subscriber; // unsubscribe on unmount
   }, [setUser]);
 

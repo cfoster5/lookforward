@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.19.0](https://github.com/cfoster5/lookforward/compare/v6.18.0...v6.19.0) (2025-05-11)
+
+
+### Features
+
+* integrate App Tracking Transparency for personalized ads ([dd59db9](https://github.com/cfoster5/lookforward/commit/dd59db94e653c0c77a61903cc2ddde32e49be157))
+
 ## [6.18.0](https://github.com/cfoster5/lookforward/compare/v6.17.0...v6.18.0) (2025-04-30)
 
 

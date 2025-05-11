@@ -1,19 +1,19 @@
 import {
+  getFirestore,
+  doc,
+  getDoc,
+  updateDoc,
+} from "@react-native-firebase/firestore";
+import {
   getMessaging,
   AuthorizationStatus,
 } from "@react-native-firebase/messaging";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
-import mobileAds from "react-native-google-mobile-ads";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  updateDoc,
-} from "@react-native-firebase/firestore";
 
 import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
+import useGoogleMobileAds from "@/hooks/useGoogleMobileAds";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
 
 import Navigation from "./src/navigation";
@@ -26,15 +26,10 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const { user, isPro, theme } = useStore();
+  const { user, theme } = useStore();
 
   useFirebaseAnalyticsCheck();
-
-  // Initialize Google Mobile Ads SDK
-  useEffect(() => {
-    if (!isPro) mobileAds().initialize();
-  }, [isPro]);
-
+  useGoogleMobileAds();
   useRevenueCat();
 
   useEffect(() => {

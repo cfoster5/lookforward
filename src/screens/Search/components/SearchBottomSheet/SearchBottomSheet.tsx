@@ -24,6 +24,7 @@ import { DropdownMenu } from "@/components/DropdownMenu";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { BANNER_AD_UNIT_ID } from "@/constants/AdUnits";
 import { calculateWidth } from "@/helpers/helpers";
+import { useAppConfigStore } from "@/stores/appConfig";
 import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
 
@@ -73,6 +74,7 @@ export const SearchBottomSheet = () => {
     initialSnapPoint,
     setInitialSnapPoint,
   } = useStore();
+  const { requestNonPersonalizedAdsOnly } = useAppConfigStore();
 
   const snapPoints = useMemo(
     () => [

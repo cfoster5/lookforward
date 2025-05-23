@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.20.0](https://github.com/cfoster5/lookforward/compare/v6.19.0...v6.20.0) (2025-05-23)
+
+
+### Features
+
+* adjust review request threshold from 5 to 3 subscriptions ([b078991](https://github.com/cfoster5/lookforward/commit/b07899178f0750de10ba85287208db93f294428a))
+
 ## [6.19.0](https://github.com/cfoster5/lookforward/compare/v6.18.0...v6.19.0) (2025-05-11)
 
 

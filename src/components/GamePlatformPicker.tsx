@@ -10,8 +10,9 @@ import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
+import { useCountdownLimit } from "@/hooks/useCountdownLimit";
 import { useStore } from "@/stores/store";
-import { Game, ReleaseDate } from "@/types";
+import { Games, ReleaseDate } from "@/types/igdb";
 import { timestampToUTC } from "@/utils/dates";
 
 import { reusableStyles } from "../helpers/styles";
@@ -58,20 +59,27 @@ const ItemSeparator = () => (
 
 export function GamePlatformPicker() {
   const { user, bottomSheetModalRef } = useStore();
+  const checkLimit = useCountdownLimit();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
   async function addGameRelease(
-    game: Game & {
+    game: Games & {
       release_dates: ReleaseDate[];
     },
     releaseDate: ReleaseDate,
   ) {
+    // Check limit before adding
+    if (!checkLimit("gameReleases")) {
+      bottomSheetModalRef.current?.dismiss();
+      return; // Limit reached, modal shown
+    }
+
     // console.log("releaseDate", releaseDate);
     // console.log(game);
     const { id, name } = game;
     try {
       const db = getFirestore();
-      const docRef = doc(db, "gameReleases", releaseDate.id.toString());
+      const docRef = doc(db, "gameReleases", releaseDate.id?.toString() || "");
       await setDoc(
         docRef,
         { game: { id, name }, subscribers: arrayUnion(user!.uid) },

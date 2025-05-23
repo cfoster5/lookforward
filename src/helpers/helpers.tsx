@@ -1,6 +1,5 @@
 import {
   getFirestore,
-  collection,
   doc,
   setDoc,
   updateDoc,
@@ -81,7 +80,13 @@ export function groupReleasesByGame(releaseDates: ReleaseDate[]) {
 export async function subToMovie(
   movieId: FirestoreMovie["documentID"],
   user: string,
+  limitCheckCallback?: () => boolean,
 ) {
+  // Check limit if callback provided
+  if (limitCheckCallback && !limitCheckCallback()) {
+    return { success: false, limitReached: true };
+  }
+
   try {
     const db = getFirestore();
     const docRef = doc(db, "movies", movieId);
@@ -90,8 +95,10 @@ export async function subToMovie(
       enableVibrateFallback: true,
       ignoreAndroidSystemSettings: false,
     });
+    return { success: true, limitReached: false };
   } catch (error) {
     console.error("Error writing document: ", error);
+    return { success: false, limitReached: false, error };
   }
 }
 

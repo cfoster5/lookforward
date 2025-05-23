@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { Movie, PosterSizes, Recommendation } from "tmdb-ts";
 
+import { useCountdownLimit } from "@/hooks/useCountdownLimit";
 import { ContextMenu } from "@/screens/Search/components/SearchBottomSheet/ContextMenu";
 import {
   addCountdownItem,
@@ -34,6 +35,7 @@ export function MoviePoster({
   buttonStyle?: StyleProp<ViewStyle>;
 }) {
   const { movieSubs, user } = useStore();
+  const checkLimit = useCountdownLimit();
 
   const isMovieSub = () =>
     movie!.id &&
@@ -44,8 +46,13 @@ export function MoviePoster({
       handleCountdownToggle={{
         action: () =>
           isMovieSub()
-            ? removeCountdownItem("movies", movie!.id, user)
-            : addCountdownItem("movies", movie!.id, user),
+            ? removeCountdownItem("movies", movie!.id, user!)
+            : addCountdownItem({
+                collection: "movies",
+                id: movie!.id,
+                user: user!,
+                limitCheckCallback: () => checkLimit("movies"),
+              }),
         buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
       }}
       handleShareSelect={() =>

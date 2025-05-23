@@ -40,7 +40,7 @@ export const Row = ({
         name={icon}
         size={36}
         tintColor={PlatformColor("systemBlue")}
-        resizeMode="scaleAspectFill"
+        resizeMode="scaleAspectFit"
         style={{ height: 36, width: 36 }}
       />
     )}

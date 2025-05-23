@@ -1,7 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import {
   getFirestore,
-  collection,
   doc,
   setDoc,
   updateDoc,
@@ -13,16 +12,18 @@ import { Animated, Easing, PlatformColor, Pressable, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { iOSColors } from "react-native-typography";
 
+import { useCountdownLimit } from "@/hooks/useCountdownLimit";
 import { useStore } from "@/stores/store";
-import { Game, ReleaseDate } from "@/types";
+import { Games, ReleaseDate } from "@/types/igdb";
 
 interface Props {
   movieId?: string;
-  game?: Game & { release_dates: ReleaseDate[] };
+  game?: Games & { release_dates: ReleaseDate[] };
 }
 
 function PosterButton({ movieId, game }: Props) {
   const { user, movieSubs, gameSubs, bottomSheetModalRef } = useStore();
+  const checkLimit = useCountdownLimit();
 
   const isMovieSub = () =>
     movieId && movieSubs.some((sub) => sub.documentID === movieId.toString());
@@ -33,6 +34,11 @@ function PosterButton({ movieId, game }: Props) {
   const transformAnim = useRef(new Animated.Value(1)).current;
 
   async function addMovieToList() {
+    // Check limit before adding
+    if (!checkLimit("movies")) {
+      return; // Limit reached, modal shown
+    }
+
     Animated.timing(transformAnim, {
       toValue: 0,
       duration: 50,
@@ -94,12 +100,20 @@ function PosterButton({ movieId, game }: Props) {
   }
 
   function toggleGameSub() {
-    const gameId = gameSubs.find(
-      (releaseDate) => releaseDate.game.id === game!.id,
-    )?.documentID;
-    return isGameSub()
-      ? deleteItem("gameReleases", gameId)
-      : bottomSheetModalRef.current?.present(game);
+    if (isGameSub()) {
+      const gameId = gameSubs.find(
+        (releaseDate) => releaseDate.game.id === game!.id,
+      )?.documentID;
+      if (gameId) {
+        return deleteItem("gameReleases", gameId);
+      }
+    } else {
+      // Check limit before showing platform picker
+      if (!checkLimit("gameReleases")) {
+        return; // Limit reached, modal shown
+      }
+      return bottomSheetModalRef.current?.present(game);
+    }
   }
 
   return (

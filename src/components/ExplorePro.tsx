@@ -141,6 +141,18 @@ export const ExplorePro = () => {
           useAltIcon
         />
         <Row
+          icon="list.dash"
+          title="Unlimited Countdown Items"
+          body="Don't stop at 5. Add every title you're excited for."
+          useAltIcon
+        />
+        <Row
+          icon="clock.arrow.circlepath"
+          title="Search History"
+          body="See your recent searches for titles and people."
+          useAltIcon
+        />
+        <Row
           icon="star"
           title="Movie Ratings"
           body="Find ratings from IMDb, Rotten Tomatoes, and Metacritic."
@@ -150,12 +162,6 @@ export const ExplorePro = () => {
           icon="ticket"
           title="Box Office"
           body="View ticket sales at the theaters."
-          useAltIcon
-        />
-        <Row
-          icon="clock.arrow.circlepath"
-          title="Search History"
-          body="See your recent searches for titles and people."
           useAltIcon
         />
         {/* <SubscriptionOption

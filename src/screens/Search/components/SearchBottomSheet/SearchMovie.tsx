@@ -7,6 +7,7 @@ import { iOSUIKit } from "react-native-typography";
 import { MovieWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
+import { useCountdownLimit } from "@/hooks/useCountdownLimit";
 import { useStore } from "@/stores/store";
 import { dateToFullLocale } from "@/utils/dates";
 import { onShare } from "@/utils/share";
@@ -19,6 +20,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
   // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
   const navigation = useNavigation<StackNavigationProp<any>>();
   const { user, movieSubs } = useStore();
+  const checkLimit = useCountdownLimit();
 
   const isMovieSub = () =>
     item.id && movieSubs.some((sub) => sub.documentID === item.id.toString());
@@ -28,8 +30,13 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
       handleCountdownToggle={{
         action: () =>
           isMovieSub()
-            ? removeCountdownItem("movies", item.id, user)
-            : addCountdownItem("movies", item.id, user),
+            ? removeCountdownItem("movies", item.id, user!)
+            : addCountdownItem({
+                collection: "movies",
+                id: item.id,
+                user: user!,
+                limitCheckCallback: () => checkLimit("movies"),
+              }),
         buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
       }}
       handleShareSelect={() =>

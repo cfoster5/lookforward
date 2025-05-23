@@ -57,6 +57,7 @@ import {
   tmdbMovieGenres,
 } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
+import { useCountdownLimit } from "@/hooks/useCountdownLimit";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
@@ -156,6 +157,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { movieId, name } = route.params;
   const { user, movieSubs, isPro, proModalRef } = useStore();
   const { requestNonPersonalizedAdsOnly } = useAppConfigStore();
+  const checkLimit = useCountdownLimit();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString(),
   );
@@ -210,7 +212,9 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
             iconName={isSubbed ? "checkmark-outline" : "add-outline"}
             onPress={() =>
               !isSubbed
-                ? subToMovie(movieId.toString(), user!.uid)
+                ? subToMovie(movieId.toString(), user!.uid, () =>
+                    checkLimit("movies"),
+                  )
                 : removeSub("movies", movieId.toString(), user!.uid)
             }
           />
@@ -224,7 +228,7 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
         </HeaderButtons>
       ),
     });
-  }, [isSubbed, movieId, name, navigation, user]);
+  }, [isSubbed, movieId, name, navigation, user, checkLimit]);
 
   // Memoize object to avoid unnecessary recalculations and re-renders.
   // Improves performance by ensuring that the object is only recalculated when its dependencies change.

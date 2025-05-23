@@ -8,6 +8,7 @@ import { PlatformColor, Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { calculateWidth } from "@/helpers/helpers";
+import { useCountdownLimit } from "@/hooks/useCountdownLimit";
 import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
 import { Recent } from "@/types";
@@ -22,6 +23,7 @@ export function RecentTitle({ item }: { item: Recent }) {
   const navigation = useNavigation<StackNavigationProp<any>>();
   const { user, movieSubs, isPro, proModalRef } = useStore();
   const { removeRecent } = useRecentItemsStore();
+  const checkLimit = useCountdownLimit();
 
   const isMovieSub = () =>
     item.id && movieSubs.some((sub) => sub.documentID === item.id.toString());
@@ -169,8 +171,13 @@ export function RecentTitle({ item }: { item: Recent }) {
           ? {
               action: () =>
                 isMovieSub()
-                  ? removeCountdownItem("movies", item.id, user)
-                  : addCountdownItem("movies", item.id, user),
+                  ? removeCountdownItem("movies", item.id, user!)
+                  : addCountdownItem({
+                      collection: "movies",
+                      id: item.id,
+                      user: user!,
+                      limitCheckCallback: () => checkLimit("movies"),
+                    }),
               buttonText: isMovieSub()
                 ? "Remove from Countdown"
                 : "Add to Countdown",

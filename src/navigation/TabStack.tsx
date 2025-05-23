@@ -120,7 +120,7 @@ export function TabStack() {
 
   useEffect(() => {
     async function requestReview() {
-      if (movieSubs.length + gameSubs.length >= 5 && !hasRequestedReview) {
+      if (movieSubs.length + gameSubs.length >= 3 && !hasRequestedReview) {
         const isAvailable = await StoreReview.isAvailableAsync();
         if (isAvailable) {
           await StoreReview.requestReview();

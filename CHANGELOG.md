@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.21.0](https://github.com/cfoster5/lookforward/compare/v6.20.0...v6.21.0) (2025-05-23)
+
+
+### Features
+
+* implement countdown limit checks for subs ([9d4723a](https://github.com/cfoster5/lookforward/commit/9d4723a05a74ff3ae1d2e1184a238940380db117))
+
 ## [6.20.0](https://github.com/cfoster5/lookforward/compare/v6.19.0...v6.20.0) (2025-05-23)
 
 

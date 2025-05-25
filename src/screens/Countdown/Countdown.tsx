@@ -1,8 +1,14 @@
+import { getAnalytics } from "@react-native-firebase/analytics";
 import { useScrollToTop } from "@react-navigation/native";
 import { useRef } from "react";
 import { Platform, PlatformColor, SectionList, View } from "react-native";
+import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
+import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { BANNER_AD_UNIT_ID } from "@/constants/AdUnits";
+import { useAppConfigStore } from "@/stores/appConfig";
+import { useStore } from "@/stores/store";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useGameCountdowns } from "./api/getGameCountdowns";
@@ -11,6 +17,8 @@ import { CountdownItem } from "./components/CountdownItem";
 import { SectionHeader } from "./components/SectionHeader";
 
 function Countdown() {
+  const { isPro, proModalRef } = useStore();
+  const { requestNonPersonalizedAdsOnly } = useAppConfigStore();
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
   const paddingBottom = useBottomTabOverflow();
@@ -69,14 +77,38 @@ function Countdown() {
       )}
       renderSectionHeader={SectionHeader}
       ListHeaderComponent={
-        <View
-          style={{
-            height: 16,
-            backgroundColor: PlatformColor("systemGray6"),
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-          }}
-        />
+        <>
+          {!isPro && (
+            <View style={{ paddingBottom: 16 }}>
+              <LargeBorderlessButton
+                handlePress={async () => {
+                  proModalRef.current?.present();
+                  await getAnalytics().logEvent("select_promotion", {
+                    name: "Pro",
+                    id: "com.lookforward.pro",
+                  });
+                }}
+                text="Explore Pro Features"
+                style={{ paddingBottom: 0 }}
+              />
+              <View style={{ alignItems: "center", paddingTop: 16 }}>
+                <BannerAd
+                  unitId={BANNER_AD_UNIT_ID}
+                  size={BannerAdSize.BANNER}
+                  requestOptions={{ requestNonPersonalizedAdsOnly }}
+                />
+              </View>
+            </View>
+          )}
+          <View
+            style={{
+              height: 16,
+              backgroundColor: PlatformColor("systemGray6"),
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+            }}
+          />
+        </>
       }
       ref={scrollRef}
     />

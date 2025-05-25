@@ -221,24 +221,26 @@ export const SearchBottomSheet = () => {
         {!searchValue && (
           <>
             {!isPro && (
-              <LargeBorderlessButton
-                handlePress={async () => {
-                  Keyboard.dismiss();
-                  proModalRef.current?.present();
-                  await getAnalytics().logEvent("select_promotion", {
-                    name: "Pro",
-                    id: "com.lookforward.pro",
-                  });
-                }}
-                text="Explore Pro Features"
-              />
-              // {/* <View style={{ alignItems: "center" }}>
-              //   <BannerAd
-              //     unitId={BANNER_AD_UNIT_ID}
-              //     size={BannerAdSize.BANNER}
-              //     requestOptions={{ requestNonPersonalizedAdsOnly: true }}
-              //   />
-              // </View> */}
+              <View style={{ paddingBottom: 16 }}>
+                <LargeBorderlessButton
+                  handlePress={async () => {
+                    Keyboard.dismiss();
+                    proModalRef.current?.present();
+                    await getAnalytics().logEvent("select_promotion", {
+                      name: "Pro",
+                      id: "com.lookforward.pro",
+                    });
+                  }}
+                  text="Explore Pro Features"
+                />
+                <View style={{ alignItems: "center" }}>
+                  <BannerAd
+                    unitId={BANNER_AD_UNIT_ID}
+                    size={BannerAdSize.BANNER}
+                    requestOptions={{ requestNonPersonalizedAdsOnly: true }}
+                  />
+                </View>
+              </View>
             )}
             <SectionList
               ListHeaderComponent={shouldShowTitle() ? ListHeader : undefined}

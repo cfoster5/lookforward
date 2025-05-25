@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.22.0](https://github.com/cfoster5/lookforward/compare/v6.21.0...v6.22.0) (2025-05-25)
+
+
+### Features
+
+* add ad banner and button for Pro features in Countdown and SearchBottomSheet ([cf18df3](https://github.com/cfoster5/lookforward/commit/cf18df30ed4675f4d8f2fe2d83a3a4754b39f67e))
+
 ## [6.21.0](https://github.com/cfoster5/lookforward/compare/v6.20.0...v6.21.0) (2025-05-23)
 
 

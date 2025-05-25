@@ -13,9 +13,9 @@
     "test": "jest --watchAll"
   },
   "dependencies": {
-    "@dev-plugins/react-native-mmkv": "~0.2.0",
-    "@dev-plugins/react-navigation": "~0.2.0",
-    "@dev-plugins/react-query": "~0.2.0",
+    "@dev-plugins/react-native-mmkv": "^0.3.1",
+    "@dev-plugins/react-navigation": "^0.3.1",
+    "@dev-plugins/react-query": "^0.3.1",
     "@expo/vector-icons": "^14.1.0",
     "@gorhom/bottom-sheet": "^5",
     "@nandorojo/galeria": "^1.2.0",
@@ -27,7 +27,7 @@
     "@react-native-segmented-control/segmented-control": "2.5.7",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/elements": "^1.2.1",
-    "@react-navigation/native": "^6.0.6",
+    "@react-navigation/native": "^6.x",
     "@react-navigation/native-stack": "^6.2.5",
     "@react-navigation/stack": "^6.3.4",
     "@tanstack/react-query": "^5.72.1",

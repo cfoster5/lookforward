@@ -1,6 +1,6 @@
 import { getAuth } from "@react-native-firebase/auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Keyboard,
@@ -21,12 +21,6 @@ type Props = NativeStackScreenProps<AuthStackParams, "Sign In">;
 function Login({ navigation, route }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  useEffect(() => {
-    if (route.params.email) {
-      setEmail(route.params.email);
-    }
-  }, [route.params.email]);
 
   async function signIn() {
     try {
@@ -59,9 +53,7 @@ function Login({ navigation, route }: Props) {
               { color: PlatformColor("label") },
             ]}
           >
-            {route.params.emailSent
-              ? "Check your email inbox"
-              : "Welcome back!"}
+            {route.params.email ? "Check your email inbox" : "Welcome back!"}
           </Text>
           <Text
             style={[
@@ -69,7 +61,7 @@ function Login({ navigation, route }: Props) {
               { color: PlatformColor("secondaryLabel"), marginBottom: 8 },
             ]}
           >
-            {route.params.emailSent
+            {route.params.email
               ? "Sign in after resetting your password"
               : "Sign in to your account"}
           </Text>
@@ -87,7 +79,7 @@ function Login({ navigation, route }: Props) {
             autoCapitalize="none"
             keyboardType="email-address"
             textContentType="username"
-            value={email}
+            value={route.params?.email ?? email}
             onChangeText={(text) => setEmail(text)}
           />
           <TextInput
@@ -106,7 +98,7 @@ function Login({ navigation, route }: Props) {
             value={password}
             onChangeText={(text) => setPassword(text)}
           />
-          {!route.params.emailSent && (
+          {!route.params.email && (
             <Pressable
               style={{ alignItems: "flex-end" }}
               onPress={() => navigation.navigate("Password Reset")}
@@ -126,7 +118,7 @@ function Login({ navigation, route }: Props) {
           )}
           <LargeFilledButton
             disabled={!email || !password}
-            style={{ marginTop: route.params.emailSent ? 16 : 8 }}
+            style={{ marginTop: route.params.email ? 16 : 8 }}
             handlePress={() => (email && password ? signIn() : null)}
             text="Continue"
           />

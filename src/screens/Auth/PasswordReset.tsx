@@ -25,7 +25,7 @@ function PasswordReset({ navigation }: Props) {
   async function signIn() {
     try {
       await getAuth().sendPasswordResetEmail(email);
-      navigation.navigate("Sign In", { emailSent: true, email });
+      navigation.navigate("Sign In", { email });
     } catch (error) {
       if (error.code === "auth/invalid-email") {
         Alert.alert("Invalid Email", "That email address is invalid!");

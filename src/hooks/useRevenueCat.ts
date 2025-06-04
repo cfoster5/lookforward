@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import Purchases from "react-native-purchases";
+import Purchases, { CustomerInfo } from "react-native-purchases";
 
 import { useStore } from "@/stores/store";
 
@@ -16,9 +16,15 @@ export function useRevenueCat() {
       appUserID: user?.uid,
     });
 
-    Purchases.addCustomerInfoUpdateListener((info) => {
+    const customerInfoUpdated = (info: CustomerInfo) => {
       setIsPro(!!info.entitlements.active.pro);
       // handle any changes to customerInfo
-    });
+    };
+
+    Purchases.addCustomerInfoUpdateListener(customerInfoUpdated);
+    return () => {
+      // Clean up the listener when the component unmounts
+      Purchases.removeCustomerInfoUpdateListener(customerInfoUpdated);
+    };
   }, [user, setIsPro]);
 }

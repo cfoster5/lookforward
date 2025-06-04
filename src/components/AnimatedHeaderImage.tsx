@@ -1,4 +1,5 @@
 import { ImageBackground, StyleSheet, useWindowDimensions } from "react-native";
+import { useMemo } from "react";
 import LinearGradient from "react-native-linear-gradient";
 import Animated, {
   interpolate,
@@ -19,12 +20,16 @@ export function AnimatedHeaderImage({
 }) {
   const { width: windowWidth } = useWindowDimensions();
 
-  const styles = StyleSheet.create({
-    backdrop: {
-      width: windowWidth,
-      height: windowWidth / (16 / 9),
-    },
-  });
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        backdrop: {
+          width: windowWidth,
+          height: windowWidth / (16 / 9),
+        },
+      }),
+    [windowWidth],
+  );
 
   const headerStyle = useAnimatedStyle(() => {
     return {

@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { useMemo } from "react";
 import { iOSUIKit } from "react-native-typography";
 import { Cast, Crew } from "tmdb-ts";
 
@@ -35,19 +36,40 @@ interface Props {
   person: Cast | Crew;
 }
 
+const pressableStyle = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  nameContainer: {
+    marginLeft: 16,
+    flex: 1,
+  },
+  centered: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+});
+
 function Person({ navigation, person }: Props) {
   const { theme } = useStore();
   const { width: windowWidth } = useWindowDimensions();
 
-  const styles = StyleSheet.create({
-    poster: {
-      width: windowWidth / 3.5 - 16,
-      aspectRatio: 2 / 3,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: theme === "dark" ? PlatformColor("separator") : "#e0e0e0",
-    },
-  });
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        poster: {
+          width: windowWidth / 3.5 - 16,
+          aspectRatio: 2 / 3,
+          borderRadius: 12,
+          borderWidth: 1,
+          borderColor: theme === "dark" ? PlatformColor("separator") : "#e0e0e0",
+        },
+      }),
+    [theme, windowWidth],
+  );
 
   return (
     <ContextMenu
@@ -56,12 +78,7 @@ function Person({ navigation, person }: Props) {
       }
     >
       <Pressable
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          alignItems: "center",
-          marginTop: 16,
-        }}
+        style={pressableStyle.container}
         onPress={() =>
           navigation.push("Actor", {
             personId: person.id,
@@ -81,10 +98,7 @@ function Person({ navigation, person }: Props) {
           />
         ) : (
           <View
-            style={[
-              styles.poster,
-              { alignItems: "center", justifyContent: "center" },
-            ]}
+            style={[styles.poster, pressableStyle.centered]}
           >
             <Text
               style={
@@ -107,7 +121,7 @@ function Person({ navigation, person }: Props) {
             </Text>
           </View>
         )}
-        <View style={{ marginLeft: 16, flex: 1 }}>
+        <View style={pressableStyle.nameContainer}>
           <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>
             {person.name}
           </Text>

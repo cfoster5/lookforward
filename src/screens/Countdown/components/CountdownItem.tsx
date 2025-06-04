@@ -1,7 +1,7 @@
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { DateTime } from "luxon";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   interpolate,
@@ -34,6 +34,17 @@ interface GameProps {
 type Props = (MovieProps | GameProps) & {
   isLastInSection: boolean;
 };
+
+const staticStyles = StyleSheet.create({
+  radioWrapper: { justifyContent: "center" },
+  imageWrapper: {
+    justifyContent: "center",
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 4,
+    shadowColor: "rgba(0, 0, 0, 0.15)",
+    shadowOpacity: 1,
+  },
+});
 
 export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
   const {
@@ -118,51 +129,55 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
     });
   }
 
-  const styles = StyleSheet.create({
-    rowFront: {
-      borderBottomLeftRadius:
-        sectionName === "Games" && isLastInSection ? 10 : 0,
-      borderBottomRightRadius:
-        sectionName === "Games" && isLastInSection ? 10 : 0,
-      overflow: "hidden",
-      backgroundColor: isSelected
-        ? PlatformColor("systemGray4")
-        : PlatformColor("systemGray6"),
-    },
-    slide: {
-      flex: 1,
-      flexDirection: "row",
-      flexWrap: "wrap",
-    },
-    image: {
-      width: 60,
-      aspectRatio: sectionName === "Movies" ? 2 / 3 : 3 / 4,
-      borderRadius: 6,
-      marginLeft: 16,
-      marginTop: 8,
-      marginBottom: 8,
-      borderWidth: StyleSheet.hairlineWidth,
-      borderColor: PlatformColor("separator"),
-    },
-    middle: {
-      borderColor: PlatformColor("separator"),
-      borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
-      flex: 1,
-      justifyContent: "center",
-      marginLeft: 16,
-      paddingTop: 8,
-      paddingBottom: 8,
-    },
-    countdown: {
-      borderColor: PlatformColor("separator"),
-      borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      paddingTop: 8,
-      paddingBottom: 8,
-    },
-  });
+  const styles = useMemo(
+    () =>
+      StyleSheet.create({
+        rowFront: {
+          borderBottomLeftRadius:
+            sectionName === "Games" && isLastInSection ? 10 : 0,
+          borderBottomRightRadius:
+            sectionName === "Games" && isLastInSection ? 10 : 0,
+          overflow: "hidden",
+          backgroundColor: isSelected
+            ? PlatformColor("systemGray4")
+            : PlatformColor("systemGray6"),
+        },
+        slide: {
+          flex: 1,
+          flexDirection: "row",
+          flexWrap: "wrap",
+        },
+        image: {
+          width: 60,
+          aspectRatio: sectionName === "Movies" ? 2 / 3 : 3 / 4,
+          borderRadius: 6,
+          marginLeft: 16,
+          marginTop: 8,
+          marginBottom: 8,
+          borderWidth: StyleSheet.hairlineWidth,
+          borderColor: PlatformColor("separator"),
+        },
+        middle: {
+          borderColor: PlatformColor("separator"),
+          borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
+          flex: 1,
+          justifyContent: "center",
+          marginLeft: 16,
+          paddingTop: 8,
+          paddingBottom: 8,
+        },
+        countdown: {
+          borderColor: PlatformColor("separator"),
+          borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          paddingTop: 8,
+          paddingBottom: 8,
+        },
+      }),
+    [sectionName, isLastInSection, isSelected],
+  );
 
   let imageSrc = "";
   let title = "";
@@ -189,21 +204,11 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
   return (
     <Pressable onPress={handlePress} style={styles.rowFront}>
       <Animated.View style={[styles.slide, slideStyle]}>
-        <Animated.View style={[{ justifyContent: "center" }, radioButtonStyle]}>
+        <Animated.View style={[staticStyles.radioWrapper, radioButtonStyle]}>
           <RadioButton isSelected={isSelected} />
         </Animated.View>
         <View
-          style={{
-            justifyContent: "center",
-            // Extracted from Figma, decide to keep or not
-            shadowOffset: {
-              width: 0,
-              height: 1,
-            },
-            shadowRadius: 4,
-            shadowColor: "rgba(0, 0, 0, 0.15)",
-            shadowOpacity: 1,
-          }}
+          style={staticStyles.imageWrapper}
         >
           <Image
             style={styles.image}

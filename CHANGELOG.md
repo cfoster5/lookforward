@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.22.1](https://github.com/cfoster5/lookforward/compare/v6.22.0...v6.22.1) (2025-06-04)
+
+
+### Bug Fixes
+
+* bump react-native-screens to correct issue with Countdown headers ([2a5e987](https://github.com/cfoster5/lookforward/commit/2a5e987700efdd89354d71413c627c6fe0c2c2a4))
+
 ## [6.22.0](https://github.com/cfoster5/lookforward/compare/v6.21.0...v6.22.0) (2025-05-25)
 
 

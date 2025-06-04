@@ -12,7 +12,9 @@ module.exports = {
     "plugin:@tanstack/query/recommended",
     "plugin:prettier/recommended",
   ],
+  plugins: ["react-you-might-not-need-an-effect"],
   rules: {
+    "react-you-might-not-need-an-effect/you-might-not-need-an-effect": "warn",
     "prettier/prettier": "warn",
     "react/no-unstable-nested-components": ["warn"],
     "max-params": ["warn", 3],

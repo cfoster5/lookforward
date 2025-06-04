@@ -1,6 +1,7 @@
 import { getAnalytics } from "@react-native-firebase/analytics";
 import { useScrollToTop } from "@react-navigation/native";
-import { useRef } from "react";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useRef, useLayoutEffect } from "react";
 import { Platform, PlatformColor, SectionList, View } from "react-native";
 import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 
@@ -15,12 +16,24 @@ import { useGameCountdowns } from "./api/getGameCountdowns";
 import { useMovieCountdowns } from "./api/getMovieCountdowns";
 import { CountdownItem } from "./components/CountdownItem";
 import { SectionHeader } from "./components/SectionHeader";
+import { DeleteHeader } from "./components/DeleteHeader.ios";
+import { MyHeaderRight } from "./components/MyHeaderRight.ios";
+import type { CountdownStackParamList } from "@/types";
+import { useCountdownStore } from "@/stores/store";
 
-function Countdown() {
+type Props = NativeStackScreenProps<CountdownStackParamList, "Countdown">;
+function Countdown({ navigation }: Props) {
   const { isPro, proModalRef } = useStore();
+  const { showDeleteButton } = useCountdownStore();
   const { requestNonPersonalizedAdsOnly } = useAppConfigStore();
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => <DeleteHeader />,
+      headerRight: () => <MyHeaderRight />,
+    });
+  }, [navigation, showDeleteButton]);
   const paddingBottom = useBottomTabOverflow();
   const movies = useMovieCountdowns();
   const gameReleases = useGameCountdowns();

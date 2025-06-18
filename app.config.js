@@ -20,7 +20,7 @@ export default {
     ios: {
       supportsTablet: true,
       googleServicesFile:
-        process.env.GOOGLE_SERVICE_PLIST ?? "./GoogleService-Info.secret.plist",
+        process.env.GOOGLE_SERVICE_PLIST ?? "./GoogleService-Info.plist",
       bundleIdentifier: "com.lookforward.app",
       associatedDomains: ["applinks:getlookforward.app"],
       entitlements: {

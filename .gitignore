@@ -34,9 +34,6 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-# .secret.* files
-**/*.secret.*
-
 # commonly used commands
 docs/scripts.md
 

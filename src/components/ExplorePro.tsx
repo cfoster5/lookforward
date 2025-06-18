@@ -135,12 +135,6 @@ export const ExplorePro = () => {
           Unlock once. Enjoy forever.
         </Text>
         <Row
-          icon="megaphone"
-          title="No Ads"
-          body="Enjoy an ad-free experience."
-          useAltIcon
-        />
-        <Row
           icon="list.dash"
           title="Unlimited Countdown Items"
           body="Don't stop at 5. Add every title you're excited for."

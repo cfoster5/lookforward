@@ -19,7 +19,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -47,7 +46,6 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
-import { BANNER_AD_UNIT_ID } from "@/constants/AdUnits";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { getReleaseDatesByCountry } from "@/helpers/getReleaseDatesByCountry";
 import {
@@ -58,7 +56,6 @@ import {
 } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
 import { useCountdownLimit } from "@/hooks/useCountdownLimit";
-import { useAppConfigStore } from "@/stores/appConfig";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
@@ -156,7 +153,6 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { movieId, name } = route.params;
   const { user, movieSubs, isPro, proModalRef } = useStore();
-  const { requestNonPersonalizedAdsOnly } = useAppConfigStore();
   const checkLimit = useCountdownLimit();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString(),
@@ -345,26 +341,17 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
           )}
 
           {!isPro && (
-            <>
-              <LargeBorderlessButton
-                handlePress={async () => {
-                  proModalRef.current?.present();
-                  await getAnalytics().logEvent("select_promotion", {
-                    name: "Pro",
-                    id: "com.lookforward.pro",
-                  });
-                }}
-                text="Explore Pro Features"
-                style={{ paddingBottom: 0 }}
-              />
-              <View style={{ alignItems: "center", paddingTop: 16 }}>
-                <BannerAd
-                  unitId={BANNER_AD_UNIT_ID}
-                  size={BannerAdSize.BANNER}
-                  requestOptions={{ requestNonPersonalizedAdsOnly }}
-                />
-              </View>
-            </>
+            <LargeBorderlessButton
+              handlePress={async () => {
+                proModalRef.current?.present();
+                await getAnalytics().logEvent("select_promotion", {
+                  name: "Pro",
+                  id: "com.lookforward.pro",
+                });
+              }}
+              text="Explore Pro Features"
+              style={{ paddingBottom: 0 }}
+            />
           )}
 
           {movieDetails.tagline && (

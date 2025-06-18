@@ -207,9 +207,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
         <Animated.View style={[staticStyles.radioWrapper, radioButtonStyle]}>
           <RadioButton isSelected={isSelected} />
         </Animated.View>
-        <View
-          style={staticStyles.imageWrapper}
-        >
+        <View style={staticStyles.imageWrapper}>
           <Image
             style={styles.image}
             source={{ uri: imageSrc }}

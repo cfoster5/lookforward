@@ -15,16 +15,13 @@ import {
   View,
 } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { ApplePillButton } from "@/components/ApplePillButton";
 import { DropdownMenu } from "@/components/DropdownMenu";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
-import { BANNER_AD_UNIT_ID } from "@/constants/AdUnits";
 import { calculateWidth } from "@/helpers/helpers";
-import { useAppConfigStore } from "@/stores/appConfig";
 import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
 
@@ -74,7 +71,6 @@ export const SearchBottomSheet = () => {
     initialSnapPoint,
     setInitialSnapPoint,
   } = useStore();
-  const { requestNonPersonalizedAdsOnly } = useAppConfigStore();
 
   const snapPoints = useMemo(
     () => [
@@ -221,26 +217,17 @@ export const SearchBottomSheet = () => {
         {!searchValue && (
           <>
             {!isPro && (
-              <View style={{ paddingBottom: 16 }}>
-                <LargeBorderlessButton
-                  handlePress={async () => {
-                    Keyboard.dismiss();
-                    proModalRef.current?.present();
-                    await getAnalytics().logEvent("select_promotion", {
-                      name: "Pro",
-                      id: "com.lookforward.pro",
-                    });
-                  }}
-                  text="Explore Pro Features"
-                />
-                <View style={{ alignItems: "center" }}>
-                  <BannerAd
-                    unitId={BANNER_AD_UNIT_ID}
-                    size={BannerAdSize.BANNER}
-                    requestOptions={{ requestNonPersonalizedAdsOnly: true }}
-                  />
-                </View>
-              </View>
+              <LargeBorderlessButton
+                handlePress={async () => {
+                  Keyboard.dismiss();
+                  proModalRef.current?.present();
+                  await getAnalytics().logEvent("select_promotion", {
+                    name: "Pro",
+                    id: "com.lookforward.pro",
+                  });
+                }}
+                text="Explore Pro Features"
+              />
             )}
             <SectionList
               ListHeaderComponent={shouldShowTitle() ? ListHeader : undefined}

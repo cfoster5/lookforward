@@ -6,7 +6,6 @@ import { Image } from "expo-image";
 import { FirestoreGame } from "interfaces/firebase";
 import { useLayoutEffect, useState, Fragment, useMemo } from "react";
 import { PlatformColor, ScrollView, View, FlatList, Text } from "react-native";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -18,11 +17,9 @@ import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
-import { BANNER_AD_UNIT_ID } from "@/constants/AdUnits";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
-import { useAppConfigStore } from "@/stores/appConfig";
 import { useStore } from "@/stores/store";
 import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
 import { timestamp } from "@/utils/dates";
@@ -62,7 +59,6 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
   const { user, gameSubs, bottomSheetModalRef, isPro, proModalRef } =
     useStore();
   const countdownId = gameSubs.find((s) => s.game.id === game.id)?.documentID;
-  const { requestNonPersonalizedAdsOnly } = useAppConfigStore();
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
   const paddingBottom = useBottomTabOverflow();
@@ -135,26 +131,17 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
           </Text>
 
           {!isPro && (
-            <>
-              <LargeBorderlessButton
-                handlePress={async () => {
-                  proModalRef.current?.present();
-                  await getAnalytics().logEvent("select_promotion", {
-                    name: "Pro",
-                    id: "com.lookforward.pro",
-                  });
-                }}
-                text="Explore Pro Features"
-                style={{ paddingBottom: 0 }}
-              />
-              <View style={{ alignItems: "center", paddingTop: 16 }}>
-                <BannerAd
-                  unitId={BANNER_AD_UNIT_ID}
-                  size={BannerAdSize.BANNER}
-                  requestOptions={{ requestNonPersonalizedAdsOnly }}
-                />
-              </View>
-            </>
+            <LargeBorderlessButton
+              handlePress={async () => {
+                proModalRef.current?.present();
+                await getAnalytics().logEvent("select_promotion", {
+                  name: "Pro",
+                  id: "com.lookforward.pro",
+                });
+              }}
+              text="Explore Pro Features"
+              style={{ paddingBottom: 0 }}
+            />
           )}
 
           <ExpandableText text={data?.summary} />

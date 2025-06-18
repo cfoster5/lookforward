@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
 
 import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
-import useGoogleMobileAds from "@/hooks/useGoogleMobileAds";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
 
 import Navigation from "./src/navigation";
@@ -29,7 +28,6 @@ export default function App() {
   const { user, theme } = useStore();
 
   useFirebaseAnalyticsCheck();
-  useGoogleMobileAds();
   useRevenueCat();
 
   useEffect(() => {

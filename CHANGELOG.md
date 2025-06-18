@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.23.0](https://github.com/cfoster5/lookforward/compare/v6.22.1...v6.23.0) (2025-06-18)
+
+
+### Features
+
+* remove Google Ads ([78f7636](https://github.com/cfoster5/lookforward/commit/78f76368942ced7695b55003e9a97a1ddb17f8b9))
+
 ## [6.22.1](https://github.com/cfoster5/lookforward/compare/v6.22.0...v6.22.1) (2025-06-04)
 
 

@@ -94,7 +94,7 @@ export default function Settings() {
           </Text>
         )}
         <>
-          <SettingNavButton
+          {/* <SettingNavButton
             onPress={async () => {
               proModalRef.current?.present();
               const analytics = getAnalytics();
@@ -105,7 +105,7 @@ export default function Settings() {
             }}
             text="Explore Pro Features"
             isFirstInGroup={true}
-          />
+          /> */}
           <SettingNavButton
             onPress={async () => {
               modalRef.current?.present();
@@ -120,7 +120,7 @@ export default function Settings() {
               });
             }}
             text="Tip Jar"
-            isFirstInGroup={false}
+            isFirstInGroup={true}
           />
           <Link
             href="itms-apps://itunes.apple.com/app/viewContentsUserReviews/id1492748952?action=write-review"

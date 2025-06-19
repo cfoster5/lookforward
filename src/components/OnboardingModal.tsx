@@ -70,7 +70,7 @@ export const OnboardingModal = () => {
           handlePress={() => onboardingModalRef.current?.dismiss()}
           text="Continue"
         />
-        <LargeBorderlessButton
+        {/* <LargeBorderlessButton
           handlePress={async () => {
             onboardingModalRef.current?.dismiss();
             proModalRef.current?.present();
@@ -81,7 +81,7 @@ export const OnboardingModal = () => {
             });
           }}
           text="Explore Pro Features"
-        />
+        /> */}
       </BottomSheetView>
     </DynamicHeightModal>
   );

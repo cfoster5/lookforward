@@ -49,7 +49,7 @@ export const useStore = create<State & Actions>((set) => ({
   onboardingModalRef,
   proModalRef,
   isPro: false,
-  setIsPro: (isPro) => set(() => ({ isPro })),
+  setIsPro: (isPro) => set(() => ({ isPro: true })),
   initialSnapPoint: 0,
   setInitialSnapPoint: (value) => set(() => ({ initialSnapPoint: value })),
 }));

@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.24.0](https://github.com/cfoster5/lookforward/compare/v6.23.0...v6.24.0) (2025-06-19)
+
+
+### Features
+
+* enable pro features by default ([b313029](https://github.com/cfoster5/lookforward/commit/b31302951bdcbfec7d893e42660fd1dece2ff16a))
+
 ## [6.23.0](https://github.com/cfoster5/lookforward/compare/v6.22.1...v6.23.0) (2025-06-18)
 
 

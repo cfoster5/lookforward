@@ -97,7 +97,7 @@ function Settings({ navigation }) {
         )}
         {Platform.OS === "ios" && (
           <>
-            <SettingNavButton
+            {/* <SettingNavButton
               handlePress={async () => {
                 proModalRef.current?.present();
                 await getAnalytics().logEvent("select_promotion", {
@@ -106,7 +106,7 @@ function Settings({ navigation }) {
                 });
               }}
               text="Explore Pro Features"
-            />
+            /> */}
             <SettingNavButton
               handlePress={async () => {
                 modalRef.current?.present();
@@ -120,7 +120,7 @@ function Settings({ navigation }) {
                 });
               }}
               text="Tip Jar"
-              buttonStyle={{ marginTop: 0 }}
+              // buttonStyle={{ marginTop: 0 }}
             />
             <SettingNavButton
               handlePress={() => {

@@ -1,8 +1,8 @@
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   PlatformColor,
   StyleSheet,
   Text,
@@ -30,29 +30,15 @@ const ItemSeparator = () => (
 
 export const TipModal = ({ modalRef }: Props) => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const [packages, setPackages] = useState<PurchasesPackage[]>([]);
   const [isPurchasing, setIsPurchasing] = useState<
     PurchasesPackage["identifier"] | null
   >(null);
 
-  useEffect(() => {
-    // Get current available packages
-    const getPackages = async () => {
-      try {
-        const offerings = await Purchases.getOfferings();
-        if (
-          offerings.current !== null &&
-          offerings.current.availablePackages.length !== 0
-        ) {
-          setPackages(offerings.current.availablePackages);
-        }
-      } catch (error) {
-        Alert.alert("Error getting offers", error.message);
-      }
-    };
-
-    getPackages();
-  }, []);
+  const { data: packages } = useQuery({
+    queryKey: ["purchasePackages"],
+    queryFn: async () => await Purchases.getOfferings(),
+    select: (data) => data.current?.availablePackages,
+  });
 
   return (
     <DynamicHeightModal modalRef={modalRef}>

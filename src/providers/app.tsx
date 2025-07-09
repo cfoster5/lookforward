@@ -32,11 +32,6 @@ export function AppProvider({ children }: AppProviderProps) {
   useReactQueryDevTools(queryClient);
   useMMKVDevTools();
 
-  // useEffect(() => {
-  //   const unsubscribe = auth().onAuthStateChanged((user) => setUser(user));
-  //   return unsubscribe; // unsubscribe on unmount
-  // });
-
   useEffect(() => {
     const subscriber = getAuth().onAuthStateChanged((user) => setUser(user));
     return subscriber; // unsubscribe on unmount

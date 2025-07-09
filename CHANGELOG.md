@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.24.1](https://github.com/cfoster5/lookforward/compare/v6.24.0...v6.24.1) (2025-07-09)
+
+
+### Performance Improvements
+
+* replace useEffect with useQuery for fetching tips ([6800f4c](https://github.com/cfoster5/lookforward/commit/6800f4ceecd482d484095f70d0a441c577e361de))
+
 ## [6.24.0](https://github.com/cfoster5/lookforward/compare/v6.23.0...v6.24.0) (2025-06-19)
 
 

@@ -55,11 +55,6 @@ export default function Navigation() {
 function RootNavigator() {
   const { user } = useStore();
 
-  useEffect(() => {
-    const hideSplashScreen = async () => await SplashScreen.hideAsync();
-    hideSplashScreen();
-  }, [user]);
-
   if (!user) return <AuthStack />;
   return (
     <HeaderButtonsProvider stackType="native">

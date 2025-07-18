@@ -1,5 +1,17 @@
 # Changelog
 
+## [6.25.0](https://github.com/cfoster5/lookforward/compare/v6.24.1...v6.25.0) (2025-07-18)
+
+
+### Features
+
+* replace react-native-haptic-feedback with expo-haptics and tweak haptics ([cb2054f](https://github.com/cfoster5/lookforward/commit/cb2054f5262c8026901055adaeedac556f202247))
+
+
+### Performance Improvements
+
+* remove useAddRecent hook and integrate addRecent directly in components ([74bd865](https://github.com/cfoster5/lookforward/commit/74bd8656a26557ea1931ed54262bb5ba9c2d4c5f))
+
 ## [6.24.1](https://github.com/cfoster5/lookforward/compare/v6.24.0...v6.24.1) (2025-07-09)
 
 

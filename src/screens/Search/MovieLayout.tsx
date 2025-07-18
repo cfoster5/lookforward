@@ -15,7 +15,9 @@ import { iOSUIKit } from "react-native-typography";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth } from "@/helpers/helpers";
+import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
+import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useMovieData } from "./api/getMovies";
@@ -30,6 +32,7 @@ export function MovieLayout({ navigation }) {
   const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(option);
   const { top } = useSafeAreaInsets();
   const { initialSnapPoint } = useStore();
+  const { addRecent } = useRecentItemsStore();
   const bottomTabOverflow = useBottomTabOverflow();
 
   return (
@@ -69,12 +72,19 @@ export function MovieLayout({ navigation }) {
           data={data}
           renderItem={({ item }) => (
             <MoviePoster
-              pressHandler={() =>
+              pressHandler={() => {
                 navigation.push("Movie", {
                   movieId: item.id,
                   name: item.title,
-                })
-              }
+                });
+                addRecent("recentMovies", {
+                  id: item.id,
+                  name: item.title,
+                  img_path: item.poster_path,
+                  last_viewed: timestamp,
+                  media_type: "movie",
+                });
+              }}
               movie={item}
               posterPath={item.poster_path}
               style={{

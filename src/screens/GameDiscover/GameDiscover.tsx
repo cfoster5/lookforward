@@ -6,12 +6,14 @@ import { FlatList, Platform, Pressable } from "react-native";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { GamePoster } from "@/components/Posters/GamePoster";
+import { useRecentItemsStore } from "@/stores/recents";
 import {
   FindStackParamList,
   Game,
   ReleaseDate,
   TabNavigationParamList,
 } from "@/types";
+import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useDiscoverGames } from "./api/getDiscoverGames";
@@ -26,6 +28,7 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
   const scrollRef = useRef<FlatList>(null);
   const paddingBottom = useBottomTabOverflow();
   const { data: games, isLoading } = useDiscoverGames({ genreId: genre.id });
+  const { addRecent } = useRecentItemsStore();
 
   return !isLoading ? (
     <FlatList
@@ -43,7 +46,18 @@ function GameDiscover({ route, navigation }: GameDiscoverScreenNavigationProp) {
       }: {
         item: Game & { release_dates: ReleaseDate[] };
       }) => (
-        <Pressable onPress={() => navigation.push("Game", { game })}>
+        <Pressable
+          onPress={() => {
+            navigation.push("Game", { game });
+            addRecent("recentGames", {
+              id: game.id,
+              name: game.name,
+              img_path: game.cover?.url ?? "",
+              last_viewed: timestamp,
+              media_type: "game",
+            });
+          }}
+        >
           <GamePoster game={game} />
         </Pressable>
       )}

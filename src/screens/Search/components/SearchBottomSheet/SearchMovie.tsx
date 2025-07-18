@@ -8,8 +8,9 @@ import { MovieWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
 import { useCountdownLimit } from "@/hooks/useCountdownLimit";
+import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
-import { dateToFullLocale } from "@/utils/dates";
+import { dateToFullLocale, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 
 import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
@@ -20,6 +21,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
   // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
   const navigation = useNavigation<StackNavigationProp<any>>();
   const { user, movieSubs } = useStore();
+  const { addRecent } = useRecentItemsStore();
   const checkLimit = useCountdownLimit();
 
   const isMovieSub = () =>
@@ -44,12 +46,19 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
       }
     >
       <Pressable
-        onPress={() =>
+        onPress={() => {
           navigation.navigate("Movie", {
             movieId: item.id,
             name: item.title,
-          })
-        }
+          });
+          addRecent("recentMovies", {
+            id: item.id,
+            name: item.title,
+            img_path: item.poster_path,
+            last_viewed: timestamp,
+            media_type: "movie",
+          });
+        }}
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click
         onLongPress={() => {}} // A callback that does nothing

@@ -12,9 +12,10 @@ import Animated, {
 import { iOSUIKit } from "react-native-typography";
 import { PosterSizes } from "tmdb-ts";
 
+import { useRecentItemsStore } from "@/stores/recents";
 import { useCountdownStore } from "@/stores/store";
 import { CountdownStackParamList } from "@/types/navigation";
-import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
+import { isoToUTC, now, timestamp, timestampToUTC } from "@/utils/dates";
 
 import { useGameCountdowns } from "../api/getGameCountdowns";
 import { useMovieCountdowns } from "../api/getMovieCountdowns";
@@ -53,6 +54,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
     games: selectedGames,
     toggleSelection,
   } = useCountdownStore();
+  const { addRecent } = useRecentItemsStore();
   const navigation = useNavigation<NavigationProp<CountdownStackParamList>>();
   const transformAmount = useSharedValue(-24);
 
@@ -108,6 +110,13 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
       movieId: item!.id,
       name: item!.title,
     });
+    addRecent("recentMovies", {
+      id: item!.id,
+      name: item!.title,
+      img_path: item!.poster_path,
+      last_viewed: timestamp,
+      media_type: "movie",
+    });
   }
 
   function handleGameAction() {
@@ -126,6 +135,13 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
         name: item!.game.name,
         cover: { url: item!.game.cover.url },
       },
+    });
+    addRecent("recentGames", {
+      id: item!.game.id,
+      name: item!.game.name,
+      img_path: item!.game.cover?.url ?? "",
+      last_viewed: timestamp,
+      media_type: "game",
     });
   }
 

@@ -13,8 +13,10 @@ import { iOSUIKit } from "react-native-typography";
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { GamePoster } from "@/components/Posters/GamePoster";
+import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
+import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useGames } from "./api/getGames";
@@ -24,6 +26,7 @@ export function GameLayout({ navigation }) {
   const scrollRef = useRef<FlatList>(null);
   const { data, isLoading } = useGames();
   const { initialSnapPoint } = useStore();
+  const { addRecent } = useRecentItemsStore();
   const bottomTabOverflow = useBottomTabOverflow();
 
   return (
@@ -61,7 +64,18 @@ export function GameLayout({ navigation }) {
             }: {
               item: Game & { release_dates: ReleaseDate[] };
             }) => (
-              <Pressable onPress={() => navigation.push("Game", { game })}>
+              <Pressable
+                onPress={() => {
+                  navigation.push("Game", { game });
+                  addRecent("recentGames", {
+                    id: game.id,
+                    name: game.name,
+                    img_path: game.cover?.url ?? "",
+                    last_viewed: timestamp,
+                    media_type: "game",
+                  });
+                }}
+              >
                 <GamePoster game={game} />
               </Pressable>
             )}

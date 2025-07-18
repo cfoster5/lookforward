@@ -2,6 +2,7 @@ import { BottomTabNavigationProp } from "@react-navigation/bottom-tabs";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { Image } from "expo-image";
+import { useMemo } from "react";
 import {
   PlatformColor,
   Pressable,
@@ -10,17 +11,18 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { useMemo } from "react";
 import { iOSUIKit } from "react-native-typography";
 import { Cast, Crew } from "tmdb-ts";
 
 import { ContextMenu } from "@/screens/Search/components/SearchBottomSheet/ContextMenu";
+import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
 import {
   CountdownStackParamList,
   FindStackParamList,
   TabNavigationParamList,
 } from "@/types";
+import { timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 
 interface Props {
@@ -55,6 +57,7 @@ const pressableStyle = StyleSheet.create({
 
 function Person({ navigation, person }: Props) {
   const { theme } = useStore();
+  const { addRecent } = useRecentItemsStore();
   const { width: windowWidth } = useWindowDimensions();
 
   const styles = useMemo(
@@ -65,7 +68,8 @@ function Person({ navigation, person }: Props) {
           aspectRatio: 2 / 3,
           borderRadius: 12,
           borderWidth: 1,
-          borderColor: theme === "dark" ? PlatformColor("separator") : "#e0e0e0",
+          borderColor:
+            theme === "dark" ? PlatformColor("separator") : "#e0e0e0",
         },
       }),
     [theme, windowWidth],
@@ -79,12 +83,18 @@ function Person({ navigation, person }: Props) {
     >
       <Pressable
         style={pressableStyle.container}
-        onPress={() =>
+        onPress={() => {
           navigation.push("Actor", {
             personId: person.id,
             name: person.name,
-          })
-        }
+          });
+          addRecent("recentPeople", {
+            id: person.id,
+            name: person.name,
+            img_path: person.profile_path,
+            last_viewed: timestamp,
+          });
+        }}
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click
         onLongPress={() => {}} // A callback that does nothing
@@ -97,9 +107,7 @@ function Person({ navigation, person }: Props) {
             }}
           />
         ) : (
-          <View
-            style={[styles.poster, pressableStyle.centered]}
-          >
+          <View style={[styles.poster, pressableStyle.centered]}>
             <Text
               style={
                 theme === "dark"

@@ -3,8 +3,7 @@ import { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import { CompositeScreenProps } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
-import { FirestoreGame } from "interfaces/firebase";
-import { useLayoutEffect, useState, Fragment, useMemo } from "react";
+import { useLayoutEffect, useState, Fragment } from "react";
 import { PlatformColor, ScrollView, View, FlatList, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -19,10 +18,8 @@ import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
-import useAddRecent from "@/hooks/useAddRecent";
 import { useStore } from "@/stores/store";
-import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
-import { timestamp } from "@/utils/dates";
+import { FindStackParamList, TabNavigationParamList } from "@/types";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useGame } from "./api/getGame";
@@ -85,21 +82,6 @@ export default function Game({ navigation, route }: GameScreenNavigationProp) {
       ),
     });
   }, [bottomSheetModalRef, countdownId, game, navigation, user, data]);
-
-  // Memoize object to avoid unnecessary recalculations and re-renders.
-  // Improves performance by ensuring that the object is only recalculated when its dependencies change.
-  const recentGame: Recent = useMemo(
-    () => ({
-      id: game.id,
-      name: game.name,
-      img_path: game.cover?.url ?? "",
-      last_viewed: timestamp,
-      media_type: "game",
-    }),
-    [game.cover?.url, game.id, game.name],
-  );
-
-  useAddRecent("recentGames", recentGame);
 
   return (
     <>

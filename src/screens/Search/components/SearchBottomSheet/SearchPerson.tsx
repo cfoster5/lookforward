@@ -7,6 +7,8 @@ import { iOSUIKit } from "react-native-typography";
 import { PersonWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
+import { useRecentItemsStore } from "@/stores/recents";
+import { timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 
 import { ContextMenu } from "./ContextMenu";
@@ -14,6 +16,7 @@ import { ContextMenu } from "./ContextMenu";
 export function SearchPerson({ item }: { item: PersonWithMediaType }) {
   // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
   const navigation = useNavigation<StackNavigationProp<any>>();
+  const { addRecent } = useRecentItemsStore();
 
   return (
     <ContextMenu
@@ -22,12 +25,18 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
       }
     >
       <Pressable
-        onPress={() =>
+        onPress={() => {
           navigation.navigate("Actor", {
             personId: item.id,
             name: item.name,
-          })
-        }
+          });
+          addRecent("recentPeople", {
+            id: item.id,
+            name: item.name,
+            img_path: item.profile_path,
+            last_viewed: timestamp,
+          });
+        }}
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click
         onLongPress={() => {}} // A callback that does nothing

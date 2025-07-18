@@ -12,6 +12,7 @@ import { useCountdownLimit } from "@/hooks/useCountdownLimit";
 import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
 import { Recent } from "@/types";
+import { timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 
 import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
@@ -22,7 +23,7 @@ export function RecentTitle({ item }: { item: Recent }) {
   // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
   const navigation = useNavigation<StackNavigationProp<any>>();
   const { user, movieSubs, isPro, proModalRef } = useStore();
-  const { removeRecent } = useRecentItemsStore();
+  const { addRecent, removeRecent } = useRecentItemsStore();
   const checkLimit = useCountdownLimit();
 
   const isMovieSub = () =>
@@ -199,17 +200,31 @@ export function RecentTitle({ item }: { item: Recent }) {
       <Pressable
         onPress={() =>
           item.media_type === "movie"
-            ? navigation.navigate("Movie", {
+            ? (navigation.navigate("Movie", {
                 movieId: item.id,
                 name: item.name,
-              })
-            : navigation.navigate("Game", {
+              }),
+              addRecent("recentMovies", {
+                id: item.id,
+                name: item.name,
+                img_path: item.img_path,
+                last_viewed: timestamp,
+                media_type: "movie",
+              }))
+            : (navigation.navigate("Game", {
                 game: {
                   id: item.id,
                   name: item.name,
                   cover: { url: item.img_path },
                 },
-              })
+              }),
+              addRecent("recentGames", {
+                id: item.id,
+                name: item.name,
+                img_path: item.img_path,
+                last_viewed: timestamp,
+                media_type: "game",
+              }))
         }
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click

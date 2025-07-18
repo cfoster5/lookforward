@@ -7,7 +7,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { DateTime } from "luxon";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -54,10 +54,10 @@ import {
   subToMovie,
   tmdbMovieGenres,
 } from "@/helpers/helpers";
-import useAddRecent from "@/hooks/useAddRecent";
 import { useCountdownLimit } from "@/hooks/useCountdownLimit";
+import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
-import { FindStackParamList, Recent, TabNavigationParamList } from "@/types";
+import { FindStackParamList, TabNavigationParamList } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
@@ -153,6 +153,7 @@ type MovieScreenNavigationProp = CompositeScreenProps<
 function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
   const { movieId, name } = route.params;
   const { user, movieSubs, isPro, proModalRef } = useStore();
+  const { addRecent } = useRecentItemsStore();
   const checkLimit = useCountdownLimit();
   const isSubbed = movieSubs.find(
     (sub) => sub.documentID === movieId.toString(),
@@ -225,21 +226,6 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
       ),
     });
   }, [isSubbed, movieId, name, navigation, user, checkLimit]);
-
-  // Memoize object to avoid unnecessary recalculations and re-renders.
-  // Improves performance by ensuring that the object is only recalculated when its dependencies change.
-  const recentMovie: Recent = useMemo(
-    () => ({
-      id: movieId,
-      name,
-      img_path: movieDetails?.poster_path,
-      last_viewed: timestamp,
-      media_type: "movie",
-    }),
-    [movieId, name, movieDetails?.poster_path],
-  );
-
-  useAddRecent("recentMovies", recentMovie);
 
   useEffect(() => {
     if (movieDetails) {
@@ -673,12 +659,19 @@ function MovieScreen({ navigation, route }: MovieScreenNavigationProp) {
                     data={movieDetails.recommendations.results}
                     renderItem={({ item }) => (
                       <MoviePoster
-                        pressHandler={() =>
+                        pressHandler={() => {
                           navigation.push("Movie", {
                             movieId: item.id,
                             name: item.title,
-                          })
-                        }
+                          });
+                          addRecent("recentMovies", {
+                            id: item.id,
+                            name: item.title,
+                            img_path: item.poster_path ?? "",
+                            last_viewed: timestamp,
+                            media_type: "movie",
+                          });
+                        }}
                         movie={item}
                         posterPath={item.poster_path}
                         style={{

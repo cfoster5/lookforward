@@ -17,7 +17,9 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
+import { useRecentItemsStore } from "@/stores/recents";
 import { FindStackParams, BottomTabParams } from "@/types";
+import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useCollection } from "./api/getCollection";
@@ -43,6 +45,7 @@ export function Collection({
   const scrollHandler = useAnimatedScrollHandler(
     (e) => (scrollOffset.value = e.contentOffset.y),
   );
+  const { addRecent } = useRecentItemsStore();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -84,12 +87,19 @@ export function Collection({
       data={collection!.parts}
       renderItem={({ item }: { item: DetailedCollection["parts"][number] }) => (
         <MoviePoster
-          pressHandler={() =>
+          pressHandler={() => {
             navigation.push("Movie", {
               movieId: item.id,
               name: item.title,
-            })
-          }
+            });
+            addRecent("recentMovies", {
+              id: item.id,
+              name: item.title,
+              img_path: item.poster_path,
+              last_viewed: timestamp,
+              media_type: "movie",
+            });
+          }}
           movie={item}
           posterPath={item.poster_path}
           style={{

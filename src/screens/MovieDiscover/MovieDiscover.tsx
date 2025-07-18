@@ -18,7 +18,9 @@ import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth, targetedProviders } from "@/helpers/helpers";
+import { useRecentItemsStore } from "@/stores/recents";
 import { FindStackParamList, TabNavigationParamList } from "@/types";
+import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useDiscoverMovies } from "./api/getDiscoverMovies";
@@ -35,6 +37,7 @@ function MovieDiscover({
   route,
   navigation,
 }: MovieDiscoverScreenNavigationProp) {
+  const { addRecent } = useRecentItemsStore();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
   const { genre, company, keyword, provider } = route.params;
   const scrollRef = useRef<FlatList>(null);
@@ -221,12 +224,19 @@ function MovieDiscover({
         data={movies}
         renderItem={({ item }: { item: Movie }) => (
           <MoviePoster
-            pressHandler={() =>
+            pressHandler={() => {
               navigation.push("Movie", {
                 movieId: item.id,
                 name: item.title,
-              })
-            }
+              });
+              addRecent("recentMovies", {
+                id: item.id,
+                name: item.title,
+                img_path: item.poster_path,
+                last_viewed: timestamp,
+                media_type: "movie",
+              });
+            }}
             movie={item}
             posterPath={item.poster_path}
             style={{

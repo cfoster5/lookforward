@@ -1,5 +1,6 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
+import * as Haptics from "expo-haptics";
 import { createRef } from "react";
 import { ColorSchemeName } from "react-native";
 import { create } from "zustand";
@@ -77,6 +78,7 @@ export const useCountdownStore = create<CountdownState & CountdownActions>()(
         );
         if (index !== -1) state[section].splice(index, 1);
         else state[section].push(documentId);
+        Haptics.selectionAsync();
       }),
     clearSelections: () =>
       set((state) => {

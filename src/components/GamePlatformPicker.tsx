@@ -5,8 +5,8 @@ import {
   setDoc,
   arrayUnion,
 } from "@react-native-firebase/firestore";
+import * as Haptics from "expo-haptics";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
@@ -85,10 +85,7 @@ export function GamePlatformPicker() {
         { game: { id, name }, subscribers: arrayUnion(user!.uid) },
         { merge: true },
       );
-      ReactNativeHapticFeedback.trigger("impactLight", {
-        enableVibrateFallback: true,
-        ignoreAndroidSystemSettings: false,
-      });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       bottomSheetModalRef.current?.dismiss();
     } catch (error) {
       console.error("Error writing document: ", error);

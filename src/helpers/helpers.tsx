@@ -6,9 +6,9 @@ import {
   arrayUnion,
   arrayRemove,
 } from "@react-native-firebase/firestore";
+import * as Haptics from "expo-haptics";
 import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import { ReleaseDate, Games } from "@/types/igdb";
 import { timestampToUTC } from "@/utils/dates";
@@ -91,10 +91,7 @@ export async function subToMovie(
     const db = getFirestore();
     const docRef = doc(db, "movies", movieId);
     await setDoc(docRef, { subscribers: arrayUnion(user) }, { merge: true });
-    ReactNativeHapticFeedback.trigger("impactLight", {
-      enableVibrateFallback: true,
-      ignoreAndroidSystemSettings: false,
-    });
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     return { success: true, limitReached: false };
   } catch (error) {
     console.error("Error writing document: ", error);

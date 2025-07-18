@@ -7,7 +7,7 @@ import {
   setDoc,
   updateDoc,
 } from "@react-native-firebase/firestore";
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import * as Haptics from "expo-haptics";
 
 import { tryCatch } from "@/utils/try-catch";
 
@@ -55,9 +55,6 @@ export async function addCountdownItem({
     console.error("Error writing document: ", error);
     return { error };
   }
-  ReactNativeHapticFeedback.trigger("impactLight", {
-    enableVibrateFallback: true,
-    ignoreAndroidSystemSettings: false,
-  });
+  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   return { error: null, limitReached: false };
 }

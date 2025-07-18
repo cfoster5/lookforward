@@ -7,9 +7,9 @@ import {
   arrayUnion,
   arrayRemove,
 } from "@react-native-firebase/firestore";
+import * as Haptics from "expo-haptics";
 import { useRef } from "react";
 import { Animated, Easing, PlatformColor, Pressable, View } from "react-native";
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { iOSColors } from "react-native-typography";
 
 import { useCountdownLimit } from "@/hooks/useCountdownLimit";
@@ -59,10 +59,7 @@ function PosterButton({ movieId, game }: Props) {
           useNativeDriver: true,
           easing: Easing.inOut(Easing.ease),
         }).start(() =>
-          ReactNativeHapticFeedback.trigger("impactLight", {
-            enableVibrateFallback: true,
-            ignoreAndroidSystemSettings: false,
-          }),
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success),
         );
       } catch (error) {
         console.error("Error writing document: ", error);

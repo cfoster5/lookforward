@@ -82,10 +82,12 @@ export function TabStack() {
   } = useAppConfigStore();
 
   useEffect(() => {
+    if (!user) return;
+
     const db = getFirestore();
     const moviesQuery = query(
       collection(db, "movies"),
-      where("subscribers", "array-contains", user!.uid),
+      where("subscribers", "array-contains", user.uid),
     );
     const movieSubscription = onSnapshot(moviesQuery, (documentSnapshot) => {
       const movieSubsData: FirestoreMovie[] = documentSnapshot.docs.map(
@@ -100,7 +102,7 @@ export function TabStack() {
 
     const gameQuery = query(
       collection(db, "gameReleases"),
-      where("subscribers", "array-contains", user!.uid),
+      where("subscribers", "array-contains", user.uid),
     );
     const gameSubscription = onSnapshot(gameQuery, (documentSnapshot) => {
       const gameSubsData = documentSnapshot.docs.map((doc) => ({

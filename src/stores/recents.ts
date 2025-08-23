@@ -42,7 +42,11 @@ export const useRecentItemsStore = create<
       addRecent: (key, recent) =>
         set((state) => {
           const currentList = state[key];
-          const index = currentList.findIndex((item) => item.id === recent.id);
+          const index = currentList.findIndex(
+            // Convert the id to a number
+            // id is a string when coming from a deep link
+            (item) => Number(item.id) === Number(recent.id),
+          );
           // If the item is already at the beginning, no changes are needed
           if (index === 0) return state;
 

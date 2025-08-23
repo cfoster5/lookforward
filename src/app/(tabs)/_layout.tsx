@@ -1,4 +1,10 @@
-import firestore from "@react-native-firebase/firestore";
+import {
+  collection,
+  getFirestore,
+  onSnapshot,
+  query,
+  where,
+} from "@react-native-firebase/firestore";
 import { useQueryClient } from "@tanstack/react-query";
 import { BlurView } from "expo-blur";
 import { Tabs } from "expo-router";
@@ -44,30 +50,36 @@ export default function TabStack() {
   } = useAppConfigStore();
 
   useEffect(() => {
-    const movieSubscription = firestore()
-      .collection("movies")
-      .where("subscribers", "array-contains", user!.uid)
-      .onSnapshot((documentSnapshot) => {
-        const movieSubsData: FirestoreMovie[] = documentSnapshot.docs.map(
-          (doc) => ({
-            ...doc.data(),
-            subscribers: doc.data()["subscribers"],
-            documentID: doc.id,
-          }),
-        );
-        setMovieSubs(movieSubsData);
-      });
+    const db = getFirestore();
 
-    const gameSubscription = firestore()
-      .collection("gameReleases")
-      .where("subscribers", "array-contains", user!.uid)
-      .onSnapshot((documentSnapshot) => {
-        const gameSubsData = documentSnapshot.docs.map((doc) => ({
+    const movieQuery = query(
+      collection(db, "movies"),
+      where("subscribers", "array-contains", user!.uid),
+    );
+
+    const movieSubscription = onSnapshot(movieQuery, (documentSnapshot) => {
+      const movieSubsData: FirestoreMovie[] = documentSnapshot.docs.map(
+        (doc) => ({
           ...doc.data(),
+          subscribers: doc.data()["subscribers"],
           documentID: doc.id,
-        }));
-        setGameSubs(gameSubsData);
-      });
+        }),
+      );
+      setMovieSubs(movieSubsData);
+    });
+
+    const gameQuery = query(
+      collection(db, "gameReleases"),
+      where("subscribers", "array-contains", user!.uid),
+    );
+
+    const gameSubscription = onSnapshot(gameQuery, (documentSnapshot) => {
+      const gameSubsData = documentSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        documentID: doc.id,
+      }));
+      setGameSubs(gameSubsData);
+    });
 
     // Stop listening for updates when no longer required
     return () => {

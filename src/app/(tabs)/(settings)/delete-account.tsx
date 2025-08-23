@@ -1,4 +1,4 @@
-import auth from "@react-native-firebase/auth";
+import { deleteUser, getAuth } from "@react-native-firebase/auth";
 import { useState } from "react";
 import {
   Alert,
@@ -13,9 +13,11 @@ import { iOSUIKit } from "react-native-typography";
 export default function DeleteAccountScreen() {
   const [password, setPassword] = useState("");
   function deleteAccount() {
-    auth()
-      .currentUser?.delete()
-      .then(() => console.log("User deleted"));
+    const auth = getAuth();
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      deleteUser(currentUser).then(() => console.log("User deleted"));
+    }
   }
 
   return (

@@ -1,4 +1,4 @@
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
@@ -25,7 +25,8 @@ export function RecentPerson({ item }: { item: Recent }) {
       <Pressable
         onPress={() => {
           proModalRef.current?.present();
-          analytics().logEvent("select_promotion", {
+          const analytics = getAnalytics();
+          logEvent(analytics, "select_promotion", {
             name: "Pro",
             id: "com.lookforward.pro",
           });

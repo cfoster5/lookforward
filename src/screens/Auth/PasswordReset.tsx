@@ -1,4 +1,4 @@
-import auth from "@react-native-firebase/auth";
+import { getAuth, sendPasswordResetEmail } from "@react-native-firebase/auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
 import {
@@ -24,9 +24,10 @@ function PasswordReset({ navigation }: Props) {
 
   async function signIn() {
     try {
-      await auth().sendPasswordResetEmail(email);
+      const auth = getAuth();
+      await sendPasswordResetEmail(auth, email);
       navigation.navigate("Sign In", { emailSent: true, email });
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === "auth/invalid-email") {
         Alert.alert("Invalid Email", "That email address is invalid!");
       }

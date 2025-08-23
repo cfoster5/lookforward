@@ -1,4 +1,7 @@
-import auth from "@react-native-firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+} from "@react-native-firebase/auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
 import {
@@ -30,9 +33,10 @@ function Login({ navigation, route }: Props) {
 
   async function signIn() {
     try {
-      await auth().signInWithEmailAndPassword(email, password);
+      const auth = getAuth();
+      await signInWithEmailAndPassword(auth, email, password);
       // console.log('User account created & signed in!');
-    } catch (error) {
+    } catch (error: any) {
       if (error.code === "auth/invalid-email") {
         Alert.alert("Invalid Email", "That email address is invalid!");
       }

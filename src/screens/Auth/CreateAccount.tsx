@@ -1,4 +1,8 @@
-import auth from "@react-native-firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  signInAnonymously,
+} from "@react-native-firebase/auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
 import {
@@ -24,8 +28,9 @@ function CreateAccount({ navigation, route }: Props) {
 
   async function createAccount() {
     try {
-      await auth().createUserWithEmailAndPassword(email, password);
-    } catch (error) {
+      const auth = getAuth();
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
       if (error.code === "auth/email-already-in-use") {
         Alert.alert(
           "Email Already in Use",
@@ -43,7 +48,8 @@ function CreateAccount({ navigation, route }: Props) {
 
   async function skipAccountCreation() {
     try {
-      await auth().signInAnonymously();
+      const auth = getAuth();
+      await signInAnonymously(auth);
     } catch (error) {
       console.error(error);
     }

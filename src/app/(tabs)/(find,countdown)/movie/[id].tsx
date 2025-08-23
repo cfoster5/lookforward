@@ -1,5 +1,5 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { useHeaderHeight } from "@react-navigation/elements";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
@@ -344,7 +344,8 @@ export default function MovieScreen() {
               <LargeBorderlessButton
                 handlePress={async () => {
                   proModalRef.current?.present();
-                  await analytics().logEvent("select_promotion", {
+                  const analytics = getAnalytics();
+                  await logEvent(analytics, "select_promotion", {
                     name: "Pro",
                     id: "com.lookforward.pro",
                   });

@@ -2,7 +2,7 @@ import BottomSheet, {
   BottomSheetFlatList,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import { useMemo, useState } from "react";
 import {
@@ -224,7 +224,8 @@ export const SearchBottomSheet = () => {
                 handlePress={async () => {
                   Keyboard.dismiss();
                   proModalRef.current?.present();
-                  await analytics().logEvent("select_promotion", {
+                  const analytics = getAnalytics();
+                  await logEvent(analytics, "select_promotion", {
                     name: "Pro",
                     id: "com.lookforward.pro",
                   });

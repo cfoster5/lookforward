@@ -1,4 +1,9 @@
-import firestore from "@react-native-firebase/firestore";
+import {
+  doc,
+  getFirestore,
+  updateDoc,
+  getDoc,
+} from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 import * as Linking from "expo-linking";
 import { Slot } from "expo-router";
@@ -55,11 +60,14 @@ export default function RootLayout() {
           authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
           authStatus === messaging.AuthorizationStatus.PROVISIONAL;
         if (enabled) {
-          const userRef = firestore().collection("users").doc(uid);
-          const docSnapshot = await userRef.get();
+          const db = getFirestore();
+          const userRef = doc(db, "users", uid);
+          const docSnapshot = await getDoc(userRef);
           if (!docSnapshot.data()?.notifications) {
             // Only set notification preferences to true if they haven't been set before
-            await userRef.update({ notifications: { day: true, week: true } });
+            await updateDoc(userRef, {
+              notifications: { day: true, week: true },
+            });
           }
           const token = await messaging().getToken();
           await saveTokenToDatabase(token);
@@ -77,10 +85,9 @@ export default function RootLayout() {
 
     async function saveTokenToDatabase(token: string) {
       try {
-        await firestore()
-          .collection("users")
-          .doc(uid)
-          .update({ deviceToken: token });
+        const db = getFirestore();
+        const userRef = doc(db, "users", uid);
+        await updateDoc(userRef, { deviceToken: token });
       } catch (error) {
         console.error("Error saving token to database:", error);
       }

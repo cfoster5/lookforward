@@ -2,7 +2,7 @@ import { useMMKVDevTools } from "@dev-plugins/react-native-mmkv";
 import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import auth from "@react-native-firebase/auth";
+import { getAuth, onAuthStateChanged } from "@react-native-firebase/auth";
 import {
   DarkTheme,
   DefaultTheme,
@@ -41,7 +41,8 @@ export function AppProvider({ children }: AppProviderProps) {
   useMMKVDevTools();
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged((user) => setUser(user));
+    const auth = getAuth();
+    const subscriber = onAuthStateChanged(auth, (user) => setUser(user));
     return subscriber; // unsubscribe on unmount
   }, [setUser]);
 

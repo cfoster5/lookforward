@@ -1,4 +1,9 @@
-import firestore from "@react-native-firebase/firestore";
+import {
+  arrayRemove,
+  doc,
+  getFirestore,
+  writeBatch,
+} from "@react-native-firebase/firestore";
 import { useCallback } from "react";
 import { PlatformColor } from "react-native";
 import { iOSUIKit } from "react-native-typography";
@@ -18,19 +23,18 @@ export const DeleteHeader = () => {
   const { user } = useStore();
 
   const deleteItems = useCallback(async () => {
-    const batch = firestore().batch();
+    const db = getFirestore();
+    const batch = writeBatch(db);
     selectedMovies.map((selection) => {
-      const docRef = firestore().collection("movies").doc(selection.toString());
+      const docRef = doc(db, "movies", selection.toString());
       batch.update(docRef, {
-        subscribers: firestore.FieldValue.arrayRemove(user!.uid),
+        subscribers: arrayRemove(user!.uid),
       });
     });
     selectedGames.map((selection) => {
-      const docRef = firestore()
-        .collection("gameReleases")
-        .doc(selection.toString());
+      const docRef = doc(db, "gameReleases", selection.toString());
       batch.update(docRef, {
-        subscribers: firestore.FieldValue.arrayRemove(user!.uid),
+        subscribers: arrayRemove(user!.uid),
       });
     });
     await batch.commit();

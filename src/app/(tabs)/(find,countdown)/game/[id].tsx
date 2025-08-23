@@ -1,4 +1,4 @@
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { Image } from "expo-image";
 import {
   useLocalSearchParams,
@@ -138,7 +138,8 @@ export default function Game() {
               <LargeBorderlessButton
                 handlePress={async () => {
                   proModalRef.current?.present();
-                  await analytics().logEvent("select_promotion", {
+                  const analytics = getAnalytics();
+                  await logEvent(analytics, "select_promotion", {
                     name: "Pro",
                     id: "com.lookforward.pro",
                   });

@@ -1,4 +1,11 @@
-import firestore from "@react-native-firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  doc,
+  getFirestore,
+  setDoc,
+  updateDoc,
+} from "@react-native-firebase/firestore";
 import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
@@ -75,13 +82,9 @@ export async function subToMovie(
   user: string,
 ) {
   try {
-    await firestore()
-      .collection("movies")
-      .doc(movieId)
-      .set(
-        { subscribers: firestore.FieldValue.arrayUnion(user) },
-        { merge: true },
-      );
+    const db = getFirestore();
+    const docRef = doc(db, "movies", movieId);
+    await setDoc(docRef, { subscribers: arrayUnion(user) }, { merge: true });
     ReactNativeHapticFeedback.trigger("impactLight", {
       enableVibrateFallback: true,
       ignoreAndroidSystemSettings: false,
@@ -97,12 +100,11 @@ export async function removeSub(
   user: string,
 ) {
   try {
-    await firestore()
-      .collection(collection)
-      .doc(countdownId)
-      .update({
-        subscribers: firestore.FieldValue.arrayRemove(user),
-      });
+    const db = getFirestore();
+    const docRef = doc(db, collection, countdownId);
+    await updateDoc(docRef, {
+      subscribers: arrayRemove(user),
+    });
   } catch (error) {
     console.error("Error writing document: ", error);
   }

@@ -1,10 +1,15 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import analytics from "@react-native-firebase/analytics";
-import firestore from "@react-native-firebase/firestore";
+import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
+import {
+  doc,
+  getFirestore,
+  onSnapshot,
+  updateDoc,
+} from "@react-native-firebase/firestore";
 import messaging from "@react-native-firebase/messaging";
 import { Link } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Linking, Platform, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import { reusableStyles } from "@/helpers/styles";
 import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
@@ -24,10 +29,10 @@ export default function Settings() {
 
   useEffect(() => {
     getNotificationPermissions();
-    const preferenceSubscription = firestore()
-      .collection("users")
-      .doc(user!.uid)
-      .onSnapshot(
+    const db = getFirestore();
+    const userRef = doc(db, "users", user!.uid);
+    const preferenceSubscription = onSnapshot(
+      userRef,
         (docSnapshot) => setNotifications(docSnapshot.data()?.notifications),
         (error) => console.log(error),
       );
@@ -62,10 +67,9 @@ export default function Settings() {
           title="Day Before"
           onValueChange={async (value) => {
             // setNotifications({ ...notifications, day: value })
-            await firestore()
-              .collection("users")
-              .doc(user!.uid)
-              .update({ "notifications.day": value });
+            const db = getFirestore();
+            const userRef = doc(db, "users", user!.uid);
+            await updateDoc(userRef, { "notifications.day": value });
             await getNotificationPermissions();
           }}
           value={notifications?.day}
@@ -74,10 +78,9 @@ export default function Settings() {
           title="Week Before"
           onValueChange={async (value) => {
             // setNotifications({ ...notifications, week: value })
-            await firestore()
-              .collection("users")
-              .doc(user!.uid)
-              .update({ "notifications.week": value });
+            const db = getFirestore();
+            const userRef = doc(db, "users", user!.uid);
+            await updateDoc(userRef, { "notifications.week": value });
             await getNotificationPermissions();
           }}
           value={notifications?.week}
@@ -94,7 +97,8 @@ export default function Settings() {
           <SettingNavButton
             onPress={async () => {
               proModalRef.current?.present();
-              await analytics().logEvent("select_promotion", {
+              const analytics = getAnalytics();
+              await logEvent(analytics, "select_promotion", {
                 name: "Pro",
                 id: "com.lookforward.pro",
               });
@@ -105,7 +109,8 @@ export default function Settings() {
           <SettingNavButton
             onPress={async () => {
               modalRef.current?.present();
-              await analytics().logEvent("select_promotion", {
+              const analytics = getAnalytics();
+              await logEvent(analytics, "select_promotion", {
                 name: "Tip Jar",
                 items: [
                   { id: "com.lookforward.tip1" },

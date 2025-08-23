@@ -1,5 +1,10 @@
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
-import firestore from "@react-native-firebase/firestore";
+import {
+  arrayUnion,
+  doc,
+  getFirestore,
+  setDoc,
+} from "@react-native-firebase/firestore";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -65,16 +70,16 @@ export function GamePlatformPicker() {
     // console.log(game);
     const { id, name } = game;
     try {
-      await firestore()
-        .collection("gameReleases")
-        .doc(releaseDate.id.toString())
-        .set(
-          {
-            game: { id, name },
-            subscribers: firestore.FieldValue.arrayUnion(user!.uid),
-          },
-          { merge: true },
-        );
+      const db = getFirestore();
+      const docRef = doc(db, "gameReleases", releaseDate.id.toString());
+      await setDoc(
+        docRef,
+        {
+          game: { id, name },
+          subscribers: arrayUnion(user!.uid),
+        },
+        { merge: true },
+      );
       ReactNativeHapticFeedback.trigger("impactLight", {
         enableVibrateFallback: true,
         ignoreAndroidSystemSettings: false,

@@ -1,5 +1,6 @@
+import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
-import analytics from "@react-native-firebase/analytics";
+import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { Linking, PlatformColor, Pressable, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -73,7 +74,8 @@ export const OnboardingModal = () => {
           handlePress={async () => {
             onboardingModalRef.current?.dismiss();
             proModalRef.current?.present();
-            await analytics().logEvent("select_promotion", {
+            const analytics = getAnalytics();
+            await logEvent(analytics, "select_promotion", {
               name: "Pro",
               id: "com.lookforward.pro",
             });

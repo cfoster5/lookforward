@@ -38,6 +38,7 @@ export default {
       },
     },
     plugins: [
+      "expo-font",
       "expo-router",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",

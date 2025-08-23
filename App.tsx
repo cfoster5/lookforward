@@ -8,7 +8,6 @@ import messaging from "@react-native-firebase/messaging";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { StatusBar } from "react-native";
-import mobileAds from "react-native-google-mobile-ads";
 
 import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
@@ -26,11 +25,6 @@ export default function App() {
   const { user, isPro, theme } = useStore();
 
   useFirebaseAnalyticsCheck();
-
-  // Initialize Google Mobile Ads SDK
-  useEffect(() => {
-    if (!isPro) mobileAds().initialize();
-  }, [isPro]);
 
   useRevenueCat();
 

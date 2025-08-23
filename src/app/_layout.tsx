@@ -10,7 +10,6 @@ import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import mobileAds from "react-native-google-mobile-ads";
 import { HeaderButtonsProvider } from "react-navigation-header-buttons";
 
 import { ExplorePro } from "@/components/ExplorePro";
@@ -34,11 +33,6 @@ export default function RootLayout() {
   }, []);
 
   useFirebaseAnalyticsCheck();
-
-  // Initialize Google Mobile Ads SDK
-  useEffect(() => {
-    if (!isPro) mobileAds().initialize();
-  }, [isPro]);
 
   useRevenueCat();
 

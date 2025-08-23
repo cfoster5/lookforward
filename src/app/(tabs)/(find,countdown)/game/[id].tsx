@@ -8,7 +8,6 @@ import {
 } from "expo-router";
 import { useLayoutEffect, useState, Fragment, useMemo } from "react";
 import { PlatformColor, ScrollView, View, FlatList, Text } from "react-native";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -20,7 +19,6 @@ import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
-import { BANNER_AD_UNIT_ID } from "@/constants/AdUnits";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
@@ -134,7 +132,6 @@ export default function Game() {
           </Text>
 
           {!isPro && (
-            <>
               <LargeBorderlessButton
                 handlePress={async () => {
                   proModalRef.current?.present();
@@ -147,14 +144,6 @@ export default function Game() {
                 text="Explore Pro Features"
                 style={{ paddingBottom: 0 }}
               />
-              <View style={{ alignItems: "center", paddingTop: 16 }}>
-                <BannerAd
-                  unitId={BANNER_AD_UNIT_ID}
-                  size={BannerAdSize.BANNER}
-                  requestOptions={{ requestNonPersonalizedAdsOnly: true }}
-                />
-              </View>
-            </>
           )}
 
           <ExpandableText text={data?.summary} />

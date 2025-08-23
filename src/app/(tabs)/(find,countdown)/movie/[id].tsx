@@ -22,7 +22,6 @@ import {
   Text,
   View,
 } from "react-native";
-import { BannerAd, BannerAdSize } from "react-native-google-mobile-ads";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -50,7 +49,6 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
-import { BANNER_AD_UNIT_ID } from "@/constants/AdUnits";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { getReleaseDatesByCountry } from "@/helpers/getReleaseDatesByCountry";
 import {
@@ -340,27 +338,18 @@ export default function MovieScreen() {
           )}
 
           {!isPro && (
-            <>
-              <LargeBorderlessButton
-                handlePress={async () => {
-                  proModalRef.current?.present();
-                  const analytics = getAnalytics();
-                  await logEvent(analytics, "select_promotion", {
-                    name: "Pro",
-                    id: "com.lookforward.pro",
-                  });
-                }}
-                text="Explore Pro Features"
-                style={{ paddingBottom: 0 }}
-              />
-              <View style={{ alignItems: "center", paddingTop: 16 }}>
-                <BannerAd
-                  unitId={BANNER_AD_UNIT_ID}
-                  size={BannerAdSize.BANNER}
-                  requestOptions={{ requestNonPersonalizedAdsOnly: true }}
-                />
-              </View>
-            </>
+            <LargeBorderlessButton
+              handlePress={async () => {
+                proModalRef.current?.present();
+                const analytics = getAnalytics();
+                await logEvent(analytics, "select_promotion", {
+                  name: "Pro",
+                  id: "com.lookforward.pro",
+                });
+              }}
+              text="Explore Pro Features"
+              style={{ paddingBottom: 0 }}
+            />
           )}
 
           {movieDetails.tagline && (

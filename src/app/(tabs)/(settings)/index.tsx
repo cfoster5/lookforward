@@ -6,7 +6,7 @@ import {
   onSnapshot,
   updateDoc,
 } from "@react-native-firebase/firestore";
-import messaging from "@react-native-firebase/messaging";
+import { getMessaging, hasPermission } from "@react-native-firebase/messaging";
 import { Link } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import { Text, View } from "react-native";
@@ -33,15 +33,16 @@ export default function Settings() {
     const userRef = doc(db, "users", user!.uid);
     const preferenceSubscription = onSnapshot(
       userRef,
-        (docSnapshot) => setNotifications(docSnapshot.data()?.notifications),
-        (error) => console.log(error),
-      );
+      (docSnapshot) => setNotifications(docSnapshot.data()?.notifications),
+      (error) => console.log(error),
+    );
     // Stop listening for updates when no longer required
     return preferenceSubscription;
   }, [user]);
 
   async function getNotificationPermissions() {
-    const res = await messaging().hasPermission();
+    const messaging = getMessaging();
+    const res = await hasPermission(messaging);
     setHasPermissions(res);
     // if (!res) {
     //   setHasPermissions(false);

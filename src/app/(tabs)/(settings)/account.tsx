@@ -1,13 +1,12 @@
-import auth from "@react-native-firebase/auth";
+import { getAuth, signOut } from "@react-native-firebase/auth";
 import { Link } from "expo-router";
 import { Alert, View } from "react-native";
 
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 
-function signOut() {
-  auth()
-    .signOut()
-    .then(() => console.log("User signed out!"));
+function handleSignOut() {
+  const auth = getAuth();
+  signOut(auth);
 }
 
 export default function AccountScreen() {
@@ -17,7 +16,7 @@ export default function AccountScreen() {
         onPress={() =>
           Alert.alert("Sign out?", undefined, [
             { text: "Cancel", style: "cancel" },
-            { text: "Sign Out", style: "destructive", onPress: signOut },
+            { text: "Sign Out", style: "destructive", onPress: handleSignOut },
           ])
         }
         text="Sign Out"

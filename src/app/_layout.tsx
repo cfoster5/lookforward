@@ -4,7 +4,13 @@ import {
   updateDoc,
   getDoc,
 } from "@react-native-firebase/firestore";
-import messaging from "@react-native-firebase/messaging";
+import {
+  AuthorizationStatus,
+  getMessaging,
+  getToken,
+  onTokenRefresh,
+  requestPermission,
+} from "@react-native-firebase/messaging";
 import * as Linking from "expo-linking";
 import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -26,7 +32,7 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const { user, isPro, theme } = useStore();
+  const { user, theme } = useStore();
 
   useEffect(() => {
     Linking.getInitialURL().then((url) => console.log("Initial URL:", url));
@@ -49,10 +55,11 @@ export default function RootLayout() {
 
     async function requestUserPermission() {
       try {
-        const authStatus = await messaging().requestPermission();
+        const messaging = getMessaging();
+        const authStatus = await requestPermission(messaging);
         const enabled =
-          authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-          authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+          authStatus === AuthorizationStatus.AUTHORIZED ||
+          authStatus === AuthorizationStatus.PROVISIONAL;
         if (enabled) {
           const db = getFirestore();
           const userRef = doc(db, "users", uid);
@@ -63,10 +70,10 @@ export default function RootLayout() {
               notifications: { day: true, week: true },
             });
           }
-          const token = await messaging().getToken();
+          const token = await getToken(messaging);
           await saveTokenToDatabase(token);
           // Listen to token refresh changes and store the unsubscribe function
-          unsubscribe = messaging().onTokenRefresh(async (token) => {
+          unsubscribe = onTokenRefresh(messaging, async (token) => {
             await saveTokenToDatabase(token);
           });
         }

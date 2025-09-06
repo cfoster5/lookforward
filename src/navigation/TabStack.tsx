@@ -70,8 +70,10 @@ export function TabStack() {
     user,
     setMovieSubs,
     setGameSubs,
+    setPeopleSubs,
     movieSubs,
     gameSubs,
+    peopleSubs,
     onboardingModalRef,
   } = useStore();
   const {
@@ -112,17 +114,33 @@ export function TabStack() {
       setGameSubs(gameSubsData);
     });
 
+    const peopleQuery = query(
+      collection(db, "people"),
+      where("subscribers", "array-contains", user.uid),
+    );
+    const peopleSubscription = onSnapshot(peopleQuery, (documentSnapshot) => {
+      const peopleSubsData = documentSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        documentID: doc.id,
+      }));
+      setPeopleSubs(peopleSubsData);
+    });
+
     // Stop listening for updates when no longer required
     return () => {
       // Unmounting
       movieSubscription();
       gameSubscription();
+      peopleSubscription();
     };
-  }, [setGameSubs, setMovieSubs, user]);
+  }, [setGameSubs, setMovieSubs, setPeopleSubs, user]);
 
   useEffect(() => {
     async function requestReview() {
-      if (movieSubs.length + gameSubs.length >= 3 && !hasRequestedReview) {
+      if (
+        movieSubs.length + gameSubs.length + peopleSubs.length >= 3 &&
+        !hasRequestedReview
+      ) {
         const isAvailable = await StoreReview.isAvailableAsync();
         if (isAvailable) {
           await StoreReview.requestReview();
@@ -135,6 +153,7 @@ export function TabStack() {
   }, [
     gameSubs.length,
     movieSubs.length,
+    peopleSubs.length,
     hasRequestedReview,
     setHasRequestedReview,
   ]);

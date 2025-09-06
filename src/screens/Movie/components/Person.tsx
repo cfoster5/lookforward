@@ -14,6 +14,8 @@ import {
 import { iOSUIKit } from "react-native-typography";
 import { Cast, Crew } from "tmdb-ts";
 
+import { removeSub, subToPerson } from "@/helpers/helpers";
+import { useCountdownLimit } from "@/hooks/useCountdownLimit";
 import { ContextMenu } from "@/screens/Search/components/SearchBottomSheet/ContextMenu";
 import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
@@ -56,9 +58,14 @@ const pressableStyle = StyleSheet.create({
 });
 
 function Person({ navigation, person }: Props) {
-  const { theme } = useStore();
+  const { theme, user, peopleSubs } = useStore();
   const { addRecent } = useRecentItemsStore();
+  const checkLimit = useCountdownLimit();
   const { width: windowWidth } = useWindowDimensions();
+
+  const isPersonSub = () =>
+    person.id &&
+    peopleSubs.some((sub) => sub.documentID === person.id.toString());
 
   const styles = useMemo(
     () =>
@@ -77,6 +84,20 @@ function Person({ navigation, person }: Props) {
 
   return (
     <ContextMenu
+      handleCountdownToggle={{
+        action: () =>
+          isPersonSub()
+            ? removeSub("people", person.id.toString(), user!.uid)
+            : subToPerson({
+                personId: person.id,
+                personName: person.name,
+                user: user!.uid,
+                limitCheckCallback: () => checkLimit("people"),
+              }),
+        buttonText: isPersonSub()
+          ? "Remove from Countdown"
+          : "Add to Countdown",
+      }}
       handleShareSelect={() =>
         onShare(`person/${person.id}?name=${person.name}`, "movie")
       }
@@ -84,7 +105,7 @@ function Person({ navigation, person }: Props) {
       <Pressable
         style={pressableStyle.container}
         onPress={() => {
-          navigation.push("Actor", {
+          (navigation as any).push("Actor", {
             personId: person.id,
             name: person.name,
           });
@@ -136,7 +157,11 @@ function Person({ navigation, person }: Props) {
           <Text
             style={[iOSUIKit.callout, { color: PlatformColor("systemGray") }]}
           >
-            {"character" in person ? person.character : person.job?.join(", ")}
+            {"character" in person
+              ? person.character
+              : Array.isArray(person.job)
+                ? person.job.join(", ")
+                : person.job}
           </Text>
         </View>
       </Pressable>

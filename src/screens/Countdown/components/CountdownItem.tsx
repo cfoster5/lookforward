@@ -19,6 +19,7 @@ import { isoToUTC, now, timestamp, timestampToUTC } from "@/utils/dates";
 
 import { useGameCountdowns } from "../api/getGameCountdowns";
 import { useMovieCountdowns } from "../api/getMovieCountdowns";
+import { usePeopleCountdowns } from "../api/getPeopleCountdowns";
 
 import { RadioButton } from "./RadioButton";
 
@@ -32,7 +33,12 @@ interface GameProps {
   sectionName: "Games";
 }
 
-type Props = (MovieProps | GameProps) & {
+interface PeopleProps {
+  item: ReturnType<typeof usePeopleCountdowns>[number]["data"];
+  sectionName: "People";
+}
+
+type Props = (MovieProps | GameProps | PeopleProps) & {
   isLastInSection: boolean;
 };
 
@@ -52,6 +58,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
     showDeleteButton,
     movies: selectedMovies,
     games: selectedGames,
+    people: selectedPeople,
     toggleSelection,
   } = useCountdownStore();
   const { addRecent } = useRecentItemsStore();
@@ -65,17 +72,22 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
   const isSelected =
     sectionName === "Movies"
       ? selectedMovies.includes(item!.documentID)
-      : selectedGames.includes(item!.id.toString());
+      : sectionName === "Games"
+        ? selectedGames.includes(item!.id.toString())
+        : selectedPeople.includes(item!.documentID);
 
   function getFormattedDate(): string {
     if (sectionName === "Movies") {
       return item!.releaseDate
         ? isoToUTC(item!.releaseDate).toLocaleString(DateTime.DATE_MED)
         : "TBD";
-    } else {
+    } else if (sectionName === "Games") {
       return item!.date
         ? timestampToUTC(item!.date).toFormat("MM/dd/yyyy")
         : item!.human;
+    } else {
+      // People don't have release dates
+      return "No upcoming releases";
     }
   }
 
@@ -84,16 +96,20 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
       return item!.releaseDate
         ? Math.ceil(isoToUTC(item!.releaseDate).diff(now).as("days"))
         : "∞";
-    } else {
+    } else if (sectionName === "Games") {
       return item!.date
         ? Math.ceil(timestampToUTC(item!.date).diff(now).as("days"))
         : "∞";
+    } else {
+      // People don't have release dates
+      return "∞";
     }
   }
 
   function handlePress() {
     if (sectionName === "Movies") handleMovieAction();
     else if (sectionName === "Games") handleGameAction();
+    else if (sectionName === "People") handlePersonAction();
   }
 
   function handleMovieAction() {
@@ -134,6 +150,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
         id: item!.game.id,
         name: item!.game.name,
         cover: { url: item!.game.cover.url },
+        release_dates: [], // Add empty release_dates to satisfy type
       },
     });
     addRecent("recentGames", {
@@ -145,14 +162,35 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
     });
   }
 
+  function handlePersonAction() {
+    if (showDeleteButton) {
+      toggleSelection(item!.documentID, "people");
+    } else {
+      goToPerson();
+    }
+  }
+
+  function goToPerson() {
+    navigation.navigate("Actor", {
+      personId: item!.id,
+      name: item!.name,
+    });
+    addRecent("recentPeople", {
+      id: item!.id,
+      name: item!.name,
+      img_path: item!.profile_path,
+      last_viewed: timestamp,
+    });
+  }
+
   const styles = useMemo(
     () =>
       StyleSheet.create({
         rowFront: {
           borderBottomLeftRadius:
-            sectionName === "Games" && isLastInSection ? 10 : 0,
+            sectionName === "People" && isLastInSection ? 10 : 0,
           borderBottomRightRadius:
-            sectionName === "Games" && isLastInSection ? 10 : 0,
+            sectionName === "People" && isLastInSection ? 10 : 0,
           overflow: "hidden",
           backgroundColor: isSelected
             ? PlatformColor("systemGray4")
@@ -165,8 +203,13 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
         },
         image: {
           width: 60,
-          aspectRatio: sectionName === "Movies" ? 2 / 3 : 3 / 4,
-          borderRadius: 6,
+          aspectRatio:
+            sectionName === "Movies"
+              ? 2 / 3
+              : sectionName === "Games"
+                ? 3 / 4
+                : 1, // People profile photos are square
+          borderRadius: sectionName === "People" ? 30 : 6, // Round for people, rectangular for movies/games
           marginLeft: 16,
           marginTop: 8,
           marginBottom: 8,
@@ -200,10 +243,14 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
   if (sectionName === "Movies") {
     imageSrc = `https://image.tmdb.org/t/p/${PosterSizes.W300}${item!.poster_path}`;
     title = item!.title;
-  }
-  if (sectionName === "Games") {
+  } else if (sectionName === "Games") {
     imageSrc = `https:${item!.game.cover.url.replace("thumb", "cover_big_2x")}`;
     title = item!.game.name;
+  } else if (sectionName === "People") {
+    imageSrc = item!.profile_path
+      ? `https://image.tmdb.org/t/p/${PosterSizes.W300}${item!.profile_path}`
+      : "";
+    title = item!.name;
   }
 
   const slideStyle = useAnimatedStyle(() => ({
@@ -224,11 +271,45 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
           <RadioButton isSelected={isSelected} />
         </Animated.View>
         <View style={staticStyles.imageWrapper}>
-          <Image
-            style={styles.image}
-            source={{ uri: imageSrc }}
-            contentFit="cover"
-          />
+          {imageSrc ? (
+            <Image
+              style={styles.image}
+              source={{ uri: imageSrc }}
+              contentFit="cover"
+            />
+          ) : sectionName === "People" ? (
+            <View
+              style={[
+                styles.image,
+                {
+                  backgroundColor: PlatformColor("systemGray"),
+                  justifyContent: "center",
+                  alignItems: "center",
+                },
+              ]}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                {title
+                  .split(" ")
+                  .map((word) => word.charAt(0))
+                  .slice(0, 2)
+                  .join("")}
+              </Text>
+            </View>
+          ) : (
+            <View
+              style={[
+                styles.image,
+                { backgroundColor: PlatformColor("systemGray") },
+              ]}
+            />
+          )}
         </View>
         <View style={styles.middle}>
           <Text

@@ -10,6 +10,7 @@ import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useGameCountdowns } from "./api/getGameCountdowns";
 import { useMovieCountdowns } from "./api/getMovieCountdowns";
+import { usePeopleCountdowns } from "./api/getPeopleCountdowns";
 import { CountdownItem } from "./components/CountdownItem";
 import { SectionHeader } from "./components/SectionHeader";
 
@@ -20,10 +21,12 @@ function Countdown() {
   const paddingBottom = useBottomTabOverflow();
   const movies = useMovieCountdowns();
   const gameReleases = useGameCountdowns();
+  const people = usePeopleCountdowns();
 
   const isLoading =
     movies.some((movie) => movie.isLoading) ||
-    gameReleases.some((release) => release.isLoading);
+    gameReleases.some((release) => release.isLoading) ||
+    people.some((person) => person.isLoading);
 
   if (isLoading) return <LoadingScreen />;
 
@@ -33,7 +36,9 @@ function Countdown() {
     .sort((a, b) => {
       if (!a?.releaseDate) return 1; // Place undefined dates at the end
       if (!b?.releaseDate) return -1; // Place undefined dates at the end
-      return a.releaseDate.localeCompare(b.releaseDate); // Lexicographical comparison
+      return (
+        new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime()
+      );
     });
 
   const flattenedGames = gameReleases
@@ -42,6 +47,15 @@ function Countdown() {
       if (!a?.date) return 1; // Place undefined dates at the end
       if (!b?.date) return -1; // Place undefined dates at the end
       return a.date - b.date; // Numeric comparison for valid dates
+    });
+
+  const flattenedPeople = people
+    .flatMap((person) => person.data)
+    .sort((a, b) => {
+      // Sort people alphabetically by name since they don't have release dates
+      if (!a?.name) return 1;
+      if (!b?.name) return -1;
+      return a.name.localeCompare(b.name);
     });
 
   return (
@@ -57,6 +71,7 @@ function Countdown() {
       sections={[
         { data: flattenedMovies, title: "Movies" },
         { data: flattenedGames, title: "Games" },
+        { data: flattenedPeople, title: "People" },
       ]}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}
@@ -67,7 +82,9 @@ function Countdown() {
           isLastInSection={
             section.title === "Movies"
               ? index + 1 === flattenedMovies.length
-              : index + 1 === flattenedGames.length
+              : section.title === "Games"
+                ? index + 1 === flattenedGames.length
+                : index + 1 === flattenedPeople.length
           }
         />
       )}

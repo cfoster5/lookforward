@@ -6,7 +6,11 @@ import { ColorSchemeName } from "react-native";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
-import { FirestoreGame, FirestoreMovie } from "@/interfaces/firebase";
+import {
+  FirestoreGame,
+  FirestoreMovie,
+  FirestorePerson,
+} from "@/interfaces/firebase";
 
 const bottomSheetModalRef = createRef<BottomSheetModal>();
 const onboardingModalRef = createRef<BottomSheetModal>();
@@ -17,6 +21,7 @@ type State = {
   theme: ColorSchemeName;
   movieSubs: FirestoreMovie[];
   gameSubs: FirestoreGame[];
+  peopleSubs: FirestorePerson[];
   categoryIndex: number;
   bottomSheetModalRef: typeof bottomSheetModalRef;
   onboardingModalRef: typeof onboardingModalRef;
@@ -30,6 +35,7 @@ type Actions = {
   setTheme: (theme: ColorSchemeName) => void;
   setMovieSubs: (movies: FirestoreMovie[]) => void;
   setGameSubs: (games: FirestoreGame[]) => void;
+  setPeopleSubs: (people: FirestorePerson[]) => void;
   setCategoryIndex: (number: number) => void;
   setIsPro: (isPro: boolean) => void;
   setInitialSnapPoint: (value: number) => void;
@@ -44,6 +50,8 @@ export const useStore = create<State & Actions>((set) => ({
   setMovieSubs: (movieSubs) => set(() => ({ movieSubs })),
   gameSubs: [],
   setGameSubs: (gameSubs) => set(() => ({ gameSubs })),
+  peopleSubs: [],
+  setPeopleSubs: (peopleSubs) => set(() => ({ peopleSubs })),
   categoryIndex: 0,
   setCategoryIndex: (categoryIndex) => set(() => ({ categoryIndex })),
   bottomSheetModalRef,
@@ -58,11 +66,15 @@ export const useStore = create<State & Actions>((set) => ({
 type CountdownState = {
   movies: string[];
   games: string[];
+  people: string[];
   showDeleteButton: boolean;
 };
 
 type CountdownActions = {
-  toggleSelection: (documentId: string, section: "movies" | "games") => void;
+  toggleSelection: (
+    documentId: string,
+    section: "movies" | "games" | "people",
+  ) => void;
   clearSelections: () => void;
   toggleDeleteButton: () => void;
 };
@@ -71,6 +83,7 @@ export const useCountdownStore = create<CountdownState & CountdownActions>()(
   immer((set) => ({
     movies: [],
     games: [],
+    people: [],
     toggleSelection: (documentId: string, section) =>
       set((state) => {
         const index = state[section].findIndex(
@@ -84,6 +97,7 @@ export const useCountdownStore = create<CountdownState & CountdownActions>()(
       set((state) => {
         state.movies = [];
         state.games = [];
+        state.people = [];
       }),
     showDeleteButton: false,
     toggleDeleteButton: () =>

@@ -99,6 +99,41 @@ export async function subToMovie(
   }
 }
 
+export async function subToPerson({
+  personId,
+  personName,
+  user,
+  limitCheckCallback,
+}: {
+  personId: number;
+  personName: string;
+  user: string;
+  limitCheckCallback?: () => boolean;
+}) {
+  // Check limit if callback provided
+  if (limitCheckCallback && !limitCheckCallback()) {
+    return { success: false, limitReached: true };
+  }
+
+  try {
+    const db = getFirestore();
+    const docRef = doc(db, "people", personId.toString());
+    await setDoc(
+      docRef,
+      {
+        person: { id: personId, name: personName },
+        subscribers: arrayUnion(user),
+      },
+      { merge: true },
+    );
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    return { success: true, limitReached: false };
+  } catch (error) {
+    console.error("Error writing document: ", error);
+    return { success: false, limitReached: false, error };
+  }
+}
+
 export async function removeSub(
   collection: string,
   countdownId: string,

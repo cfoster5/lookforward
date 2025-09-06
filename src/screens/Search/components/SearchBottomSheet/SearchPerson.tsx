@@ -6,8 +6,10 @@ import { PlatformColor, Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { PersonWithMediaType } from "tmdb-ts";
 
-import { calculateWidth } from "@/helpers/helpers";
+import { calculateWidth, removeSub, subToPerson } from "@/helpers/helpers";
+import { useCountdownLimit } from "@/hooks/useCountdownLimit";
 import { useRecentItemsStore } from "@/stores/recents";
+import { useStore } from "@/stores/store";
 import { timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 
@@ -16,10 +18,29 @@ import { ContextMenu } from "./ContextMenu";
 export function SearchPerson({ item }: { item: PersonWithMediaType }) {
   // https://github.com/react-navigation/react-navigation/issues/9037#issuecomment-735698288
   const navigation = useNavigation<StackNavigationProp<any>>();
+  const { user, peopleSubs } = useStore();
   const { addRecent } = useRecentItemsStore();
+  const checkLimit = useCountdownLimit();
+
+  const isPersonSub = () =>
+    item.id && peopleSubs.some((sub) => sub.documentID === item.id.toString());
 
   return (
     <ContextMenu
+      handleCountdownToggle={{
+        action: () =>
+          isPersonSub()
+            ? removeSub("people", item.id.toString(), user!.uid)
+            : subToPerson({
+                personId: item.id,
+                personName: item.name,
+                user: user!.uid,
+                limitCheckCallback: () => checkLimit("people"),
+              }),
+        buttonText: isPersonSub()
+          ? "Remove from Countdown"
+          : "Add to Countdown",
+      }}
       handleShareSelect={() =>
         onShare(`person/${item.id}?name=${item.name}`, "search")
       }

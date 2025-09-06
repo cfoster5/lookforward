@@ -5,29 +5,33 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, Platform, Text, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
 
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { ExpandableText } from "@/components/ExpandableText";
-import { DynamicShareHeader } from "@/components/Headers";
+import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
-import { calculateWidth } from "@/helpers/helpers";
+import { calculateWidth, removeSub, subToPerson } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
+import { useCountdownLimit } from "@/hooks/useCountdownLimit";
 import { useRecentItemsStore } from "@/stores/recents";
-import { FindStackParams, BottomTabParams } from "@/types";
+import { useStore } from "@/stores/store";
+import { FindStackParamList, TabNavigationParamList } from "@/types";
 import { dateToFullLocale, timestamp } from "@/utils/dates";
+import { onShare } from "@/utils/share";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { usePerson } from "./api/getPerson";
 import { CarouselItem } from "./components/CarouselItem";
 
 type ActorScreenNavigationProp = CompositeScreenProps<
-  NativeStackScreenProps<FindStackParams, "Actor">,
+  NativeStackScreenProps<FindStackParamList, "Actor">,
   CompositeScreenProps<
-    BottomTabScreenProps<BottomTabParams, "FindTabStack">,
-    BottomTabScreenProps<BottomTabParams, "CountdownTabStack">
+    BottomTabScreenProps<TabNavigationParamList, "FindTab">,
+    BottomTabScreenProps<TabNavigationParamList, "CountdownTab">
   >
 >;
 
@@ -68,22 +72,47 @@ function getUniqueSortedCrewJobs(crew?: PersonMovieCrew[]) {
 function Actor({ route, navigation }: ActorScreenNavigationProp) {
   const { personId, name } = route.params;
   const { data: person, isLoading } = usePerson(route.params.personId);
+  const { user, peopleSubs } = useStore();
+  const checkLimit = useCountdownLimit();
   const paddingBottom = useBottomTabOverflow();
   const ref = useRef<Carousel<any>>(null);
   const [selectedJob, setSelectedJob] = useState("Actor");
   const { addRecent } = useRecentItemsStore();
 
+  const isSubbed = peopleSubs.find(
+    (sub) => sub.documentID === personId.toString(),
+  );
+
   useLayoutEffect(() => {
     navigation.setOptions({
       // eslint-disable-next-line react/no-unstable-nested-components
       headerRight: () => (
-        <DynamicShareHeader
-          title={name}
-          urlSegment={`person/${personId}?name=${name}`}
-        />
+        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
+          <Item
+            title="subscribe"
+            iconName={isSubbed ? "checkmark-outline" : "add-outline"}
+            onPress={() =>
+              !isSubbed
+                ? subToPerson({
+                    personId,
+                    personName: name,
+                    user: user!.uid,
+                    limitCheckCallback: () => checkLimit("people"),
+                  })
+                : removeSub("people", personId.toString(), user!.uid)
+            }
+          />
+          <Item
+            title="share"
+            iconName="share-outline"
+            onPress={() =>
+              onShare(`person/${personId}?name=${name}`, "headerButton")
+            }
+          />
+        </HeaderButtons>
       ),
     });
-  }, [name, navigation, personId]);
+  }, [isSubbed, personId, name, navigation, user, checkLimit]);
 
   const castCredits = person?.movie_credits.cast.sort(sortReleaseDates);
   const crewCredits = person?.movie_credits.crew

@@ -208,7 +208,7 @@ export function TabStack() {
       <Tab.Screen
         name="CountdownTab"
         component={CountdownStack}
-        options={{ headerShown: false, tabBarLabel: "Countdown" }}
+        options={{ headerShown: false, tabBarLabel: "Pins" }}
       />
       <Tab.Screen
         name="SettingsTab"

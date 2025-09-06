@@ -53,7 +53,7 @@ export function MoviePoster({
                 user: user!,
                 limitCheckCallback: () => checkLimit("movies"),
               }),
-        buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
+        buttonText: isMovieSub() ? "Remove from Pins" : "Add to Pins",
       }}
       handleShareSelect={() =>
         onShare(`movie/${movie!.id}?name=${movie!.title}`, "poster")

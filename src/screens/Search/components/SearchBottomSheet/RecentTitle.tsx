@@ -179,9 +179,7 @@ export function RecentTitle({ item }: { item: Recent }) {
                       user: user!,
                       limitCheckCallback: () => checkLimit("movies"),
                     }),
-              buttonText: isMovieSub()
-                ? "Remove from Countdown"
-                : "Add to Countdown",
+              buttonText: isMovieSub() ? "Remove from Pins" : "Add to Pins",
             }
           : undefined
       }

@@ -47,8 +47,8 @@ export const OnboardingModal = () => {
         </ContextMenu>
         <Row
           icon="timer-outline"
-          title="Countdown"
-          body="Add titles to your list so you can see release dates on the Countdown tab."
+          title="Pins"
+          body="Add titles to your list so you can see release dates on the Pins tab."
         />
         <Row
           icon="information-circle-outline"

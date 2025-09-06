@@ -37,9 +37,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
                 user: user!.uid,
                 limitCheckCallback: () => checkLimit("people"),
               }),
-        buttonText: isPersonSub()
-          ? "Remove from Countdown"
-          : "Add to Countdown",
+        buttonText: isPersonSub() ? "Remove from Pins" : "Add to Pins",
       }}
       handleShareSelect={() =>
         onShare(`person/${item.id}?name=${item.name}`, "search")

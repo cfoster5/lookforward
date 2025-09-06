@@ -12,7 +12,7 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { useStore, useCountdownStore } from "@/stores/store";
 
-export const DeleteHeader = () => {
+export const SeeAllDeleteHeader = () => {
   const {
     movies: selectedMovies,
     games: selectedGames,
@@ -50,21 +50,21 @@ export const DeleteHeader = () => {
     user,
   ]);
 
-  return (
-    showDeleteButton && (
-      <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton} left>
-        <Item
-          title="Delete"
-          buttonStyle={{
-            ...iOSUIKit.bodyEmphasizedObject,
-            color:
-              selectedMovies.concat(selectedGames, selectedPeople).length === 0
-                ? PlatformColor("systemGray3")
-                : PlatformColor("systemRed"),
-          }}
-          onPress={deleteItems}
-        />
-      </HeaderButtons>
-    )
-  );
+  // Only show the delete button when in edit mode
+  // When not in edit mode, let the default back button show
+  return showDeleteButton ? (
+    <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton} left>
+      <Item
+        title="Delete"
+        buttonStyle={{
+          ...iOSUIKit.bodyEmphasizedObject,
+          color:
+            selectedMovies.concat(selectedGames, selectedPeople).length === 0
+              ? PlatformColor("systemGray3")
+              : PlatformColor("systemRed"),
+        }}
+        onPress={deleteItems}
+      />
+    </HeaderButtons>
+  ) : null; // Return null to show default back button
 };

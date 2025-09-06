@@ -94,9 +94,7 @@ function Person({ navigation, person }: Props) {
                 user: user!.uid,
                 limitCheckCallback: () => checkLimit("people"),
               }),
-        buttonText: isPersonSub()
-          ? "Remove from Countdown"
-          : "Add to Countdown",
+        buttonText: isPersonSub() ? "Remove from Pins" : "Add to Pins",
       }}
       handleShareSelect={() =>
         onShare(`person/${person.id}?name=${person.name}`, "movie")

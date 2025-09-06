@@ -53,6 +53,10 @@ export type FindStackParamList = {
 
 export type CountdownStackParamList = {
   Countdown: undefined;
+  SeeAll: {
+    sectionType: "Movies" | "Games" | "People";
+    title: string;
+  };
 } & MovieScreens &
   GameScreens;
 

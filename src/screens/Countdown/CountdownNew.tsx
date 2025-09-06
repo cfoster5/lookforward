@@ -1,8 +1,10 @@
 import { getAnalytics } from "@react-native-firebase/analytics";
+import { useScrollToTop } from "@react-navigation/native";
 import { useRef } from "react";
 import {
   Animated,
   FlatList,
+  Platform,
   PlatformColor,
   ScrollView,
   View,
@@ -23,6 +25,7 @@ import { HorizontalSectionHeader } from "./components/HorizontalSectionHeader";
 function Countdown() {
   const { isPro, proModalRef } = useStore();
   const scrollRef = useRef<ScrollView>(null);
+  useScrollToTop(scrollRef as any);
   const paddingBottom = useBottomTabOverflow();
   const { top: statusBarInset } = useSafeAreaInsets();
   const movies = useMovieCountdowns();
@@ -45,7 +48,8 @@ function Countdown() {
       return (
         new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime()
       );
-    });
+    })
+    .slice(0, 10); // Limit to 10 items for horizontal scroll
 
   const flattenedGames = gameReleases
     .flatMap((release) => release.data)
@@ -53,7 +57,8 @@ function Countdown() {
       if (!a?.date) return 1;
       if (!b?.date) return -1;
       return a.date - b.date;
-    });
+    })
+    .slice(0, 10); // Limit to 10 items for horizontal scroll
 
   const flattenedPeople = people
     .flatMap((person) => person.data)
@@ -61,7 +66,8 @@ function Countdown() {
       if (!a?.name) return 1;
       if (!b?.name) return -1;
       return a.name.localeCompare(b.name);
-    });
+    })
+    .slice(0, 10); // Limit to 10 items for horizontal scroll
 
   const largeHeaderInset = statusBarInset + 92;
 
@@ -76,7 +82,7 @@ function Countdown() {
         top: -largeHeaderInset,
       }}
       scrollIndicatorInsets={{
-        bottom: paddingBottom,
+        bottom: paddingBottom - (Platform.OS === "ios" ? 0 : 0),
         top: largeHeaderInset,
       }}
       style={{
@@ -122,26 +128,6 @@ function Countdown() {
         </>
       )}
 
-      {/* People Section */}
-      {flattenedPeople.length > 0 && (
-        <>
-          <HorizontalSectionHeader title="People" sectionType="People" />
-          <FlatList
-            data={flattenedPeople}
-            renderItem={({ item }) => (
-              <CountdownCard item={item} sectionName="People" />
-            )}
-            keyExtractor={(item, index) => `person-${item?.id || index}`}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingHorizontal: 16,
-              paddingBottom: 8,
-            }}
-          />
-        </>
-      )}
-
       {/* Games Section */}
       {flattenedGames.length > 0 && (
         <>
@@ -152,6 +138,26 @@ function Countdown() {
               <CountdownCard item={item} sectionName="Games" />
             )}
             keyExtractor={(item, index) => `game-${item?.id || index}`}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              paddingBottom: 8,
+            }}
+          />
+        </>
+      )}
+
+      {/* People Section */}
+      {flattenedPeople.length > 0 && (
+        <>
+          <HorizontalSectionHeader title="People" sectionType="People" />
+          <FlatList
+            data={flattenedPeople}
+            renderItem={({ item }) => (
+              <CountdownCard item={item} sectionName="People" />
+            )}
+            keyExtractor={(item, index) => `person-${item?.id || index}`}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{

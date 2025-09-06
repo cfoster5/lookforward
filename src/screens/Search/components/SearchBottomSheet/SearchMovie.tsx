@@ -39,7 +39,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
                 user: user!,
                 limitCheckCallback: () => checkLimit("movies"),
               }),
-        buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
+        buttonText: isMovieSub() ? "Remove from Pins" : "Add to Pins",
       }}
       handleShareSelect={() =>
         onShare(`movie/${item.id}?name=${item.title}`, "search")

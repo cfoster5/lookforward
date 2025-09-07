@@ -1,5 +1,20 @@
 # Changelog
 
+## [6.25.0](https://github.com/cfoster5/lookforward/compare/v6.24.1...v6.25.0) (2025-09-07)
+
+
+### Features
+
+* add ability to subscribe to people ([3ae4d4a](https://github.com/cfoster5/lookforward/commit/3ae4d4a0e0cc37015721fb24de8c580877de34af))
+* add context menu for removing from Pins ([cbb2a79](https://github.com/cfoster5/lookforward/commit/cbb2a796daf033923208fc031e6b3681b4ac2575))
+* add People to list of subscriptions, renamed Pins ([31f0f31](https://github.com/cfoster5/lookforward/commit/31f0f31c5086b1aae50107f355e798e58d141ef6))
+* replace react-native-haptic-feedback with expo-haptics and tweak haptics ([cb2054f](https://github.com/cfoster5/lookforward/commit/cb2054f5262c8026901055adaeedac556f202247))
+
+
+### Performance Improvements
+
+* remove useAddRecent hook and integrate addRecent directly in components ([74bd865](https://github.com/cfoster5/lookforward/commit/74bd8656a26557ea1931ed54262bb5ba9c2d4c5f))
+
 ## [6.24.1](https://github.com/cfoster5/lookforward/compare/v6.24.0...v6.24.1) (2025-07-09)
 
 

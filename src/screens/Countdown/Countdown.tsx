@@ -1,18 +1,11 @@
 import { getAnalytics } from "@react-native-firebase/analytics";
 import { useRef } from "react";
-import {
-  Animated,
-  FlatList,
-  PlatformColor,
-  ScrollView,
-  View,
-} from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { FlatList, ScrollView, View } from "react-native";
 
+import { BodyScrollView } from "@/components/body-scroll-view";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useStore } from "@/stores/store";
-import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useGameCountdowns } from "./api/getGameCountdowns";
 import { useMovieCountdowns } from "./api/getMovieCountdowns";
@@ -23,8 +16,6 @@ import { HorizontalSectionHeader } from "./components/HorizontalSectionHeader";
 function Countdown() {
   const { isPro, proModalRef } = useStore();
   const scrollRef = useRef<ScrollView>(null);
-  const paddingBottom = useBottomTabOverflow();
-  const { top: statusBarInset } = useSafeAreaInsets();
   const movies = useMovieCountdowns();
   const gameReleases = useGameCountdowns();
   const people = usePeopleCountdowns();
@@ -63,30 +54,8 @@ function Countdown() {
       return a.name.localeCompare(b.name);
     });
 
-  const largeHeaderInset = statusBarInset + 92;
-
   return (
-    <Animated.ScrollView
-      ref={scrollRef}
-      scrollToOverflowEnabled
-      automaticallyAdjustsScrollIndicatorInsets
-      contentInsetAdjustmentBehavior="automatic"
-      contentInset={{
-        bottom: paddingBottom,
-        top: -largeHeaderInset,
-      }}
-      scrollIndicatorInsets={{
-        bottom: paddingBottom,
-        top: largeHeaderInset,
-      }}
-      style={{
-        backgroundColor: PlatformColor("systemGroupedBackground"),
-      }}
-      contentContainerStyle={{
-        paddingTop: largeHeaderInset,
-        paddingBottom: paddingBottom,
-      }}
-    >
+    <BodyScrollView ref={scrollRef}>
       {!isPro && (
         <View style={{ paddingHorizontal: 16, paddingTop: 16 }}>
           <LargeBorderlessButton
@@ -161,10 +130,7 @@ function Countdown() {
           />
         </>
       )}
-
-      {/* Add some bottom padding */}
-      <View style={{ height: 32 }} />
-    </Animated.ScrollView>
+    </BodyScrollView>
   );
 }
 

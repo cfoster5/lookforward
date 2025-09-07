@@ -24,16 +24,18 @@ export function CountdownStack() {
         name="Countdown"
         component={Countdown}
         options={{
-          headerTransparent: Platform.OS === "ios",
-          headerBlurEffect: "dark",
-          headerLargeTitle: Platform.OS === "ios",
+          headerBlurEffect: "systemChromeMaterial",
+          headerShadowVisible: true,
           headerLargeTitleShadowVisible: false,
           headerLargeStyle: {
             backgroundColor: "transparent",
           },
+
+          headerTransparent: Platform.OS === "ios",
+          headerLargeTitle: Platform.OS === "ios",
           title: "Pins",
-          headerRight: MyHeaderRight,
-          headerLeft: DeleteHeader,
+          // headerRight: MyHeaderRight,
+          // headerLeft: DeleteHeader,
         }}
       />
       <Stack.Screen

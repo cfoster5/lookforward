@@ -5,7 +5,10 @@ import { useMemo } from "react";
 import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
 import { PosterSizes } from "tmdb-ts";
 
+import { removeSub } from "@/helpers/helpers";
+import { ContextMenu } from "@/screens/Search/components/SearchBottomSheet/ContextMenu";
 import { useRecentItemsStore } from "@/stores/recents";
+import { useStore } from "@/stores/store";
 import { CountdownStackParamList } from "@/types/navigation";
 import { isoToUTC, now, timestamp, timestampToUTC } from "@/utils/dates";
 
@@ -32,6 +35,7 @@ type Props = MovieProps | GameProps | PeopleProps;
 
 export function CountdownCard({ item, sectionName }: Props) {
   const { addRecent } = useRecentItemsStore();
+  const { user, gameSubs } = useStore();
   const navigation = useNavigation<NavigationProp<CountdownStackParamList>>();
 
   function getFormattedDate(): string {
@@ -68,6 +72,23 @@ export function CountdownCard({ item, sectionName }: Props) {
     if (sectionName === "Movies") handleMovieAction();
     else if (sectionName === "Games") handleGameAction();
     else if (sectionName === "People") handlePersonAction();
+  }
+
+  function handleRemove() {
+    if (!user) return;
+
+    if (sectionName === "Movies") {
+      removeSub("movies", item!.id.toString(), user.uid);
+    } else if (sectionName === "Games") {
+      const gameCountdownId = gameSubs.find(
+        (s) => s.game.id === item!.game.id,
+      )?.documentID;
+      if (gameCountdownId) {
+        removeSub("gameReleases", gameCountdownId, user.uid);
+      }
+    } else if (sectionName === "People") {
+      removeSub("people", item!.id.toString(), user.uid);
+    }
   }
 
   function handleMovieAction() {
@@ -215,40 +236,47 @@ export function CountdownCard({ item, sectionName }: Props) {
   const daysUntil = getDaysUntil();
 
   return (
-    <Pressable onPress={handlePress} style={styles.card}>
-      <View style={styles.imageContainer}>
-        {imageSrc ? (
-          <Image
-            style={styles.image}
-            source={{ uri: imageSrc }}
-            contentFit="cover"
-          />
-        ) : (
-          <View style={styles.placeholderContainer}>
-            <Text style={styles.placeholderText}>
-              {sectionName === "People"
-                ? title
-                    .split(" ")
-                    .map((word) => word.charAt(0))
-                    .slice(0, 2)
-                    .join("")
-                : "?"}
-            </Text>
-          </View>
-        )}
-      </View>
-      <View style={styles.content}>
-        <Text style={styles.title} numberOfLines={2}>
-          {title}
-        </Text>
-        <Text style={styles.subtitle} numberOfLines={1}>
-          {getFormattedDate()}
-        </Text>
-        <View style={styles.countdown}>
-          <Text style={styles.countdownNumber}>{daysUntil}</Text>
-          <Text style={styles.countdownLabel}>days</Text>
+    <ContextMenu
+      handleCountdownToggle={{
+        action: handleRemove,
+        buttonText: "Remove from Pins",
+      }}
+    >
+      <Pressable onPress={handlePress} style={styles.card}>
+        <View style={styles.imageContainer}>
+          {imageSrc ? (
+            <Image
+              style={styles.image}
+              source={{ uri: imageSrc }}
+              contentFit="cover"
+            />
+          ) : (
+            <View style={styles.placeholderContainer}>
+              <Text style={styles.placeholderText}>
+                {sectionName === "People"
+                  ? title
+                      .split(" ")
+                      .map((word) => word.charAt(0))
+                      .slice(0, 2)
+                      .join("")
+                  : "?"}
+              </Text>
+            </View>
+          )}
         </View>
-      </View>
-    </Pressable>
+        <View style={styles.content}>
+          <Text style={styles.title} numberOfLines={2}>
+            {title}
+          </Text>
+          <Text style={styles.subtitle} numberOfLines={1}>
+            {getFormattedDate()}
+          </Text>
+          <View style={styles.countdown}>
+            <Text style={styles.countdownNumber}>{daysUntil}</Text>
+            <Text style={styles.countdownLabel}>days</Text>
+          </View>
+        </View>
+      </Pressable>
+    </ContextMenu>
   );
 }

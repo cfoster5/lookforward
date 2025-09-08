@@ -242,7 +242,13 @@ export function CountdownCard({ item, sectionName }: Props) {
         buttonText: "Remove from Pins",
       }}
     >
-      <Pressable onPress={handlePress} style={styles.card}>
+      <Pressable
+        onPress={handlePress}
+        style={styles.card}
+        // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
+        delayLongPress={100} // Leave room for a user to be able to click
+        onLongPress={() => {}} // A callback that does nothing
+      >
         <View style={styles.imageContainer}>
           {imageSrc ? (
             <Image

@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
-import { Linking, PlatformColor, Pressable, Text } from "react-native";
+import { Linking, Pressable, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
@@ -24,14 +25,14 @@ export const OnboardingModal = () => {
           justifyContent: "center",
           paddingHorizontal: 16,
           paddingBottom: safeBottomArea,
-          backgroundColor: PlatformColor("secondarySystemBackground"),
+          backgroundColor: Colors.secondarySystemBackground,
         }}
       >
         <Text
           style={[
             iOSUIKit.largeTitleEmphasized,
             {
-              color: PlatformColor("label"),
+              color: Colors.label,
               textAlign: "center",
               paddingBottom: 16,
             },

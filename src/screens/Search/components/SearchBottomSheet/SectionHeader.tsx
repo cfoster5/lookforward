@@ -1,5 +1,6 @@
-import { PlatformColor, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { useRecentItemsStore } from "@/stores/recents";
 
@@ -32,14 +33,14 @@ export const SectionHeader = ({ text, categoryIndex }: SectionHeaderProps) => {
       <Text
         style={[
           iOSUIKit.subheadEmphasized,
-          { color: PlatformColor("secondaryLabel") },
+          { color: Colors.secondaryLabel },
         ]}
       >
         {text}
       </Text>
       <Pressable onPress={() => handleClearPress(text)}>
         <Text
-          style={[iOSUIKit.subhead, { color: PlatformColor("systemBlue") }]}
+          style={[iOSUIKit.subhead, { color: Colors.systemBlue }]}
         >
           Clear
         </Text>

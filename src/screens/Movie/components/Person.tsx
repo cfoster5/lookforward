@@ -1,7 +1,6 @@
 import { Image } from "expo-image";
 import { useRouter, useSegments } from "expo-router";
 import {
-  PlatformColor,
   Pressable,
   StyleSheet,
   Text,
@@ -9,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 import { Cast, Crew } from "tmdb-ts";
 
 import { ContextMenu } from "@/screens/Search/components/SearchBottomSheet/ContextMenu";
@@ -32,7 +32,7 @@ function Person({ person }: Props) {
       aspectRatio: 2 / 3,
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: theme === "dark" ? PlatformColor("separator") : "#e0e0e0",
+      borderColor: theme === "dark" ? Colors.separator : "#e0e0e0",
     },
   });
 
@@ -83,7 +83,7 @@ function Person({ person }: Props) {
                     }
                   : {
                       ...iOSUIKit.title3EmphasizedObject,
-                      color: PlatformColor("systemGray"),
+                      color: Colors.systemGray,
                       textAlign: "center",
                     }
               }
@@ -100,7 +100,7 @@ function Person({ person }: Props) {
             {person.name}
           </Text>
           <Text
-            style={[iOSUIKit.callout, { color: PlatformColor("systemGray") }]}
+            style={[iOSUIKit.callout, { color: Colors.systemGray }]}
           >
             {"character" in person ? person.character : person.job?.join(", ")}
           </Text>

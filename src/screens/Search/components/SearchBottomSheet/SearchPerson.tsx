@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { PlatformColor, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 import { PersonWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
@@ -39,7 +40,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
             paddingLeft: 12,
           },
           pressed && {
-            backgroundColor: PlatformColor("tertiarySystemBackground"),
+            backgroundColor: Colors.tertiarySystemBackground,
           },
         ]}
       >
@@ -65,18 +66,18 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: calculateWidth(12, 12, 3.5),
                 borderWidth: 1,
-                borderColor: PlatformColor("separator"),
+                borderColor: Colors.separator,
               }}
             />
           ) : (
             <View
               style={{
-                backgroundColor: PlatformColor("systemGray"),
+                backgroundColor: Colors.systemGray,
                 aspectRatio: 1,
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: calculateWidth(12, 12, 3.5),
                 borderWidth: 1,
-                borderColor: PlatformColor("separator"),
+                borderColor: Colors.separator,
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -94,7 +95,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
         </View>
         <View style={{ flex: 1, marginHorizontal: 12 }}>
           <Text
-            style={[iOSUIKit.body, { color: PlatformColor("label") }]}
+            style={[iOSUIKit.body, { color: Colors.label }]}
             numberOfLines={2}
           >
             {item.name}
@@ -102,7 +103,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
           <Text
             style={[
               iOSUIKit.subhead,
-              { color: PlatformColor("secondaryLabel") },
+              { color: Colors.secondaryLabel },
             ]}
             numberOfLines={2}
           >
@@ -113,7 +114,7 @@ export function SearchPerson({ item }: { item: PersonWithMediaType }) {
           name="chevron-forward"
           size={28}
           style={{ marginRight: 12 }}
-          color={PlatformColor("tertiaryLabel")}
+          color={Colors.tertiaryLabel}
         />
       </Pressable>
     </ContextMenu>

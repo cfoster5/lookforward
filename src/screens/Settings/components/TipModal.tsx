@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   ActivityIndicator,
-  PlatformColor,
   StyleSheet,
   Text,
   View,
@@ -11,6 +10,7 @@ import {
 import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 
@@ -23,7 +23,7 @@ const ItemSeparator = () => (
     style={{
       marginVertical: 4,
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderColor: PlatformColor("separator"),
+      borderColor: Colors.separator,
     }}
   />
 );
@@ -48,7 +48,7 @@ export const TipModal = ({ modalRef }: Props) => {
           <Text
             style={[
               iOSUIKit.body,
-              { color: PlatformColor("label"), paddingBottom: 32 },
+              { color: Colors.label, paddingBottom: 32 },
             ]}
           >
             {`If you're feeling generous and would like to support LookForward's development further, any tip helps!`}

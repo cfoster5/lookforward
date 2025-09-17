@@ -1,7 +1,6 @@
 import { Image } from "expo-image";
 import { useState } from "react";
 import {
-  PlatformColor,
   Pressable,
   Text,
   View,
@@ -11,6 +10,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { Video as MovieVideo } from "tmdb-ts";
 
@@ -56,7 +56,7 @@ function Trailer({ video }: TrailerProps) {
             aspectRatio: 16 / 9,
             borderRadius: 12,
             borderWidth: 1,
-            borderColor: PlatformColor("separator"),
+            borderColor: Colors.separator,
           }}
           source={{
             uri: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
@@ -67,7 +67,7 @@ function Trailer({ video }: TrailerProps) {
           numberOfLines={2}
           style={[
             iOSUIKit.subhead,
-            { color: PlatformColor("label"), marginTop: 8 },
+            { color: Colors.label, marginTop: 8 },
           ]}
         >
           {video.name}
@@ -93,7 +93,7 @@ function Trailer({ video }: TrailerProps) {
             accessibilityLabel="Close video"
             onPress={() => setModalVisible(false)}
           >
-            <Text style={[iOSUIKit.body, { color: PlatformColor("label") }]}>
+            <Text style={[iOSUIKit.body, { color: Colors.label }]}>
               Close
             </Text>
           </Pressable>

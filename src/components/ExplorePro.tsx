@@ -1,7 +1,6 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useEffect, useState } from "react";
 import {
-  PlatformColor,
   View,
   Text,
   Pressable,
@@ -12,6 +11,7 @@ import {
 import Purchases, { PurchasesOffering } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
@@ -97,16 +97,16 @@ export const ExplorePro = () => {
           justifyContent: "center",
           paddingHorizontal: 16,
           // paddingHorizontal: 32,
-          // backgroundColor: PlatformColor("systemBackground"),
+          // backgroundColor: Colors.systemBackground,
           paddingBottom: safeBottomArea,
-          backgroundColor: PlatformColor("secondarySystemBackground"),
+          backgroundColor: Colors.secondarySystemBackground,
         }}
       >
         <Text
           style={[
             iOSUIKit.largeTitleEmphasized,
             {
-              color: PlatformColor("label"),
+              color: Colors.label,
               textAlign: "center",
               paddingBottom: 16,
             },
@@ -117,7 +117,7 @@ export const ExplorePro = () => {
         <Text
           style={[
             iOSUIKit.title3Emphasized,
-            { color: PlatformColor("systemBlue"), textAlign: "center" },
+            { color: Colors.systemBlue, textAlign: "center" },
           ]}
         >
           {products?.lifetime?.product.priceString}
@@ -126,7 +126,7 @@ export const ExplorePro = () => {
           style={[
             iOSUIKit.title3,
             {
-              color: PlatformColor("label"),
+              color: Colors.label,
               textAlign: "center",
               paddingBottom: 16,
             },
@@ -209,7 +209,7 @@ export const ExplorePro = () => {
           <Text
             style={[
               iOSUIKit.bodyEmphasized,
-              { color: PlatformColor("systemBlue") },
+              { color: Colors.systemBlue },
             ]}
           >
             Restore Purchase
@@ -238,7 +238,7 @@ export const ExplorePro = () => {
             <Text
               style={[
                 iOSUIKit.footnote,
-                { color: PlatformColor("systemBlue") },
+                { color: Colors.systemBlue },
               ]}
             >
               Terms of Service
@@ -258,7 +258,7 @@ export const ExplorePro = () => {
             <Text
               style={[
                 iOSUIKit.footnote,
-                { color: PlatformColor("systemBlue") },
+                { color: Colors.systemBlue },
               ]}
             >
               Privacy Policy

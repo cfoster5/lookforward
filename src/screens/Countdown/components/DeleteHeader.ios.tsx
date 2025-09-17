@@ -5,7 +5,7 @@ import {
   writeBatch,
 } from "@react-native-firebase/firestore";
 import { useCallback } from "react";
-import { PlatformColor } from "react-native";
+import * as Colors from "@bacons/apple-colors";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -57,8 +57,8 @@ export const DeleteHeader = () => {
             ...iOSUIKit.bodyEmphasizedObject,
             color:
               selectedMovies.concat(selectedGames).length === 0
-                ? PlatformColor("systemGray3")
-                : PlatformColor("systemRed"),
+                ? Colors.systemGray3
+                : Colors.systemRed,
           }}
           onPress={deleteItems}
         />

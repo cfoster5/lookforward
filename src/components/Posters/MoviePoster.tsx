@@ -1,12 +1,12 @@
 import { Image } from "expo-image";
 import {
   ImageStyle,
-  PlatformColor,
   Pressable,
   StyleProp,
   ViewStyle,
 } from "react-native";
 import { Movie, PosterSizes, Recommendation } from "tmdb-ts";
+import * as Colors from "@bacons/apple-colors";
 
 import { ContextMenu } from "@/screens/Search/components/SearchBottomSheet/ContextMenu";
 import {
@@ -64,7 +64,7 @@ export function MoviePoster({
               {
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: PlatformColor("separator"),
+                borderColor: Colors.separator,
               },
               style,
             ]}

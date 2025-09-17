@@ -8,9 +8,10 @@ import {
   updateDoc,
 } from "@react-native-firebase/firestore";
 import { useRef } from "react";
-import { Animated, Easing, PlatformColor, Pressable, View } from "react-native";
+import { Animated, Easing, Pressable, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { iOSColors } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
@@ -112,7 +113,7 @@ function PosterButton({ movieId, game }: Props) {
           width: 36,
           borderRadius: 18,
           borderWidth: 1,
-          borderColor: PlatformColor("separator"),
+          borderColor: Colors.separator,
           alignItems: "center",
           justifyContent: "center",
         }}
@@ -122,7 +123,7 @@ function PosterButton({ movieId, game }: Props) {
             height: 36,
             width: 36,
             borderRadius: 18,
-            backgroundColor: PlatformColor("systemGray5"),
+            backgroundColor: Colors.systemGray5,
             alignItems: "center",
             justifyContent: "center",
           }}

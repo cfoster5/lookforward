@@ -1,6 +1,6 @@
 import { Galeria } from "@nandorojo/galeria";
 import { Image } from "expo-image";
-import { PlatformColor } from "react-native";
+import * as Colors from "@bacons/apple-colors";
 
 type GalleryImageProps = {
   index: number;
@@ -20,7 +20,7 @@ export const GalleryImage = ({
       style={{
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: PlatformColor("separator"),
+        borderColor: Colors.separator,
         width,
         aspectRatio,
         // aspectRatio:

@@ -1,5 +1,6 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { PlatformColor, View } from "react-native";
+import { View } from "react-native";
+import * as Colors from "@bacons/apple-colors";
 
 import { SearchBottomSheet } from "@/screens/Search/components/SearchBottomSheet/SearchBottomSheet";
 import { GameLayout } from "@/screens/Search/GameLayout";
@@ -26,7 +27,7 @@ export default function Search() {
           left: 0,
           right: 0,
           height: tabBarHeight,
-          backgroundColor: PlatformColor("secondarySystemBackground"),
+          backgroundColor: Colors.secondarySystemBackground,
         }}
       />
     </>

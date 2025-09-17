@@ -1,6 +1,7 @@
 import { FontAwesome6 } from "@expo/vector-icons";
-import { PlatformColor, Pressable, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { useStore } from "@/stores/store";
 
@@ -22,8 +23,8 @@ export default function ButtonSingleState({
     <Pressable
       onPress={onPress}
       style={{
-        backgroundColor: PlatformColor("systemGray4"),
-        borderColor: PlatformColor("systemGray4"),
+        backgroundColor: Colors.systemGray4,
+        borderColor: Colors.systemGray4,
         // Use below when animated background with colors is implemented
         // backgroundColor: "transparent",
         // borderColor: "#636366",

@@ -1,4 +1,5 @@
-import { PlatformColor, View } from "react-native";
+import { View } from "react-native";
+import * as Colors from "@bacons/apple-colors";
 
 export function BlueBullet() {
   return (
@@ -8,7 +9,7 @@ export function BlueBullet() {
         height: 5,
         borderRadius: 5,
         marginHorizontal: 5,
-        backgroundColor: PlatformColor("systemBlue"),
+        backgroundColor: Colors.systemBlue,
         alignSelf: "center",
       }}
     />

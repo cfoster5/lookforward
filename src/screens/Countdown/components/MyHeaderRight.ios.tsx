@@ -1,4 +1,4 @@
-import { PlatformColor } from "react-native";
+import * as Colors from "@bacons/apple-colors";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -15,7 +15,7 @@ export const MyHeaderRight = () => {
         title={showDeleteButton ? "Done" : "Edit"}
         buttonStyle={[
           showDeleteButton ? iOSUIKit.bodyEmphasized : null,
-          { color: PlatformColor("systemBlue") },
+          { color: Colors.systemBlue },
         ]}
         onPress={() => {
           toggleDeleteButton();

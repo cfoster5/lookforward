@@ -4,7 +4,6 @@ import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import {
   FlatList,
-  PlatformColor,
   Pressable,
   StyleSheet,
   Text,
@@ -12,6 +11,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
@@ -46,7 +46,7 @@ export function MovieLayout() {
         }}
       >
         <Text
-          style={[iOSUIKit.title3Emphasized, { color: PlatformColor("label") }]}
+          style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}
         >
           {option}
         </Text>
@@ -60,7 +60,7 @@ export function MovieLayout() {
             justifyContent: "center",
           }}
         >
-          <Text style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}>
+          <Text style={[iOSUIKit.body, { color: Colors.systemBlue }]}>
             More
           </Text>
         </Pressable>

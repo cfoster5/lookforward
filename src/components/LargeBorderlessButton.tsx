@@ -1,11 +1,11 @@
 import {
-  PlatformColor,
   Pressable,
   StyleProp,
   Text,
   ViewStyle,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 type LargeBorderlessButtonProps = {
   style?: StyleProp<ViewStyle>;
@@ -35,7 +35,7 @@ export const LargeBorderlessButton = ({
     onPress={handlePress}
   >
     <Text
-      style={[iOSUIKit.bodyEmphasized, { color: PlatformColor("systemBlue") }]}
+      style={[iOSUIKit.bodyEmphasized, { color: Colors.systemBlue }]}
     >
       {text}
     </Text>

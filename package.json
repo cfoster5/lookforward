@@ -13,6 +13,7 @@
     "test": "jest --watchAll"
   },
   "dependencies": {
+    "@bacons/apple-colors": "^0.0.8",
     "@dev-plugins/react-native-mmkv": "~0.2.0",
     "@dev-plugins/react-navigation": "~0.2.0",
     "@dev-plugins/react-query": "~0.2.0",

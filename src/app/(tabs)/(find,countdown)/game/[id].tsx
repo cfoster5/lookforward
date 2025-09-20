@@ -7,8 +7,9 @@ import {
   useSegments,
 } from "expo-router";
 import { useLayoutEffect, useState, Fragment, useMemo } from "react";
-import { PlatformColor, ScrollView, View, FlatList, Text } from "react-native";
+import { ScrollView, View, FlatList, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import ButtonSingleState from "@/components/ButtonSingleState";
@@ -125,7 +126,7 @@ export default function Game() {
           <Text
             style={[
               iOSUIKit.subheadEmphasized,
-              { color: PlatformColor("secondaryLabel") },
+              { color: Colors.secondaryLabel },
             ]}
           >
             {getGameReleaseDate(data)}
@@ -169,10 +170,8 @@ export default function Game() {
                   })
                 }
                 buttonStyle={{
-                  backgroundColor: PlatformColor(
-                    "secondarySystemGroupedBackground",
-                  ),
-                  borderColor: PlatformColor(
+                  backgroundColor: Colors.secondarySystemGroupedBackground,
+                  borderColor: Colors.secondarySystemGroupedBackground,
                     "secondarySystemGroupedBackground",
                   ),
                 }}

@@ -1,11 +1,11 @@
 import {
-  PlatformColor,
   Pressable,
   StyleProp,
   Text,
   ViewStyle,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 type LargeFilledButtonProps = {
   disabled: boolean;
@@ -26,8 +26,8 @@ export const LargeFilledButton = ({
     style={({ pressed }) => [
       {
         backgroundColor: disabled
-          ? PlatformColor("tertiarySystemFillColor")
-          : PlatformColor("systemBlue"),
+          ? Colors.tertiarySystemFillColor
+          : Colors.systemBlue,
         width: "100%",
         paddingVertical: 16,
         borderRadius: 12,
@@ -43,8 +43,8 @@ export const LargeFilledButton = ({
           iOSUIKit.bodyEmphasized,
           {
             color: disabled
-              ? PlatformColor("tertiaryLabel")
-              : PlatformColor("label"),
+              ? Colors.tertiaryLabel
+              : Colors.label,
             textAlign: "center",
           },
         ]}

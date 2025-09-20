@@ -7,7 +7,7 @@ export function useRevenueCat() {
   const { user, setIsPro } = useStore();
   useEffect(() => {
     /* Enable debug logs before calling `setup`. */
-    if (__DEV__) Purchases.setLogLevel(Purchases.LOG_LEVEL.VERBOSE);
+    if (__DEV__) Purchases.setLogLevel(Purchases.LOG_LEVEL.ERROR);
     else Purchases.setLogLevel(Purchases.LOG_LEVEL.INFO);
 
     // Initialize the RevenueCat Purchases SDK.

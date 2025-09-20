@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { PlatformColor } from "react-native";
+import * as Colors from "@bacons/apple-colors";
 import { PosterSizes } from "tmdb-ts";
 
 import { MyPerson } from "../types";
@@ -17,7 +17,7 @@ export const CarouselItem = ({ item, width, horizontalMargin }: Props) => (
     }}
     style={{
       borderRadius: 12,
-      borderColor: PlatformColor("separator"),
+      borderColor: Colors.separator,
       borderWidth: 1,
       width,
       height: width * 1.5,

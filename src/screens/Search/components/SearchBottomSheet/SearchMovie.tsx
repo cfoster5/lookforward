@@ -1,8 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
-import { PlatformColor, Pressable, View, Text } from "react-native";
+import { Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 import { MovieWithMediaType } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
@@ -54,7 +55,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
             paddingLeft: 12,
           },
           pressed && {
-            backgroundColor: PlatformColor("tertiarySystemBackground"),
+            backgroundColor: Colors.tertiarySystemBackground,
           },
         ]}
       >
@@ -80,18 +81,18 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: PlatformColor("separator"),
+                borderColor: Colors.separator,
               }}
             />
           ) : (
             <View
               style={{
-                backgroundColor: PlatformColor("systemGray"),
+                backgroundColor: Colors.systemGray,
                 aspectRatio: 2 / 3,
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: PlatformColor("separator"),
+                borderColor: Colors.separator,
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -104,7 +105,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
         </View>
         <View style={{ flex: 1, marginHorizontal: 12 }}>
           <Text
-            style={[iOSUIKit.body, { color: PlatformColor("label") }]}
+            style={[iOSUIKit.body, { color: Colors.label }]}
             numberOfLines={2}
           >
             {item.title}
@@ -112,7 +113,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
           <Text
             style={[
               iOSUIKit.subhead,
-              { color: PlatformColor("secondaryLabel") },
+              { color: Colors.secondaryLabel },
             ]}
             numberOfLines={2}
           >
@@ -123,7 +124,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
           name="chevron-forward"
           size={28}
           style={{ marginRight: 12 }}
-          color={PlatformColor("tertiaryLabel")}
+          color={Colors.tertiaryLabel}
         />
       </Pressable>
     </ContextMenu>

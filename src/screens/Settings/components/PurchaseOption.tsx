@@ -2,26 +2,26 @@ import { Ionicons } from "@expo/vector-icons";
 import {
   ActivityIndicator,
   Alert,
-  PlatformColor,
   Pressable,
   Text,
   View,
 } from "react-native";
 import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 function Icon({ title }) {
   let name = "";
   let color = "";
   if (title === "Coffee-Sized Tip") {
     name = "cafe";
-    color = PlatformColor("systemBrown");
+    color = Colors.systemBrown;
   } else if (title === "Snack-Sized Tip") {
     name = "ice-cream";
     color = "lightgreen";
   } else if (title === "Pizza-Sized Tip") {
     name = "pizza";
-    color = PlatformColor("systemYellow");
+    color = Colors.systemYellow;
   }
   return <Ionicons name={name} color={color} size={28} />;
 }
@@ -70,7 +70,7 @@ export const PurchaseOption = ({
         <Text
           style={[
             iOSUIKit.body,
-            { color: PlatformColor("label"), paddingLeft: 16 },
+            { color: Colors.label, paddingLeft: 16 },
           ]}
         >
           {title}
@@ -79,7 +79,7 @@ export const PurchaseOption = ({
       {isPurchasing === identifier ? (
         <ActivityIndicator />
       ) : (
-        <Text style={[iOSUIKit.body, { color: PlatformColor("label") }]}>
+        <Text style={[iOSUIKit.body, { color: Colors.label }]}>
           {priceString}
         </Text>
       )}

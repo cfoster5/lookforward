@@ -15,7 +15,6 @@ import {
   Dimensions,
   FlatList,
   Platform,
-  PlatformColor,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -27,6 +26,7 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import {
   BackdropSizes,
@@ -121,10 +121,8 @@ function ScrollViewWithFlatList({
               })
             }
             buttonStyle={{
-              backgroundColor: PlatformColor(
-                "secondarySystemGroupedBackground",
-              ),
-              borderColor: PlatformColor("secondarySystemGroupedBackground"),
+              backgroundColor: Colors.secondarySystemGroupedBackground,
+              borderColor: Colors.secondarySystemGroupedBackground,
             }}
           />
         )}
@@ -309,7 +307,7 @@ export default function MovieScreen() {
                         style={{
                           width: 44 * 2,
                           // backgroundColor: "rgba(120, 120, 120, 0.12)",
-                          backgroundColor: PlatformColor("placeholderText"),
+                          backgroundColor: Colors.placeholderText,
                           opacity: 0.5,
                           borderRadius: 4,
                         }}
@@ -359,7 +357,7 @@ export default function MovieScreen() {
                 {
                   paddingTop: 16,
                   fontStyle: "italic",
-                  color: PlatformColor("systemGray"),
+                  color: Colors.systemGray,
                 },
               ]}
             >
@@ -386,12 +384,8 @@ export default function MovieScreen() {
                 buttonStyle={{
                   paddingHorizontal: 16,
                   flexDirection: "row",
-                  backgroundColor: PlatformColor(
-                    "secondarySystemGroupedBackground",
-                  ),
-                  borderColor: PlatformColor(
-                    "secondarySystemGroupedBackground",
-                  ),
+                  backgroundColor: Colors.secondarySystemGroupedBackground,
+                  borderColor: Colors.secondarySystemGroupedBackground,
                 }}
                 icon={tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon}
                 textStyle={{ alignSelf: "center" }}
@@ -415,7 +409,7 @@ export default function MovieScreen() {
                   <Text
                     style={[
                       iOSUIKit.body,
-                      { color: PlatformColor("systemBlue") },
+                      { color: Colors.systemBlue },
                     ]}
                   >
                     More
@@ -449,7 +443,7 @@ export default function MovieScreen() {
                       height: calculateWidth(16, 8, 6),
                       aspectRatio: 1 / 1,
                       borderWidth: 1,
-                      borderColor: PlatformColor("separator"),
+                      borderColor: Colors.separator,
                       borderRadius: 12,
                     }}
                   />
@@ -630,7 +624,7 @@ export default function MovieScreen() {
                         width: Dimensions.get("screen").width - 32,
                         aspectRatio: 16 / 9,
                         borderWidth: 1,
-                        borderColor: PlatformColor("separator"),
+                        borderColor: Colors.separator,
                         borderRadius: 12,
                       }}
                       source={{
@@ -704,6 +698,6 @@ export default function MovieScreen() {
 const styles = StyleSheet.create({
   secondarySubhedEmphasized: {
     ...iOSUIKit.subheadEmphasizedObject,
-    color: PlatformColor("secondaryLabel"),
+    color: Colors.secondaryLabel,
   },
 });

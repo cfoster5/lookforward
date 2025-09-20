@@ -3,8 +3,9 @@ import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { SymbolView } from "expo-symbols";
-import { PlatformColor, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { calculateWidth } from "@/helpers/helpers";
 import { useRecentItemsStore } from "@/stores/recents";
@@ -62,19 +63,19 @@ export function RecentTitle({ item }: { item: Recent }) {
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: PlatformColor("separator"),
+                borderColor: Colors.separator,
                 marginBottom: 8,
               }}
             />
           ) : (
             <View
               style={{
-                backgroundColor: PlatformColor("systemGray"),
+                backgroundColor: Colors.systemGray,
                 aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: PlatformColor("separator"),
+                borderColor: Colors.separator,
                 marginBottom: 8,
                 justifyContent: "center",
                 alignItems: "center",
@@ -113,7 +114,7 @@ export function RecentTitle({ item }: { item: Recent }) {
               <SymbolView
                 name="lock"
                 size={36}
-                tintColor={PlatformColor("label")}
+                tintColor={Colors.label}
                 resizeMode="scaleAspectFit"
                 style={{
                   height: 36,
@@ -132,7 +133,7 @@ export function RecentTitle({ item }: { item: Recent }) {
             style={[
               iOSUIKit.subhead,
               {
-                color: PlatformColor("label"),
+                color: Colors.label,
                 maxWidth: 96,
                 textAlign: "center",
               },
@@ -240,19 +241,19 @@ export function RecentTitle({ item }: { item: Recent }) {
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: PlatformColor("separator"),
+                borderColor: Colors.separator,
                 marginBottom: 8,
               }}
             />
           ) : (
             <View
               style={{
-                backgroundColor: PlatformColor("systemGray"),
+                backgroundColor: Colors.systemGray,
                 aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: PlatformColor("separator"),
+                borderColor: Colors.separator,
                 marginBottom: 8,
                 justifyContent: "center",
                 alignItems: "center",
@@ -268,7 +269,7 @@ export function RecentTitle({ item }: { item: Recent }) {
           style={[
             iOSUIKit.subhead,
             {
-              color: PlatformColor("label"),
+              color: Colors.label,
               maxWidth: 96,
               textAlign: "center",
               alignSelf: "center",

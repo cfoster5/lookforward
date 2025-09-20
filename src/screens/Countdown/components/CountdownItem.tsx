@@ -2,7 +2,7 @@ import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { DateTime } from "luxon";
 import { useEffect } from "react";
-import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 import { PosterSizes } from "tmdb-ts";
 
 import { useCountdownStore } from "@/stores/store";
@@ -132,8 +133,8 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
         sectionName === "Games" && isLastInSection ? 10 : 0,
       overflow: "hidden",
       backgroundColor: isSelected
-        ? PlatformColor("systemGray4")
-        : PlatformColor("systemGray6"),
+        ? Colors.systemGray4
+        : Colors.systemGray6,
     },
     slide: {
       flex: 1,
@@ -148,10 +149,10 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
       marginTop: 8,
       marginBottom: 8,
       borderWidth: StyleSheet.hairlineWidth,
-      borderColor: PlatformColor("separator"),
+      borderColor: Colors.separator,
     },
     middle: {
-      borderColor: PlatformColor("separator"),
+      borderColor: Colors.separator,
       borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
       flex: 1,
       justifyContent: "center",
@@ -160,7 +161,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
       paddingBottom: 8,
     },
     countdown: {
-      borderColor: PlatformColor("separator"),
+      borderColor: Colors.separator,
       borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
       flex: 1,
       alignItems: "center",
@@ -219,7 +220,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
         </View>
         <View style={styles.middle}>
           <Text
-            style={[iOSUIKit.body, { color: PlatformColor("label") }]}
+            style={[iOSUIKit.body, { color: Colors.label }]}
             numberOfLines={2}
           >
             {title}
@@ -227,7 +228,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
           <Text
             style={[
               iOSUIKit.subhead,
-              { color: PlatformColor("secondaryLabel") },
+              { color: Colors.secondaryLabel },
             ]}
           >
             {getFormattedDate()}
@@ -237,12 +238,12 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
           <Text
             style={[
               iOSUIKit.bodyEmphasized,
-              { color: PlatformColor("systemBlue") },
+              { color: Colors.systemBlue },
             ]}
           >
             {getDaysUntil()}
           </Text>
-          <Text style={[iOSUIKit.body, { color: PlatformColor("systemBlue") }]}>
+          <Text style={[iOSUIKit.body, { color: Colors.systemBlue }]}>
             days
           </Text>
         </View>

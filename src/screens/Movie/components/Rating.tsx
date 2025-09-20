@@ -1,6 +1,7 @@
 import { Image } from "expo-image";
-import { PlatformColor, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { useStore } from "@/stores/store";
 
@@ -53,13 +54,13 @@ export const Rating = ({
           style={{
             width: 44,
             // backgroundColor: "rgba(120, 120, 120, 0.12)",
-            backgroundColor: PlatformColor("placeholderText"),
+            backgroundColor: Colors.placeholderText,
             opacity: 0.5,
             borderRadius: 4,
           }}
         />
       ) : (
-        <Text style={[iOSUIKit.body, { color: PlatformColor("label") }]}>
+        <Text style={[iOSUIKit.body, { color: Colors.label }]}>
           {rating}
         </Text>
       )}

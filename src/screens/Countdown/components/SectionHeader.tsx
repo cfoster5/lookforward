@@ -1,8 +1,9 @@
-import { PlatformColor, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 export const SectionHeader = ({ section }) => (
-  <View style={{ backgroundColor: PlatformColor("systemGray6") }}>
+  <View style={{ backgroundColor: Colors.systemGray6 }}>
     <Text
       style={[
         iOSUIKit.title3EmphasizedWhite,

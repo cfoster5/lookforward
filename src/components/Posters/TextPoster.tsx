@@ -1,5 +1,6 @@
-import { PlatformColor, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { useStore } from "@/stores/store";
 
@@ -12,7 +13,7 @@ export function TextPoster({ text, style }: { text: string; style?: any }) {
       style={{
         ...reusableStyles.gamePoster,
         // borderWidth: 1,
-        borderColor: PlatformColor("separator"),
+        borderColor: Colors.separator,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
@@ -27,7 +28,7 @@ export function TextPoster({ text, style }: { text: string; style?: any }) {
             ? { ...iOSUIKit.title3EmphasizedWhiteObject, textAlign: "center" }
             : {
                 ...iOSUIKit.title3EmphasizedObject,
-                color: PlatformColor("systemGray"),
+                color: Colors.systemGray,
                 textAlign: "center",
               }
         }

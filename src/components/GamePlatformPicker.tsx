@@ -5,10 +5,11 @@ import {
   getFirestore,
   setDoc,
 } from "@react-native-firebase/firestore";
-import { PlatformColor, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { useStore } from "@/stores/store";
 import { Game, ReleaseDate } from "@/types";
@@ -51,7 +52,7 @@ const ItemSeparator = () => (
     style={{
       marginVertical: 4,
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderColor: PlatformColor("separator"),
+      borderColor: Colors.separator,
     }}
   />
 );

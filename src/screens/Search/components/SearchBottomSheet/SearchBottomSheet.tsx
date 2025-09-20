@@ -8,7 +8,6 @@ import { useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Keyboard,
-  PlatformColor,
   SectionList,
   StyleSheet,
   Text,
@@ -17,6 +16,7 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { ApplePillButton } from "@/components/ApplePillButton";
 import { DropdownMenu } from "@/components/DropdownMenu";
@@ -40,7 +40,7 @@ const ItemSeparator = () => (
   <View
     style={{
       height: StyleSheet.hairlineWidth,
-      backgroundColor: PlatformColor("separator"),
+      backgroundColor: Colors.separator,
       marginLeft: calculateWidth(12, 12, 3.5) + 12,
       marginRight: 12,
     }}
@@ -51,7 +51,7 @@ const ListHeader = () => (
   <Text
     style={[
       iOSUIKit.title3Emphasized,
-      { color: PlatformColor("label"), marginBottom: 16 },
+      { color: Colors.label, marginBottom: 16 },
     ]}
   >
     History
@@ -156,10 +156,10 @@ export const SearchBottomSheet = () => {
       topInset={top}
       snapPoints={snapPoints}
       backgroundStyle={{
-        backgroundColor: PlatformColor("secondarySystemBackground"),
+        backgroundColor: Colors.secondarySystemBackground,
       }}
       handleIndicatorStyle={{
-        backgroundColor: PlatformColor("systemGray"),
+        backgroundColor: Colors.systemGray,
       }}
     >
       <View style={{ marginHorizontal: 12, flex: 1 }}>
@@ -168,7 +168,7 @@ export const SearchBottomSheet = () => {
             onLayout={onLayout}
             onChangeText={(value) => setSearchValue(value)}
             placeholder={categoryIndex === 0 ? "Movies & People" : "Games"}
-            placeholderTextColor={PlatformColor("secondaryLabel")}
+            placeholderTextColor={Colors.secondaryLabel}
             clearButtonMode="while-editing"
             style={styles.textInput}
             value={searchValue}
@@ -187,7 +187,7 @@ export const SearchBottomSheet = () => {
               // text={categoryIndex === 0 ? "Movies" : "Games"}
               iconName={categoryIndex === 0 ? "film" : "gamecontroller"}
               style={{
-                backgroundColor: PlatformColor("tertiarySystemFill"),
+                backgroundColor: Colors.tertiarySystemFill,
                 marginTop: 0,
                 marginLeft: 12,
                 paddingHorizontal: 12,
@@ -290,8 +290,8 @@ export const styles = StyleSheet.create({
     // marginBottom: 12,
     padding: 12,
     borderRadius: 12,
-    backgroundColor: PlatformColor("tertiarySystemFill"),
-    color: PlatformColor("label"),
+    backgroundColor: Colors.tertiarySystemFill,
+    color: Colors.label,
     // textAlign: "center",
     marginBottom: 16,
     flex: 1,

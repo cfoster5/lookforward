@@ -1,7 +1,8 @@
 import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { SFSymbol, SymbolView } from "expo-symbols";
-import { PlatformColor, View, Text } from "react-native";
+import { View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 type IconProps = {
   icon: keyof (typeof Ionicons)["glyphMap"];
@@ -34,23 +35,23 @@ export const Row = ({
     }}
   >
     {!useAltIcon ? (
-      <Ionicons name={icon} size={36} color={PlatformColor("systemBlue")} />
+      <Ionicons name={icon} size={36} color={Colors.systemBlue} />
     ) : (
       <SymbolView
         name={icon}
         size={36}
-        tintColor={PlatformColor("systemBlue")}
+        tintColor={Colors.systemBlue}
         resizeMode="scaleAspectFill"
         style={{ height: 36, width: 36 }}
       />
     )}
     <View style={{ paddingLeft: 16, flex: 1, alignItems: "flex-start" }}>
       <Text
-        style={[iOSUIKit.bodyEmphasized, { color: PlatformColor("label") }]}
+        style={[iOSUIKit.bodyEmphasized, { color: Colors.label }]}
       >
         {title}
       </Text>
-      <Text style={[iOSUIKit.body, { color: PlatformColor("secondaryLabel") }]}>
+      <Text style={[iOSUIKit.body, { color: Colors.secondaryLabel }]}>
         {body}
       </Text>
     </View>
@@ -58,7 +59,7 @@ export const Row = ({
       <Ionicons
         name="chevron-forward"
         size={iOSUIKit.bodyObject.lineHeight}
-        color={PlatformColor("secondaryLabel")}
+        color={Colors.secondaryLabel}
         style={{ paddingLeft: 8 }}
       />
     )}

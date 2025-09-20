@@ -1,6 +1,7 @@
 import { useScrollToTop } from "@react-navigation/native";
 import { useRef } from "react";
-import { Platform, PlatformColor, SectionList, View } from "react-native";
+import { Platform, SectionList, View } from "react-native";
+import * as Colors from "@bacons/apple-colors";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useGameCountdowns } from "@/screens/Countdown/api/getGameCountdowns";
@@ -71,7 +72,7 @@ export default function Countdown() {
         <View
           style={{
             height: 16,
-            backgroundColor: PlatformColor("systemGray6"),
+            backgroundColor: Colors.systemGray6,
             borderTopLeftRadius: 10,
             borderTopRightRadius: 10,
           }}

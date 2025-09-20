@@ -1,5 +1,6 @@
-import { PlatformColor, Pressable, Text } from "react-native";
+import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 import { useStore } from "@/stores/store";
 
@@ -24,9 +25,9 @@ export default function ButtonMultiState({
         // Below colors extracted from Apple Fitness category buttons
         backgroundColor:
           selectedVal === (test !== undefined ? test : text)
-            ? PlatformColor("systemGray4")
+            ? Colors.systemGray4
             : undefined,
-        borderColor: PlatformColor("systemGray4"),
+        borderColor: Colors.systemGray4,
         borderWidth: 1,
         borderRadius: 22,
         paddingHorizontal: 24,

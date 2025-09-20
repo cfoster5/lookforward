@@ -3,13 +3,13 @@ import { Image } from "expo-image";
 import {
   FlatList,
   Linking,
-  PlatformColor,
   Pressable,
   Text,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 import { LogoSizes, WatchLocale } from "tmdb-ts";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
@@ -57,7 +57,7 @@ function WatchProvidersModal({
             <Text
               style={{
                 ...iOSUIKit.bodyEmphasizedObject,
-                color: PlatformColor("systemBlue"),
+                color: Colors.systemBlue,
               }}
             >
               More Info
@@ -95,7 +95,7 @@ function WatchProvidersModal({
                           borderWidth: 1,
                           borderColor:
                             theme === "dark"
-                              ? PlatformColor("separator")
+                              ? Colors.separator
                               : "#e0e0e0",
                           borderRadius: 12,
                         }}
@@ -133,7 +133,7 @@ function WatchProvidersModal({
           <Text
             style={{
               ...iOSUIKit.footnoteObject,
-              color: PlatformColor("systemGray"),
+              color: Colors.systemGray,
               marginRight: 8,
             }}
           >

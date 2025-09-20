@@ -4,7 +4,7 @@ import {
   BottomSheetModal,
   BottomSheetModalProps,
 } from "@gorhom/bottom-sheet";
-import { PlatformColor } from "react-native";
+import * as Colors from "@bacons/apple-colors";
 
 const RenderBackdrop = (props: BottomSheetBackdropProps) => (
   <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
@@ -23,10 +23,10 @@ export function DynamicHeightModal({
       enableDynamicSizing
       backdropComponent={RenderBackdrop}
       backgroundStyle={{
-        backgroundColor: PlatformColor("secondarySystemBackground"),
+        backgroundColor: Colors.secondarySystemBackground,
       }}
       handleIndicatorStyle={{
-        backgroundColor: PlatformColor("systemGray"),
+        backgroundColor: Colors.systemGray,
       }}
     >
       {children}

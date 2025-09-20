@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { PlatformColor, View } from "react-native";
+import { View } from "react-native";
 import { iOSColors } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 
 export const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
   <View
@@ -9,7 +10,7 @@ export const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
       width: 24,
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: PlatformColor("systemGray"),
+      borderColor: Colors.systemGray,
       alignItems: "center",
       justifyContent: "center",
     }}
@@ -20,7 +21,7 @@ export const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
           height: 24,
           width: 24,
           borderRadius: 12,
-          backgroundColor: PlatformColor("systemBlue"),
+          backgroundColor: Colors.systemBlue,
           justifyContent: "center",
         }}
       >

@@ -3,13 +3,13 @@ import { Image } from "expo-image";
 import { useRef } from "react";
 import {
   Dimensions,
-  PlatformColor,
   SafeAreaView,
   Text,
   View,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
+import * as Colors from "@bacons/apple-colors";
 import { PosterSizes, TrendingResults } from "tmdb-ts";
 
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
@@ -59,7 +59,7 @@ const CarouselItem = ({ item, index }: CarouselItemProps) => {
       source={{ uri: imageUri }}
       style={{
         borderRadius: 12,
-        borderColor: PlatformColor("separator"),
+        borderColor: Colors.separator,
         borderWidth: 1,
         width,
         aspectRatio: 2 / 3,

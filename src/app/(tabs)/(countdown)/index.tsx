@@ -1,7 +1,7 @@
+import * as Colors from "@bacons/apple-colors";
 import { useScrollToTop } from "@react-navigation/native";
 import { useRef } from "react";
 import { Platform, SectionList, View } from "react-native";
-import * as Colors from "@bacons/apple-colors";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useGameCountdowns } from "@/screens/Countdown/api/getGameCountdowns";

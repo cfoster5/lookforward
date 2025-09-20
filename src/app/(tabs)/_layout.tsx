@@ -6,32 +6,15 @@ import {
   where,
 } from "@react-native-firebase/firestore";
 import { useQueryClient } from "@tanstack/react-query";
-import { BlurView } from "expo-blur";
-import { Tabs } from "expo-router";
+import { Icon, Label, NativeTabs } from "expo-router/build/native-tabs";
 import * as StoreReview from "expo-store-review";
-import { SymbolView } from "expo-symbols";
 import { useEffect } from "react";
-import { Platform, StyleSheet } from "react-native";
 
 import { FirestoreMovie } from "@/interfaces/firebase";
 import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
 import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useStore } from "@/stores/store";
-
-function BlurTabBarBackground() {
-  return (
-    <BlurView
-      // TODO: Use systemChromeMaterialDark when same can be applied to Search modals
-      // System chrome material automatically adapts to the system's theme
-      // and matches the native tab bar appearance on iOS.
-      // tint="systemChromeMaterial"
-      tint="dark"
-      intensity={100}
-      style={StyleSheet.absoluteFill}
-    />
-  );
-}
 
 export default function TabStack() {
   const {
@@ -137,47 +120,23 @@ export default function TabStack() {
   }, [gameSubs, queryClient]);
 
   return (
-    <Tabs
-      screenOptions={() => ({
-        tabBarStyle: Platform.select({ ios: { position: "absolute" } }),
-        tabBarBackground: BlurTabBarBackground,
-      })}
-    >
-      {/* Is setting headerShown to false the best method? */}
-      <Tabs.Screen
-        name="(find)"
-        options={{
-          headerShown: false,
-          tabBarLabel: "Find",
-          tabBarIcon: ({ ...props }) => (
-            <SymbolView
-              {...props}
-              name="magnifyingglass"
-              tintColor={props.color}
-            />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="(countdown)"
-        options={{
-          headerShown: false,
-          tabBarLabel: "Countdown",
-          tabBarIcon: ({ ...props }) => (
-            <SymbolView {...props} name="timer" tintColor={props.color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="(settings)"
-        options={{
-          headerShown: false,
-          tabBarLabel: "Settings",
-          tabBarIcon: ({ ...props }) => (
-            <SymbolView {...props} name="gear" tintColor={props.color} />
-          ),
-        }}
-      />
-    </Tabs>
+    <NativeTabs>
+      <NativeTabs.Trigger name="(find)">
+        <Label>Home</Label>
+        <Icon sf="house.fill" drawable="custom_android_drawable" />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="(countdown)">
+        <Label>Countdown</Label>
+        <Icon sf="timer" drawable="custom_android_drawable" />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="(settings)">
+        <Label>Settings</Label>
+        <Icon sf="gear" drawable="custom_android_drawable" />
+      </NativeTabs.Trigger>
+      <NativeTabs.Trigger name="(search)" role="search">
+        <Label>Search</Label>
+        <Icon sf="magnifyingglass" drawable="custom_android_drawable" />
+      </NativeTabs.Trigger>
+    </NativeTabs>
   );
 }

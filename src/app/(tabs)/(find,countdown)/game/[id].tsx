@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { Image } from "expo-image";
 import {
@@ -9,7 +10,6 @@ import {
 import { useLayoutEffect, useState, Fragment, useMemo } from "react";
 import { ScrollView, View, FlatList, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import ButtonSingleState from "@/components/ButtonSingleState";
@@ -133,18 +133,18 @@ export default function Game() {
           </Text>
 
           {!isPro && (
-              <LargeBorderlessButton
-                handlePress={async () => {
-                  proModalRef.current?.present();
-                  const analytics = getAnalytics();
-                  await logEvent(analytics, "select_promotion", {
-                    name: "Pro",
-                    id: "com.lookforward.pro",
-                  });
-                }}
-                text="Explore Pro Features"
-                style={{ paddingBottom: 0 }}
-              />
+            <LargeBorderlessButton
+              handlePress={async () => {
+                proModalRef.current?.present();
+                const analytics = getAnalytics();
+                await logEvent(analytics, "select_promotion", {
+                  name: "Pro",
+                  id: "com.lookforward.pro",
+                });
+              }}
+              text="Explore Pro Features"
+              style={{ paddingBottom: 0 }}
+            />
           )}
 
           <ExpandableText text={data?.summary} />
@@ -172,8 +172,6 @@ export default function Game() {
                 buttonStyle={{
                   backgroundColor: Colors.secondarySystemGroupedBackground,
                   borderColor: Colors.secondarySystemGroupedBackground,
-                    "secondarySystemGroupedBackground",
-                  ),
                 }}
               />
             ))}

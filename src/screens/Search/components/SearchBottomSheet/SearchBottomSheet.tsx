@@ -61,7 +61,8 @@ const ListHeader = () => (
 const HorizontalSpacer = () => <View style={{ width: 12 }} />;
 
 export const SearchBottomSheet = () => {
-  const tabBarHeight = useBottomTabBarHeight();
+  // const tabBarHeight = useBottomTabBarHeight();
+  const tabBarHeight = 49;
   const { top } = useSafeAreaInsets();
   const {
     categoryIndex,

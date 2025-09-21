@@ -1,13 +1,33 @@
 import { Stack } from "expo-router";
 import { Platform } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
+import { CategoryControl } from "@/components/CategoryControl";
 import { MultiItemHeader } from "@/components/Headers";
+import { useStore } from "@/stores/store";
 
 export const unstable_settings = {
   initialRouteName: "find",
   countdown: {
     initialRouteName: "countdown",
   },
+};
+
+const FindHeader = () => {
+  const { categoryIndex, setCategoryIndex } = useStore();
+  return (
+    <SafeAreaView edges={["top", "left", "right"]}>
+      <CategoryControl
+        buttons={["Movies", "Games"]}
+        categoryIndex={categoryIndex}
+        handleCategoryChange={(index) => setCategoryIndex(index)}
+        style={{
+          marginHorizontal: 12,
+          minHeight: 44,
+        }}
+      />
+    </SafeAreaView>
+  );
 };
 
 function SharedLayout({ children }) {
@@ -83,7 +103,11 @@ export default function DynamicLayout({ segment }) {
       <SharedLayout>
         <Stack.Screen
           name="index"
-          options={{ title: "Find", headerShown: false }}
+          options={{
+            title: "Find",
+            headerShown: true,
+            header: FindHeader,
+          }}
         />
       </SharedLayout>
     );

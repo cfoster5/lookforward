@@ -132,43 +132,33 @@ export default function SearchPage() {
 
   return (
     <View style={{ marginHorizontal: 12, flex: 1 }}>
-      {/* <CategoryControl
-         buttons={["Movies", "Games"]}
-         categoryIndex={categoryIndex}
-         handleCategoryChange={(index) => setCategoryIndex(index)}
-         style={{
-           marginTop: safeTopArea,
-           marginHorizontal: 0,
-           minHeight: 44,
-         }}
-       /> */}
-
       {searchQuery && (
-        <FlatList
-          ListHeaderComponent={() => (
-            <CategoryControl
-              buttons={["Movies", "Games"]}
-              categoryIndex={categoryIndex}
-              handleCategoryChange={(index) => setCategoryIndex(index)}
-              style={{
-                marginBottom: 24,
-                marginHorizontal: 12,
-                minHeight: 44,
-              }}
-            />
-          )}
-          data={getSearchData()}
-          renderItem={({ item }) => getRenderItem(item)}
-          ItemSeparatorComponent={ItemSeparator}
-          keyExtractor={(result) => result.id.toString()}
-          keyboardShouldPersistTaps="handled"
-          style={{ marginRight: -12, marginLeft: -12 }}
-          automaticallyAdjustsScrollIndicatorInsets={true}
-          contentInsetAdjustmentBehavior="automatic"
-          ListEmptyComponent={() =>
-            isLoading && <ActivityIndicator size="large" />
-          }
-        />
+        <>
+          <CategoryControl
+            buttons={["Movies", "Games"]}
+            categoryIndex={categoryIndex}
+            handleCategoryChange={(index) => setCategoryIndex(index)}
+            style={{
+              marginBottom: 12,
+              marginHorizontal: 0,
+              minHeight: 44,
+              marginTop: safeTopArea,
+            }}
+          />
+          <FlatList
+            data={getSearchData()}
+            renderItem={({ item }) => getRenderItem(item)}
+            ItemSeparatorComponent={ItemSeparator}
+            keyExtractor={(result) => result.id.toString()}
+            keyboardShouldPersistTaps="handled"
+            style={{ marginRight: -12, marginLeft: -12 }}
+            automaticallyAdjustsScrollIndicatorInsets={true}
+            contentInsetAdjustmentBehavior="automatic"
+            ListEmptyComponent={() =>
+              isLoading && <ActivityIndicator size="large" />
+            }
+          />
+        </>
       )}
 
       {!searchQuery && (

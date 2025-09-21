@@ -6,6 +6,7 @@ import {
   Keyboard,
   SectionList,
   StyleSheet,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -37,14 +38,23 @@ const ItemSeparator = () => (
   />
 );
 
-const ListHeader = () => (
-  // <Text
-  //   style={[iOSUIKit.title3Emphasized, { color: AC.label, marginBottom: 16 }]}
-  // >
-  //   History
-  // </Text>
-  <View style={{ height: 16 }} />
-);
+const ListHeader = () => {
+  const { categoryIndex, setCategoryIndex, isPro, proModalRef } = useStore();
+  const { top: safeTopArea } = useSafeAreaInsets();
+  // <View style={{ height: 16 }} />
+  return (
+    <CategoryControl
+      buttons={["Movies", "Games"]}
+      categoryIndex={categoryIndex}
+      handleCategoryChange={(index) => setCategoryIndex(index)}
+      style={{
+        marginHorizontal: 0,
+        minHeight: 44,
+        marginBottom: 24,
+      }}
+    />
+  );
+};
 
 const HorizontalSpacer = () => <View style={{ width: 12 }} />;
 
@@ -52,6 +62,7 @@ export default function SearchPage() {
   const searchQuery = useSearch();
   const { categoryIndex, setCategoryIndex, isPro, proModalRef } = useStore();
   const { top: safeTopArea } = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
 
   const [searchValue, setSearchValue] = useState("");
   const debouncedSearch = useDebounce(searchQuery, 400);
@@ -121,30 +132,44 @@ export default function SearchPage() {
 
   return (
     <View style={{ marginHorizontal: 12, flex: 1 }}>
-      <CategoryControl
-        buttons={["Movies", "Games"]}
-        categoryIndex={categoryIndex}
-        handleCategoryChange={(index) => setCategoryIndex(index)}
-        style={{
-          marginTop: safeTopArea,
-          marginHorizontal: 0,
-          minHeight: 44,
-        }}
-      />
+      {/* <CategoryControl
+         buttons={["Movies", "Games"]}
+         categoryIndex={categoryIndex}
+         handleCategoryChange={(index) => setCategoryIndex(index)}
+         style={{
+           marginTop: safeTopArea,
+           marginHorizontal: 0,
+           minHeight: 44,
+         }}
+       /> */}
 
-      {searchQuery &&
-        (isLoading() ? (
-          <ActivityIndicator size="large" style={{ flex: 1 }} />
-        ) : (
-          <FlatList
-            data={getSearchData()}
-            renderItem={({ item }) => getRenderItem(item)}
-            ItemSeparatorComponent={ItemSeparator}
-            keyExtractor={(result) => result.id.toString()}
-            keyboardShouldPersistTaps="handled"
-            style={{ marginRight: -12, marginLeft: -12 }}
-          />
-        ))}
+      {searchQuery && (
+        <FlatList
+          ListHeaderComponent={() => (
+            <CategoryControl
+              buttons={["Movies", "Games"]}
+              categoryIndex={categoryIndex}
+              handleCategoryChange={(index) => setCategoryIndex(index)}
+              style={{
+                marginBottom: 24,
+                marginHorizontal: 12,
+                minHeight: 44,
+              }}
+            />
+          )}
+          data={getSearchData()}
+          renderItem={({ item }) => getRenderItem(item)}
+          ItemSeparatorComponent={ItemSeparator}
+          keyExtractor={(result) => result.id.toString()}
+          keyboardShouldPersistTaps="handled"
+          style={{ marginRight: -12, marginLeft: -12 }}
+          automaticallyAdjustsScrollIndicatorInsets={true}
+          contentInsetAdjustmentBehavior="automatic"
+          ListEmptyComponent={() =>
+            isLoading && <ActivityIndicator size="large" />
+          }
+        />
+      )}
 
       {!searchQuery && (
         <>
@@ -163,7 +188,7 @@ export default function SearchPage() {
             />
           )}
           <SectionList
-            ListHeaderComponent={shouldShowTitle() ? ListHeader : undefined}
+            ListHeaderComponent={ListHeader}
             sections={composeRecentSections()}
             renderItem={({ section, item }) => (
               <FlatList
@@ -200,6 +225,8 @@ export default function SearchPage() {
             scrollEnabled={false}
             style={{ marginHorizontal: -12, paddingHorizontal: 12 }}
             keyboardShouldPersistTaps="handled"
+            automaticallyAdjustsScrollIndicatorInsets={true}
+            contentInsetAdjustmentBehavior="automatic"
           />
         </>
       )}

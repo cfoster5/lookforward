@@ -1,18 +1,13 @@
+import * as Colors from "@bacons/apple-colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useScrollToTop } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
+import { CategoryControl } from "@/components/CategoryControl";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth } from "@/helpers/helpers";
@@ -31,23 +26,32 @@ export function MovieLayout() {
   const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
   const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(option);
   const { top } = useSafeAreaInsets();
-  const { initialSnapPoint } = useStore();
+  const { categoryIndex, setCategoryIndex, initialSnapPoint } = useStore();
   const bottomTabOverflow = useBottomTabOverflow();
 
   return (
     <>
+      {/* <CategoryControl
+        buttons={["Movies", "Games"]}
+        categoryIndex={categoryIndex}
+        handleCategoryChange={(index) => setCategoryIndex(index)}
+        style={{
+          // marginBottom: 24,
+          // marginHorizontal: 12,
+          minHeight: 44,
+          marginTop: top,
+        }}
+      /> */}
       <View
         style={{
           margin: 16,
-          marginTop: top,
+          // marginTop: top,
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
-        <Text
-          style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}
-        >
+        <Text style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}>
           {option}
         </Text>
         {/* <ListLabel text={option} style={{ marginBottom: 0 }} /> */}

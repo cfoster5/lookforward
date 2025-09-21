@@ -1,6 +1,6 @@
+import * as Colors from "@bacons/apple-colors";
 import { Dimensions, StyleSheet } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 export const reusableStyles = StyleSheet.create({
   gamePoster: {

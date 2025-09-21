@@ -1,15 +1,9 @@
+import * as Colors from "@bacons/apple-colors";
 import { useRouter } from "expo-router";
 import { useRef } from "react";
-import {
-  FlatList,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -33,15 +27,13 @@ export function GameLayout() {
       <View
         style={{
           margin: 16,
-          marginTop: top,
+          // marginTop: top,
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
         }}
       >
-        <Text
-          style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}
-        >
+        <Text style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}>
           Coming Soon
         </Text>
         <Pressable

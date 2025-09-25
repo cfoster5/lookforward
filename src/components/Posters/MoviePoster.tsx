@@ -4,7 +4,6 @@ import { Link, useSegments } from "expo-router";
 import { ImageStyle, Pressable, StyleProp, ViewStyle } from "react-native";
 import { Movie, PosterSizes, Recommendation } from "tmdb-ts";
 
-import { ContextMenu } from "@/screens/Search/components/SearchBottomSheet/ContextMenu";
 import {
   addCountdownItem,
   removeCountdownItem,
@@ -38,20 +37,12 @@ export function MoviePoster({
     movieSubs.some((sub) => sub.documentID === movie!.id.toString());
 
   return (
-    <ContextMenu
-      handleCountdownToggle={{
-        action: () =>
-          isMovieSub()
-            ? removeCountdownItem("movies", movie!.id, user)
-            : addCountdownItem("movies", movie!.id, user),
-        buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
-      }}
-      handleShareSelect={() => onShare(`movie/${movie!.id}`, "poster")}
-    >
-      <Link href={`/(tabs)/${stack}/movie/${movie?.id}`} asChild>
+    <Link href={`/(tabs)/${stack}/movie/${movie?.id}`} asChild>
+      <Link.Trigger>
         <Pressable
           style={buttonStyle}
           // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
+          // These are still needed even with expo-router Link
           delayLongPress={100} // Leave room for a user to be able to click
           onLongPress={() => {}} // A callback that does nothing
         >
@@ -74,7 +65,24 @@ export function MoviePoster({
             <TextPoster text={movie.title} style={style} />
           )}
         </Pressable>
-      </Link>
-    </ContextMenu>
+      </Link.Trigger>
+      <Link.Menu>
+        {isMovieSub() ? (
+          <Link.MenuAction
+            title="Remove from Countdown"
+            onPress={() => removeCountdownItem("movies", movie!.id, user)}
+          />
+        ) : (
+          <Link.MenuAction
+            title="Add to Countdown"
+            onPress={() => addCountdownItem("movies", movie!.id, user)}
+          />
+        )}
+        <Link.MenuAction
+          title="Share"
+          onPress={() => onShare(`movie/${movie!.id}`, "poster")}
+        />
+      </Link.Menu>
+    </Link>
   );
 }

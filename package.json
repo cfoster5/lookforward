@@ -40,6 +40,7 @@
     "expo-constants": "~18.0.9",
     "expo-dev-client": "~6.0.12",
     "expo-font": "~14.0.8",
+    "expo-glass-effect": "~0.1.4",
     "expo-image": "~3.0.8",
     "expo-linking": "~8.0.8",
     "expo-router": "~6.0.8",
@@ -94,5 +95,9 @@
     "prettier": "^3.2.5",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "private": true,
+  "patchedDependencies": {
+    "react-native-ios-utilities@5.1.8": "patches/react-native-ios-utilities@5.1.8.patch",
+    "react-native-ios-context-menu@3.1.3": "patches/react-native-ios-context-menu@3.1.3.patch"
+  }
 }

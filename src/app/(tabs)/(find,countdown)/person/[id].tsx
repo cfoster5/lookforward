@@ -104,12 +104,6 @@ export default function Actor() {
       renderItem={({ item }) => (
         <MoviePoster
           key={item.id.toString()}
-          pressHandler={() =>
-            router.push({
-              pathname: `/(tabs)/${stack}/movie/[id]`,
-              params: { id: item.id },
-            })
-          }
           movie={item}
           posterPath={item.poster_path}
           style={{

@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { useHeaderHeight } from "@react-navigation/elements";
@@ -26,7 +27,6 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import {
   BackdropSizes,
@@ -406,12 +406,7 @@ export default function MovieScreen() {
               >
                 <ListLabel text="Watch on" style={{ marginBottom: 0 }} />
                 <Pressable onPress={() => modalRef.current?.present()}>
-                  <Text
-                    style={[
-                      iOSUIKit.body,
-                      { color: Colors.systemBlue },
-                    ]}
-                  >
+                  <Text style={[iOSUIKit.body, { color: Colors.systemBlue }]}>
                     More
                   </Text>
                 </Pressable>
@@ -665,12 +660,6 @@ export default function MovieScreen() {
                     data={movieDetails.recommendations.results}
                     renderItem={({ item }) => (
                       <MoviePoster
-                        pressHandler={() =>
-                          router.push({
-                            pathname: `/(tabs)/${stack}/movie/[id]`,
-                            params: { id: item.id },
-                          })
-                        }
                         movie={item}
                         posterPath={item.poster_path}
                         style={{

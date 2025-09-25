@@ -225,12 +225,6 @@ export default function MovieDiscover() {
         data={movies}
         renderItem={({ item }: { item: Movie }) => (
           <MoviePoster
-            pressHandler={() =>
-              router.push({
-                pathname: `/(tabs)/${stack}/movie/[id]`,
-                params: { id: item.id },
-              })
-            }
             movie={item}
             posterPath={item.poster_path}
             style={{

@@ -75,12 +75,6 @@ export function MovieLayout() {
           data={data}
           renderItem={({ item }) => (
             <MoviePoster
-              pressHandler={() =>
-                router.push({
-                  pathname: "/(tabs)/(find)/movie/[id]",
-                  params: { id: item.id },
-                })
-              }
               movie={item}
               posterPath={item.poster_path}
               style={{

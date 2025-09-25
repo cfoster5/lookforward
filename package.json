@@ -10,7 +10,8 @@
     "postinstall": "husky",
     "lint": "expo lint",
     "lint:file": "expo lint > lint.log 2>&1 || true",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "clean-install": "rm -rf ios node_modules bun.lock build-*.tar.gz LookForward.app && bun install"
   },
   "dependencies": {
     "@bacons/apple-colors": "^0.0.8",

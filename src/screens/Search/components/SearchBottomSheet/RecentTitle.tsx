@@ -1,12 +1,12 @@
+import * as Colors from "@bacons/apple-colors";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
+import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth } from "@/helpers/helpers";
 import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
@@ -15,10 +15,7 @@ import { onShare } from "@/utils/share";
 
 import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
 
-import { ContextMenu } from "./ContextMenu";
-
 export function RecentTitle({ item }: { item: Recent }) {
-  const router = useRouter();
   const { user, movieSubs, isPro, proModalRef } = useStore();
   const { removeRecent } = useRecentItemsStore();
 
@@ -163,7 +160,28 @@ export function RecentTitle({ item }: { item: Recent }) {
     );
 
   return (
-    <ContextMenu
+    <ContextMenuLink
+      href={
+        item.media_type === "movie"
+          ? {
+              pathname: "/(tabs)/(find)/movie/[id]",
+              params: {
+                id: item.id,
+                name: item.name,
+              },
+            }
+          : {
+              pathname: "/(tabs)/(find)/game/[id]",
+              params: {
+                id: item.id,
+                game: JSON.stringify({
+                  id: item.id,
+                  name: item.name,
+                  cover: { url: item.img_path },
+                }),
+              },
+            }
+      }
       handleCountdownToggle={
         item.media_type === "movie"
           ? {
@@ -190,27 +208,6 @@ export function RecentTitle({ item }: { item: Recent }) {
       }
     >
       <Pressable
-        onPress={() =>
-          item.media_type === "movie"
-            ? router.navigate({
-                pathname: "/(tabs)/(find)/movie/[id]",
-                params: {
-                  id: item.id,
-                  name: item.name,
-                },
-              })
-            : router.navigate({
-                pathname: "/(tabs)/(find)/game/[id]",
-                params: {
-                  id: item.id,
-                  game: JSON.stringify({
-                    id: item.id,
-                    name: item.name,
-                    cover: { url: item.img_path },
-                  }),
-                },
-              })
-        }
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click
         onLongPress={() => {}} // A callback that does nothing
@@ -280,6 +277,6 @@ export function RecentTitle({ item }: { item: Recent }) {
           {item.name}
         </Text>
       </Pressable>
-    </ContextMenu>
+    </ContextMenuLink>
   );
 }

@@ -1,23 +1,19 @@
+import * as Colors from "@bacons/apple-colors";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
+import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth } from "@/helpers/helpers";
 import { useRecentItemsStore } from "@/stores/recents";
 import { useStore } from "@/stores/store";
 import { Recent } from "@/types";
 import { onShare } from "@/utils/share";
 
-import { ContextMenu } from "./ContextMenu";
-
 export function RecentPerson({ item }: { item: Recent }) {
-  const router = useRouter();
-
   const { isPro, proModalRef } = useStore();
   const { removeRecent } = useRecentItemsStore();
 
@@ -163,20 +159,18 @@ export function RecentPerson({ item }: { item: Recent }) {
     );
 
   return (
-    <ContextMenu
+    <ContextMenuLink
+      href={{
+        pathname: "/(tabs)/(find)/person/[id]",
+        params: {
+          id: item.id,
+          name: item.name,
+        },
+      }}
       handleShareSelect={() => onShare(`person/${item.id}`, "recent")}
       handleRemoveSelect={() => removeRecent("recentPeople", item)}
     >
       <Pressable
-        onPress={() =>
-          router.navigate({
-            pathname: "/(tabs)/(find)/person/[id]",
-            params: {
-              id: item.id,
-              name: item.name,
-            },
-          })
-        }
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click
         onLongPress={() => {}} // A callback that does nothing
@@ -248,6 +242,6 @@ export function RecentPerson({ item }: { item: Recent }) {
           {item.name}
         </Text>
       </Pressable>
-    </ContextMenu>
+    </ContextMenuLink>
   );
 }

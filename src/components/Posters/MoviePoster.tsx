@@ -1,6 +1,6 @@
 import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
-import { Link, useSegments } from "expo-router";
+import { useSegments } from "expo-router";
 import { ImageStyle, Pressable, StyleProp, ViewStyle } from "react-native";
 import { Movie, PosterSizes, Recommendation } from "tmdb-ts";
 
@@ -11,6 +11,7 @@ import {
 import { useStore } from "@/stores/store";
 import { onShare } from "@/utils/share";
 
+import { ContextMenuLink } from "../ContextMenuLink";
 import PosterButton from "../PosterButton";
 
 import { TextPoster } from "./TextPoster";
@@ -37,52 +38,43 @@ export function MoviePoster({
     movieSubs.some((sub) => sub.documentID === movie!.id.toString());
 
   return (
-    <Link href={`/(tabs)/${stack}/movie/${movie?.id}`} asChild>
-      <Link.Trigger>
-        <Pressable
-          style={buttonStyle}
-          // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
-          // These are still needed even with expo-router Link
-          delayLongPress={100} // Leave room for a user to be able to click
-          onLongPress={() => {}} // A callback that does nothing
-        >
-          {movie && <PosterButton movieId={movie.id.toString()} />}
-          {posterPath ? (
-            <Image
-              style={[
-                {
-                  borderRadius: 12,
-                  borderWidth: 1,
-                  borderColor: Colors.separator,
-                },
-                style,
-              ]}
-              source={{
-                uri: `https://image.tmdb.org/t/p/${PosterSizes.W300}${posterPath}`,
-              }}
-            />
-          ) : (
-            <TextPoster text={movie.title} style={style} />
-          )}
-        </Pressable>
-      </Link.Trigger>
-      <Link.Menu>
-        {isMovieSub() ? (
-          <Link.MenuAction
-            title="Remove from Countdown"
-            onPress={() => removeCountdownItem("movies", movie!.id, user)}
+    <ContextMenuLink
+      href={`/(tabs)/${stack}/movie/${movie?.id}`}
+      handleCountdownToggle={{
+        action: () =>
+          isMovieSub()
+            ? removeCountdownItem("movies", movie!.id, user)
+            : addCountdownItem("movies", movie!.id, user),
+        buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
+      }}
+      handleShareSelect={() => onShare(`movie/${movie!.id}`, "poster")}
+    >
+      <Pressable
+        style={buttonStyle}
+        // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
+        // These are still needed even with expo-router Link
+        delayLongPress={100} // Leave room for a user to be able to click
+        onLongPress={() => {}} // A callback that does nothing
+      >
+        {movie && <PosterButton movieId={movie.id.toString()} />}
+        {posterPath ? (
+          <Image
+            style={[
+              {
+                borderRadius: 12,
+                borderWidth: 1,
+                borderColor: Colors.separator,
+              },
+              style,
+            ]}
+            source={{
+              uri: `https://image.tmdb.org/t/p/${PosterSizes.W300}${posterPath}`,
+            }}
           />
         ) : (
-          <Link.MenuAction
-            title="Add to Countdown"
-            onPress={() => addCountdownItem("movies", movie!.id, user)}
-          />
+          <TextPoster text={movie.title} style={style} />
         )}
-        <Link.MenuAction
-          title="Share"
-          onPress={() => onShare(`movie/${movie!.id}`, "poster")}
-        />
-      </Link.Menu>
-    </Link>
+      </Pressable>
+    </ContextMenuLink>
   );
 }

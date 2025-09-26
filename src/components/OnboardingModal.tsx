@@ -1,16 +1,16 @@
+import * as Colors from "@bacons/apple-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { Linking, Pressable, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
-import { ContextMenu } from "@/screens/Search/components/SearchBottomSheet/ContextMenu";
 import { useStore } from "@/stores/store";
 
+import { ContextMenuLink } from "./ContextMenuLink";
 import { LargeBorderlessButton } from "./LargeBorderlessButton";
 import { LargeFilledButton } from "./LargeFilledButton";
 
@@ -40,13 +40,13 @@ export const OnboardingModal = () => {
         >
           Getting Started
         </Text>
-        <ContextMenu isOnboarding>
+        <ContextMenuLink href="/" isOnboarding>
           <Row
             icon="search"
             title="Find"
             body="Discover movie and game releases by searching for title, cast, or crew. Holding down on an item will give you more options. Give it a try!"
           />
-        </ContextMenu>
+        </ContextMenuLink>
         <Row
           icon="timer-outline"
           title="Countdown"

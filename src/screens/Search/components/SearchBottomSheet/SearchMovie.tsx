@@ -1,11 +1,11 @@
+import * as Colors from "@bacons/apple-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
 import { Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 import { MovieWithMediaType } from "tmdb-ts";
 
+import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth } from "@/helpers/helpers";
 import { useStore } from "@/stores/store";
 import { dateToFullLocale } from "@/utils/dates";
@@ -13,17 +13,21 @@ import { onShare } from "@/utils/share";
 
 import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
 
-import { ContextMenu } from "./ContextMenu";
-
 export function SearchMovie({ item }: { item: MovieWithMediaType }) {
-  const router = useRouter();
   const { user, movieSubs } = useStore();
 
   const isMovieSub = () =>
     item.id && movieSubs.some((sub) => sub.documentID === item.id.toString());
 
   return (
-    <ContextMenu
+    <ContextMenuLink
+      href={{
+        pathname: "/(tabs)/(find)/movie/[id]",
+        params: {
+          id: item.id,
+          name: item.title,
+        },
+      }}
       handleCountdownToggle={{
         action: () =>
           isMovieSub()
@@ -34,15 +38,6 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
       handleShareSelect={() => onShare(`movie/${item.id}`, "search")}
     >
       <Pressable
-        onPress={() =>
-          router.navigate({
-            pathname: "/(tabs)/(find)/movie/[id]",
-            params: {
-              id: item.id,
-              name: item.title,
-            },
-          })
-        }
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click
         onLongPress={() => {}} // A callback that does nothing
@@ -111,10 +106,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
             {item.title}
           </Text>
           <Text
-            style={[
-              iOSUIKit.subhead,
-              { color: Colors.secondaryLabel },
-            ]}
+            style={[iOSUIKit.subhead, { color: Colors.secondaryLabel }]}
             numberOfLines={2}
           >
             {dateToFullLocale(item.release_date)}
@@ -127,6 +119,6 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
           color={Colors.tertiaryLabel}
         />
       </Pressable>
-    </ContextMenu>
+    </ContextMenuLink>
   );
 }

@@ -1,51 +1,30 @@
 import * as Colors from "@bacons/apple-colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useScrollToTop } from "@react-navigation/native";
-import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { CategoryControl } from "@/components/CategoryControl";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth } from "@/helpers/helpers";
-import { useStore } from "@/stores/store";
-import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 import { useMovieData } from "./api/getMovies";
 import { MovieSearchModal } from "./components/MovieSearchModal";
 import { MovieOption } from "./types";
 
 export function MovieLayout() {
-  const router = useRouter();
   const modalRef = useRef<BottomSheetModal>();
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
   const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
   const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(option);
-  const { top } = useSafeAreaInsets();
-  const { categoryIndex, setCategoryIndex, initialSnapPoint } = useStore();
-  const bottomTabOverflow = useBottomTabOverflow();
 
   return (
     <>
-      {/* <CategoryControl
-        buttons={["Movies", "Games"]}
-        categoryIndex={categoryIndex}
-        handleCategoryChange={(index) => setCategoryIndex(index)}
-        style={{
-          // marginBottom: 24,
-          // marginHorizontal: 12,
-          minHeight: 44,
-          marginTop: top,
-        }}
-      /> */}
       <View
         style={{
           margin: 16,
-          // marginTop: top,
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
@@ -54,7 +33,6 @@ export function MovieLayout() {
         <Text style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}>
           {option}
         </Text>
-        {/* <ListLabel text={option} style={{ marginBottom: 0 }} /> */}
         <Pressable
           onPress={() => modalRef.current?.present()}
           style={{
@@ -84,24 +62,20 @@ export function MovieLayout() {
             />
           )}
           numColumns={2}
-          contentContainerStyle={[
-            styles.flatlistContentContainer,
-            { paddingBottom: bottomTabOverflow + initialSnapPoint },
-          ]}
+          contentContainerStyle={styles.flatlistContentContainer}
           columnWrapperStyle={styles.flatlistColumnWrapper}
           ref={scrollRef}
           keyExtractor={(item, index) => item.id.toString() + index.toString()}
           initialNumToRender={6}
           showsVerticalScrollIndicator={false}
           onEndReached={() => (hasNextPage ? fetchNextPage() : null)}
-          onEndReachedThreshold={1.5}
+          onEndReachedThreshold={2}
           contentInsetAdjustmentBehavior="automatic"
         />
       ) : (
         <LoadingScreen />
       )}
       <MovieSearchModal
-        // navigation={navigation}
         modalRef={modalRef}
         selectedOption={option}
         setSelectedOption={(option) => {

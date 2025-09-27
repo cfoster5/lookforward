@@ -7,8 +7,10 @@ import { iOSUIKit } from "react-native-typography";
 
 import { CategoryControl } from "@/components/CategoryControl";
 import { MultiItemHeader } from "@/components/Headers";
+import { DeleteHeader } from "@/screens/Countdown/components/DeleteHeader.ios";
+import { MyHeaderRight } from "@/screens/Countdown/components/MyHeaderRight.ios";
 import { MovieOption } from "@/screens/Search/types";
-import { useInterfaceStore } from "@/stores";
+import { useCountdownStore, useInterfaceStore } from "@/stores";
 
 export const unstable_settings = {
   initialRouteName: "find",
@@ -133,6 +135,11 @@ function SharedLayout({ children }) {
   );
 }
 
+const ConditionalDeleteHeader = () => {
+  const { showDeleteButton } = useCountdownStore();
+  return showDeleteButton ? <DeleteHeader /> : null;
+};
+
 export default function DynamicLayout({ segment }) {
   if (segment === "(find)") {
     return (
@@ -151,7 +158,14 @@ export default function DynamicLayout({ segment }) {
 
   return (
     <SharedLayout>
-      <Stack.Screen name="index" options={{ title: "Countdown" }} />
+      <Stack.Screen
+        name="index"
+        options={{
+          title: "Countdown",
+          headerLeft: ConditionalDeleteHeader,
+          headerRight: MyHeaderRight,
+        }}
+      />
     </SharedLayout>
   );
 }

@@ -3,7 +3,7 @@ import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-import { useCountdownStore } from "@/stores/store";
+import { useCountdownStore } from "@/stores";
 
 export const MyHeaderRight = () => {
   const { showDeleteButton, toggleDeleteButton, clearSelections } =

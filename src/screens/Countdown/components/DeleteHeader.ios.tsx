@@ -10,8 +10,7 @@ import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-import { useAuthStore } from "@/stores";
-import { useCountdownStore } from "@/stores";
+import { useAuthStore, useCountdownStore } from "@/stores";
 
 export const DeleteHeader = () => {
   const {

@@ -48,7 +48,6 @@ export default function Countdown() {
       }}
       automaticallyAdjustsScrollIndicatorInsets
       contentInsetAdjustmentBehavior="automatic"
-      contentInset={{ bottom: paddingBottom }}
       scrollIndicatorInsets={{ bottom: paddingBottom }}
       sections={[
         { data: flattenedMovies, title: "Movies" },

@@ -159,6 +159,7 @@ export default function SearchPage() {
             ListEmptyComponent={() =>
               isLoading && <ActivityIndicator size="large" />
             }
+            keyboardDismissMode="on-drag"
           />
         </>
       )}

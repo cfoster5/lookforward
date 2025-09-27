@@ -1,7 +1,8 @@
 import * as Colors from "@bacons/apple-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Pressable, Text, View } from "react-native";
+import { ComponentRef, forwardRef } from "react";
+import { Pressable, PressableProps, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { PersonWithMediaType } from "tmdb-ts";
 
@@ -9,18 +10,14 @@ import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth } from "@/helpers/helpers";
 import { onShare } from "@/utils/share";
 
-export const SearchPerson = ({ item }: { item: PersonWithMediaType }) => (
-  <ContextMenuLink
-    href={{
-      pathname: "/(tabs)/(find)/person/[id]",
-      params: {
-        id: item.id,
-        name: item.name,
-      },
-    }}
-    handleShareSelect={() => onShare(`person/${item.id}`, "search")}
-  >
+type ResultProps = PressableProps &
+  Pick<Parameters<typeof SearchPerson>[0], "item">;
+
+const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
+  ({ item, ...rest }, ref) => (
     <Pressable
+      ref={ref}
+      {...rest} // Apply props before custom ones to allow overrides
       // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
       delayLongPress={100} // Leave room for a user to be able to click
       onLongPress={() => {}} // A callback that does nothing
@@ -107,5 +104,22 @@ export const SearchPerson = ({ item }: { item: PersonWithMediaType }) => (
         color={Colors.tertiaryLabel}
       />
     </Pressable>
+  ),
+);
+
+Result.displayName = "Result";
+
+export const SearchPerson = ({ item }: { item: PersonWithMediaType }) => (
+  <ContextMenuLink
+    href={{
+      pathname: "/(tabs)/(find)/person/[id]",
+      params: {
+        id: item.id,
+        name: item.name,
+      },
+    }}
+    handleShareSelect={() => onShare(`person/${item.id}`, "search")}
+  >
+    <Result item={item} />
   </ContextMenuLink>
 );

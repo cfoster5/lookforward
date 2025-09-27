@@ -1,9 +1,13 @@
+import * as Colors from "@bacons/apple-colors";
 import { Stack } from "expo-router";
-import { Platform } from "react-native";
+import { useRef, useState } from "react";
+import { Platform, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { iOSUIKit } from "react-native-typography";
 
 import { CategoryControl } from "@/components/CategoryControl";
 import { MultiItemHeader } from "@/components/Headers";
+import { MovieOption } from "@/screens/Search/types";
 import { useStore } from "@/stores/store";
 
 export const unstable_settings = {
@@ -15,6 +19,9 @@ export const unstable_settings = {
 
 const FindHeader = () => {
   const { categoryIndex, setCategoryIndex } = useStore();
+  const modalRef = useRef<BottomSheetModal>();
+  const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
+
   return (
     <SafeAreaView edges={["top", "left", "right"]}>
       <CategoryControl
@@ -26,6 +33,35 @@ const FindHeader = () => {
           minHeight: 44,
         }}
       />
+      <View
+        style={{
+          margin: 16,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <Text style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}>
+          {option}
+        </Text>
+        <Pressable
+          onPress={() =>
+            categoryIndex === 0 ? modalRef.current?.present() : null
+          }
+          style={{
+            minWidth: 60,
+            minHeight: 44,
+            alignItems: "flex-end",
+            justifyContent: "center",
+          }}
+        >
+          {categoryIndex === 0 && (
+            <Text style={[iOSUIKit.body, { color: Colors.systemBlue }]}>
+              More
+            </Text>
+          )}
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 };

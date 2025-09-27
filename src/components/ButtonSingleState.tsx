@@ -1,9 +1,9 @@
+import * as Colors from "@bacons/apple-colors";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
-import { useStore } from "@/stores/store";
+import { useInterfaceStore } from "@/stores";
 
 export default function ButtonSingleState({
   text,
@@ -18,7 +18,7 @@ export default function ButtonSingleState({
   icon?: string;
   textStyle?: any;
 }) {
-  const { theme } = useStore();
+  const { theme } = useInterfaceStore();
   return (
     <Pressable
       onPress={onPress}

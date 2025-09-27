@@ -1,21 +1,15 @@
+import * as Colors from "@bacons/apple-colors";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
-import {
-  FlatList,
-  Linking,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { FlatList, Linking, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 import { LogoSizes, WatchLocale } from "tmdb-ts";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { calculateWidth } from "@/helpers/helpers";
-import { useStore } from "@/stores/store";
+import { useInterfaceStore } from "@/stores";
 
 function WatchProvidersModal({
   modalRef,
@@ -25,7 +19,7 @@ function WatchProvidersModal({
   providers: WatchLocale["US"];
 }) {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const { theme } = useStore();
+  const { theme } = useInterfaceStore();
   const mod = {
     ...horizontalListProps,
     style: { ...horizontalListProps.style, marginTop: 8 },
@@ -94,9 +88,7 @@ function WatchProvidersModal({
                           width: calculateWidth(16, 8, 4.5),
                           borderWidth: 1,
                           borderColor:
-                            theme === "dark"
-                              ? Colors.separator
-                              : "#e0e0e0",
+                            theme === "dark" ? Colors.separator : "#e0e0e0",
                           borderRadius: 12,
                         }}
                       />

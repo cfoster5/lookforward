@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -14,7 +15,6 @@ import {
   View,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { AuthStackParams } from "@/types";
@@ -58,10 +58,7 @@ function Login({ navigation, route }: Props) {
         {/* Wrapping with View fixes jump that Text elements experienced when keyboard is opening/dismissing */}
         <View>
           <Text
-            style={[
-              iOSUIKit.largeTitleEmphasized,
-              { color: Colors.label },
-            ]}
+            style={[iOSUIKit.largeTitleEmphasized, { color: Colors.label }]}
           >
             {route.params.emailSent
               ? "Check your email inbox"

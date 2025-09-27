@@ -15,7 +15,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TMDB } from "tmdb-ts";
 
 import { IGDB_AWS_KEY, TMDB_TOKEN } from "@/constants/ApiKeys";
-import { useStore } from "@/stores/store";
+import { useAuthStore, useInterfaceStore } from "@/stores";
 import { IGDB_API } from "@/types/igdb";
 
 const queryClient = new QueryClient();
@@ -34,7 +34,8 @@ type AppProviderProps = {
 
 export function AppProvider({ children }: AppProviderProps) {
   // const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
-  const { setUser, theme } = useStore();
+  const { setUser } = useAuthStore();
+  const { theme } = useInterfaceStore();
   const navigationRef = useNavigationContainerRef();
   useReactNavigationDevTools(navigationRef);
   useReactQueryDevTools(queryClient);

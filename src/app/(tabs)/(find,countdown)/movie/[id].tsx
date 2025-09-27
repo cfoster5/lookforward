@@ -72,7 +72,11 @@ import {
 } from "@/screens/Movie/types";
 import { composeGroupedJobCredits } from "@/screens/Movie/utils/composeGroupedJobCredits";
 import { composeRuntime } from "@/screens/Movie/utils/composeRuntime";
-import { useStore } from "@/stores/store";
+import {
+  useAuthStore,
+  useSubscriptionStore,
+  useInterfaceStore,
+} from "@/stores";
 import { Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
@@ -151,7 +155,9 @@ export default function MovieScreen() {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const { user, movieSubs, isPro, proModalRef } = useStore();
+  const { user, isPro } = useAuthStore();
+  const { movieSubs } = useSubscriptionStore();
+  const { proModalRef } = useInterfaceStore();
   const isSubbed = movieSubs.find((sub) => sub.documentID === id);
   const { data: movieDetails, isLoading } = useMovie(id);
   const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(

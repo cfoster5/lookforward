@@ -12,7 +12,7 @@ import { iOSUIKit } from "react-native-typography";
 import { Cast, Crew } from "tmdb-ts";
 
 import { ContextMenuLink } from "@/components/ContextMenuLink";
-import { useStore } from "@/stores/store";
+import { useInterfaceStore } from "@/stores";
 import { onShare } from "@/utils/share";
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
 function Person({ person }: Props) {
   const segments = useSegments();
   const stack = segments[1] as "(find)" | "(countdown)";
-  const { theme } = useStore();
+  const { theme } = useInterfaceStore();
   const { width: windowWidth } = useWindowDimensions();
 
   const styles = StyleSheet.create({

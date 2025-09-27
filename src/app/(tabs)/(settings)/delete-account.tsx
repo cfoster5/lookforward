@@ -1,14 +1,8 @@
+import * as Colors from "@bacons/apple-colors";
 import { deleteUser, getAuth } from "@react-native-firebase/auth";
 import { useState } from "react";
-import {
-  Alert,
-  Pressable,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, Pressable, Text, TextInput, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 export default function DeleteAccountScreen() {
   const [password, setPassword] = useState("");

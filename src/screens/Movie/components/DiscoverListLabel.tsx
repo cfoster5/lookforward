@@ -1,6 +1,6 @@
+import * as Colors from "@bacons/apple-colors";
 import { Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 export function DiscoverListLabel({ text }: { text: string }) {
   return (

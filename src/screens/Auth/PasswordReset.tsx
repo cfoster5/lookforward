@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import { getAuth, sendPasswordResetEmail } from "@react-native-firebase/auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useState } from "react";
@@ -12,7 +13,6 @@ import {
   View,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { AuthStackParams } from "@/types";

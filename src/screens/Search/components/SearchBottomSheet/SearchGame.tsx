@@ -1,9 +1,9 @@
+import * as Colors from "@bacons/apple-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 import { calculateWidth, getGameReleaseDate } from "@/helpers/helpers";
 import { Game, ReleaseDate } from "@/types";

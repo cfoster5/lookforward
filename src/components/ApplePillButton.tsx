@@ -1,7 +1,7 @@
+import * as Colors from "@bacons/apple-colors";
 import { SymbolView } from "expo-symbols";
 import { Pressable, Text, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 type ApplePillButtonProps = {
   text?: string;
@@ -36,12 +36,7 @@ export const ApplePillButton = ({
     ]}
   >
     {text && (
-      <Text
-        style={[
-          iOSUIKit.bodyEmphasized,
-          { color: Colors.systemBlue },
-        ]}
-      >
+      <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.systemBlue }]}>
         {text}
       </Text>
     )}

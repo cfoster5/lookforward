@@ -1,9 +1,9 @@
+import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
 import { Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
-import { useStore } from "@/stores/store";
+import { useAuthStore } from "@/stores";
 
 import { OMDBMovie } from "../types/omdb";
 
@@ -14,7 +14,7 @@ export const Rating = ({
   source: OMDBMovie["Ratings"][number]["Source"];
   rating: OMDBMovie["Ratings"][number]["Value"];
 }) => {
-  const { isPro } = useStore();
+  const { isPro } = useAuthStore();
   const imageMap = {
     "Internet Movie Database": {
       path: require("../assets/IMDb_Logo_Rectangle_Gold.png"),
@@ -60,9 +60,7 @@ export const Rating = ({
           }}
         />
       ) : (
-        <Text style={[iOSUIKit.body, { color: Colors.label }]}>
-          {rating}
-        </Text>
+        <Text style={[iOSUIKit.body, { color: Colors.label }]}>{rating}</Text>
       )}
     </View>
   );

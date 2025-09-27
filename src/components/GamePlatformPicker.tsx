@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import {
   arrayUnion,
@@ -9,9 +10,8 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
-import { useStore } from "@/stores/store";
+import { useAuthStore, useInterfaceStore } from "@/stores";
 import { Game, ReleaseDate } from "@/types";
 import { timestampToUTC } from "@/utils/dates";
 
@@ -58,7 +58,8 @@ const ItemSeparator = () => (
 );
 
 export function GamePlatformPicker() {
-  const { user, bottomSheetModalRef } = useStore();
+  const { user } = useAuthStore();
+  const { bottomSheetModalRef } = useInterfaceStore();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
   async function addGameRelease(

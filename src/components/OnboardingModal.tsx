@@ -8,14 +8,14 @@ import { iOSUIKit } from "react-native-typography";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
-import { useStore } from "@/stores/store";
+import { useInterfaceStore } from "@/stores";
 
 import { ContextMenuLink } from "./ContextMenuLink";
 import { LargeBorderlessButton } from "./LargeBorderlessButton";
 import { LargeFilledButton } from "./LargeFilledButton";
 
 export const OnboardingModal = () => {
-  const { onboardingModalRef, proModalRef } = useStore();
+  const { onboardingModalRef } = useInterfaceStore();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
   return (

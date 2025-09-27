@@ -24,7 +24,7 @@ import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
 import { AuthStack } from "@/navigation/AuthStack";
 import { AppProvider } from "@/providers/app";
-import { useStore } from "@/stores/store";
+import { useAuthStore, useInterfaceStore } from "@/stores";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -32,7 +32,8 @@ SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
-  const { user, theme } = useStore();
+  const { user } = useAuthStore();
+  const { theme } = useInterfaceStore();
 
   useEffect(() => {
     Linking.getInitialURL().then((url) => console.log("Initial URL:", url));

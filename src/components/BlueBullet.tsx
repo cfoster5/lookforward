@@ -1,5 +1,5 @@
-import { View } from "react-native";
 import * as Colors from "@bacons/apple-colors";
+import { View } from "react-native";
 
 export function BlueBullet() {
   return (

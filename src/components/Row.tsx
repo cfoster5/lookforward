@@ -1,8 +1,8 @@
+import * as Colors from "@bacons/apple-colors";
 import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { SFSymbol, SymbolView } from "expo-symbols";
 import { View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 type IconProps = {
   icon: keyof (typeof Ionicons)["glyphMap"];
@@ -46,9 +46,7 @@ export const Row = ({
       />
     )}
     <View style={{ paddingLeft: 16, flex: 1, alignItems: "flex-start" }}>
-      <Text
-        style={[iOSUIKit.bodyEmphasized, { color: Colors.label }]}
-      >
+      <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.label }]}>
         {title}
       </Text>
       <Text style={[iOSUIKit.body, { color: Colors.secondaryLabel }]}>

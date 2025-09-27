@@ -15,10 +15,11 @@ import { reusableStyles } from "@/helpers/styles";
 import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 import { TipModal } from "@/screens/Settings/components/TipModal";
-import { useStore } from "@/stores/store";
+import { useAuthStore, useInterfaceStore } from "@/stores";
 
 export default function Settings() {
-  const { user, onboardingModalRef, proModalRef } = useStore();
+  const { user } = useAuthStore();
+  const { onboardingModalRef } = useInterfaceStore();
   const [hasPermissions, setHasPermissions] = useState(true);
   const [notifications, setNotifications] = useState({
     day: false,

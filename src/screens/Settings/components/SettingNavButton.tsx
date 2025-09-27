@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
@@ -8,7 +9,6 @@ import {
   View,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 type ButtonProps = PressableProps & {
   text: string;

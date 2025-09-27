@@ -8,7 +8,7 @@ import { iOSUIKit } from "react-native-typography";
 import { CategoryControl } from "@/components/CategoryControl";
 import { MultiItemHeader } from "@/components/Headers";
 import { MovieOption } from "@/screens/Search/types";
-import { useStore } from "@/stores/store";
+import { useInterfaceStore } from "@/stores";
 
 export const unstable_settings = {
   initialRouteName: "find",
@@ -18,7 +18,7 @@ export const unstable_settings = {
 };
 
 const FindHeader = () => {
-  const { categoryIndex, setCategoryIndex } = useStore();
+  const { categoryIndex, setCategoryIndex } = useInterfaceStore();
   const modalRef = useRef<BottomSheetModal>();
   const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
 

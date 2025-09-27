@@ -1,8 +1,8 @@
+import * as Colors from "@bacons/apple-colors";
 import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
-import { useStore } from "@/stores/store";
+import { useInterfaceStore } from "@/stores";
 
 export default function ButtonMultiState({
   text,
@@ -17,7 +17,7 @@ export default function ButtonMultiState({
   test?: any;
   children?: any;
 }) {
-  const { theme } = useStore();
+  const { theme } = useInterfaceStore();
   return (
     <Pressable
       onPress={onPress}

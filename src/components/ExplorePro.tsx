@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useEffect, useState } from "react";
 import {
@@ -11,17 +12,17 @@ import {
 import Purchases, { PurchasesOffering } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 import { Row } from "@/components/Row";
-import { useStore } from "@/stores/store";
+import { useAuthStore, useInterfaceStore } from "@/stores";
 
 import { LargeFilledButton } from "./LargeFilledButton";
 
 export const ExplorePro = () => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const { setIsPro, proModalRef } = useStore();
+  const { setIsPro } = useAuthStore();
+  const { proModalRef } = useInterfaceStore();
   const [products, setProducts] = useState<PurchasesOffering>();
   // const [selectedProduct, setSelectedProduct] = useState<PurchasesPackage>();
   const [isPurchasing, setIsPurchasing] = useState(false);
@@ -206,12 +207,7 @@ export const ExplorePro = () => {
           }}
           onPress={handleRestorePurchase}
         >
-          <Text
-            style={[
-              iOSUIKit.bodyEmphasized,
-              { color: Colors.systemBlue },
-            ]}
-          >
+          <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.systemBlue }]}>
             Restore Purchase
           </Text>
         </Pressable>
@@ -235,12 +231,7 @@ export const ExplorePro = () => {
               )
             }
           >
-            <Text
-              style={[
-                iOSUIKit.footnote,
-                { color: Colors.systemBlue },
-              ]}
-            >
+            <Text style={[iOSUIKit.footnote, { color: Colors.systemBlue }]}>
               Terms of Service
             </Text>
           </Pressable>
@@ -255,12 +246,7 @@ export const ExplorePro = () => {
               Linking.openURL("https://getlookforward.app/privacy")
             }
           >
-            <Text
-              style={[
-                iOSUIKit.footnote,
-                { color: Colors.systemBlue },
-              ]}
-            >
+            <Text style={[iOSUIKit.footnote, { color: Colors.systemBlue }]}>
               Privacy Policy
             </Text>
           </Pressable>

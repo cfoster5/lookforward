@@ -8,15 +8,21 @@ import { iOSUIKit } from "react-native-typography";
 
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth } from "@/helpers/helpers";
+import {
+  useAuthStore,
+  useSubscriptionStore,
+  useInterfaceStore,
+} from "@/stores";
 import { useRecentItemsStore } from "@/stores/recents";
-import { useStore } from "@/stores/store";
 import { Recent } from "@/types";
 import { onShare } from "@/utils/share";
 
 import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
 
 export function RecentTitle({ item }: { item: Recent }) {
-  const { user, movieSubs, isPro, proModalRef } = useStore();
+  const { user, isPro } = useAuthStore();
+  const { movieSubs } = useSubscriptionStore();
+  const { proModalRef } = useInterfaceStore();
   const { removeRecent } = useRecentItemsStore();
 
   const isMovieSub = () =>

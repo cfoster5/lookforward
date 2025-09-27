@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import BottomSheet, {
   BottomSheetFlatList,
   BottomSheetTextInput,
@@ -16,14 +17,13 @@ import {
 import { FlatList } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 import { ApplePillButton } from "@/components/ApplePillButton";
 import { DropdownMenu } from "@/components/DropdownMenu";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { calculateWidth } from "@/helpers/helpers";
+import { useAuthStore, useInterfaceStore } from "@/stores";
 import { useRecentItemsStore } from "@/stores/recents";
-import { useStore } from "@/stores/store";
 
 import { useGamesSearch } from "../../api/getGamesSearch";
 import { useMultiSearch } from "../../api/getMultiSearch";
@@ -64,14 +64,14 @@ export const SearchBottomSheet = () => {
   // const tabBarHeight = useBottomTabBarHeight();
   const tabBarHeight = 49;
   const { top } = useSafeAreaInsets();
+  const { isPro } = useAuthStore();
   const {
     categoryIndex,
     setCategoryIndex,
-    isPro,
     proModalRef,
     initialSnapPoint,
     setInitialSnapPoint,
-  } = useStore();
+  } = useInterfaceStore();
 
   const snapPoints = useMemo(
     () => [

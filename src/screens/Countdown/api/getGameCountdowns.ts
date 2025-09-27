@@ -1,7 +1,7 @@
 import { useQueries } from "@tanstack/react-query";
 
 import { igdb } from "@/providers/app";
-import { useStore } from "@/stores/store";
+import { useSubscriptionStore } from "@/stores";
 import { ReleaseDate } from "@/types/igdb";
 
 export async function getGameRelease(releaseId: ReleaseDate["id"]) {
@@ -11,7 +11,7 @@ export async function getGameRelease(releaseId: ReleaseDate["id"]) {
 }
 
 export function useGameCountdowns() {
-  const { gameSubs } = useStore();
+  const { gameSubs } = useSubscriptionStore();
   return useQueries({
     queries: gameSubs.map((sub) => ({
       queryKey: ["gameRelease", Number(sub.documentID)],

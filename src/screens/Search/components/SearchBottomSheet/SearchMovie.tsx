@@ -7,14 +7,15 @@ import { MovieWithMediaType } from "tmdb-ts";
 
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth } from "@/helpers/helpers";
-import { useStore } from "@/stores/store";
+import { useAuthStore, useSubscriptionStore } from "@/stores";
 import { dateToFullLocale } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 
 import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
 
 export function SearchMovie({ item }: { item: MovieWithMediaType }) {
-  const { user, movieSubs } = useStore();
+  const { user } = useAuthStore();
+  const { movieSubs } = useSubscriptionStore();
 
   const isMovieSub = () =>
     item.id && movieSubs.some((sub) => sub.documentID === item.id.toString());

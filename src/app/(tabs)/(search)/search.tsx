@@ -24,8 +24,8 @@ import { SearchMovie } from "@/screens/Search/components/SearchBottomSheet/Searc
 import { SearchPerson } from "@/screens/Search/components/SearchBottomSheet/SearchPerson";
 import { SectionHeader } from "@/screens/Search/components/SearchBottomSheet/SectionHeader";
 import useDebounce from "@/screens/Search/hooks/useDebounce";
+import { useAuthStore, useInterfaceStore } from "@/stores";
 import { useRecentItemsStore } from "@/stores/recents";
-import { useStore } from "@/stores/store";
 
 const ItemSeparator = () => (
   <View
@@ -39,7 +39,8 @@ const ItemSeparator = () => (
 );
 
 const ListHeader = () => {
-  const { categoryIndex, setCategoryIndex, isPro, proModalRef } = useStore();
+  const { isPro } = useAuthStore();
+  const { categoryIndex, setCategoryIndex, proModalRef } = useInterfaceStore();
   const { top: safeTopArea } = useSafeAreaInsets();
   // <View style={{ height: 16 }} />
   return (
@@ -60,7 +61,8 @@ const HorizontalSpacer = () => <View style={{ width: 12 }} />;
 
 export default function SearchPage() {
   const searchQuery = useSearch();
-  const { categoryIndex, setCategoryIndex, isPro, proModalRef } = useStore();
+  const { isPro } = useAuthStore();
+  const { categoryIndex, setCategoryIndex, proModalRef } = useInterfaceStore();
   const { top: safeTopArea } = useSafeAreaInsets();
   const { height } = useWindowDimensions();
 

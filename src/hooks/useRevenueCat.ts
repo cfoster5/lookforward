@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import Purchases, { CustomerInfo } from "react-native-purchases";
 
-import { useStore } from "@/stores/store";
+import { useAuthStore } from "@/stores";
 
 export function useRevenueCat() {
-  const { user, setIsPro } = useStore();
+  const { user, setIsPro } = useAuthStore();
   useEffect(() => {
     /* Enable debug logs before calling `setup`. */
     if (__DEV__) Purchases.setLogLevel(Purchases.LOG_LEVEL.ERROR);

@@ -8,13 +8,14 @@ import { iOSUIKit } from "react-native-typography";
 
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth } from "@/helpers/helpers";
+import { useAuthStore, useInterfaceStore } from "@/stores";
 import { useRecentItemsStore } from "@/stores/recents";
-import { useStore } from "@/stores/store";
 import { Recent } from "@/types";
 import { onShare } from "@/utils/share";
 
 export function RecentPerson({ item }: { item: Recent }) {
-  const { isPro, proModalRef } = useStore();
+  const { isPro } = useAuthStore();
+  const { proModalRef } = useInterfaceStore();
   const { removeRecent } = useRecentItemsStore();
 
   if (!isPro)

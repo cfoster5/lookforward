@@ -1,6 +1,6 @@
+import * as Colors from "@bacons/apple-colors";
 import { Galeria } from "@nandorojo/galeria";
 import { Image } from "expo-image";
-import * as Colors from "@bacons/apple-colors";
 
 type GalleryImageProps = {
   index: number;

@@ -1,7 +1,7 @@
+import * as Colors from "@bacons/apple-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { View } from "react-native";
 import { iOSColors } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 export const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
   <View

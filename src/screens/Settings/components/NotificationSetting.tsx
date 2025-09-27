@@ -1,12 +1,6 @@
-import {
-  StyleSheet,
-  Switch,
-  Text,
-  View,
-  ViewStyle,
-} from "react-native";
-import { iOSUIKit } from "react-native-typography";
 import * as Colors from "@bacons/apple-colors";
+import { StyleSheet, Switch, Text, View, ViewStyle } from "react-native";
+import { iOSUIKit } from "react-native-typography";
 
 type Props = {
   title: string;

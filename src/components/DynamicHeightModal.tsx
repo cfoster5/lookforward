@@ -1,10 +1,10 @@
+import * as Colors from "@bacons/apple-colors";
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetModal,
   BottomSheetModalProps,
 } from "@gorhom/bottom-sheet";
-import * as Colors from "@bacons/apple-colors";
 
 const RenderBackdrop = (props: BottomSheetBackdropProps) => (
   <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />

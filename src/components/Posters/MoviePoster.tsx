@@ -8,7 +8,7 @@ import {
   addCountdownItem,
   removeCountdownItem,
 } from "@/screens/Search/utils/firestore";
-import { useStore } from "@/stores/store";
+import { useAuthStore, useSubscriptionStore } from "@/stores";
 import { onShare } from "@/utils/share";
 
 import { ContextMenuLink } from "../ContextMenuLink";
@@ -31,7 +31,8 @@ export function MoviePoster({
   // segment is undefined from MovieLayout, research why
   const stack = (segments[1] as "(find)" | "(countdown)") ?? "(find)";
 
-  const { movieSubs, user } = useStore();
+  const { user } = useAuthStore();
+  const { movieSubs } = useSubscriptionStore();
 
   const isMovieSub = () =>
     movie!.id &&

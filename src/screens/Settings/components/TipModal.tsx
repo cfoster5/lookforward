@@ -1,16 +1,11 @@
+import * as Colors from "@bacons/apple-colors";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 import { DynamicHeightModal } from "@/components/DynamicHeightModal";
 
@@ -46,10 +41,7 @@ export const TipModal = ({ modalRef }: Props) => {
         data={packages?.sort(({ product: a, product: b }) => a.price - b.price)}
         ListHeaderComponent={
           <Text
-            style={[
-              iOSUIKit.body,
-              { color: Colors.label, paddingBottom: 32 },
-            ]}
+            style={[iOSUIKit.body, { color: Colors.label, paddingBottom: 32 }]}
           >
             {`If you're feeling generous and would like to support LookForward's development further, any tip helps!`}
           </Text>

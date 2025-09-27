@@ -1,5 +1,5 @@
-import { Image } from "expo-image";
 import * as Colors from "@bacons/apple-colors";
+import { Image } from "expo-image";
 import { PosterSizes } from "tmdb-ts";
 
 import { MyPerson } from "../types";

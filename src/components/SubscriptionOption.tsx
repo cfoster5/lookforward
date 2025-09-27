@@ -1,11 +1,6 @@
-import {
-  Pressable,
-  StyleProp,
-  Text,
-  ViewStyle,
-} from "react-native";
-import { iOSUIKit } from "react-native-typography";
 import * as Colors from "@bacons/apple-colors";
+import { Pressable, StyleProp, Text, ViewStyle } from "react-native";
+import { iOSUIKit } from "react-native-typography";
 
 type Props = {
   handlePress: () => void;

@@ -1,14 +1,8 @@
+import * as Colors from "@bacons/apple-colors";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  ActivityIndicator,
-  Alert,
-  Pressable,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Alert, Pressable, Text, View } from "react-native";
 import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 function Icon({ title }) {
   let name = "";
@@ -67,12 +61,7 @@ export const PurchaseOption = ({
     >
       <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
         <Icon title={title} />
-        <Text
-          style={[
-            iOSUIKit.body,
-            { color: Colors.label, paddingLeft: 16 },
-          ]}
-        >
+        <Text style={[iOSUIKit.body, { color: Colors.label, paddingLeft: 16 }]}>
           {title}
         </Text>
       </View>

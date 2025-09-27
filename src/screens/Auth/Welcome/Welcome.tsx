@@ -1,15 +1,10 @@
+import * as Colors from "@bacons/apple-colors";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Image } from "expo-image";
 import { useRef } from "react";
-import {
-  Dimensions,
-  SafeAreaView,
-  Text,
-  View,
-} from "react-native";
+import { Dimensions, SafeAreaView, Text, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 import { PosterSizes, TrendingResults } from "tmdb-ts";
 
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";

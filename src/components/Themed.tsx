@@ -5,7 +5,7 @@
 
 import { Text as DefaultText, View as DefaultView } from "react-native";
 
-import { useStore } from "@/stores/store";
+import { useInterfaceStore } from "@/stores";
 
 import Colors from "../constants/Colors";
 
@@ -13,7 +13,7 @@ export function useThemeColor(
   props: { light?: string; dark?: string },
   colorName: keyof typeof Colors.light & keyof typeof Colors.dark,
 ) {
-  const { theme } = useStore();
+  const { theme } = useInterfaceStore();
   const colorFromProps = props[theme];
 
   if (colorFromProps) {

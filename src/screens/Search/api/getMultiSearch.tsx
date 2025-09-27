@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { tmdb } from "@/providers/app";
-import { useStore } from "@/stores/store";
+import { useInterfaceStore } from "@/stores";
 
 const getMultiSearch = async (searchValue: string) =>
   await tmdb.search.multi({
@@ -11,7 +11,7 @@ const getMultiSearch = async (searchValue: string) =>
   });
 
 export function useMultiSearch(searchValue: string) {
-  const { categoryIndex } = useStore();
+  const { categoryIndex } = useInterfaceStore();
   return useQuery({
     queryKey: ["movieSearch", searchValue],
     queryFn: () => getMultiSearch(searchValue),

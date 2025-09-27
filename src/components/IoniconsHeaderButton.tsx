@@ -1,5 +1,5 @@
-import { Ionicons } from "@expo/vector-icons";
 import * as Colors from "@bacons/apple-colors";
+import { Ionicons } from "@expo/vector-icons";
 import { HeaderButton } from "react-navigation-header-buttons";
 
 export function IoniconsHeaderButton(props) {

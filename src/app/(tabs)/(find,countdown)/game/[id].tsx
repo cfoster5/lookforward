@@ -24,7 +24,11 @@ import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
 import { useGame } from "@/screens/Game/api/getGame";
-import { useStore } from "@/stores/store";
+import {
+  useAuthStore,
+  useSubscriptionStore,
+  useInterfaceStore,
+} from "@/stores";
 import { Recent } from "@/types";
 import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
@@ -58,8 +62,9 @@ export default function Game() {
   const navigation = useNavigation();
   const { game: gameString } = useLocalSearchParams();
   const game = gameString ? JSON.parse(gameString) : undefined;
-  const { user, gameSubs, bottomSheetModalRef, isPro, proModalRef } =
-    useStore();
+  const { user, isPro } = useAuthStore();
+  const { gameSubs } = useSubscriptionStore();
+  const { bottomSheetModalRef, proModalRef } = useInterfaceStore();
   const countdownId = gameSubs.find((s) => s.game.id === game.id)?.documentID;
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);

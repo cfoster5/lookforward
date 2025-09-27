@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -15,7 +16,6 @@ import {
   View,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { AuthStackParams } from "@/types";
@@ -63,10 +63,7 @@ function CreateAccount({ navigation, route }: Props) {
       >
         <View>
           <Text
-            style={[
-              iOSUIKit.largeTitleEmphasized,
-              { color: Colors.label },
-            ]}
+            style={[iOSUIKit.largeTitleEmphasized, { color: Colors.label }]}
           >
             Hello!
           </Text>

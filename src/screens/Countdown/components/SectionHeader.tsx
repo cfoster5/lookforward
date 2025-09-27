@@ -1,6 +1,6 @@
+import * as Colors from "@bacons/apple-colors";
 import { Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 
 export const SectionHeader = ({ section }) => (
   <View style={{ backgroundColor: Colors.systemGray6 }}>

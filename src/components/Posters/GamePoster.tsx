@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 
-import { useStore } from "@/stores/store";
+import { useSubscriptionStore } from "@/stores";
 import { Game, ReleaseDate } from "@/types";
 import { timestamp } from "@/utils/dates";
 
@@ -14,7 +14,7 @@ export function GamePoster({
 }: {
   game: Game & { release_dates: ReleaseDate[] };
 }) {
-  const { gameSubs } = useStore();
+  const { gameSubs } = useSubscriptionStore();
   const inCountdown = gameSubs.find(
     (releaseDate) => releaseDate.game.id === game.id,
   )?.documentID;

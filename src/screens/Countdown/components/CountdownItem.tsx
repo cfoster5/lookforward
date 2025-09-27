@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { DateTime } from "luxon";
@@ -10,10 +11,9 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
-import * as Colors from "@bacons/apple-colors";
 import { PosterSizes } from "tmdb-ts";
 
-import { useCountdownStore } from "@/stores/store";
+import { useCountdownStore } from "@/stores";
 import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
 
 import { useGameCountdowns } from "../api/getGameCountdowns";
@@ -132,9 +132,7 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
       borderBottomRightRadius:
         sectionName === "Games" && isLastInSection ? 10 : 0,
       overflow: "hidden",
-      backgroundColor: isSelected
-        ? Colors.systemGray4
-        : Colors.systemGray6,
+      backgroundColor: isSelected ? Colors.systemGray4 : Colors.systemGray6,
     },
     slide: {
       flex: 1,
@@ -225,22 +223,12 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
           >
             {title}
           </Text>
-          <Text
-            style={[
-              iOSUIKit.subhead,
-              { color: Colors.secondaryLabel },
-            ]}
-          >
+          <Text style={[iOSUIKit.subhead, { color: Colors.secondaryLabel }]}>
             {getFormattedDate()}
           </Text>
         </View>
         <View style={styles.countdown}>
-          <Text
-            style={[
-              iOSUIKit.bodyEmphasized,
-              { color: Colors.systemBlue },
-            ]}
-          >
+          <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.systemBlue }]}>
             {getDaysUntil()}
           </Text>
           <Text style={[iOSUIKit.body, { color: Colors.systemBlue }]}>

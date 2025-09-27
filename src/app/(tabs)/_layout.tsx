@@ -13,18 +13,18 @@ import { useEffect } from "react";
 import { FirestoreMovie } from "@/interfaces/firebase";
 import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
 import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";
+import {
+  useAuthStore,
+  useSubscriptionStore,
+  useInterfaceStore,
+} from "@/stores";
 import { useAppConfigStore } from "@/stores/appConfig";
-import { useStore } from "@/stores/store";
 
 export default function TabStack() {
-  const {
-    user,
-    setMovieSubs,
-    setGameSubs,
-    movieSubs,
-    gameSubs,
-    onboardingModalRef,
-  } = useStore();
+  const { user } = useAuthStore();
+  const { setMovieSubs, setGameSubs, movieSubs, gameSubs } =
+    useSubscriptionStore();
+  const { onboardingModalRef } = useInterfaceStore();
   const {
     hasRequestedReview,
     setHasRequestedReview,

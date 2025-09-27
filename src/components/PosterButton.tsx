@@ -4,7 +4,11 @@ import { Pressable, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 
 import { removeSub, subToMovie } from "@/helpers/helpers";
-import { useStore } from "@/stores/store";
+import {
+  useAuthStore,
+  useSubscriptionStore,
+  useInterfaceStore,
+} from "@/stores";
 import { Game, ReleaseDate } from "@/types";
 
 import { IconSymbol } from "./IconSymbol";
@@ -15,7 +19,9 @@ interface Props {
 }
 
 function PosterButton({ movieId, game }: Props) {
-  const { user, movieSubs, gameSubs, bottomSheetModalRef } = useStore();
+  const { user } = useAuthStore();
+  const { movieSubs, gameSubs } = useSubscriptionStore();
+  const { bottomSheetModalRef } = useInterfaceStore();
 
   const isMovieSub = () =>
     movieId && movieSubs.some((sub) => sub.documentID === movieId.toString());

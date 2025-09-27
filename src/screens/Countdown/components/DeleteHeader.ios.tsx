@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import {
   arrayRemove,
   doc,
@@ -5,12 +6,12 @@ import {
   writeBatch,
 } from "@react-native-firebase/firestore";
 import { useCallback } from "react";
-import * as Colors from "@bacons/apple-colors";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-import { useStore, useCountdownStore } from "@/stores/store";
+import { useAuthStore } from "@/stores";
+import { useCountdownStore } from "@/stores";
 
 export const DeleteHeader = () => {
   const {
@@ -20,7 +21,7 @@ export const DeleteHeader = () => {
     toggleDeleteButton,
     clearSelections,
   } = useCountdownStore();
-  const { user } = useStore();
+  const { user } = useAuthStore();
 
   const deleteItems = useCallback(async () => {
     const db = getFirestore();

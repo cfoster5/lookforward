@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
@@ -24,6 +25,7 @@ export const DynamicShareHeader = ({ urlSegment }) => (
       title="share"
       iconName="share-outline"
       onPress={() => onShare(urlSegment, "headerButton")}
+      color={Colors.label}
     />
   </HeaderButtons>
 );

@@ -42,7 +42,7 @@ export default function Layout() {
       <Stack.Screen
         name="search"
         options={{
-          title: "Search",
+          title: "Recents",
           headerSearchBarOptions: {},
 
           // headerRight: () => (

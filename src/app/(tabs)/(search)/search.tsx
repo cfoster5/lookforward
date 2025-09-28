@@ -1,4 +1,4 @@
-import * as AC from "@bacons/apple-colors";
+import * as Colors from "@bacons/apple-colors";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -31,7 +31,7 @@ const ItemSeparator = () => (
   <View
     style={{
       height: StyleSheet.hairlineWidth,
-      backgroundColor: AC.separator,
+      backgroundColor: Colors.separator,
       marginLeft: calculateWidth(12, 12, 3.5) + 12,
       marginRight: 12,
     }}

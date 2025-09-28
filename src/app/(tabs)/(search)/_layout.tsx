@@ -1,11 +1,11 @@
-import * as AC from "@bacons/apple-colors";
+import * as Colors from "@bacons/apple-colors";
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { isLiquidGlassAvailable } from "expo-glass-effect";
 import { Stack } from "expo-router";
 
 export { ErrorBoundary } from "expo-router";
 
-const AppleStackPreset: NativeStackNavigationOptions =
+export const AppleStackPreset: NativeStackNavigationOptions =
   process.env.EXPO_OS !== "ios"
     ? {}
     : isLiquidGlassAvailable()
@@ -18,7 +18,7 @@ const AppleStackPreset: NativeStackNavigationOptions =
             backgroundColor: "transparent",
           },
           headerTitleStyle: {
-            color: AC.label as any,
+            color: Colors.label as any,
           },
           headerLargeTitle: true,
           headerBlurEffect: "none",

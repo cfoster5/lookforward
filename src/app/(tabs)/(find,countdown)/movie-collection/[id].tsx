@@ -25,6 +25,8 @@ import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 // import { useGetCollection } from "./api/useGetCollection";
 
+const spacing = 16;
+
 export default function Collection() {
   const segments = useSegments();
   const stack = segments[1] as "(find)" | "(countdown)";
@@ -76,27 +78,37 @@ export default function Collection() {
       onScroll={scrollHandler}
       scrollEventThrottle={16}
       data={collection!.parts}
-      renderItem={({ item }: { item: DetailedCollection["parts"][number] }) => (
+      renderItem={({
+        item,
+        index,
+      }: {
+        item: DetailedCollection["parts"][number];
+        index: number;
+      }) => (
         <MoviePoster
           movie={item}
           posterPath={item.poster_path}
           style={{
-            width: calculateWidth(16, 16, 2),
+            width: calculateWidth(spacing, spacing, 2),
             aspectRatio: 2 / 3,
+          }}
+          buttonStyle={{
+            marginRight: index % 2 === 0 ? spacing / 2 : 0,
+            marginLeft: index % 2 === 1 ? spacing / 2 : 0,
           }}
         />
       )}
       numColumns={2}
       contentContainerStyle={{
-        marginHorizontal: 16,
+        marginHorizontal: spacing,
       }}
       automaticallyAdjustsScrollIndicatorInsets
       contentInsetAdjustmentBehavior="automatic"
-      contentInset={{ bottom: paddingBottom }}
-      scrollIndicatorInsets={{ bottom: paddingBottom }}
+      // contentInset={{ bottom: paddingBottom }}
+      // scrollIndicatorInsets={{ bottom: paddingBottom }}
       columnWrapperStyle={{
         justifyContent: "space-between",
-        marginBottom: 16,
+        marginBottom: spacing,
       }}
       keyExtractor={(movie: DetailedCollection["parts"][number]) =>
         movie.id.toString()

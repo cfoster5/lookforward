@@ -10,6 +10,8 @@ import { DeleteHeader } from "@/screens/Countdown/components/DeleteHeader.ios";
 import { MyHeaderRight } from "@/screens/Countdown/components/MyHeaderRight.ios";
 import { useCountdownStore, useInterfaceStore } from "@/stores";
 
+import { AppleStackPreset } from "../(search)/_layout";
+
 export const unstable_settings = {
   initialRouteName: "find",
   countdown: {
@@ -163,6 +165,7 @@ export default function DynamicLayout({ segment }) {
         name="index"
         options={{
           title: "Countdown",
+          ...AppleStackPreset,
           headerLeft: ConditionalDeleteHeader,
           headerRight: MyHeaderRight,
         }}

@@ -33,9 +33,15 @@ interface GameProps {
 
 type Props = (MovieProps | GameProps) & {
   isLastInSection: boolean;
+  isFirstInSection: boolean;
 };
 
-export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
+export function CountdownItem({
+  item,
+  sectionName,
+  isLastInSection,
+  isFirstInSection,
+}: Props) {
   const router = useRouter();
   const {
     showDeleteButton,
@@ -127,10 +133,10 @@ export function CountdownItem({ item, sectionName, isLastInSection }: Props) {
 
   const styles = StyleSheet.create({
     rowFront: {
-      borderBottomLeftRadius:
-        sectionName === "Games" && isLastInSection ? 10 : 0,
-      borderBottomRightRadius:
-        sectionName === "Games" && isLastInSection ? 10 : 0,
+      borderTopLeftRadius: isFirstInSection ? 10 : 0,
+      borderTopRightRadius: isFirstInSection ? 10 : 0,
+      borderBottomLeftRadius: isLastInSection ? 10 : 0,
+      borderBottomRightRadius: isLastInSection ? 10 : 0,
       overflow: "hidden",
       backgroundColor: isSelected ? Colors.systemGray4 : Colors.systemGray6,
     },

@@ -1,7 +1,6 @@
-import * as Colors from "@bacons/apple-colors";
 import { useScrollToTop } from "@react-navigation/native";
 import { useRef } from "react";
-import { Platform, SectionList, View } from "react-native";
+import { Platform, SectionList } from "react-native";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useGameCountdowns } from "@/screens/Countdown/api/getGameCountdowns";
@@ -59,6 +58,7 @@ export default function Countdown() {
         <CountdownItem
           item={item}
           sectionName={section.title}
+          isFirstInSection={index === 0}
           isLastInSection={
             section.title === "Movies"
               ? index + 1 === flattenedMovies.length
@@ -67,16 +67,6 @@ export default function Countdown() {
         />
       )}
       renderSectionHeader={SectionHeader}
-      ListHeaderComponent={
-        <View
-          style={{
-            height: 16,
-            backgroundColor: Colors.systemGray6,
-            borderTopLeftRadius: 10,
-            borderTopRightRadius: 10,
-          }}
-        />
-      }
       ref={scrollRef}
     />
   );

@@ -216,11 +216,13 @@ export default function MovieScreen() {
                 ? subToMovie(id, user!.uid)
                 : removeSub("movies", id, user!.uid)
             }
+            color={Colors.label}
           />
           <Item
             title="share"
             iconName="share-outline"
             onPress={() => onShare(`movie/${id}`, "headerButton")}
+            color={Colors.label}
           />
         </HeaderButtons>
       ),

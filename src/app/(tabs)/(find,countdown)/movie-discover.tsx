@@ -24,6 +24,8 @@ import { calculateWidth, targetedProviders } from "@/helpers/helpers";
 import { useDiscoverMovies } from "@/screens/MovieDiscover/api/getDiscoverMovies";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
+const spacing = 16;
+
 export default function MovieDiscover() {
   const segments = useSegments();
   const stack = segments[1] as "(find)" | "(countdown)";
@@ -223,25 +225,29 @@ export default function MovieDiscover() {
     <>
       <FlatList
         data={movies}
-        renderItem={({ item }: { item: Movie }) => (
+        renderItem={({ item, index }) => (
           <MoviePoster
             movie={item}
             posterPath={item.poster_path}
             style={{
-              width: calculateWidth(16, 16, 2),
+              width: calculateWidth(spacing, spacing, 2),
               aspectRatio: 2 / 3,
+            }}
+            buttonStyle={{
+              marginRight: index % 2 === 0 ? spacing / 2 : 0,
+              marginLeft: index % 2 === 1 ? spacing / 2 : 0,
             }}
           />
         )}
         automaticallyAdjustsScrollIndicatorInsets
         contentInsetAdjustmentBehavior="automatic"
-        contentInset={{ bottom: paddingBottom }}
-        scrollIndicatorInsets={{ bottom: paddingBottom }}
+        // contentInset={{ bottom: paddingBottom }}
+        // scrollIndicatorInsets={{ bottom: paddingBottom }}
         contentContainerStyle={{ marginHorizontal: 16, paddingTop: 16 }}
         numColumns={2}
         columnWrapperStyle={{
           justifyContent: "space-between",
-          marginBottom: 16,
+          marginBottom: spacing,
         }}
         ref={scrollRef}
         keyExtractor={(item) => item.id.toString()}

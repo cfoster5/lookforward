@@ -3,15 +3,20 @@ import { createRef } from "react";
 import { ColorSchemeName } from "react-native";
 import { create } from "zustand";
 
+import { MovieOption } from "@/screens/Search/types";
+
 const bottomSheetModalRef = createRef<BottomSheetModal>();
 const onboardingModalRef = createRef<BottomSheetModal>();
 const proModalRef = createRef<BottomSheetModal>();
+const movieSearchModalRef = createRef<BottomSheetModal>();
 
 type InterfaceState = {
   theme: ColorSchemeName;
   bottomSheetModalRef: typeof bottomSheetModalRef;
   onboardingModalRef: typeof onboardingModalRef;
   proModalRef: typeof proModalRef;
+  movieSearchModalRef: typeof movieSearchModalRef;
+  movieSearchOption: MovieOption;
   initialSnapPoint: number;
   categoryIndex: number;
 };
@@ -20,6 +25,7 @@ type InterfaceActions = {
   setTheme: (theme: ColorSchemeName) => void;
   setInitialSnapPoint: (value: number) => void;
   setCategoryIndex: (number: number) => void;
+  setMovieSearchOption: (option: MovieOption) => void;
 };
 
 export const useInterfaceStore = create<InterfaceState & InterfaceActions>(
@@ -29,6 +35,10 @@ export const useInterfaceStore = create<InterfaceState & InterfaceActions>(
     bottomSheetModalRef,
     onboardingModalRef,
     proModalRef,
+    movieSearchModalRef,
+    movieSearchOption: MovieOption.ComingSoon,
+    setMovieSearchOption: (option) =>
+      set(() => ({ movieSearchOption: option })),
     initialSnapPoint: 0,
     setInitialSnapPoint: (value) => set(() => ({ initialSnapPoint: value })),
     categoryIndex: 0,

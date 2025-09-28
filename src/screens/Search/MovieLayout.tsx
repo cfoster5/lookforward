@@ -1,24 +1,24 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useScrollToTop } from "@react-navigation/native";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { FlatList, StyleSheet } from "react-native";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth } from "@/helpers/helpers";
+import { useInterfaceStore } from "@/stores";
 
 import { useMovieData } from "./api/getMovies";
 import { MovieSearchModal } from "./components/MovieSearchModal";
-import { MovieOption } from "./types";
 
 const spacing = 16;
 
 export function MovieLayout() {
-  const modalRef = useRef<BottomSheetModal>();
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
-  const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
-  const { data, fetchNextPage, hasNextPage, isLoading } = useMovieData(option);
+  const { movieSearchModalRef, movieSearchOption, setMovieSearchOption } =
+    useInterfaceStore();
+  const { data, fetchNextPage, hasNextPage, isLoading } =
+    useMovieData(movieSearchOption);
 
   return (
     <>
@@ -55,11 +55,11 @@ export function MovieLayout() {
         <LoadingScreen />
       )}
       <MovieSearchModal
-        modalRef={modalRef}
-        selectedOption={option}
+        modalRef={movieSearchModalRef}
+        selectedOption={movieSearchOption}
         setSelectedOption={(option) => {
-          setOption(option);
-          modalRef.current?.dismiss();
+          setMovieSearchOption(option);
+          movieSearchModalRef.current?.dismiss();
           scrollRef.current?.scrollToIndex({ index: 0 });
         }}
       />

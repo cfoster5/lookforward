@@ -1,6 +1,5 @@
 import * as Colors from "@bacons/apple-colors";
 import { Stack } from "expo-router";
-import { useRef, useState } from "react";
 import { Platform, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -9,7 +8,6 @@ import { CategoryControl } from "@/components/CategoryControl";
 import { MultiItemHeader } from "@/components/Headers";
 import { DeleteHeader } from "@/screens/Countdown/components/DeleteHeader.ios";
 import { MyHeaderRight } from "@/screens/Countdown/components/MyHeaderRight.ios";
-import { MovieOption } from "@/screens/Search/types";
 import { useCountdownStore, useInterfaceStore } from "@/stores";
 
 export const unstable_settings = {
@@ -20,9 +18,12 @@ export const unstable_settings = {
 };
 
 const FindHeader = () => {
-  const { categoryIndex, setCategoryIndex } = useInterfaceStore();
-  const modalRef = useRef<BottomSheetModal>();
-  const [option, setOption] = useState<MovieOption>(MovieOption.ComingSoon);
+  const {
+    categoryIndex,
+    setCategoryIndex,
+    movieSearchModalRef,
+    movieSearchOption,
+  } = useInterfaceStore();
 
   return (
     <SafeAreaView edges={["top", "left", "right"]}>
@@ -44,11 +45,11 @@ const FindHeader = () => {
         }}
       >
         <Text style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}>
-          {option}
+          {movieSearchOption}
         </Text>
         <Pressable
           onPress={() =>
-            categoryIndex === 0 ? modalRef.current?.present() : null
+            categoryIndex === 0 ? movieSearchModalRef.current?.present() : null
           }
           style={{
             minWidth: 60,

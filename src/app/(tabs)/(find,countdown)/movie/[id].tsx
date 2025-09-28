@@ -267,8 +267,8 @@ export default function MovieScreen() {
         scrollEventThrottle={16}
         automaticallyAdjustsScrollIndicatorInsets
         contentInsetAdjustmentBehavior="automatic"
-        contentInset={{ bottom: paddingBottom }}
-        scrollIndicatorInsets={{ bottom: paddingBottom }}
+        // contentInset={{ bottom: paddingBottom }}
+        // scrollIndicatorInsets={{ bottom: paddingBottom }}
         contentContainerStyle={Platform.select({
           ios: { paddingTop: headerHeight },
         })}

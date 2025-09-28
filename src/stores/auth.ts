@@ -14,6 +14,6 @@ type AuthActions = {
 export const useAuthStore = create<AuthState & AuthActions>((set) => ({
   user: null,
   setUser: (user) => set(() => ({ user })),
-  isPro: false,
-  setIsPro: (isPro) => set(() => ({ isPro })),
+  isPro: true,
+  setIsPro: (isPro) => set(() => ({ isPro: true })),
 }));

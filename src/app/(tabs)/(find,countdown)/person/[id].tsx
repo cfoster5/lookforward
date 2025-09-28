@@ -26,6 +26,7 @@ import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 const width = 200;
 const horizontalMargin = 4;
+const spacing = 16;
 
 function sortReleaseDates(
   a: PersonMovieCast | PersonMovieCrew,
@@ -101,14 +102,18 @@ export default function Actor() {
   return (
     <FlatList
       data={selectedJob === "Actor" ? castCredits : crewCredits}
-      renderItem={({ item }) => (
+      renderItem={({ item, index }) => (
         <MoviePoster
           key={item.id.toString()}
           movie={item}
           posterPath={item.poster_path}
           style={{
-            width: calculateWidth(16, 16, 2),
+            width: calculateWidth(spacing, spacing, 2),
             aspectRatio: 2 / 3,
+          }}
+          buttonStyle={{
+            marginRight: index % 2 === 0 ? spacing / 2 : 0,
+            marginLeft: index % 2 === 1 ? spacing / 2 : 0,
           }}
         />
       )}
@@ -116,14 +121,14 @@ export default function Actor() {
       numColumns={2}
       automaticallyAdjustsScrollIndicatorInsets
       contentInsetAdjustmentBehavior="automatic"
-      contentInset={{ bottom: paddingBottom }}
-      scrollIndicatorInsets={{ bottom: paddingBottom }}
+      // contentInset={{ bottom: paddingBottom }}
+      // scrollIndicatorInsets={{ bottom: paddingBottom }}
       contentContainerStyle={{
-        marginHorizontal: 16,
+        marginHorizontal: spacing,
       }}
       columnWrapperStyle={{
         justifyContent: "space-between",
-        marginBottom: 16,
+        marginBottom: spacing,
       }}
       // do not use arrow functions for header and footer components
       // fixed issue where carousel would re-render

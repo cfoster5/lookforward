@@ -5,7 +5,7 @@ import { Games } from "@/types/igdb";
 
 async function getGame(gameId: Games["id"]) {
   const query = `fields summary, genres.name, involved_companies.developer, involved_companies.porting, involved_companies.publisher, involved_companies.supporting, involved_companies.company.name, videos.name, videos.video_id, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name;
-      where id = ${gameId} & release_dates.region = (2,8);`;
+      where id = ${gameId} & release_dates.release_region = (2,8);`;
 
   const response = await igdb.games.retreiveGames(query);
   return response.data;

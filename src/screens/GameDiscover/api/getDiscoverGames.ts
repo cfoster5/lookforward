@@ -21,7 +21,7 @@ export function useDiscoverGames({
   companyId?: number;
   keywordId?: number;
 }) {
-  let filter = `where date > ${Math.floor(timestamp)} & region = (2,8)`;
+  let filter = `where date > ${Math.floor(timestamp)} & release_region = (2,8)`;
   filter += genreId ? ` & game.genres = (${genreId})` : ``;
   // filter += companyId ? `&with_companies=${companyId}` : ``;
   // filter += keywordId ? `&with_keywords=${keywordId}` : ``;

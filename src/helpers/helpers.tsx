@@ -135,7 +135,7 @@ export function getGameReleaseDate(
   const uniqueDates = new Set<number>();
 
   for (const releaseDate of game.release_dates) {
-    if (releaseDate.region === 2 || releaseDate.region === 8) {
+    if (releaseDate.release_region === 2 || releaseDate.release_region === 8) {
       uniqueDates.add(releaseDate.date);
     }
   }

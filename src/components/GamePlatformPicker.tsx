@@ -99,7 +99,8 @@ export function GamePlatformPicker() {
           // need to filter client-side since combining search and filter on API is not working
           data={data?.release_dates.filter(
             (release_date) =>
-              release_date.region === 2 || release_date.region === 8,
+              release_date.release_region === 2 ||
+              release_date.release_region === 8,
           )}
           renderItem={({ item: releaseDate }) => (
             <RenderItem

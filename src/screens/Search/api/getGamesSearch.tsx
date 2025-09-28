@@ -5,7 +5,7 @@ import { useInterfaceStore } from "@/stores";
 
 async function getGamesSearch(searchValue: string) {
   const query = `fields name, cover.*, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name;
-      where release_dates.region = (2,8);
+      where release_dates.release_region = (2,8);
       search "${searchValue}";
       limit 50;`;
 

@@ -9,7 +9,7 @@ import {
 import { getMessaging, hasPermission } from "@react-native-firebase/messaging";
 import { Link } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Text, View } from "react-native";
+import { ScrollView, Text } from "react-native";
 
 import { reusableStyles } from "@/helpers/styles";
 import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
@@ -53,50 +53,49 @@ export default function Settings() {
   }
 
   return (
-    <>
-      <View style={{ flex: 1 }}>
+    <ScrollView>
+      <Text
+        style={{
+          ...reusableStyles.date,
+          // paddingTop: 24,
+          paddingLeft: 16,
+          paddingBottom: 8,
+        }}
+      >
+        COUNTDOWN NOTIFICATIONS
+      </Text>
+      <NotificationSetting
+        title="Day Before"
+        onValueChange={async (value) => {
+          // setNotifications({ ...notifications, day: value })
+          const db = getFirestore();
+          const userRef = doc(db, "users", user!.uid);
+          await updateDoc(userRef, { "notifications.day": value });
+          await getNotificationPermissions();
+        }}
+        value={notifications?.day}
+      />
+      <NotificationSetting
+        title="Week Before"
+        onValueChange={async (value) => {
+          // setNotifications({ ...notifications, week: value })
+          const db = getFirestore();
+          const userRef = doc(db, "users", user!.uid);
+          await updateDoc(userRef, { "notifications.week": value });
+          await getNotificationPermissions();
+        }}
+        value={notifications?.week}
+        style={{ borderBottomWidth: 0 }}
+      />
+      {!hasPermissions && (
         <Text
-          style={{
-            ...reusableStyles.date,
-            paddingTop: 24,
-            paddingLeft: 16,
-            paddingBottom: 8,
-          }}
+          style={{ ...reusableStyles.date, paddingTop: 8, paddingLeft: 16 }}
         >
-          COUNTDOWN NOTIFICATIONS
+          {`Please enable notifications in your device's settings`}
         </Text>
-        <NotificationSetting
-          title="Day Before"
-          onValueChange={async (value) => {
-            // setNotifications({ ...notifications, day: value })
-            const db = getFirestore();
-            const userRef = doc(db, "users", user!.uid);
-            await updateDoc(userRef, { "notifications.day": value });
-            await getNotificationPermissions();
-          }}
-          value={notifications?.day}
-        />
-        <NotificationSetting
-          title="Week Before"
-          onValueChange={async (value) => {
-            // setNotifications({ ...notifications, week: value })
-            const db = getFirestore();
-            const userRef = doc(db, "users", user!.uid);
-            await updateDoc(userRef, { "notifications.week": value });
-            await getNotificationPermissions();
-          }}
-          value={notifications?.week}
-          style={{ borderBottomWidth: 0 }}
-        />
-        {!hasPermissions && (
-          <Text
-            style={{ ...reusableStyles.date, paddingTop: 8, paddingLeft: 16 }}
-          >
-            {`Please enable notifications in your device's settings`}
-          </Text>
-        )}
-        <>
-          {/* <SettingNavButton
+      )}
+      <>
+        {/* <SettingNavButton
             onPress={async () => {
               proModalRef.current?.present();
               const analytics = getAnalytics();
@@ -108,39 +107,39 @@ export default function Settings() {
             text="Explore Pro Features"
             isFirstInGroup={true}
           /> */}
-          <SettingNavButton
-            onPress={async () => {
-              modalRef.current?.present();
-              const analytics = getAnalytics();
-              await logEvent(analytics, "select_promotion", {
-                name: "Tip Jar",
-                items: [
-                  { id: "com.lookforward.tip1" },
-                  { id: "com.lookforward.tip3" },
-                  { id: "com.lookforward.tip5" },
-                ],
-              });
-            }}
-            text="Tip Jar"
-            isFirstInGroup={true}
-          />
-          <Link
-            href="itms-apps://itunes.apple.com/app/viewContentsUserReviews/id1492748952?action=write-review"
-            asChild
-          >
-            <SettingNavButton text="Write a Review" isFirstInGroup={false} />
-          </Link>
-          <SettingNavButton
-            onPress={() => onboardingModalRef.current?.present()}
-            text="Show Getting Started"
-            isFirstInGroup={true}
-          />
-        </>
-        <Link href="/(tabs)/(settings)/account" asChild>
-          <SettingNavButton text="Account" isFirstInGroup={true} />
+        <SettingNavButton
+          onPress={async () => {
+            modalRef.current?.present();
+            const analytics = getAnalytics();
+            await logEvent(analytics, "select_promotion", {
+              name: "Tip Jar",
+              items: [
+                { id: "com.lookforward.tip1" },
+                { id: "com.lookforward.tip3" },
+                { id: "com.lookforward.tip5" },
+              ],
+            });
+          }}
+          text="Tip Jar"
+          isFirstInGroup={true}
+        />
+        <Link
+          href="itms-apps://itunes.apple.com/app/viewContentsUserReviews/id1492748952?action=write-review"
+          asChild
+        >
+          <SettingNavButton text="Write a Review" isFirstInGroup={false} />
         </Link>
-      </View>
+        <SettingNavButton
+          onPress={() => onboardingModalRef.current?.present()}
+          text="Show Getting Started"
+          isFirstInGroup={true}
+        />
+      </>
+      <Link href="/(tabs)/(settings)/account" asChild>
+        <SettingNavButton text="Account" isFirstInGroup={true} />
+      </Link>
+
       <TipModal modalRef={modalRef} />
-    </>
+    </ScrollView>
   );
 }

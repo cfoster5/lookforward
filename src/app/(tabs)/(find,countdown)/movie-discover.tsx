@@ -243,7 +243,7 @@ export default function MovieDiscover() {
         contentInsetAdjustmentBehavior="automatic"
         // contentInset={{ bottom: paddingBottom }}
         // scrollIndicatorInsets={{ bottom: paddingBottom }}
-        contentContainerStyle={{ marginHorizontal: 16, paddingTop: 16 }}
+        contentContainerStyle={{ marginHorizontal: 16 }}
         numColumns={2}
         columnWrapperStyle={{
           justifyContent: "space-between",

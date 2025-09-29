@@ -1,7 +1,14 @@
 import * as Colors from "@bacons/apple-colors";
 import { deleteUser, getAuth } from "@react-native-firebase/auth";
 import { useState } from "react";
-import { Alert, Pressable, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 export default function DeleteAccountScreen() {
@@ -15,7 +22,7 @@ export default function DeleteAccountScreen() {
   }
 
   return (
-    <View style={{ flex: 1, margin: 16 }}>
+    <ScrollView style={{ marginHorizontal: 16 }}>
       <Text
         style={[
           iOSUIKit.title3Emphasized,
@@ -82,6 +89,6 @@ export default function DeleteAccountScreen() {
           Delete
         </Text>
       </Pressable>
-    </View>
+    </ScrollView>
   );
 }

@@ -98,8 +98,7 @@ function SharedLayout({ children }) {
         name="movie-discover"
         options={({ route }) => ({
           title: route.params.screenTitle,
-          headerTransparent: Platform.OS === "ios",
-          headerBlurEffect: "dark",
+          ...AppleStackPreset,
           // Add a placeholder button without the `onPress` to avoid flicker
           headerRight: MultiItemHeader,
         })}

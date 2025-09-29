@@ -1,6 +1,6 @@
 import { getAuth, signOut } from "@react-native-firebase/auth";
 import { Link } from "expo-router";
-import { Alert, View } from "react-native";
+import { Alert, ScrollView } from "react-native";
 
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 
@@ -11,7 +11,7 @@ function handleSignOut() {
 
 export default function AccountScreen() {
   return (
-    <View style={{ flex: 1, paddingTop: 12 }}>
+    <ScrollView>
       <SettingNavButton
         onPress={() =>
           Alert.alert("Sign out?", undefined, [
@@ -25,6 +25,6 @@ export default function AccountScreen() {
       <Link href="/(tabs)/(settings)/delete-account" asChild>
         <SettingNavButton text="Delete Account" isFirstInGroup={false} />
       </Link>
-    </View>
+    </ScrollView>
   );
 }

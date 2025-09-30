@@ -43,11 +43,11 @@ export default function Countdown() {
     <SectionList
       contentContainerStyle={{
         marginHorizontal: 16,
-        ...Platform.select({ ios: { paddingVertical: 16 } }),
+        ...Platform.select({ ios: { paddingBottom: 16 } }),
       }}
       automaticallyAdjustsScrollIndicatorInsets
       contentInsetAdjustmentBehavior="automatic"
-      scrollIndicatorInsets={{ bottom: paddingBottom }}
+      // scrollIndicatorInsets={{ bottom: paddingBottom }}
       sections={[
         { data: flattenedMovies, title: "Movies" },
         { data: flattenedGames, title: "Games" },

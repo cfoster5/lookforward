@@ -4,13 +4,13 @@ import { immer } from "zustand/middleware/immer";
 type CountdownState = {
   movies: string[];
   games: string[];
-  showDeleteButton: boolean;
+  isEditing: boolean;
 };
 
 type CountdownActions = {
   toggleSelection: (documentId: string, section: "movies" | "games") => void;
   clearSelections: () => void;
-  toggleDeleteButton: () => void;
+  toggleIsEditing: () => void;
 };
 
 export const useCountdownStore = create<CountdownState & CountdownActions>()(
@@ -30,10 +30,10 @@ export const useCountdownStore = create<CountdownState & CountdownActions>()(
         state.movies = [];
         state.games = [];
       }),
-    showDeleteButton: false,
-    toggleDeleteButton: () =>
+    isEditing: false,
+    toggleIsEditing: () =>
       set((state) => {
-        state.showDeleteButton = !state.showDeleteButton;
+        state.isEditing = !state.isEditing;
       }),
   })),
 );

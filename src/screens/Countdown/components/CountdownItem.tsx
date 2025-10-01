@@ -44,7 +44,7 @@ export function CountdownItem({
 }: Props) {
   const router = useRouter();
   const {
-    showDeleteButton,
+    isEditing,
     movies: selectedMovies,
     games: selectedGames,
     toggleSelection,
@@ -52,8 +52,8 @@ export function CountdownItem({
   const transformAmount = useSharedValue(-24);
 
   useEffect(() => {
-    transformAmount.value = withTiming(!showDeleteButton ? -24 : 16);
-  }, [showDeleteButton, transformAmount]);
+    transformAmount.value = withTiming(!isEditing ? -24 : 16);
+  }, [isEditing, transformAmount]);
 
   const isSelected =
     sectionName === "Movies"
@@ -90,7 +90,7 @@ export function CountdownItem({
   }
 
   function handleMovieAction() {
-    if (showDeleteButton) {
+    if (isEditing) {
       // toggleMovieSelection(item);
       toggleSelection(item!.documentID, "movies");
     } else {
@@ -109,7 +109,7 @@ export function CountdownItem({
   }
 
   function handleGameAction() {
-    if (showDeleteButton) {
+    if (isEditing) {
       // toggleGameSelection(item);
       toggleSelection(item!.id.toString(), "games");
     } else {

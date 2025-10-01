@@ -138,8 +138,8 @@ function SharedLayout({ children }) {
 }
 
 const ConditionalDeleteHeader = () => {
-  const { showDeleteButton } = useCountdownStore();
-  return showDeleteButton ? <DeleteHeader /> : null;
+  const { isEditing } = useCountdownStore();
+  return isEditing ? <DeleteHeader /> : null;
 };
 
 export default function DynamicLayout({ segment }) {

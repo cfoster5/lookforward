@@ -6,20 +6,19 @@ import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { useCountdownStore } from "@/stores";
 
 export const MyHeaderRight = () => {
-  const { showDeleteButton, toggleDeleteButton, clearSelections } =
-    useCountdownStore();
+  const { isEditing, toggleIsEditing, clearSelections } = useCountdownStore();
 
   return (
     <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
       <Item
-        title={showDeleteButton ? "Done" : "Edit"}
+        title={isEditing ? "Done" : "Edit"}
         buttonStyle={[
-          showDeleteButton ? iOSUIKit.bodyEmphasized : null,
+          isEditing ? iOSUIKit.bodyEmphasized : null,
           { color: Colors.systemBlue },
         ]}
         onPress={() => {
-          toggleDeleteButton();
-          if (showDeleteButton) clearSelections();
+          toggleIsEditing();
+          if (isEditing) clearSelections();
         }}
       />
     </HeaderButtons>

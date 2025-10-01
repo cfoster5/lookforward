@@ -16,8 +16,8 @@ export const DeleteHeader = () => {
   const {
     movies: selectedMovies,
     games: selectedGames,
-    showDeleteButton,
-    toggleDeleteButton,
+    isEditing,
+    toggleIsEditing,
     clearSelections,
   } = useCountdownStore();
   const { user } = useAuthStore();
@@ -38,18 +38,12 @@ export const DeleteHeader = () => {
       });
     });
     await batch.commit();
-    toggleDeleteButton();
+    toggleIsEditing();
     clearSelections();
-  }, [
-    clearSelections,
-    selectedGames,
-    selectedMovies,
-    toggleDeleteButton,
-    user,
-  ]);
+  }, [clearSelections, selectedGames, selectedMovies, toggleIsEditing, user]);
 
   return (
-    showDeleteButton && (
+    isEditing && (
       <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton} left>
         <Item
           title="Delete"

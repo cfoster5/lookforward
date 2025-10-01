@@ -5,7 +5,6 @@ import {
   getFirestore,
   writeBatch,
 } from "@react-native-firebase/firestore";
-import { useCallback } from "react";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
@@ -22,7 +21,7 @@ export const DeleteHeader = () => {
   } = useCountdownStore();
   const { user } = useAuthStore();
 
-  const deleteItems = useCallback(async () => {
+  const deleteItems = async () => {
     const db = getFirestore();
     const batch = writeBatch(db);
     selectedMovies.map((selection) => {
@@ -40,7 +39,7 @@ export const DeleteHeader = () => {
     await batch.commit();
     toggleIsEditing();
     clearSelections();
-  }, [clearSelections, selectedGames, selectedMovies, toggleIsEditing, user]);
+  };
 
   return (
     isEditing && (

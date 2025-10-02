@@ -1,5 +1,47 @@
 # Changelog
 
+## [7.0.0](https://github.com/cfoster5/lookforward/compare/v6.18.0...v7.0.0) (2025-10-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* migrate to expo-router
+
+### Features
+
+* add IconSymbol component for consistent icon usage across platforms ([8cb3e36](https://github.com/cfoster5/lookforward/commit/8cb3e36268ebf85e187352db78718ffa89d1165c))
+* adjust review request threshold from 5 to 3 subscriptions ([5586919](https://github.com/cfoster5/lookforward/commit/558691902447a1cb51fa9e3847d0dbe6b1ded117))
+* enable pro features by default ([e9b1819](https://github.com/cfoster5/lookforward/commit/e9b1819c6b43d5a879ac9adb97de0141d4f147ea))
+* migrate to expo-router ([a8b2fe0](https://github.com/cfoster5/lookforward/commit/a8b2fe0bf1d483bf3643d25c10ef4e51d4936cdc))
+* remove Google Ads ([760c540](https://github.com/cfoster5/lookforward/commit/760c540286f12d2ce9ee4c1c272b1f801475f509))
+* update Tabs to NativeTabs for Liquid Glass and universal search tab ([5d311ad](https://github.com/cfoster5/lookforward/commit/5d311ade057596fa73ea7673c169fa4f94c4bf29))
+
+
+### Bug Fixes
+
+* add color prop to header buttons in MovieScreen ([1bb4f5c](https://github.com/cfoster5/lookforward/commit/1bb4f5c2b6c7f586e6b419593b63adb26d8c9572))
+* add color prop to share button in DynamicShareHeader ([2518db3](https://github.com/cfoster5/lookforward/commit/2518db38e85d385b0ec2b3038468b6baf28e4723))
+* add Countdown header buttons ([8f89f87](https://github.com/cfoster5/lookforward/commit/8f89f87f1eb5581579023cde09aef2eb35cd0889))
+* add keyboard dismissal when scrolling search results ([447b57a](https://github.com/cfoster5/lookforward/commit/447b57a70d39cbfd59624809dd194849bd93c139))
+* adjust spacing and layout for movie posters in Person screen ([a790153](https://github.com/cfoster5/lookforward/commit/a79015392c74a6dd9555277f212564aba9f1a711))
+* adjust spacing for movie posters in Collection component ([0f312cd](https://github.com/cfoster5/lookforward/commit/0f312cdc9526269af89f9075abad5fd5ca89f33e))
+* adjust spacing for movie posters in MovieDiscover ([4399d18](https://github.com/cfoster5/lookforward/commit/4399d18421c140cae1c4a5afabcf4beb027c3fca))
+* correct broken design of search results wrapped with ContextMenuLink ([674b483](https://github.com/cfoster5/lookforward/commit/674b483c22946ca01192345261ed55eb2b903e12))
+* ensure id comparison in addRecent handles string to number conversion ([9f133a0](https://github.com/cfoster5/lookforward/commit/9f133a0eabac5a3c7fd8272e54b6e8b441d81f11))
+* remove contentInset and scrollIndicatorInsets in MovieScreen ([cb186e7](https://github.com/cfoster5/lookforward/commit/cb186e73b18b1cccffa1514dfeabdfaf081bb662))
+* remove contentInset in Countdown ([e7f46fe](https://github.com/cfoster5/lookforward/commit/e7f46fed21a721ee70fb188f0dabffe986b0df2f))
+* show Search CategoryControl when history is empty ([9639ddb](https://github.com/cfoster5/lookforward/commit/9639ddb9073e6247667b8df5d64a280d531a3ced))
+* update IGDB queries to use release_region instead of region which was deprecated ([d249608](https://github.com/cfoster5/lookforward/commit/d249608b9d4737238efbb7a8ab293f0eb4b4ed6f))
+* update isPro to true at all times ([7ab5379](https://github.com/cfoster5/lookforward/commit/7ab53796c6fb99ad897578415d59e79341d86862))
+* update movie search modal to use zustand store ([e37dfee](https://github.com/cfoster5/lookforward/commit/e37dfee401966141221702dd0d43264a4f842605))
+* update Search CategoryControl to stick to top of screen ([4383821](https://github.com/cfoster5/lookforward/commit/43838219302dfff6fa5e1027fe1ebdd140b565cc))
+* update title of search screen to "Recents" ([99cc6b4](https://github.com/cfoster5/lookforward/commit/99cc6b41e3487dcf032e67f89c97e387e321e8ec))
+
+
+### Performance Improvements
+
+* replace useEffect with useQuery for fetching tips ([7e6250f](https://github.com/cfoster5/lookforward/commit/7e6250f374075a8e0843e34205ce6ee7ade761bf))
+
 ## [6.18.0](https://github.com/cfoster5/lookforward/compare/v6.17.0...v6.18.0) (2025-04-30)
 
 

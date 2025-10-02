@@ -66,7 +66,12 @@ export default function Countdown() {
           }
         />
       )}
-      renderSectionHeader={SectionHeader}
+      renderSectionHeader={({ section }) => (
+        <SectionHeader
+          section={section}
+          sectionIndex={section.title === "Movies" ? 0 : 1}
+        />
+      )}
       ref={scrollRef}
     />
   );

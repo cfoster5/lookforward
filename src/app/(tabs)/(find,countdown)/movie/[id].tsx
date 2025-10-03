@@ -11,7 +11,7 @@ import {
   useSegments,
 } from "expo-router";
 import { DateTime } from "luxon";
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -229,18 +229,13 @@ export default function MovieScreen() {
     });
   }, [isSubbed, id, navigation, user, movieDetails?.title]);
 
-  // Memoize object to avoid unnecessary recalculations and re-renders.
-  // Improves performance by ensuring that the object is only recalculated when its dependencies change.
-  const recentMovie: Recent = useMemo(
-    () => ({
-      id: id,
-      name: movieDetails?.title,
-      img_path: movieDetails?.poster_path,
-      last_viewed: timestamp,
-      media_type: "movie",
-    }),
-    [id, movieDetails],
-  );
+  const recentMovie: Recent = {
+    id: id,
+    name: movieDetails?.title,
+    img_path: movieDetails?.poster_path,
+    last_viewed: timestamp,
+    media_type: "movie",
+  };
 
   useAddRecent("recentMovies", recentMovie);
 

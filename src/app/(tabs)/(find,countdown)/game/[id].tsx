@@ -7,7 +7,7 @@ import {
   useRouter,
   useSegments,
 } from "expo-router";
-import { useLayoutEffect, useState, Fragment, useMemo } from "react";
+import { useLayoutEffect, useState, Fragment } from "react";
 import { ScrollView, View, FlatList, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
@@ -93,18 +93,13 @@ export default function Game() {
     });
   }, [bottomSheetModalRef, countdownId, game, navigation, user, data]);
 
-  // Memoize object to avoid unnecessary recalculations and re-renders.
-  // Improves performance by ensuring that the object is only recalculated when its dependencies change.
-  const recentGame: Recent = useMemo(
-    () => ({
-      id: game.id,
-      name: game.name,
-      img_path: game.cover?.url ?? "",
-      last_viewed: timestamp,
-      media_type: "game",
-    }),
-    [game.cover?.url, game.id, game.name],
-  );
+  const recentGame: Recent = {
+    id: game.id,
+    name: game.name,
+    img_path: game.cover?.url ?? "",
+    last_viewed: timestamp,
+    media_type: "game",
+  };
 
   useAddRecent("recentGames", recentGame);
 

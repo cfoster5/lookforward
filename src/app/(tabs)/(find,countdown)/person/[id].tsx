@@ -4,7 +4,7 @@ import {
   useRouter,
   useSegments,
 } from "expo-router";
-import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, Platform, Text, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
@@ -78,17 +78,12 @@ export default function Actor() {
     });
   }, [navigation, id, person?.name]);
 
-  // Memoize object to avoid unnecessary recalculations and re-renders.
-  // Improves performance by ensuring that the object is only recalculated when its dependencies change.
-  const recentPerson: Recent = useMemo(
-    () => ({
-      id: id,
-      name: person?.name,
-      img_path: person?.profile_path,
-      last_viewed: timestamp,
-    }),
-    [id, person?.name, person?.profile_path],
-  );
+  const recentPerson: Recent = {
+    id: id,
+    name: person?.name,
+    img_path: person?.profile_path,
+    last_viewed: timestamp,
+  };
 
   useAddRecent("recentPeople", recentPerson);
 

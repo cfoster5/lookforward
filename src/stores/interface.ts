@@ -17,13 +17,11 @@ type InterfaceState = {
   proModalRef: typeof proModalRef;
   movieSearchModalRef: typeof movieSearchModalRef;
   movieSearchOption: MovieOption;
-  initialSnapPoint: number;
   categoryIndex: number;
 };
 
 type InterfaceActions = {
   setTheme: (theme: ColorSchemeName) => void;
-  setInitialSnapPoint: (value: number) => void;
   setCategoryIndex: (number: number) => void;
   setMovieSearchOption: (option: MovieOption) => void;
 };
@@ -39,8 +37,6 @@ export const useInterfaceStore = create<InterfaceState & InterfaceActions>(
     movieSearchOption: MovieOption.ComingSoon,
     setMovieSearchOption: (option) =>
       set(() => ({ movieSearchOption: option })),
-    initialSnapPoint: 0,
-    setInitialSnapPoint: (value) => set(() => ({ initialSnapPoint: value })),
     categoryIndex: 0,
     setCategoryIndex: (categoryIndex) => set(() => ({ categoryIndex })),
   }),

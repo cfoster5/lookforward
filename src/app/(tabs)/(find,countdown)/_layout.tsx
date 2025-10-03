@@ -1,7 +1,7 @@
 import * as Colors from "@bacons/apple-colors";
 import { Stack } from "expo-router";
 import { Platform, Pressable, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { CategoryControl } from "@/components/CategoryControl";
@@ -26,9 +26,10 @@ const FindHeader = () => {
     movieSearchModalRef,
     movieSearchOption,
   } = useInterfaceStore();
+  const insets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView edges={["top", "left", "right"]}>
+    <View style={{ paddingTop: insets.top }}>
       <CategoryControl
         buttons={["Movies", "Games"]}
         categoryIndex={categoryIndex}
@@ -67,7 +68,7 @@ const FindHeader = () => {
           )}
         </Pressable>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 

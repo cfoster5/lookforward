@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.0.1](https://github.com/cfoster5/lookforward/compare/v7.0.0...v7.0.1) (2025-10-04)
+
+
+### Bug Fixes
+
+* correct jumpy CategoryControl on Home screen ([d93788f](https://github.com/cfoster5/lookforward/commit/d93788fa371b1a2848687f562b03ce747108b0b9))
+
 ## [7.0.0](https://github.com/cfoster5/lookforward/compare/v6.18.0...v7.0.0) (2025-10-02)
 
 

@@ -7,12 +7,18 @@
 
 ## Code Style
 
-- Use TypeScript whenever possible.
-- Use kebab-case for all file names. Avoid capital letters.
+- Use TypeScript whenever possible. Avoid non-null assertion operator (`!`).
+- Use kebab-case for route file names. Avoid capital letters. Use camelCase for everything else.
 - Use `@/` path aliases for imports.
 - Use root src directory.
-- Follow patterns from <https://github.com/ryanmcdermott/clean-code-javascript> and <https://github.com/kettanaito/naming-cheatsheet>.
 - This app uses React Compiler and does not need `useCallback`, `useMemo`, or `React.memo` for performance optimizations. Avoid using these hooks and components unless absolutely necessary.
+
+### Best Practices
+
+- Follow patterns from
+  - <https://github.com/ryanmcdermott/clean-code-javascript>
+  - <https://github.com/kettanaito/naming-cheatsheet>
+  - <https://github.com/alan2207/bulletproof-react>
 
 ## CLI
 

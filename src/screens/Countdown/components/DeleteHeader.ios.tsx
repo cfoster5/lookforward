@@ -9,7 +9,8 @@ import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
-import { useAuthStore, useCountdownStore } from "@/stores";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
+import { useCountdownStore } from "@/stores";
 
 export const DeleteHeader = () => {
   const {
@@ -19,7 +20,7 @@ export const DeleteHeader = () => {
     toggleIsEditing,
     clearSelections,
   } = useCountdownStore();
-  const { user } = useAuthStore();
+  const user = useAuthenticatedUser();
 
   const deleteItems = async () => {
     const db = getFirestore();
@@ -27,13 +28,13 @@ export const DeleteHeader = () => {
     selectedMovies.map((selection) => {
       const docRef = doc(db, "movies", selection.toString());
       batch.update(docRef, {
-        subscribers: arrayRemove(user!.uid),
+        subscribers: arrayRemove(user.uid),
       });
     });
     selectedGames.map((selection) => {
       const docRef = doc(db, "gameReleases", selection.toString());
       batch.update(docRef, {
-        subscribers: arrayRemove(user!.uid),
+        subscribers: arrayRemove(user.uid),
       });
     });
     await batch.commit();

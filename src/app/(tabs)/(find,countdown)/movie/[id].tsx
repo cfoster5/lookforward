@@ -58,6 +58,7 @@ import {
   tmdbMovieGenres,
 } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useMovie } from "@/screens/Movie/api/getMovie";
 import { useMovieRatings } from "@/screens/Movie/api/getMovieRatings";
 import { DiscoverListLabel } from "@/screens/Movie/components/DiscoverListLabel";
@@ -155,7 +156,8 @@ export default function MovieScreen() {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const { user, isPro } = useAuthStore();
+  const user = useAuthenticatedUser();
+  const { isPro } = useAuthStore();
   const { movieSubs } = useSubscriptionStore();
   const { proModalRef } = useInterfaceStore();
   const isSubbed = movieSubs.find((sub) => sub.documentID === id);
@@ -213,8 +215,8 @@ export default function MovieScreen() {
             iconName={isSubbed ? "checkmark-outline" : "add-outline"}
             onPress={() =>
               !isSubbed
-                ? subToMovie(id, user!.uid)
-                : removeSub("movies", id, user!.uid)
+                ? subToMovie(id, user.uid)
+                : removeSub("movies", id, user.uid)
             }
             color={Colors.label}
           />

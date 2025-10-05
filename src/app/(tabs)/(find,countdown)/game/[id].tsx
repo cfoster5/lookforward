@@ -23,6 +23,7 @@ import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useGame } from "@/screens/Game/api/getGame";
 import {
   useAuthStore,
@@ -62,7 +63,8 @@ export default function Game() {
   const navigation = useNavigation();
   const { game: gameString } = useLocalSearchParams();
   const game = gameString ? JSON.parse(gameString) : undefined;
-  const { user, isPro } = useAuthStore();
+  const user = useAuthenticatedUser();
+  const { isPro } = useAuthStore();
   const { gameSubs } = useSubscriptionStore();
   const { bottomSheetModalRef, proModalRef } = useInterfaceStore();
   const countdownId = gameSubs.find((s) => s.game.id === game.id)?.documentID;
@@ -84,7 +86,7 @@ export default function Game() {
                   release_dates: data?.release_dates,
                 });
               } else {
-                removeSub("gameReleases", countdownId, user!.uid);
+                removeSub("gameReleases", countdownId, user.uid);
               }
             }}
           />

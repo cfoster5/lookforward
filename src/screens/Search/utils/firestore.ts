@@ -23,7 +23,7 @@ export async function removeCountdownItem(
   try {
     const db = getFirestore();
     const docRef = doc(db, collection, id.toString());
-    await updateDoc(docRef, { subscribers: arrayRemove(user!.uid) });
+    await updateDoc(docRef, { subscribers: arrayRemove(user.uid) });
   } catch (error) {
     console.error("Error writing document: ", error);
   }
@@ -39,7 +39,7 @@ export async function addCountdownItem(
     const docRef = doc(db, collection, id.toString());
     await setDoc(
       docRef,
-      { subscribers: arrayUnion(user!.uid) },
+      { subscribers: arrayUnion(user.uid) },
       { merge: true },
     );
     ReactNativeHapticFeedback.trigger("impactLight", {

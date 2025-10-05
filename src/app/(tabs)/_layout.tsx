@@ -10,18 +10,15 @@ import { Icon, Label, NativeTabs } from "expo-router/build/native-tabs";
 import * as StoreReview from "expo-store-review";
 import { useEffect } from "react";
 
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { FirestoreMovie } from "@/interfaces/firebase";
 import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
 import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";
-import {
-  useAuthStore,
-  useSubscriptionStore,
-  useInterfaceStore,
-} from "@/stores";
+import { useSubscriptionStore, useInterfaceStore } from "@/stores";
 import { useAppConfigStore } from "@/stores/appConfig";
 
 export default function TabStack() {
-  const { user } = useAuthStore();
+  const user = useAuthenticatedUser();
   const { setMovieSubs, setGameSubs, movieSubs, gameSubs } =
     useSubscriptionStore();
   const { onboardingModalRef } = useInterfaceStore();
@@ -37,7 +34,7 @@ export default function TabStack() {
 
     const movieQuery = query(
       collection(db, "movies"),
-      where("subscribers", "array-contains", user!.uid),
+      where("subscribers", "array-contains", user.uid),
     );
 
     const movieSubscription = onSnapshot(movieQuery, (documentSnapshot) => {
@@ -53,7 +50,7 @@ export default function TabStack() {
 
     const gameQuery = query(
       collection(db, "gameReleases"),
-      where("subscribers", "array-contains", user!.uid),
+      where("subscribers", "array-contains", user.uid),
     );
 
     const gameSubscription = onSnapshot(gameQuery, (documentSnapshot) => {

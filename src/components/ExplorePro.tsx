@@ -38,7 +38,9 @@ export const ExplorePro = () => {
         ) {
           // console.log('offerings.all["pro"]', offerings.all["pro"]);
           setProducts(offerings.all["pro"]);
-          // setSelectedProduct(offerings.all["pro"]?.annual!);
+          // if (offerings.all["pro"]?.annual) {
+          //   setSelectedProduct(offerings.all["pro"].annual);
+          // }
           // Display packages for sale
         }
       } catch (error) {
@@ -160,7 +162,11 @@ export const ExplorePro = () => {
           useAltIcon
         />
         {/* <SubscriptionOption
-          handlePress={() => setSelectedProduct(products?.monthly!)}
+          handlePress={() => {
+            if (products?.monthly) {
+              setSelectedProduct(products.monthly);
+            }
+          }}
           text={`${products?.monthly?.product.priceString} Monthly`}
           isSelected={
             products?.monthly?.identifier === selectedProduct?.identifier
@@ -168,7 +174,11 @@ export const ExplorePro = () => {
           style={{ marginTop: 16, marginBottom: 8 }}
         />
         <SubscriptionOption
-          handlePress={() => setSelectedProduct(products?.annual!)}
+          handlePress={() => {
+            if (products?.annual) {
+              setSelectedProduct(products.annual);
+            }
+          }}
           text={`${products?.annual?.product.priceString} Yearly`}
           isSelected={
             products?.annual?.identifier === selectedProduct?.identifier

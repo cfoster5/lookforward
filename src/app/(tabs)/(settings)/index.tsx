@@ -12,13 +12,14 @@ import { useEffect, useRef, useState } from "react";
 import { ScrollView, Text } from "react-native";
 
 import { reusableStyles } from "@/helpers/styles";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 import { TipModal } from "@/screens/Settings/components/TipModal";
-import { useAuthStore, useInterfaceStore } from "@/stores";
+import { useInterfaceStore } from "@/stores";
 
 export default function Settings() {
-  const { user } = useAuthStore();
+  const user = useAuthenticatedUser();
   const { onboardingModalRef } = useInterfaceStore();
   const [hasPermissions, setHasPermissions] = useState(true);
   const [notifications, setNotifications] = useState({
@@ -31,7 +32,7 @@ export default function Settings() {
   useEffect(() => {
     getNotificationPermissions();
     const db = getFirestore();
-    const userRef = doc(db, "users", user!.uid);
+    const userRef = doc(db, "users", user.uid);
     const preferenceSubscription = onSnapshot(
       userRef,
       (docSnapshot) => setNotifications(docSnapshot.data()?.notifications),
@@ -69,7 +70,7 @@ export default function Settings() {
         onValueChange={async (value) => {
           // setNotifications({ ...notifications, day: value })
           const db = getFirestore();
-          const userRef = doc(db, "users", user!.uid);
+          const userRef = doc(db, "users", user.uid);
           await updateDoc(userRef, { "notifications.day": value });
           await getNotificationPermissions();
         }}
@@ -80,7 +81,7 @@ export default function Settings() {
         onValueChange={async (value) => {
           // setNotifications({ ...notifications, week: value })
           const db = getFirestore();
-          const userRef = doc(db, "users", user!.uid);
+          const userRef = doc(db, "users", user.uid);
           await updateDoc(userRef, { "notifications.week": value });
           await getNotificationPermissions();
         }}

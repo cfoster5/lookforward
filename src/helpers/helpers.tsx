@@ -63,7 +63,10 @@ export function groupReleasesByGame(releaseDates: ReleaseDate[]) {
     if (releaseDate.game) {
       const gameId = releaseDate.game.id;
       if (map.has(gameId)) {
-        map.get(gameId)!.release_dates.push(releaseDate);
+        const game = map.get(gameId);
+        if (game) {
+          game.release_dates.push(releaseDate);
+        }
       } else {
         map.set(gameId, {
           ...releaseDate.game,

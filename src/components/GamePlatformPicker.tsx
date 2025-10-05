@@ -11,7 +11,8 @@ import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { useAuthStore, useInterfaceStore } from "@/stores";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
+import { useInterfaceStore } from "@/stores";
 import { Game, ReleaseDate } from "@/types";
 import { formatGameReleaseDate } from "@/utils/dates";
 
@@ -53,7 +54,7 @@ const ItemSeparator = () => (
 );
 
 export function GamePlatformPicker() {
-  const { user } = useAuthStore();
+  const user = useAuthenticatedUser();
   const { bottomSheetModalRef } = useInterfaceStore();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
@@ -71,7 +72,7 @@ export function GamePlatformPicker() {
         docRef,
         {
           game: { id, name },
-          subscribers: arrayUnion(user!.uid),
+          subscribers: arrayUnion(user.uid),
         },
         { merge: true },
       );

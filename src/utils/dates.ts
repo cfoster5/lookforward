@@ -14,3 +14,6 @@ export const compareDates = (a: DateTime, b: DateTime) =>
 
 export const dateToFullLocale = (input: string) =>
   DateTime.fromFormat(input, "yyyy-MM-dd").toLocaleString(DateTime.DATE_FULL);
+
+export const formatGameReleaseDate = (date: number | null, human: string) =>
+  date ? timestampToUTC(date).toFormat("MM/dd/yyyy") : human;

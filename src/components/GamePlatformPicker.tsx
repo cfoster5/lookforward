@@ -13,7 +13,7 @@ import { iOSUIKit } from "react-native-typography";
 
 import { useAuthStore, useInterfaceStore } from "@/stores";
 import { Game, ReleaseDate } from "@/types";
-import { timestampToUTC } from "@/utils/dates";
+import { formatGameReleaseDate } from "@/utils/dates";
 
 import { reusableStyles } from "../helpers/styles";
 
@@ -35,14 +35,9 @@ const RenderItem = ({ handlePress, releaseDate }: RenderItemProps) => (
       alignItems: "center",
     }}
   >
-    {/* <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}> */}
     <Text style={iOSUIKit.bodyWhite}>{releaseDate.platform.name}</Text>
     <Text style={reusableStyles.date}>
-      {/* Crashing here
-      fromSeconds requires a numerical input */}
-      {releaseDate.date
-        ? timestampToUTC(releaseDate.date).toFormat("MM/dd/yyyy")
-        : releaseDate.human}
+      {formatGameReleaseDate(releaseDate.date, releaseDate.human)}
     </Text>
   </Pressable>
 );
@@ -68,8 +63,6 @@ export function GamePlatformPicker() {
     },
     releaseDate: ReleaseDate,
   ) {
-    // console.log("releaseDate", releaseDate);
-    // console.log(game);
     const { id, name } = game;
     try {
       const db = getFirestore();

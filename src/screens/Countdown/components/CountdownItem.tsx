@@ -90,7 +90,7 @@ export function CountdownItem({
         </View>
         <View style={styles.countdown}>
           <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.systemBlue }]}>
-            {daysUntil}
+            {daysUntil ?? "TBD"}
           </Text>
           <Text style={[iOSUIKit.body, { color: Colors.systemBlue }]}>
             days

@@ -1,7 +1,12 @@
 import { DateTime } from "luxon";
 import { PosterSizes } from "tmdb-ts";
 
-import { isoToUTC, now, timestampToUTC } from "@/utils/dates";
+import {
+  formatGameReleaseDate,
+  isoToUTC,
+  now,
+  timestampToUTC,
+} from "@/utils/dates";
 
 import { useGameCountdowns } from "../api/getGameCountdowns";
 import { useMovieCountdowns } from "../api/getMovieCountdowns";
@@ -46,23 +51,21 @@ export function formatReleaseDate(
   }
 
   const gameItem = item as GameCountdown;
-  return gameItem.date
-    ? timestampToUTC(gameItem.date).toFormat("MM/dd/yyyy")
-    : gameItem.human;
+  return formatGameReleaseDate(gameItem.date, gameItem.human);
 }
 
 export function calculateDaysUntil(
   item: CountdownItem,
   sectionName: "Movies" | "Games",
-): number | "∞" {
+): number | null {
   if (sectionName === "Movies") {
     const movieItem = item as MovieCountdown;
-    if (!movieItem.releaseDate) return "∞";
+    if (!movieItem.releaseDate) return null;
     return Math.ceil(isoToUTC(movieItem.releaseDate).diff(now).as("days"));
   }
 
   const gameItem = item as GameCountdown;
-  if (!gameItem.date) return "∞";
+  if (!gameItem.date) return null;
   return Math.ceil(timestampToUTC(gameItem.date).diff(now).as("days"));
 }
 

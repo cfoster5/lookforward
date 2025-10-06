@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.0.2](https://github.com/cfoster5/lookforward/compare/v7.0.1...v7.0.2) (2025-10-06)
+
+
+### Bug Fixes
+
+* update countdown items to show "TBD days" instead of "∞ days" ([4d03915](https://github.com/cfoster5/lookforward/commit/4d039155d6c90354a2649e72843f00eb69bc9058))
+
 ## [7.0.1](https://github.com/cfoster5/lookforward/compare/v7.0.0...v7.0.1) (2025-10-04)
 
 

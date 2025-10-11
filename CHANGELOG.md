@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.1.0](https://github.com/cfoster5/lookforward/compare/v7.0.1...v7.1.0) (2025-10-11)
+
+
+### Features
+
+* add platform-specific tab icons ([0e181ca](https://github.com/cfoster5/lookforward/commit/0e181ca39edb6b2737de26f740390b70f0c828d6))
+
+
+### Bug Fixes
+
+* update countdown items to show "TBD days" instead of "∞ days" ([4d03915](https://github.com/cfoster5/lookforward/commit/4d039155d6c90354a2649e72843f00eb69bc9058))
+
 ## [7.0.1](https://github.com/cfoster5/lookforward/compare/v7.0.0...v7.0.1) (2025-10-04)
 
 

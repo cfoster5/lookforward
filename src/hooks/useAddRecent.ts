@@ -15,7 +15,8 @@ const useAddRecent = (
       // After API call succeeds, img_path is no longer undefined but may be empty string
       addRecent(key, recentItem);
     }
-  }, [addRecent, key, recentItem]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [key, recentItem.id]);
 };
 
 export default useAddRecent;

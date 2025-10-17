@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.1.1](https://github.com/cfoster5/lookforward/compare/v7.1.0...v7.1.1) (2025-10-16)
+
+
+### Bug Fixes
+
+* correct infinite loop for useAddRecent that would cause the app to crash; fixes [#155](https://github.com/cfoster5/lookforward/issues/155) ([6d88982](https://github.com/cfoster5/lookforward/commit/6d8898283294f68c3494ec93f0b42970a38857d6))
+
 ## [7.1.0](https://github.com/cfoster5/lookforward/compare/v7.0.1...v7.1.0) (2025-10-11)
 
 

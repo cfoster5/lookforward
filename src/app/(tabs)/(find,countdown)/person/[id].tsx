@@ -177,7 +177,7 @@ export default function Actor() {
             {getUniqueSortedCrewJobs(person?.movie_credits.crew)?.map(
               (credit) => (
                 <ButtonMultiState
-                  key={credit.id}
+                  key={credit.job}
                   text={credit.job}
                   selectedVal={selectedJob}
                   onPress={() => setSelectedJob(credit.job)}

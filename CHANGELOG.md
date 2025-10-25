@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.1.2](https://github.com/cfoster5/lookforward/compare/v7.1.1...v7.1.2) (2025-10-25)
+
+
+### Bug Fixes
+
+* update key for job filter button in Person screen to use credit.job ([f99d775](https://github.com/cfoster5/lookforward/commit/f99d775349ea5a7456969ffefa1b84ddb0aec5ab))
+
 ## [7.1.1](https://github.com/cfoster5/lookforward/compare/v7.1.0...v7.1.1) (2025-10-16)
 
 

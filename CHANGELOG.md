@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.1.3](https://github.com/cfoster5/lookforward/compare/v7.1.2...v7.1.3) (2025-10-27)
+
+
+### Bug Fixes
+
+* correct query field from 'category' to 'game_type' in useHypedGames ([cc47d88](https://github.com/cfoster5/lookforward/commit/cc47d886aa83b7f23995fdf1859367e59167a9d6))
+
 ## [7.1.2](https://github.com/cfoster5/lookforward/compare/v7.1.1...v7.1.2) (2025-10-25)
 
 

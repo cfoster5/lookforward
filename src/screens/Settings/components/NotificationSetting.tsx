@@ -1,5 +1,5 @@
 import * as Colors from "@bacons/apple-colors";
-import { StyleSheet, Switch, Text, View, ViewStyle } from "react-native";
+import { Switch, Text, View, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 type Props = {
@@ -15,36 +15,26 @@ export const NotificationSetting = ({
   value,
   style,
 }: Props) => (
-  <View style={styles.itemContainer}>
-    <View style={[styles.item, style]}>
-      <Text style={iOSUIKit.bodyWhite}>{title}</Text>
-      <Switch
-        trackColor={{ false: "red", true: Colors.systemBlue }}
-        style={{ marginRight: 16 }}
-        onValueChange={onValueChange}
-        value={value}
-      />
-    </View>
+  <View
+    style={[
+      {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingHorizontal: 16,
+        backgroundColor: Colors.secondarySystemGroupedBackground,
+        minHeight: 44,
+      },
+      style,
+    ]}
+  >
+    <Text style={{ ...iOSUIKit.bodyObject, color: Colors.label }}>{title}</Text>
+    <Switch
+      style={{ alignSelf: "center" }}
+      // trackColor={{ false: "red", true: Colors.systemBlue }}
+      onValueChange={onValueChange}
+      value={value}
+    />
   </View>
 );
-
-const styles = StyleSheet.create({
-  itemContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    backgroundColor: Colors.systemGray6,
-    paddingLeft: 16,
-    alignItems: "center",
-  },
-  item: {
-    flex: 1,
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
-    borderColor: Colors.separator,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    alignItems: "center",
-    paddingVertical: 16,
-  },
-});

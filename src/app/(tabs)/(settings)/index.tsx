@@ -1,3 +1,4 @@
+import * as Colors from "@bacons/apple-colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import {
@@ -9,14 +10,16 @@ import {
 import { getMessaging, hasPermission } from "@react-native-firebase/messaging";
 import { Link } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { ScrollView, Text } from "react-native";
+import { Linking, Pressable, ScrollView, Text } from "react-native";
+import { iOSUIKit } from "react-native-typography";
 
-import { reusableStyles } from "@/helpers/styles";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 import { TipModal } from "@/screens/Settings/components/TipModal";
 import { useInterfaceStore } from "@/stores";
+
+import { ViewSeparator } from "./ViewSeparator";
 
 export default function Settings() {
   const user = useAuthenticatedUser();
@@ -54,16 +57,16 @@ export default function Settings() {
   }
 
   return (
-    <ScrollView>
+    <ScrollView style={{ paddingHorizontal: 16 }}>
       <Text
         style={{
-          ...reusableStyles.date,
-          // paddingTop: 24,
-          paddingLeft: 16,
-          paddingBottom: 8,
+          ...iOSUIKit.bodyEmphasizedObject,
+          color: Colors.secondaryLabel,
+          marginHorizontal: 16,
+          paddingBottom: 9,
         }}
       >
-        COUNTDOWN NOTIFICATIONS
+        Countdown Notifications
       </Text>
       <NotificationSetting
         title="Day Before"
@@ -75,7 +78,9 @@ export default function Settings() {
           await getNotificationPermissions();
         }}
         value={notifications?.day}
+        style={{ borderTopLeftRadius: 26, borderTopRightRadius: 26 }}
       />
+      <ViewSeparator />
       <NotificationSetting
         title="Week Before"
         onValueChange={async (value) => {
@@ -86,14 +91,21 @@ export default function Settings() {
           await getNotificationPermissions();
         }}
         value={notifications?.week}
-        style={{ borderBottomWidth: 0 }}
+        style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
       />
       {!hasPermissions && (
-        <Text
-          style={{ ...reusableStyles.date, paddingTop: 8, paddingLeft: 16 }}
-        >
-          {`Please enable notifications in your device's settings`}
-        </Text>
+        <Pressable onPress={() => Linking.openSettings()}>
+          <Text
+            style={{
+              ...iOSUIKit.footnoteObject,
+              color: Colors.systemBlue,
+              paddingTop: 8,
+              paddingHorizontal: 16,
+            }}
+          >
+            {`Please enable notifications in your device's settings.`}
+          </Text>
+        </Pressable>
       )}
       <>
         {/* <SettingNavButton
@@ -106,7 +118,7 @@ export default function Settings() {
               });
             }}
             text="Explore Pro Features"
-            isFirstInGroup={true}
+            isFirstInGroup
           /> */}
         <SettingNavButton
           onPress={async () => {
@@ -122,24 +134,33 @@ export default function Settings() {
             });
           }}
           text="Tip Jar"
-          isFirstInGroup={true}
+          isFirstInGroup
+          style={{ borderTopLeftRadius: 26, borderTopRightRadius: 26 }}
         />
+        <ViewSeparator />
         <Link
           href="itms-apps://itunes.apple.com/app/viewContentsUserReviews/id1492748952?action=write-review"
           asChild
         >
-          <SettingNavButton text="Write a Review" isFirstInGroup={false} />
+          <SettingNavButton
+            text="Write a Review"
+            style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
+          />
         </Link>
         <SettingNavButton
           onPress={() => onboardingModalRef.current?.present()}
           text="Show Getting Started"
-          isFirstInGroup={true}
+          isFirstInGroup
+          style={{ borderRadius: 26 }}
         />
       </>
       <Link href="/(tabs)/(settings)/account" asChild>
-        <SettingNavButton text="Account" isFirstInGroup={true} />
+        <SettingNavButton
+          text="Account"
+          isFirstInGroup
+          style={{ borderRadius: 26 }}
+        />
       </Link>
-
       <TipModal modalRef={modalRef} />
     </ScrollView>
   );

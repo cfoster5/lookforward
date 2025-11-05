@@ -12,13 +12,13 @@ import { iOSUIKit } from "react-native-typography";
 
 type ButtonProps = PressableProps & {
   text: string;
-  isFirstInGroup: boolean;
+  isFirstInGroup?: boolean;
 };
 
 export const SettingNavButton = React.forwardRef<
   React.ComponentRef<typeof Pressable>,
   ButtonProps
->(({ text, isFirstInGroup, ...rest }, ref) => {
+>(({ text, isFirstInGroup = false, style, ...rest }, ref) => {
   return (
     <Pressable
       ref={ref}
@@ -27,13 +27,14 @@ export const SettingNavButton = React.forwardRef<
         styles.buttonContainer,
         pressed && styles.pressed,
         isFirstInGroup && styles.firstInGroup,
+        style,
       ]}
     >
       <View style={[styles.button, { justifyContent: "space-between" }]}>
-        <Text style={iOSUIKit.bodyWhite}>{text}</Text>
+        <Text style={[iOSUIKit.body, { color: Colors.label }]}>{text}</Text>
         <Ionicons
           name="chevron-forward"
-          color={Colors.systemGray}
+          color={Colors.tertiaryLabel}
           size={iOSUIKit.bodyObject.fontSize}
           style={{ alignSelf: "center" }}
         />
@@ -46,20 +47,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    backgroundColor: Colors.systemGray6,
+    backgroundColor: Colors.secondarySystemGroupedBackground,
     alignItems: "center",
   },
   button: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "center",
-    borderColor: Colors.separator,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderTopWidth: StyleSheet.hairlineWidth,
     padding: 16,
   },
   firstInGroup: { marginTop: 32 },
-  pressed: { backgroundColor: Colors.systemGray5 },
+  pressed: { backgroundColor: Colors.tertiarySystemGroupedBackground },
 });
 
 SettingNavButton.displayName = "SettingNavButton";

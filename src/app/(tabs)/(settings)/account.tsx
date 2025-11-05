@@ -4,6 +4,8 @@ import { Alert, ScrollView } from "react-native";
 
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 
+import { ViewSeparator } from "./ViewSeparator";
+
 function handleSignOut() {
   const auth = getAuth();
   signOut(auth);
@@ -11,7 +13,7 @@ function handleSignOut() {
 
 export default function AccountScreen() {
   return (
-    <ScrollView>
+    <ScrollView style={{ paddingHorizontal: 16 }}>
       <SettingNavButton
         onPress={() =>
           Alert.alert("Sign out?", undefined, [
@@ -20,10 +22,15 @@ export default function AccountScreen() {
           ])
         }
         text="Sign Out"
-        isFirstInGroup={true}
+        isFirstInGroup
+        style={{ borderTopLeftRadius: 26, borderTopRightRadius: 26 }}
       />
+      <ViewSeparator />
       <Link href="/(tabs)/(settings)/delete-account" asChild>
-        <SettingNavButton text="Delete Account" isFirstInGroup={false} />
+        <SettingNavButton
+          text="Delete Account"
+          style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
+        />
       </Link>
     </ScrollView>
   );

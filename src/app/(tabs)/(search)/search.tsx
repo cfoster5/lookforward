@@ -156,6 +156,7 @@ export default function SearchPage() {
             style={{ marginRight: -12, marginLeft: -12 }}
             automaticallyAdjustsScrollIndicatorInsets={true}
             contentInsetAdjustmentBehavior="automatic"
+            // TODO: Activity indicator when loading search results should be fully centered
             ListEmptyComponent={() =>
               isLoading && <ActivityIndicator size="large" />
             }

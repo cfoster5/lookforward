@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.2.0](https://github.com/cfoster5/lookforward/compare/v7.1.3...v7.2.0) (2025-11-08)
+
+
+### Features
+
+* update Settings screens to use inset design ([840a664](https://github.com/cfoster5/lookforward/commit/840a664cf94621466a0721d294df0fcb95ef8697))
+
 ## [7.1.3](https://github.com/cfoster5/lookforward/compare/v7.1.2...v7.1.3) (2025-10-27)
 
 

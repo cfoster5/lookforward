@@ -4,6 +4,8 @@ import { SFSymbol, SymbolView } from "expo-symbols";
 import { View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { IconSymbol } from "./IconSymbol";
+
 type IconProps = {
   icon: keyof (typeof Ionicons)["glyphMap"];
   useAltIcon: undefined;
@@ -31,19 +33,13 @@ export const Row = ({
     style={{
       flexDirection: "row",
       alignItems: "center",
-      paddingVertical: 16,
+      paddingVertical: 12,
     }}
   >
     {!useAltIcon ? (
       <Ionicons name={icon} size={36} color={Colors.systemBlue} />
     ) : (
-      <SymbolView
-        name={icon}
-        size={36}
-        tintColor={Colors.systemBlue}
-        resizeMode="scaleAspectFill"
-        style={{ height: 36, width: 36 }}
-      />
+      <IconSymbol name={icon} size={36} color={Colors.systemBlue} />
     )}
     <View style={{ paddingLeft: 16, flex: 1, alignItems: "flex-start" }}>
       <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.label }]}>

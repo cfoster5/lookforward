@@ -1,5 +1,19 @@
 # Changelog
 
+## [7.3.0](https://github.com/cfoster5/lookforward/compare/v7.2.0...v7.3.0) (2025-11-08)
+
+
+### Features
+
+* add countdown limit enforcement for free tier users ([8d13657](https://github.com/cfoster5/lookforward/commit/8d136575e29136ceb834260f67a5d6b771a707e9))
+* enable subscription options in Pro modal ([853aa66](https://github.com/cfoster5/lookforward/commit/853aa66545eb7d6b43f7bdd1b648148c2f08c414))
+* re-enable Pro feature promotion throughout app ([592bfe9](https://github.com/cfoster5/lookforward/commit/592bfe9c7f1ba50c4240f650b08393dec8fca904))
+
+
+### Bug Fixes
+
+* correct isPro store to default false and use setIsPro parameter ([84f565d](https://github.com/cfoster5/lookforward/commit/84f565d8eb12076cba3a0e85bdfe295c1a43e82e))
+
 ## [7.2.0](https://github.com/cfoster5/lookforward/compare/v7.1.3...v7.2.0) (2025-11-08)
 
 

@@ -19,9 +19,9 @@ interface Props {
 }
 
 function PosterButton({ movieId, game }: Props) {
-  const { user } = useAuthStore();
-  const { movieSubs, gameSubs } = useSubscriptionStore();
-  const { bottomSheetModalRef } = useInterfaceStore();
+  const { user, isPro } = useAuthStore();
+  const { movieSubs, gameSubs, hasReachedLimit } = useSubscriptionStore();
+  const { bottomSheetModalRef, proModalRef } = useInterfaceStore();
 
   const isMovieSub = () =>
     movieId && movieSubs.some((sub) => sub.documentID === movieId.toString());
@@ -30,6 +30,12 @@ function PosterButton({ movieId, game }: Props) {
     game && gameSubs.some((releaseDate) => releaseDate.game.id === game.id);
 
   function toggleMovieSub() {
+    // If trying to add and limit reached, show Pro modal
+    if (!isMovieSub() && hasReachedLimit(isPro)) {
+      proModalRef.current?.present();
+      return;
+    }
+
     return isMovieSub()
       ? removeSub("movies", movieId!, user!.uid)
       : subToMovie(movieId!, user!.uid);
@@ -39,6 +45,13 @@ function PosterButton({ movieId, game }: Props) {
     const gameId = gameSubs.find(
       (releaseDate) => releaseDate.game.id === game!.id,
     )?.documentID;
+
+    // If trying to add and limit reached, show Pro modal
+    if (!isGameSub() && hasReachedLimit(isPro)) {
+      proModalRef.current?.present();
+      return;
+    }
+
     return isGameSub()
       ? removeSub("gameReleases", gameId, user!.uid)
       : bottomSheetModalRef.current?.present(game);

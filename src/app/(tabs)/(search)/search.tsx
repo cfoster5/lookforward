@@ -1,4 +1,5 @@
 import * as Colors from "@bacons/apple-colors";
+import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -44,16 +45,32 @@ const ListHeader = () => {
   const { top: safeTopArea } = useSafeAreaInsets();
   // <View style={{ height: 16 }} />
   return (
-    <CategoryControl
-      buttons={["Movies", "Games"]}
-      categoryIndex={categoryIndex}
-      handleCategoryChange={(index) => setCategoryIndex(index)}
-      style={{
-        marginHorizontal: 0,
-        minHeight: 44,
-        marginBottom: 24,
-      }}
-    />
+    <>
+      <CategoryControl
+        buttons={["Movies", "Games"]}
+        categoryIndex={categoryIndex}
+        handleCategoryChange={(index) => setCategoryIndex(index)}
+        style={{
+          marginHorizontal: 0,
+          minHeight: 44,
+          marginBottom: 24,
+        }}
+      />
+      {!isPro && (
+        <LargeBorderlessButton
+          handlePress={async () => {
+            Keyboard.dismiss();
+            proModalRef.current?.present();
+            const analytics = getAnalytics();
+            await logEvent(analytics, "select_promotion", {
+              name: "Pro",
+              id: "com.lookforward.pro",
+            });
+          }}
+          text="Explore Pro Features"
+        />
+      )}
+    </>
   );
 };
 
@@ -167,20 +184,6 @@ export default function SearchPage() {
 
       {!searchQuery && (
         <>
-          {!isPro && (
-            <LargeBorderlessButton
-              handlePress={async () => {
-                Keyboard.dismiss();
-                proModalRef.current?.present();
-                // const analytics = getAnalytics();
-                // await logEvent(analytics, "select_promotion", {
-                //   name: "Pro",
-                //   id: "com.lookforward.pro",
-                // });
-              }}
-              text="Explore Pro Features"
-            />
-          )}
           <SectionList
             ListHeaderComponent={ListHeader}
             sections={composeRecentSections()}

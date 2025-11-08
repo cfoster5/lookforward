@@ -8,7 +8,12 @@ import { CategoryControl } from "@/components/CategoryControl";
 import { MultiItemHeader } from "@/components/Headers";
 import { DeleteHeader } from "@/screens/Countdown/components/DeleteHeader.ios";
 import { MyHeaderRight } from "@/screens/Countdown/components/MyHeaderRight.ios";
-import { useCountdownStore, useInterfaceStore } from "@/stores";
+import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
+import {
+  useCountdownStore,
+  useInterfaceStore,
+  useSubscriptionStore,
+} from "@/stores";
 
 import { AppleStackPreset } from "../(search)/_layout";
 
@@ -39,6 +44,7 @@ const FindHeader = () => {
           minHeight: 44,
         }}
       />
+      <CountdownLimitBanner style={{ margin: 16, marginBottom: 0 }} />
       <View
         style={{
           margin: 16,
@@ -143,6 +149,11 @@ const ConditionalDeleteHeader = () => {
   return isEditing ? <DeleteHeader /> : null;
 };
 
+const ConditionalRightHeader = () => {
+  const { movieSubs, gameSubs } = useSubscriptionStore();
+  return movieSubs.length || gameSubs.length ? <MyHeaderRight /> : null;
+};
+
 export default function DynamicLayout({ segment }) {
   if (segment === "(find)") {
     return (
@@ -167,7 +178,7 @@ export default function DynamicLayout({ segment }) {
           title: "Countdown",
           ...AppleStackPreset,
           headerLeft: ConditionalDeleteHeader,
-          headerRight: MyHeaderRight,
+          headerRight: ConditionalRightHeader,
         }}
       />
     </SharedLayout>

@@ -1,5 +1,6 @@
 {
   "lockfileVersion": 1,
+  "configVersion": 0,
   "workspaces": {
     "": {
       "name": "lookforward",
@@ -52,7 +53,8 @@
         "react-native-ios-utilities": "^5.2.0",
         "react-native-linear-gradient": "^2.5.6",
         "react-native-mmkv": "^3.2.0",
-        "react-native-purchases": "^8.9.3",
+        "react-native-purchases": "^9.6.3",
+        "react-native-purchases-ui": "^9.6.3",
         "react-native-reanimated": "~4.1.1",
         "react-native-safe-area-context": "~5.6.0",
         "react-native-screens": "~4.16.0",
@@ -721,7 +723,11 @@
 
     "@react-navigation/stack": ["@react-navigation/stack@6.4.1", "", { "dependencies": { "@react-navigation/elements": "^1.3.31", "color": "^4.2.3", "warn-once": "^0.1.0" }, "peerDependencies": { "@react-navigation/native": "^6.0.0", "react": "*", "react-native": "*", "react-native-gesture-handler": ">= 1.0.0", "react-native-safe-area-context": ">= 3.0.0", "react-native-screens": ">= 3.0.0" } }, "sha512-upMEHOKMtuMu4c9gmoPlO/JqI6mDlSqwXg1aXKOTQLXAF8H5koOLRfrmi7AkdiE9A7lDXWUAZoGuD9O88cYvDQ=="],
 
-    "@revenuecat/purchases-typescript-internal": ["@revenuecat/purchases-typescript-internal@14.3.0", "", {}, "sha512-P3IhlWvH4wJAM9ypv8HamdIBMQfnLdU9PbjURw+s7NxHOL8LmPGhKuyv+gBINpka27mt1CAsDoOhNHjkexJhkg=="],
+    "@revenuecat/purchases-js": ["@revenuecat/purchases-js@1.18.0", "", {}, "sha512-KvRMvqC3hf+uzF7Fh1okofHW64SmGnuEV/fCi3e8RKfcwtoo0FP1DbkBTPUeOR5yIe5HcrodshNcPjI9OhNuxg=="],
+
+    "@revenuecat/purchases-js-hybrid-mappings": ["@revenuecat/purchases-js-hybrid-mappings@17.16.0", "", { "dependencies": { "@revenuecat/purchases-js": "1.18.0" } }, "sha512-dVuZ7qCHuZrxSOHJ9bkYh6Psa06gTJAZ6knFEGzSw5zqAm7YmFLTRSusik84GGhf0+FYwGd8PphP+jWTIfxmag=="],
+
+    "@revenuecat/purchases-typescript-internal": ["@revenuecat/purchases-typescript-internal@17.16.0", "", {}, "sha512-1jWAqswWC2hj59bDJL30IE6g7BhRhpCKf641fnewXCxl/FoFlx/C2Flsxoo2Ug4MKsW9alfokUfPwXqbvqzUsQ=="],
 
     "@rtsao/scc": ["@rtsao/scc@1.1.0", "", {}, "sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g=="],
 
@@ -2037,7 +2043,9 @@
 
     "react-native-mmkv": ["react-native-mmkv@3.3.3", "", { "peerDependencies": { "react": "*", "react-native": "*" } }, "sha512-GMsfOmNzx0p5+CtrCFRVtpOOMYNJXuksBVARSQrCFaZwjUyHJdQzcN900GGaFFNTxw2fs8s5Xje//RDKj9+PZA=="],
 
-    "react-native-purchases": ["react-native-purchases@8.12.0", "", { "dependencies": { "@revenuecat/purchases-typescript-internal": "14.3.0" }, "peerDependencies": { "react": ">= 16.6.3", "react-native": "*" } }, "sha512-0T6WtSDN96swsS6iLeTh7GEGLSedBr4FWP5JsGLnP6Ri7Rp754pf3UJ+S0+ZnT1cqUZ4W2z2oB6zTLyyfNfuKw=="],
+    "react-native-purchases": ["react-native-purchases@9.6.3", "", { "dependencies": { "@revenuecat/purchases-js-hybrid-mappings": "17.16.0", "@revenuecat/purchases-typescript-internal": "17.16.0" }, "peerDependencies": { "react": ">= 16.6.3", "react-native": ">= 0.73.0", "react-native-web": "*" }, "optionalPeers": ["react-native-web"] }, "sha512-yR9GAcJR0xa22VWQ97UDmpkHoRWnfSeExRR9tit2xGOpafgioL29NocYXxmV45F5mebYyYc8kaJge8XBir7hDA=="],
+
+    "react-native-purchases-ui": ["react-native-purchases-ui@9.6.3", "", { "dependencies": { "@revenuecat/purchases-typescript-internal": "17.16.0" }, "peerDependencies": { "react": "*", "react-native": ">= 0.73.0", "react-native-purchases": "9.6.3", "react-native-web": "*" }, "optionalPeers": ["react-native-web"] }, "sha512-ZCgvF4LP6meFqi+75ZERz+p2iY1riH2gOYb/sqJuafxbR+PNQL8mRdteQZ7Dqao165BuvfLeNqA3R/fxwVLB3w=="],
 
     "react-native-reanimated": ["react-native-reanimated@4.1.3", "", { "dependencies": { "react-native-is-edge-to-edge": "^1.2.1", "semver": "7.7.2" }, "peerDependencies": { "@babel/core": "^7.0.0-0", "react": "*", "react-native": "*", "react-native-worklets": ">=0.5.0" } }, "sha512-GP8wsi1u3nqvC1fMab/m8gfFwFyldawElCcUSBJQgfrXeLmsPPUOpDw44lbLeCpcwUuLa05WTVePdTEwCLTUZg=="],
 

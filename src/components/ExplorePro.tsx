@@ -1,5 +1,6 @@
 import * as Colors from "@bacons/apple-colors";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
   View,
@@ -9,7 +10,7 @@ import {
   ActivityIndicator,
   Linking,
 } from "react-native";
-import Purchases, { PurchasesOffering } from "react-native-purchases";
+import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
@@ -18,50 +19,37 @@ import { Row } from "@/components/Row";
 import { useAuthStore, useInterfaceStore } from "@/stores";
 
 import { LargeFilledButton } from "./LargeFilledButton";
+import { SubscriptionOption } from "./SubscriptionOption";
 
 export const ExplorePro = () => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
   const { setIsPro } = useAuthStore();
   const { proModalRef } = useInterfaceStore();
-  const [products, setProducts] = useState<PurchasesOffering>();
-  // const [selectedProduct, setSelectedProduct] = useState<PurchasesPackage>();
+  const [selectedProduct, setSelectedProduct] = useState<PurchasesPackage>();
   const [isPurchasing, setIsPurchasing] = useState(false);
 
-  useEffect(() => {
-    // Get current available packages
-    const getPackages = async () => {
-      try {
-        const offerings = await Purchases.getOfferings();
-        if (
-          offerings.all["pro"] !== null &&
-          offerings.all["pro"].availablePackages.length !== 0
-        ) {
-          // console.log('offerings.all["pro"]', offerings.all["pro"]);
-          setProducts(offerings.all["pro"]);
-          // if (offerings.all["pro"]?.annual) {
-          //   setSelectedProduct(offerings.all["pro"].annual);
-          // }
-          // Display packages for sale
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const { data: purchaseOfferings, error } = useQuery({
+    queryKey: ["explore-pro"],
+    queryFn: async () => await Purchases.getOfferings(),
+  });
 
-    getPackages();
-  }, []);
+  useEffect(() => {
+    if (purchaseOfferings && purchaseOfferings.all["pro"].annual) {
+      setSelectedProduct(purchaseOfferings.all["pro"].annual);
+    }
+  }, [purchaseOfferings]);
 
   async function handlePurchase() {
     setIsPurchasing(true);
     // Using Offerings/Packages
     try {
-      if (!products?.lifetime) {
+      if (!purchaseOfferings?.all["pro"]?.lifetime) {
         console.error("No lifetime package available");
         return;
       }
       const { customerInfo } = await Purchases.purchasePackage(
-        // selectedProduct!
-        products.lifetime,
+        selectedProduct!,
+        // products.lifetime,
       );
       if (typeof customerInfo.entitlements.active.pro !== "undefined") {
         // Unlock that great "pro" content
@@ -115,9 +103,9 @@ export const ExplorePro = () => {
             },
           ]}
         >
-          Pro Features
+          LookForward Pro
         </Text>
-        <Text
+        {/* <Text
           style={[
             iOSUIKit.title3Emphasized,
             { color: Colors.systemBlue, textAlign: "center" },
@@ -136,11 +124,17 @@ export const ExplorePro = () => {
           ]}
         >
           Unlock once. Enjoy forever.
-        </Text>
+        </Text> */}
         <Row
-          icon="megaphone"
-          title="No Ads"
-          body="Enjoy an ad-free experience."
+          icon="list.dash"
+          title="Unlimited Countdown Items"
+          body="Don't stop at 5. Add every title you're excited for."
+          useAltIcon
+        />
+        <Row
+          icon="clock.arrow.circlepath"
+          title="Search History"
+          body="See your recent searches for titles and people."
           useAltIcon
         />
         <Row
@@ -155,36 +149,32 @@ export const ExplorePro = () => {
           body="View ticket sales at the theaters."
           useAltIcon
         />
-        <Row
-          icon="clock.arrow.circlepath"
-          title="Search History"
-          body="See your recent searches for titles and people."
-          useAltIcon
-        />
-        {/* <SubscriptionOption
+        <SubscriptionOption
           handlePress={() => {
-            if (products?.monthly) {
-              setSelectedProduct(products.monthly);
+            if (purchaseOfferings?.all["pro"].monthly) {
+              setSelectedProduct(purchaseOfferings?.all["pro"].monthly);
             }
           }}
-          text={`${products?.monthly?.product.priceString} Monthly`}
+          text={`${purchaseOfferings?.all["pro"].monthly?.product.priceString} Monthly`}
           isSelected={
-            products?.monthly?.identifier === selectedProduct?.identifier
+            purchaseOfferings?.all["pro"].monthly?.identifier ===
+            selectedProduct?.identifier
           }
           style={{ marginTop: 16, marginBottom: 8 }}
         />
         <SubscriptionOption
           handlePress={() => {
-            if (products?.annual) {
-              setSelectedProduct(products.annual);
+            if (purchaseOfferings?.all["pro"].annual) {
+              setSelectedProduct(purchaseOfferings?.all["pro"].annual);
             }
           }}
-          text={`${products?.annual?.product.priceString} Yearly`}
+          text={`${purchaseOfferings?.all["pro"]?.annual?.product.priceString} Yearly`}
           isSelected={
-            products?.annual?.identifier === selectedProduct?.identifier
+            purchaseOfferings?.all["pro"]?.annual?.identifier ===
+            selectedProduct?.identifier
           }
           style={{ marginTop: 8, marginBottom: 16 }}
-        /> */}
+        />
         <LargeFilledButton
           disabled={false}
           style={{ marginVertical: 16 }}
@@ -203,8 +193,8 @@ export const ExplorePro = () => {
                 { color: "white", textAlign: "center" },
               ]}
             >
-              Unlock forever for {products?.lifetime?.product.priceString}
-              {/* Unlock for {selectedProduct?.product.priceString} */}
+              {/* Unlock forever for {products?.lifetime?.product.priceString} */}
+              Unlock for {selectedProduct?.product.priceString}
             </Text>
           )}
         </LargeFilledButton>

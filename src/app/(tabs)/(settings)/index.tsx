@@ -23,8 +23,8 @@ import { ViewSeparator } from "./ViewSeparator";
 
 export default function Settings() {
   const user = useAuthenticatedUser();
-  const { onboardingModalRef } = useInterfaceStore();
-  const [hasPermissions, setHasPermissions] = useState(true);
+  const { onboardingModalRef, proModalRef } = useInterfaceStore();
+  const [notificationPermissions, setNotificationPermissions] = useState(true);
   const [notifications, setNotifications] = useState({
     day: false,
     week: false,
@@ -47,13 +47,8 @@ export default function Settings() {
 
   async function getNotificationPermissions() {
     const messaging = getMessaging();
-    const res = await hasPermission(messaging);
-    setHasPermissions(res);
-    // if (!res) {
-    //   setHasPermissions(false);
-    // } else {
-    //   setHasPermissions(true);
-    // }
+    const authStatus = await hasPermission(messaging);
+    setNotificationPermissions(authStatus);
   }
 
   return (
@@ -93,7 +88,7 @@ export default function Settings() {
         value={notifications?.week}
         style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
       />
-      {!hasPermissions && (
+      {!notificationPermissions && (
         <Pressable onPress={() => Linking.openSettings()}>
           <Text
             style={{
@@ -108,18 +103,19 @@ export default function Settings() {
         </Pressable>
       )}
       <>
-        {/* <SettingNavButton
-            onPress={async () => {
-              proModalRef.current?.present();
-              const analytics = getAnalytics();
-              await logEvent(analytics, "select_promotion", {
-                name: "Pro",
-                id: "com.lookforward.pro",
-              });
-            }}
-            text="Explore Pro Features"
-            isFirstInGroup
-          /> */}
+        <SettingNavButton
+          onPress={async () => {
+            proModalRef.current?.present();
+            const analytics = getAnalytics();
+            await logEvent(analytics, "select_promotion", {
+              name: "Pro",
+              id: "com.lookforward.pro",
+            });
+          }}
+          text="Explore Pro Features"
+          isFirstInGroup
+          style={{ borderRadius: 26 }}
+        />
         <SettingNavButton
           onPress={async () => {
             modalRef.current?.present();

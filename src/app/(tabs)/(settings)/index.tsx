@@ -23,7 +23,7 @@ import { ViewSeparator } from "./ViewSeparator";
 
 export default function Settings() {
   const user = useAuthenticatedUser();
-  const { onboardingModalRef } = useInterfaceStore();
+  const { onboardingModalRef, proModalRef } = useInterfaceStore();
   const [notificationPermissions, setNotificationPermissions] = useState(true);
   const [notifications, setNotifications] = useState({
     day: false,
@@ -103,6 +103,19 @@ export default function Settings() {
         </Pressable>
       )}
       <>
+        <SettingNavButton
+          onPress={async () => {
+            proModalRef.current?.present();
+            const analytics = getAnalytics();
+            await logEvent(analytics, "select_promotion", {
+              name: "Pro",
+              id: "com.lookforward.pro",
+            });
+          }}
+          text="Explore Pro Features"
+          isFirstInGroup
+          style={{ borderRadius: 26 }}
+        />
         <SettingNavButton
           onPress={async () => {
             modalRef.current?.present();

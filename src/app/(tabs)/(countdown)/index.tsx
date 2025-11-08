@@ -6,15 +6,17 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { useGameCountdowns } from "@/screens/Countdown/api/getGameCountdowns";
 import { useMovieCountdowns } from "@/screens/Countdown/api/getMovieCountdowns";
 import { CountdownItem } from "@/screens/Countdown/components/CountdownItem";
+import { EmptyState } from "@/screens/Countdown/components/EmptyState";
 import { SectionHeader } from "@/screens/Countdown/components/SectionHeader";
-import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
+import { useSubscriptionStore } from "@/stores";
 
 export default function Countdown() {
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
-  const paddingBottom = useBottomTabOverflow();
   const movies = useMovieCountdowns();
   const gameReleases = useGameCountdowns();
+  const { movieSubs, gameSubs } = useSubscriptionStore();
 
   const isLoading =
     movies.some((movie) => movie.isLoading) ||
@@ -38,6 +40,11 @@ export default function Countdown() {
       if (!b?.date) return -1; // Place undefined dates at the end
       return a.date - b.date; // Numeric comparison for valid dates
     });
+
+  const totalCountdowns = movieSubs.length + gameSubs.length;
+
+  // Show empty state when user has no countdowns
+  if (totalCountdowns === 0) return <EmptyState />;
 
   return (
     <SectionList
@@ -72,6 +79,7 @@ export default function Countdown() {
           sectionIndex={section.title === "Movies" ? 0 : 1}
         />
       )}
+      ListHeaderComponent={<CountdownLimitBanner />}
       ref={scrollRef}
     />
   );

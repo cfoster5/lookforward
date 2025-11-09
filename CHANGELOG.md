@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.3.2](https://github.com/cfoster5/lookforward/compare/v7.3.1...v7.3.2) (2025-11-09)
+
+
+### Bug Fixes
+
+* handle optional chaining for game cover URL in getImageSource function ([ab80541](https://github.com/cfoster5/lookforward/commit/ab80541de9af3457719768c1dfb96a186f5124af))
+
 ## [7.3.1](https://github.com/cfoster5/lookforward/compare/v7.3.0...v7.3.1) (2025-11-09)
 
 

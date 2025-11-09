@@ -25,7 +25,7 @@ export function getImageSource(
   }
 
   const gameItem = item as GameCountdown;
-  return `https:${gameItem.game.cover.url.replace("thumb", "cover_big_2x")}`;
+  return `https:${gameItem.game.cover?.url.replace("thumb", "cover_big_2x")}`;
 }
 
 export function getTitle(

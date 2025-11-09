@@ -40,6 +40,8 @@ export function AppProvider({ children }: AppProviderProps) {
   useReactNavigationDevTools(navigationRef);
   useReactQueryDevTools(queryClient);
   useMMKVDevTools();
+  // TODO: allow switching appearance
+  // const colorScheme = useColorScheme();
 
   useEffect(() => {
     const auth = getAuth();
@@ -50,7 +52,10 @@ export function AppProvider({ children }: AppProviderProps) {
   return (
     <GestureHandlerRootView>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider value={theme === "dark" ? DarkTheme : DefaultTheme}>
+        <ThemeProvider
+          // value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          value={theme === "dark" ? DarkTheme : DefaultTheme}
+        >
           <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
         </ThemeProvider>
       </QueryClientProvider>

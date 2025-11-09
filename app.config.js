@@ -9,6 +9,8 @@ export default {
     orientation: "portrait",
     icon: "./assets/icon.png",
     scheme: "lookforward",
+    // TODO: allow switching appearance
+    // userInterfaceStyle: "automatic",
     userInterfaceStyle: "dark",
     newArchEnabled: true,
     splash: {

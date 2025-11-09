@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.3.1](https://github.com/cfoster5/lookforward/compare/v7.3.0...v7.3.1) (2025-11-09)
+
+
+### Bug Fixes
+
+* request store review directly when subscribing instead of as a side effect ([3b77804](https://github.com/cfoster5/lookforward/commit/3b778046d7a15287fa9b9da45dbf015966aa57fd))
+
 ## [7.3.0](https://github.com/cfoster5/lookforward/compare/v7.2.0...v7.3.0) (2025-11-08)
 
 

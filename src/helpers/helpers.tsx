@@ -12,6 +12,7 @@ import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
 import { ReleaseDate, Games } from "@/types/igdb";
 import { timestampToUTC } from "@/utils/dates";
+import { tryRequestReview } from "@/utils/requestReview";
 
 import { FirestoreMovie } from "../interfaces/firebase";
 
@@ -92,6 +93,7 @@ export async function subToMovie(
       enableVibrateFallback: true,
       ignoreAndroidSystemSettings: false,
     });
+    await tryRequestReview();
   } catch (error) {
     console.error("Error writing document: ", error);
   }

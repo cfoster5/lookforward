@@ -15,6 +15,7 @@ import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useInterfaceStore } from "@/stores";
 import { Game, ReleaseDate } from "@/types";
 import { formatGameReleaseDate } from "@/utils/dates";
+import { tryRequestReview } from "@/utils/requestReview";
 
 import { reusableStyles } from "../helpers/styles";
 
@@ -80,6 +81,7 @@ export function GamePlatformPicker() {
         enableVibrateFallback: true,
         ignoreAndroidSystemSettings: false,
       });
+      await tryRequestReview();
       bottomSheetModalRef.current?.dismiss();
     } catch (error) {
       console.error("Error writing document: ", error);

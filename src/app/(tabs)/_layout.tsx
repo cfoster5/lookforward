@@ -13,7 +13,6 @@ import {
   NativeTabs,
   VectorIcon,
 } from "expo-router/build/native-tabs";
-import * as StoreReview from "expo-store-review";
 import { useEffect } from "react";
 import { Platform } from "react-native";
 
@@ -29,12 +28,8 @@ export default function TabStack() {
   const { setMovieSubs, setGameSubs, movieSubs, gameSubs } =
     useSubscriptionStore();
   const { onboardingModalRef } = useInterfaceStore();
-  const {
-    hasRequestedReview,
-    setHasRequestedReview,
-    hasSeenOnboardingModal,
-    setHasSeenOnboardingModal,
-  } = useAppConfigStore();
+  const { hasSeenOnboardingModal, setHasSeenOnboardingModal } =
+    useAppConfigStore();
 
   useEffect(() => {
     const db = getFirestore();
@@ -75,25 +70,6 @@ export default function TabStack() {
       gameSubscription();
     };
   }, [setGameSubs, setMovieSubs, user]);
-
-  useEffect(() => {
-    async function requestReview() {
-      if (movieSubs.length + gameSubs.length >= 3 && !hasRequestedReview) {
-        const isAvailable = await StoreReview.isAvailableAsync();
-        if (isAvailable) {
-          await StoreReview.requestReview();
-          setHasRequestedReview();
-        }
-      }
-    }
-
-    requestReview();
-  }, [
-    gameSubs.length,
-    movieSubs.length,
-    hasRequestedReview,
-    setHasRequestedReview,
-  ]);
 
   useEffect(() => {
     if (!hasSeenOnboardingModal) {

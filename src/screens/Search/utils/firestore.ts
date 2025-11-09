@@ -9,6 +9,8 @@ import {
 } from "@react-native-firebase/firestore";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
+import { tryRequestReview } from "@/utils/requestReview";
+
 type CountdownToggleProps = {
   collection: "movies";
   id: number;
@@ -46,6 +48,7 @@ export async function addCountdownItem(
       enableVibrateFallback: true,
       ignoreAndroidSystemSettings: false,
     });
+    await tryRequestReview();
   } catch (error) {
     console.error("Error writing document: ", error);
   }

@@ -114,7 +114,6 @@ export default function RootLayout() {
     <AppProvider>
       <OnboardingModal />
       <ExplorePro />
-
       {!user ? (
         <AuthStack />
       ) : (

@@ -19,7 +19,7 @@ import { tryRequestReview } from "@/utils/requestReview";
 
 import { reusableStyles } from "../helpers/styles";
 
-import { DynamicHeightModal } from "./DynamicHeightModal";
+import { CustomBottomSheetModal } from "./CustomBottomSheetModal";
 
 type RenderItemProps = {
   handlePress: () => void;
@@ -89,7 +89,7 @@ export function GamePlatformPicker() {
   }
 
   return (
-    <DynamicHeightModal modalRef={bottomSheetModalRef}>
+    <CustomBottomSheetModal modalRef={bottomSheetModalRef}>
       {({ data }) => (
         <BottomSheetFlatList
           // need to filter client-side since combining search and filter on API is not working
@@ -113,6 +113,6 @@ export function GamePlatformPicker() {
           }}
         />
       )}
-    </DynamicHeightModal>
+    </CustomBottomSheetModal>
   );
 }

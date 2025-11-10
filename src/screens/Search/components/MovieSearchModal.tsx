@@ -8,7 +8,7 @@ import { iOSUIKit } from "react-native-typography";
 import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
 import ButtonMultiState from "@/components/ButtonMultiState";
 import ButtonSingleState from "@/components/ButtonSingleState";
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { targetedProviders } from "@/helpers/helpers";
 
 import { MovieOption } from "../types";
@@ -50,7 +50,7 @@ export function MovieSearchModal({
   );
 
   return (
-    <DynamicHeightModal modalRef={modalRef}>
+    <CustomBottomSheetModal modalRef={modalRef}>
       <BottomSheetView style={{ paddingBottom: safeBottomArea }}>
         <FlatList
           horizontal
@@ -111,6 +111,6 @@ export function MovieSearchModal({
           )}
         </ScrollView>
       </BottomSheetView>
-    </DynamicHeightModal>
+    </CustomBottomSheetModal>
   );
 }

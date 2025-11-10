@@ -10,7 +10,7 @@ const RenderBackdrop = (props: BottomSheetBackdropProps) => (
   <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
 );
 
-export function DynamicHeightModal({
+export function CustomBottomSheetModal({
   modalRef,
   children,
 }: {
@@ -20,7 +20,6 @@ export function DynamicHeightModal({
   return (
     <BottomSheetModal
       ref={modalRef}
-      enableDynamicSizing
       backdropComponent={RenderBackdrop}
       backgroundStyle={{
         backgroundColor: Colors.secondarySystemBackground,

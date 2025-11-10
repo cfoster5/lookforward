@@ -16,7 +16,7 @@ import { Movie } from "tmdb-ts";
 
 import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
 import ButtonMultiState from "@/components/ButtonMultiState";
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
@@ -135,7 +135,7 @@ export default function MovieDiscover() {
 
   function DiscoveryFilterModal({ modalRef }) {
     return (
-      <DynamicHeightModal modalRef={modalRef}>
+      <CustomBottomSheetModal modalRef={modalRef}>
         <BottomSheetView style={{ paddingBottom: safeBottomArea }}>
           <ModalListWrapper text="Sort By">
             <FlatList
@@ -215,7 +215,7 @@ export default function MovieDiscover() {
             />
           </ModalListWrapper>
         </BottomSheetView>
-      </DynamicHeightModal>
+      </CustomBottomSheetModal>
     );
   }
 

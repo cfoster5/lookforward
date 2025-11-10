@@ -7,7 +7,7 @@ import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 
 import { PurchaseOption } from "./PurchaseOption";
 
@@ -36,7 +36,7 @@ export const TipModal = ({ modalRef }: Props) => {
   });
 
   return (
-    <DynamicHeightModal modalRef={modalRef}>
+    <CustomBottomSheetModal modalRef={modalRef}>
       <BottomSheetFlatList
         data={packages?.sort(({ product: a, product: b }) => a.price - b.price)}
         ListHeaderComponent={
@@ -63,6 +63,6 @@ export const TipModal = ({ modalRef }: Props) => {
           paddingHorizontal: 16,
         }}
       />
-    </DynamicHeightModal>
+    </CustomBottomSheetModal>
   );
 };

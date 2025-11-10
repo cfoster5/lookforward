@@ -14,7 +14,7 @@ import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { Row } from "@/components/Row";
 import { useAuthStore, useInterfaceStore } from "@/stores";
 import { tryCatch } from "@/utils/try-catch";
@@ -103,7 +103,7 @@ export const ExplorePro = () => {
   }
 
   return (
-    <DynamicHeightModal modalRef={proModalRef}>
+    <CustomBottomSheetModal modalRef={proModalRef}>
       <BottomSheetView
         style={{
           justifyContent: "center",
@@ -234,6 +234,6 @@ export const ExplorePro = () => {
           />
         </View>
       </BottomSheetView>
-    </DynamicHeightModal>
+    </CustomBottomSheetModal>
   );
 };

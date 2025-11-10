@@ -2,7 +2,11 @@ import { useMMKVDevTools } from "@dev-plugins/react-native-mmkv";
 import { useReactNavigationDevTools } from "@dev-plugins/react-navigation";
 import { useReactQueryDevTools } from "@dev-plugins/react-query";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
-import { getAuth, onAuthStateChanged } from "@react-native-firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInAnonymously,
+} from "@react-native-firebase/auth";
 import {
   DarkTheme,
   DefaultTheme,
@@ -45,7 +49,18 @@ export function AppProvider({ children }: AppProviderProps) {
 
   useEffect(() => {
     const auth = getAuth();
-    const subscriber = onAuthStateChanged(auth, (user) => setUser(user));
+    const subscriber = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        // Automatically sign in as guest if not already signed in
+        try {
+          await signInAnonymously(auth);
+        } catch (error) {
+          console.error("Error signing in anonymously:", error);
+        }
+      } else {
+        setUser(user);
+      }
+    });
     return subscriber; // unsubscribe on unmount
   }, [setUser]);
 

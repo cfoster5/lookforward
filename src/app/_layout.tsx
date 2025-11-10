@@ -22,7 +22,6 @@ import { ExplorePro } from "@/components/ExplorePro";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
-import { AuthStack } from "@/navigation/AuthStack";
 import { AppProvider } from "@/providers/app";
 import { useAuthStore, useInterfaceStore } from "@/stores";
 
@@ -114,13 +113,9 @@ export default function RootLayout() {
     <AppProvider>
       <OnboardingModal />
       <ExplorePro />
-      {!user ? (
-        <AuthStack />
-      ) : (
-        <HeaderButtonsProvider stackType="native">
-          <Slot />
-        </HeaderButtonsProvider>
-      )}
+      <HeaderButtonsProvider stackType="native">
+        <Slot />
+      </HeaderButtonsProvider>
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
     </AppProvider>
   );

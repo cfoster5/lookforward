@@ -2,9 +2,8 @@ import { getAuth, signOut } from "@react-native-firebase/auth";
 import { Link } from "expo-router";
 import { Alert, ScrollView } from "react-native";
 
+import { ViewSeparator } from "@/components/ViewSeparator";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
-
-import { ViewSeparator } from "./ViewSeparator";
 
 function handleSignOut() {
   const auth = getAuth();

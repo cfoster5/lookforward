@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.4.0](https://github.com/cfoster5/lookforward/compare/v7.3.2...v7.4.0) (2025-11-10)
+
+
+### Features
+
+* implement anonymous sign-in for unauthenticated users ([f53f069](https://github.com/cfoster5/lookforward/commit/f53f06996f3a2e68649d9797b2d9ff0bcab5eb7e))
+
 ## [7.3.2](https://github.com/cfoster5/lookforward/compare/v7.3.1...v7.3.2) (2025-11-09)
 
 

@@ -113,9 +113,11 @@ export default function RootLayout() {
     <AppProvider>
       <OnboardingModal />
       <ExplorePro />
-      <HeaderButtonsProvider stackType="native">
-        <Slot />
-      </HeaderButtonsProvider>
+      {user && (
+        <HeaderButtonsProvider stackType="native">
+          <Slot />
+        </HeaderButtonsProvider>
+      )}
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
     </AppProvider>
   );

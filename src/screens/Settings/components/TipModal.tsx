@@ -32,7 +32,7 @@ export const TipModal = ({ modalRef }: Props) => {
   const { data: packages } = useQuery({
     queryKey: ["purchasePackages"],
     queryFn: async () => await Purchases.getOfferings(),
-    select: (data) => data.current?.availablePackages,
+    select: (data) => data.all["tips"].availablePackages,
   });
 
   return (

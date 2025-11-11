@@ -11,6 +11,15 @@ export default function SettingsStack() {
         name="delete-account"
         options={{ title: "Delete Account" }}
       />
+      <Stack.Screen
+        name="create-account"
+        options={{ title: "Create Account" }}
+      />
+      <Stack.Screen name="login" options={{ title: "Welcome back!" }} />
+      <Stack.Screen
+        name="reset-password"
+        options={{ title: "Reset Password" }}
+      />
     </Stack>
   );
 }

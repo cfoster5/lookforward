@@ -1,5 +1,21 @@
 # Changelog
 
+## [7.4.0](https://github.com/cfoster5/lookforward/compare/v7.3.2...v7.4.0) (2025-11-11)
+
+
+### Features
+
+* implement account creation, login, and password reset flows ([eefec9b](https://github.com/cfoster5/lookforward/commit/eefec9b381929887e70cba4abe99ee4455f958ed))
+* implement anonymous sign-in for unauthenticated users ([f53f069](https://github.com/cfoster5/lookforward/commit/f53f06996f3a2e68649d9797b2d9ff0bcab5eb7e))
+
+
+### Bug Fixes
+
+* correct dependency array for adding recent items ([2435247](https://github.com/cfoster5/lookforward/commit/24352472a8fa24e5c7af4832c71cce1dc633112e))
+* correct race condition when there is no user ([c020263](https://github.com/cfoster5/lookforward/commit/c020263b687274178ada7e94c28bde246730e266))
+* corrects issue where app would open in Countdown tab ([241ffb3](https://github.com/cfoster5/lookforward/commit/241ffb39327296db2df0e2078fc02ff683685fc2))
+* update query selection to retrieve available packages for tips ([12ef292](https://github.com/cfoster5/lookforward/commit/12ef292b1d968b39f62a2f28f0dc33f5dfa347a8))
+
 ## [7.3.2](https://github.com/cfoster5/lookforward/compare/v7.3.1...v7.3.2) (2025-11-09)
 
 

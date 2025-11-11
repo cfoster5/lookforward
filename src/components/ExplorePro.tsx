@@ -80,6 +80,7 @@ export const ExplorePro = () => {
     const { customerInfo } = data;
     if (typeof customerInfo.entitlements.active["pro"] !== "undefined") {
       setIsPro(true);
+      // TODO: Replace with a bottom sheet asking if they want to create an account
       Alert.alert(
         "Thank you!",
         "Thank you so much for your support. Please enjoy your Pro content.",

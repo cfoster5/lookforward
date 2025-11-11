@@ -16,4 +16,12 @@ export const reusableStyles = StyleSheet.create({
     ...iOSUIKit.footnoteEmphasizedObject,
     color: Colors.systemGray,
   },
+  textInput: {
+    ...iOSUIKit.bodyObject,
+    backgroundColor: Colors.systemGray6,
+    color: Colors.label,
+    padding: 16,
+    borderRadius: 12,
+    marginVertical: 8,
+  },
 });

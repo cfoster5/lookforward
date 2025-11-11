@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
 import { LogoSizes, WatchLocale } from "tmdb-ts";
 
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { calculateWidth } from "@/helpers/helpers";
 import { useInterfaceStore } from "@/stores";
@@ -26,7 +26,7 @@ function WatchProvidersModal({
   };
 
   return (
-    <DynamicHeightModal modalRef={modalRef}>
+    <CustomBottomSheetModal modalRef={modalRef}>
       <BottomSheetView style={{ paddingBottom: safeBottomArea }}>
         <View
           style={{
@@ -140,7 +140,7 @@ function WatchProvidersModal({
           />
         </View>
       </BottomSheetView>
-    </DynamicHeightModal>
+    </CustomBottomSheetModal>
   );
 }
 

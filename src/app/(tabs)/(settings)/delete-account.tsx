@@ -1,15 +1,10 @@
 import * as Colors from "@bacons/apple-colors";
 import { deleteUser, getAuth } from "@react-native-firebase/auth";
 import { useState } from "react";
-import {
-  Alert,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, Pressable, ScrollView, Text, TextInput } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { reusableStyles } from "@/helpers/styles";
 
 export default function DeleteAccountScreen() {
   const [password, setPassword] = useState("");
@@ -43,14 +38,7 @@ export default function DeleteAccountScreen() {
         {`Complete your deletion request by entering "DELETE"`}.
       </Text>
       <TextInput
-        style={{
-          ...iOSUIKit.bodyObject,
-          backgroundColor: Colors.systemGray6,
-          color: "white",
-          padding: 16,
-          borderRadius: 12,
-          marginVertical: 8,
-        }}
+        style={reusableStyles.textInput}
         value={password}
         onChangeText={(text) => setPassword(text)}
       />

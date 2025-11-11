@@ -121,6 +121,12 @@ export default function RootLayout() {
           <Slot />
         </HeaderButtonsProvider>
       )}
+      {/* Below launches app with the Countdown screen */}
+      {/* {user && (
+        <HeaderButtonsProvider stackType="native">
+          <Slot />
+        </HeaderButtonsProvider>
+      )} */}
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
     </AppProvider>
   );

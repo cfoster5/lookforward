@@ -13,13 +13,12 @@ import { useEffect, useRef, useState } from "react";
 import { Linking, Pressable, ScrollView, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { ViewSeparator } from "@/components/ViewSeparator";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 import { TipModal } from "@/screens/Settings/components/TipModal";
 import { useInterfaceStore } from "@/stores";
-
-import { ViewSeparator } from "./ViewSeparator";
 
 export default function Settings() {
   const user = useAuthenticatedUser();

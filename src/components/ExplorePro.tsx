@@ -14,7 +14,7 @@ import Purchases, { PurchasesPackage } from "react-native-purchases";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { Row } from "@/components/Row";
 import { useAuthStore, useInterfaceStore } from "@/stores";
 import { tryCatch } from "@/utils/try-catch";
@@ -80,6 +80,7 @@ export const ExplorePro = () => {
     const { customerInfo } = data;
     if (typeof customerInfo.entitlements.active["pro"] !== "undefined") {
       setIsPro(true);
+      // TODO: Replace with a bottom sheet asking if they want to create an account
       Alert.alert(
         "Thank you!",
         "Thank you so much for your support. Please enjoy your Pro content.",
@@ -103,7 +104,7 @@ export const ExplorePro = () => {
   }
 
   return (
-    <DynamicHeightModal modalRef={proModalRef}>
+    <CustomBottomSheetModal modalRef={proModalRef}>
       <BottomSheetView
         style={{
           justifyContent: "center",
@@ -234,6 +235,6 @@ export const ExplorePro = () => {
           />
         </View>
       </BottomSheetView>
-    </DynamicHeightModal>
+    </CustomBottomSheetModal>
   );
 };

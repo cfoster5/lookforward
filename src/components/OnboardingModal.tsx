@@ -6,7 +6,7 @@ import { Linking, Pressable, Text } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
-import { DynamicHeightModal } from "@/components/DynamicHeightModal";
+import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { Row } from "@/components/Row";
 import { useInterfaceStore } from "@/stores";
 
@@ -19,7 +19,7 @@ export const OnboardingModal = () => {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
   return (
-    <DynamicHeightModal modalRef={onboardingModalRef}>
+    <CustomBottomSheetModal modalRef={onboardingModalRef}>
       <BottomSheetView
         style={{
           justifyContent: "center",
@@ -84,6 +84,6 @@ export const OnboardingModal = () => {
           text="Explore Pro Features"
         />
       </BottomSheetView>
-    </DynamicHeightModal>
+    </CustomBottomSheetModal>
   );
 };

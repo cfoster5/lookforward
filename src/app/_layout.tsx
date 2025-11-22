@@ -18,7 +18,6 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { HeaderButtonsProvider } from "react-navigation-header-buttons";
 
-import { ExplorePro } from "@/components/ExplorePro";
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
@@ -113,7 +112,6 @@ export default function RootLayout() {
   return (
     <AppProvider>
       <OnboardingModal />
-      <ExplorePro />
       {!user ? (
         <AuthStack />
       ) : (

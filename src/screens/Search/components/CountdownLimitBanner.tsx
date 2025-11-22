@@ -7,10 +7,12 @@ import {
   View,
   ViewStyle,
 } from "react-native";
+import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
+import { useProOfferings } from "@/api/getProOfferings";
 import { IconSymbol } from "@/components/IconSymbol";
-import { useAuthStore, useInterfaceStore } from "@/stores";
+import { useAuthStore } from "@/stores";
 import {
   FREE_TIER_COUNTDOWN_LIMIT,
   useSubscriptionStore,
@@ -27,7 +29,7 @@ export const CountdownLimitBanner = ({
 }: CountdownLimitBannerProps) => {
   const { isPro } = useAuthStore();
   const { movieSubs, gameSubs } = useSubscriptionStore();
-  const { proModalRef } = useInterfaceStore();
+  const { data: pro } = useProOfferings();
 
   const iconSize = iOSUIKit.bodyObject.fontSize;
 
@@ -55,7 +57,7 @@ export const CountdownLimitBanner = ({
 
   return (
     <Pressable
-      onPress={() => proModalRef.current?.present()}
+      onPress={async () => await RevenueCatUI.presentPaywall({ offering: pro })}
       style={[
         {
           backgroundColor: Colors.secondarySystemBackground,

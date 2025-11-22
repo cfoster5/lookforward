@@ -22,6 +22,7 @@ import {
   Text,
   View,
 } from "react-native";
+import RevenueCatUI from "react-native-purchases-ui";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -35,6 +36,7 @@ import {
   ReleaseDateType,
 } from "tmdb-ts";
 
+import { useProOfferings } from "@/api/getProOfferings";
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { ApplePillButton } from "@/components/ApplePillButton";
 import { BlueBullet } from "@/components/BlueBullet";
@@ -159,7 +161,6 @@ export default function MovieScreen() {
   const user = useAuthenticatedUser();
   const { isPro } = useAuthStore();
   const { movieSubs } = useSubscriptionStore();
-  const { proModalRef } = useInterfaceStore();
   const isSubbed = movieSubs.find((sub) => sub.documentID === id);
   const { data: movieDetails, isLoading } = useMovie(id);
   const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(
@@ -257,6 +258,8 @@ export default function MovieScreen() {
     }
   }, [movieDetails]);
 
+  const { data: pro } = useProOfferings();
+
   if (isLoading || !movieDetails || isLoadingRatings) return <LoadingScreen />;
 
   return (
@@ -343,7 +346,7 @@ export default function MovieScreen() {
           {!isPro && (
             <LargeBorderlessButton
               handlePress={async () => {
-                proModalRef.current?.present();
+                await RevenueCatUI.presentPaywall({ offering: pro });
                 const analytics = getAnalytics();
                 await logEvent(analytics, "select_promotion", {
                   name: "Pro",

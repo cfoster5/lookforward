@@ -3,9 +3,11 @@ import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { Linking, Pressable, Text } from "react-native";
+import RevenueCatUI from "react-native-purchases-ui";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
+import { useProOfferings } from "@/api/getProOfferings";
 import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { Row } from "@/components/Row";
 import { useInterfaceStore } from "@/stores";
@@ -15,8 +17,9 @@ import { LargeBorderlessButton } from "./LargeBorderlessButton";
 import { LargeFilledButton } from "./LargeFilledButton";
 
 export const OnboardingModal = () => {
-  const { onboardingModalRef, proModalRef } = useInterfaceStore();
+  const { onboardingModalRef } = useInterfaceStore();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
+  const { data: pro } = useProOfferings();
 
   return (
     <CustomBottomSheetModal modalRef={onboardingModalRef}>
@@ -74,7 +77,7 @@ export const OnboardingModal = () => {
         <LargeBorderlessButton
           handlePress={async () => {
             onboardingModalRef.current?.dismiss();
-            proModalRef.current?.present();
+            await RevenueCatUI.presentPaywall({ offering: pro });
             const analytics = getAnalytics();
             await logEvent(analytics, "select_promotion", {
               name: "Pro",

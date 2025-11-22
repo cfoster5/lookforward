@@ -10,8 +10,10 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import RevenueCatUI from "react-native-purchases-ui";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useProOfferings } from "@/api/getProOfferings";
 import { CategoryControl } from "@/components/CategoryControl";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { calculateWidth } from "@/helpers/helpers";
@@ -41,9 +43,12 @@ const ItemSeparator = () => (
 
 const ListHeader = () => {
   const { isPro } = useAuthStore();
-  const { categoryIndex, setCategoryIndex, proModalRef } = useInterfaceStore();
+  const { categoryIndex, setCategoryIndex } = useInterfaceStore();
   const { top: safeTopArea } = useSafeAreaInsets();
   // <View style={{ height: 16 }} />
+
+  const { data: pro } = useProOfferings();
+
   return (
     <>
       <CategoryControl
@@ -60,7 +65,7 @@ const ListHeader = () => {
         <LargeBorderlessButton
           handlePress={async () => {
             Keyboard.dismiss();
-            proModalRef.current?.present();
+            await RevenueCatUI.presentPaywall({ offering: pro });
             const analytics = getAnalytics();
             await logEvent(analytics, "select_promotion", {
               name: "Pro",
@@ -79,7 +84,7 @@ const HorizontalSpacer = () => <View style={{ width: 12 }} />;
 export default function SearchPage() {
   const searchQuery = useSearch();
   const { isPro } = useAuthStore();
-  const { categoryIndex, setCategoryIndex, proModalRef } = useInterfaceStore();
+  const { categoryIndex, setCategoryIndex } = useInterfaceStore();
   const { top: safeTopArea } = useSafeAreaInsets();
   const { height } = useWindowDimensions();
 

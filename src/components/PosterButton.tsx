@@ -1,8 +1,10 @@
 import * as Colors from "@bacons/apple-colors";
 import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
 import { Pressable, View } from "react-native";
+import RevenueCatUI from "react-native-purchases-ui";
 import Animated, { FadeIn } from "react-native-reanimated";
 
+import { useProOfferings } from "@/api/getProOfferings";
 import { removeSub, subToMovie } from "@/helpers/helpers";
 import {
   useAuthStore,
@@ -21,7 +23,8 @@ interface Props {
 function PosterButton({ movieId, game }: Props) {
   const { user, isPro } = useAuthStore();
   const { movieSubs, gameSubs, hasReachedLimit } = useSubscriptionStore();
-  const { bottomSheetModalRef, proModalRef } = useInterfaceStore();
+  const { bottomSheetModalRef } = useInterfaceStore();
+  const { data: pro } = useProOfferings();
 
   const isMovieSub = () =>
     movieId && movieSubs.some((sub) => sub.documentID === movieId.toString());
@@ -29,10 +32,10 @@ function PosterButton({ movieId, game }: Props) {
   const isGameSub = () =>
     game && gameSubs.some((releaseDate) => releaseDate.game.id === game.id);
 
-  function toggleMovieSub() {
+  async function toggleMovieSub() {
     // If trying to add and limit reached, show Pro modal
     if (!isMovieSub() && hasReachedLimit(isPro)) {
-      proModalRef.current?.present();
+      await RevenueCatUI.presentPaywall({ offering: pro });
       return;
     }
 
@@ -41,14 +44,14 @@ function PosterButton({ movieId, game }: Props) {
       : subToMovie(movieId!, user!.uid);
   }
 
-  function toggleGameSub() {
+  async function toggleGameSub() {
     const gameId = gameSubs.find(
       (releaseDate) => releaseDate.game.id === game!.id,
     )?.documentID;
 
     // If trying to add and limit reached, show Pro modal
     if (!isGameSub() && hasReachedLimit(isPro)) {
-      proModalRef.current?.present();
+      await RevenueCatUI.presentPaywall({ offering: pro });
       return;
     }
 

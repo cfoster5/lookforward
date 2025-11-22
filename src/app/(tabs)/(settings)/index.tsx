@@ -1,5 +1,4 @@
 import * as Colors from "@bacons/apple-colors";
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import {
   doc,
@@ -8,28 +7,35 @@ import {
   updateDoc,
 } from "@react-native-firebase/firestore";
 import { getMessaging, hasPermission } from "@react-native-firebase/messaging";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Linking, Pressable, ScrollView, Text } from "react-native";
+import Purchases from "react-native-purchases";
+import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
+import { useProOfferings } from "@/api/getProOfferings";
 import { ViewSeparator } from "@/components/ViewSeparator";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
-import { TipModal } from "@/screens/Settings/components/TipModal";
 import { useInterfaceStore } from "@/stores";
 
 export default function Settings() {
   const user = useAuthenticatedUser();
-  const { onboardingModalRef, proModalRef } = useInterfaceStore();
+  const { onboardingModalRef } = useInterfaceStore();
   const [notificationPermissions, setNotificationPermissions] = useState(true);
   const [notifications, setNotifications] = useState({
     day: false,
     week: false,
   });
 
-  const modalRef = useRef<BottomSheetModal>();
+  async function getNotificationPermissions() {
+    const messaging = getMessaging();
+    const authStatus = await hasPermission(messaging);
+    setNotificationPermissions(authStatus);
+  }
 
   useEffect(() => {
     getNotificationPermissions();
@@ -44,11 +50,13 @@ export default function Settings() {
     return preferenceSubscription;
   }, [user]);
 
-  async function getNotificationPermissions() {
-    const messaging = getMessaging();
-    const authStatus = await hasPermission(messaging);
-    setNotificationPermissions(authStatus);
-  }
+  const { data: pro } = useProOfferings();
+
+  const { data: tips } = useQuery({
+    queryKey: ["tipsPackages"],
+    queryFn: async () => await Purchases.getOfferings(),
+    select: (data) => data.all["tips"],
+  });
 
   return (
     <ScrollView style={{ paddingHorizontal: 16 }}>
@@ -104,7 +112,7 @@ export default function Settings() {
       <>
         <SettingNavButton
           onPress={async () => {
-            proModalRef.current?.present();
+            await RevenueCatUI.presentPaywall({ offering: pro });
             const analytics = getAnalytics();
             await logEvent(analytics, "select_promotion", {
               name: "Pro",
@@ -117,7 +125,7 @@ export default function Settings() {
         />
         <SettingNavButton
           onPress={async () => {
-            modalRef.current?.present();
+            await RevenueCatUI.presentPaywall({ offering: tips });
             const analytics = getAnalytics();
             await logEvent(analytics, "select_promotion", {
               name: "Tip Jar",
@@ -156,7 +164,6 @@ export default function Settings() {
           style={{ borderRadius: 26 }}
         />
       </Link>
-      <TipModal modalRef={modalRef} />
     </ScrollView>
   );
 }

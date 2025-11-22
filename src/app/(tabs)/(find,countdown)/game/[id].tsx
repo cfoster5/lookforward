@@ -9,9 +9,11 @@ import {
 } from "expo-router";
 import { useLayoutEffect, useState, Fragment } from "react";
 import { ScrollView, View, FlatList, Text } from "react-native";
+import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
+import { useProOfferings } from "@/api/getProOfferings";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { CategoryControl } from "@/components/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
@@ -66,7 +68,7 @@ export default function Game() {
   const user = useAuthenticatedUser();
   const { isPro } = useAuthStore();
   const { gameSubs } = useSubscriptionStore();
-  const { bottomSheetModalRef, proModalRef } = useInterfaceStore();
+  const { bottomSheetModalRef } = useInterfaceStore();
   const countdownId = gameSubs.find((s) => s.game.id === game.id)?.documentID;
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
@@ -105,6 +107,8 @@ export default function Game() {
 
   useAddRecent("recentGames", recentGame);
 
+  const { data: pro } = useProOfferings();
+
   return (
     <>
       <ScrollView
@@ -137,7 +141,7 @@ export default function Game() {
           {!isPro && (
             <LargeBorderlessButton
               handlePress={async () => {
-                proModalRef.current?.present();
+                await RevenueCatUI.presentPaywall({ offering: pro });
                 const analytics = getAnalytics();
                 await logEvent(analytics, "select_promotion", {
                   name: "Pro",

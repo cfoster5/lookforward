@@ -4,15 +4,13 @@ import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { SymbolView } from "expo-symbols";
 import { Pressable, Text, View } from "react-native";
+import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
+import { useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth } from "@/helpers/helpers";
-import {
-  useAuthStore,
-  useSubscriptionStore,
-  useInterfaceStore,
-} from "@/stores";
+import { useAuthStore, useSubscriptionStore } from "@/stores";
 import { useRecentItemsStore } from "@/stores/recents";
 import { Recent } from "@/types";
 import { onShare } from "@/utils/share";
@@ -22,7 +20,7 @@ import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
 export function RecentTitle({ item }: { item: Recent }) {
   const { user, isPro } = useAuthStore();
   const { movieSubs } = useSubscriptionStore();
-  const { proModalRef } = useInterfaceStore();
+  const { data: pro } = useProOfferings();
   const { removeRecent } = useRecentItemsStore();
 
   const isMovieSub = () =>
@@ -31,8 +29,8 @@ export function RecentTitle({ item }: { item: Recent }) {
   if (!isPro)
     return (
       <Pressable
-        onPress={() => {
-          proModalRef.current?.present();
+        onPress={async () => {
+          await RevenueCatUI.presentPaywall({ offering: pro });
           const analytics = getAnalytics();
           logEvent(analytics, "select_promotion", {
             name: "Pro",

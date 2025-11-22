@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.5.0](https://github.com/cfoster5/lookforward/compare/v7.4.0...v7.5.0) (2025-11-22)
+
+
+### Features
+
+* integrate RevenueCat for Pro and tip offerings ([865205c](https://github.com/cfoster5/lookforward/commit/865205ccd460139a1d38d5e269babf793adebbf6))
+
 ## [7.4.0](https://github.com/cfoster5/lookforward/compare/v7.3.2...v7.4.0) (2025-11-11)
 
 

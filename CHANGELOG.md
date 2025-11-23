@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.6.0](https://github.com/cfoster5/lookforward/compare/v7.5.0...v7.6.0) (2025-11-23)
+
+
+### Features
+
+* adjust button placement in OnboardingModal to make Explore Pro Features more prominent ([5d325f1](https://github.com/cfoster5/lookforward/commit/5d325f1cc737b1494b331b8f8ba3d8d326a0af0d))
+
 ## [7.5.0](https://github.com/cfoster5/lookforward/compare/v7.4.0...v7.5.0) (2025-11-22)
 
 

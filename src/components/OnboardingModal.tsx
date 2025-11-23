@@ -71,10 +71,6 @@ export const OnboardingModal = () => {
         <LargeFilledButton
           disabled={false}
           style={{ marginVertical: 16 }}
-          handlePress={() => onboardingModalRef.current?.dismiss()}
-          text="Continue"
-        />
-        <LargeBorderlessButton
           handlePress={async () => {
             onboardingModalRef.current?.dismiss();
             await RevenueCatUI.presentPaywall({ offering: pro });
@@ -85,6 +81,10 @@ export const OnboardingModal = () => {
             });
           }}
           text="Explore Pro Features"
+        />
+        <LargeBorderlessButton
+          handlePress={() => onboardingModalRef.current?.dismiss()}
+          text="Continue"
         />
       </BottomSheetView>
     </CustomBottomSheetModal>

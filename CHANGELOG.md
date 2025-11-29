@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.8.1](https://github.com/cfoster5/lookforward/compare/v7.8.0...v7.8.1) (2025-11-29)
+
+
+### Bug Fixes
+
+* prevent infinite loop in useAddRecent effect dependencies ([114ba83](https://github.com/cfoster5/lookforward/commit/114ba8395518ac3f5843fea1558eb525a004af8d))
+
 ## [7.8.0](https://github.com/cfoster5/lookforward/compare/v7.7.0...v7.8.0) (2025-11-29)
 
 

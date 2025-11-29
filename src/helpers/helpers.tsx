@@ -9,6 +9,7 @@ import {
 import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import RevenueCatUI from "react-native-purchases-ui";
 
 import { ReleaseDate, Games } from "@/types/igdb";
 import { timestampToUTC } from "@/utils/dates";
@@ -113,6 +114,40 @@ export async function removeSub(
   } catch (error) {
     console.error("Error writing document: ", error);
   }
+}
+
+/**
+ * Handles toggling a movie subscription with Pro limit checking.
+ * If the user is trying to add a movie and has reached their limit,
+ * shows the Pro paywall. Otherwise, adds or removes the subscription.
+ */
+export async function handleMovieToggle(params: {
+  movieId: string;
+  userId: string;
+  isCurrentlySubbed: boolean;
+  isPro: boolean;
+  hasReachedLimit: (isPro: boolean) => boolean;
+  proOffering: unknown;
+}): Promise<void> {
+  const {
+    movieId,
+    userId,
+    isCurrentlySubbed,
+    isPro,
+    hasReachedLimit,
+    proOffering,
+  } = params;
+
+  // If trying to add and limit reached, show Pro modal
+  if (!isCurrentlySubbed && hasReachedLimit(isPro)) {
+    await RevenueCatUI.presentPaywall({ offering: proOffering });
+    return;
+  }
+
+  // Otherwise, add or remove
+  return isCurrentlySubbed
+    ? removeSub("movies", movieId, userId)
+    : subToMovie(movieId, userId);
 }
 
 // Calculates the width of each element based on the available window width,

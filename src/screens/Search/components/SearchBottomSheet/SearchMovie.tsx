@@ -6,13 +6,12 @@ import { Pressable, View, Text, PressableProps } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { MovieWithMediaType } from "tmdb-ts";
 
+import { useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
-import { calculateWidth } from "@/helpers/helpers";
+import { calculateWidth, handleMovieToggle } from "@/helpers/helpers";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
 import { dateToFullLocale } from "@/utils/dates";
 import { onShare } from "@/utils/share";
-
-import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
 
 type ResultProps = PressableProps &
   Pick<Parameters<typeof SearchMovie>[0], "item">;
@@ -109,8 +108,9 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
 Result.displayName = "Result";
 
 export function SearchMovie({ item }: { item: MovieWithMediaType }) {
-  const { user } = useAuthStore();
-  const { movieSubs } = useSubscriptionStore();
+  const { user, isPro } = useAuthStore();
+  const { movieSubs, hasReachedLimit } = useSubscriptionStore();
+  const { data: pro } = useProOfferings();
 
   const isMovieSub = () =>
     item.id && movieSubs.some((sub) => sub.documentID === item.id.toString());
@@ -126,9 +126,14 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
       }}
       handleCountdownToggle={{
         action: () =>
-          isMovieSub()
-            ? removeCountdownItem("movies", item.id, user)
-            : addCountdownItem("movies", item.id, user),
+          handleMovieToggle({
+            movieId: item.id.toString(),
+            userId: user!.uid,
+            isCurrentlySubbed: isMovieSub(),
+            isPro,
+            hasReachedLimit,
+            proOffering: pro,
+          }),
         buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
       }}
       handleShareSelect={() => onShare(`movie/${item.id}`, "search")}

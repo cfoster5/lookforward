@@ -9,17 +9,15 @@ import { iOSUIKit } from "react-native-typography";
 
 import { useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
-import { calculateWidth } from "@/helpers/helpers";
+import { calculateWidth, handleMovieToggle } from "@/helpers/helpers";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
 import { useRecentItemsStore } from "@/stores/recents";
 import { Recent } from "@/types";
 import { onShare } from "@/utils/share";
 
-import { addCountdownItem, removeCountdownItem } from "../../utils/firestore";
-
 export function RecentTitle({ item }: { item: Recent }) {
   const { user, isPro } = useAuthStore();
-  const { movieSubs } = useSubscriptionStore();
+  const { movieSubs, hasReachedLimit } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
   const { removeRecent } = useRecentItemsStore();
 
@@ -190,9 +188,14 @@ export function RecentTitle({ item }: { item: Recent }) {
         item.media_type === "movie"
           ? {
               action: () =>
-                isMovieSub()
-                  ? removeCountdownItem("movies", item.id, user)
-                  : addCountdownItem("movies", item.id, user),
+                handleMovieToggle({
+                  movieId: item.id.toString(),
+                  userId: user!.uid,
+                  isCurrentlySubbed: isMovieSub(),
+                  isPro,
+                  hasReachedLimit,
+                  proOffering: pro,
+                }),
               buttonText: isMovieSub()
                 ? "Remove from Countdown"
                 : "Add to Countdown",

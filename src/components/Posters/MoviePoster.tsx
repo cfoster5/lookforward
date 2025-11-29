@@ -4,10 +4,8 @@ import { useSegments } from "expo-router";
 import { ImageStyle, Pressable, StyleProp, ViewStyle } from "react-native";
 import { Movie, PosterSizes, Recommendation } from "tmdb-ts";
 
-import {
-  addCountdownItem,
-  removeCountdownItem,
-} from "@/screens/Search/utils/firestore";
+import { useProOfferings } from "@/api/getProOfferings";
+import { handleMovieToggle } from "@/helpers/helpers";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
 import { onShare } from "@/utils/share";
 
@@ -31,8 +29,9 @@ export function MoviePoster({
   // segment is undefined from MovieLayout, research why
   const stack = (segments[1] as "(find)" | "(countdown)") ?? "(find)";
 
-  const { user } = useAuthStore();
-  const { movieSubs } = useSubscriptionStore();
+  const { user, isPro } = useAuthStore();
+  const { movieSubs, hasReachedLimit } = useSubscriptionStore();
+  const { data: pro } = useProOfferings();
 
   const isMovieSub = () =>
     movie!.id &&
@@ -43,9 +42,14 @@ export function MoviePoster({
       href={`/(tabs)/${stack}/movie/${movie?.id}`}
       handleCountdownToggle={{
         action: () =>
-          isMovieSub()
-            ? removeCountdownItem("movies", movie!.id, user)
-            : addCountdownItem("movies", movie!.id, user),
+          handleMovieToggle({
+            movieId: movie!.id.toString(),
+            userId: user!.uid,
+            isCurrentlySubbed: isMovieSub(),
+            isPro,
+            hasReachedLimit,
+            proOffering: pro,
+          }),
         buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
       }}
       handleShareSelect={() => onShare(`movie/${movie!.id}`, "poster")}

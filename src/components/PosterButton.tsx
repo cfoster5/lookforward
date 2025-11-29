@@ -5,7 +5,7 @@ import RevenueCatUI from "react-native-purchases-ui";
 import Animated, { FadeIn } from "react-native-reanimated";
 
 import { useProOfferings } from "@/api/getProOfferings";
-import { removeSub, subToMovie } from "@/helpers/helpers";
+import { handleMovieToggle, removeSub } from "@/helpers/helpers";
 import {
   useAuthStore,
   useSubscriptionStore,
@@ -33,15 +33,14 @@ function PosterButton({ movieId, game }: Props) {
     game && gameSubs.some((releaseDate) => releaseDate.game.id === game.id);
 
   async function toggleMovieSub() {
-    // If trying to add and limit reached, show Pro modal
-    if (!isMovieSub() && hasReachedLimit(isPro)) {
-      await RevenueCatUI.presentPaywall({ offering: pro });
-      return;
-    }
-
-    return isMovieSub()
-      ? removeSub("movies", movieId!, user!.uid)
-      : subToMovie(movieId!, user!.uid);
+    return handleMovieToggle({
+      movieId: movieId!,
+      userId: user!.uid,
+      isCurrentlySubbed: isMovieSub(),
+      isPro,
+      hasReachedLimit,
+      proOffering: pro,
+    });
   }
 
   async function toggleGameSub() {

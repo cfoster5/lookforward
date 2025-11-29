@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.8.0](https://github.com/cfoster5/lookforward/compare/v7.7.0...v7.8.0) (2025-11-29)
+
+
+### Features
+
+* implement handleMovieToggle for subscription management and Pro limit checks ([a38719f](https://github.com/cfoster5/lookforward/commit/a38719f805c265fb897d0a5fded5b8ef6c881ef4))
+
+
+### Bug Fixes
+
+* update header buttons to correct sizing issues ([55cc803](https://github.com/cfoster5/lookforward/commit/55cc8031063a7260a0b5b2b60c8b42f10c1c76ba))
+
 ## [7.7.0](https://github.com/cfoster5/lookforward/compare/v7.6.0...v7.7.0) (2025-11-29)
 
 

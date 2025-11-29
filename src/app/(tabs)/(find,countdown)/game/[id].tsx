@@ -11,14 +11,12 @@ import { useLayoutEffect, useState, Fragment } from "react";
 import { ScrollView, View, FlatList, Text } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
 
 import { useProOfferings } from "@/api/getProOfferings";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { CategoryControl } from "@/components/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
@@ -76,24 +74,23 @@ export default function Game() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-          <Item
-            title="search"
-            iconName={countdownId ? "checkmark-outline" : "add-outline"}
-            onPress={() => {
-              if (!countdownId) {
-                bottomSheetModalRef.current?.present({
-                  ...game,
-                  release_dates: data?.release_dates,
-                });
-              } else {
-                removeSub("gameReleases", countdownId, user.uid);
-              }
-            }}
-          />
-        </HeaderButtons>
-      ),
+      unstable_headerRightItems: () => [
+        {
+          type: "button",
+          label: "Edit",
+          icon: { type: "sfSymbol", name: "plus" },
+          onPress: () => {
+            if (!countdownId) {
+              bottomSheetModalRef.current?.present({
+                ...game,
+                release_dates: data?.release_dates,
+              });
+            } else {
+              removeSub("gameReleases", countdownId, user.uid);
+            }
+          },
+        },
+      ],
     });
   }, [bottomSheetModalRef, countdownId, game, navigation, user, data]);
 

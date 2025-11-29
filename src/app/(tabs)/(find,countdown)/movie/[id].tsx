@@ -1,7 +1,6 @@
 import * as Colors from "@bacons/apple-colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import {
@@ -28,7 +27,6 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import {
   BackdropSizes,
   PosterSizes,
@@ -44,7 +42,6 @@ import ButtonSingleState from "@/components/ButtonSingleState";
 import { CategoryControl } from "@/components/CategoryControl";
 import { DropdownMenu } from "@/components/DropdownMenu";
 import { ExpandableText } from "@/components/ExpandableText";
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { ListLabel } from "@/components/ListLabel";
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -55,8 +52,7 @@ import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { getReleaseDatesByCountry } from "@/helpers/getReleaseDatesByCountry";
 import {
   calculateWidth,
-  removeSub,
-  subToMovie,
+  handleMovieToggle,
   tmdbMovieGenres,
 } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
@@ -75,15 +71,10 @@ import {
 } from "@/screens/Movie/types";
 import { composeGroupedJobCredits } from "@/screens/Movie/utils/composeGroupedJobCredits";
 import { composeRuntime } from "@/screens/Movie/utils/composeRuntime";
-import {
-  useAuthStore,
-  useSubscriptionStore,
-  useInterfaceStore,
-} from "@/stores";
+import { useAuthStore, useSubscriptionStore } from "@/stores";
 import { Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
-import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 function ScrollViewWithFlatList({
   data,
@@ -160,7 +151,7 @@ export default function MovieScreen() {
   const router = useRouter();
   const user = useAuthenticatedUser();
   const { isPro } = useAuthStore();
-  const { movieSubs } = useSubscriptionStore();
+  const { movieSubs, hasReachedLimit } = useSubscriptionStore();
   const isSubbed = movieSubs.find((sub) => sub.documentID === id);
   const { data: movieDetails, isLoading } = useMovie(id);
   const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(
@@ -170,8 +161,6 @@ export default function MovieScreen() {
   //   movieDetails?.imdb_id
   // );
   const [detailIndex, setDetailIndex] = useState(0);
-  const headerHeight = useHeaderHeight();
-  const paddingBottom = useBottomTabOverflow();
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
     (e) => (scrollOffset.value = e.contentOffset.y),
@@ -205,32 +194,47 @@ export default function MovieScreen() {
   )?.certification;
 
   const runtime = composeRuntime(movieDetails?.runtime);
+  const { data: pro } = useProOfferings();
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: movieDetails?.title,
-      headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={IoniconsHeaderButton}>
-          <Item
-            title="search"
-            iconName={isSubbed ? "checkmark-outline" : "add-outline"}
-            onPress={() =>
-              !isSubbed
-                ? subToMovie(id, user.uid)
-                : removeSub("movies", id, user.uid)
-            }
-            color={Colors.label}
-          />
-          <Item
-            title="share"
-            iconName="share-outline"
-            onPress={() => onShare(`movie/${id}`, "headerButton")}
-            color={Colors.label}
-          />
-        </HeaderButtons>
-      ),
+      unstable_headerRightItems: () => [
+        {
+          type: "button",
+          label: "Edit",
+          icon: {
+            type: "sfSymbol",
+            name: isSubbed ? "checkmark" : "plus",
+          },
+          onPress: () =>
+            handleMovieToggle({
+              movieId: id.toString(),
+              userId: user.uid,
+              isCurrentlySubbed: !!isSubbed,
+              isPro,
+              hasReachedLimit,
+              proOffering: pro,
+            }),
+        },
+        {
+          type: "button",
+          label: "Share",
+          icon: { type: "sfSymbol", name: "square.and.arrow.up" },
+          onPress: () => onShare(`movie/${id}`, "headerButton"),
+        },
+      ],
     });
-  }, [isSubbed, id, navigation, user, movieDetails?.title]);
+  }, [
+    isSubbed,
+    id,
+    navigation,
+    user,
+    movieDetails?.title,
+    isPro,
+    hasReachedLimit,
+    pro,
+  ]);
 
   const recentMovie: Recent = {
     id: id,
@@ -257,8 +261,6 @@ export default function MovieScreen() {
       );
     }
   }, [movieDetails]);
-
-  const { data: pro } = useProOfferings();
 
   if (isLoading || !movieDetails || isLoadingRatings) return <LoadingScreen />;
 

@@ -1,17 +1,34 @@
+import {
+  arrayRemove,
+  doc,
+  getFirestore,
+  writeBatch,
+} from "@react-native-firebase/firestore";
 import { useScrollToTop } from "@react-navigation/native";
-import { useRef } from "react";
+import { useNavigation } from "expo-router";
+import { useLayoutEffect, useRef } from "react";
 import { Platform, SectionList } from "react-native";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useGameCountdowns } from "@/screens/Countdown/api/getGameCountdowns";
 import { useMovieCountdowns } from "@/screens/Countdown/api/getMovieCountdowns";
 import { CountdownItem } from "@/screens/Countdown/components/CountdownItem";
 import { EmptyState } from "@/screens/Countdown/components/EmptyState";
 import { SectionHeader } from "@/screens/Countdown/components/SectionHeader";
 import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
-import { useSubscriptionStore } from "@/stores";
+import { useCountdownStore, useSubscriptionStore } from "@/stores";
 
 export default function Countdown() {
+  const navigation = useNavigation();
+  const {
+    isEditing,
+    toggleIsEditing,
+    clearSelections,
+    movies: selectedMovies,
+    games: selectedGames,
+  } = useCountdownStore();
+  const user = useAuthenticatedUser();
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
   const movies = useMovieCountdowns();
@@ -21,6 +38,67 @@ export default function Countdown() {
   const isLoading =
     movies.some((movie) => movie.isLoading) ||
     gameReleases.some((release) => release.isLoading);
+
+  useLayoutEffect(() => {
+    const deleteItems = async () => {
+      const db = getFirestore();
+      const batch = writeBatch(db);
+      selectedMovies.map((selection) => {
+        const docRef = doc(db, "movies", selection.toString());
+        batch.update(docRef, {
+          subscribers: arrayRemove(user.uid),
+        });
+      });
+      selectedGames.map((selection) => {
+        const docRef = doc(db, "gameReleases", selection.toString());
+        batch.update(docRef, {
+          subscribers: arrayRemove(user.uid),
+        });
+      });
+      await batch.commit();
+      toggleIsEditing();
+      clearSelections();
+    };
+
+    navigation.setOptions({
+      unstable_headerLeftItems: () =>
+        !isEditing
+          ? []
+          : [
+              {
+                type: "button",
+                label: "Delete",
+                icon: { type: "sfSymbol", name: "trash" },
+                onPress: () => deleteItems(),
+              },
+            ],
+      unstable_headerRightItems: () =>
+        movieSubs.length || gameSubs.length
+          ? [
+              {
+                type: "button",
+                label: "Edit",
+                icon: { type: "sfSymbol", name: "pencil" },
+                onPress: () => {
+                  toggleIsEditing();
+                  if (isEditing) clearSelections();
+                },
+                variant: !isEditing ? "plain" : "done",
+              },
+            ]
+          : [],
+    });
+  }, [
+    clearSelections,
+    gameSubs.length,
+    isEditing,
+    movieSubs.length,
+    navigation,
+    selectedGames,
+    selectedMovies,
+    toggleIsEditing,
+    user.uid,
+  ]);
 
   if (isLoading) return <LoadingScreen />;
 

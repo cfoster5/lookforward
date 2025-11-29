@@ -16,7 +16,6 @@ import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
-import { HeaderButtonsProvider } from "react-navigation-header-buttons";
 
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
@@ -112,13 +111,7 @@ export default function RootLayout() {
   return (
     <AppProvider>
       <OnboardingModal />
-      {!user ? (
-        <AuthStack />
-      ) : (
-        <HeaderButtonsProvider stackType="native">
-          <Slot />
-        </HeaderButtonsProvider>
-      )}
+      {!user ? <AuthStack /> : <Slot />}
       {/* Below launches app with the Countdown screen */}
       {/* {user && (
         <HeaderButtonsProvider stackType="native">

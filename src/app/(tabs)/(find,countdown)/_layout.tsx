@@ -1,19 +1,12 @@
 import * as Colors from "@bacons/apple-colors";
 import { Stack } from "expo-router";
-import { Platform, Pressable, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { CategoryControl } from "@/components/CategoryControl";
-import { MultiItemHeader } from "@/components/Headers";
-import { DeleteHeader } from "@/screens/Countdown/components/DeleteHeader.ios";
-import { MyHeaderRight } from "@/screens/Countdown/components/MyHeaderRight.ios";
 import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
-import {
-  useCountdownStore,
-  useInterfaceStore,
-  useSubscriptionStore,
-} from "@/stores";
+import { useInterfaceStore, useSubscriptionStore } from "@/stores";
 
 import { AppleStackPreset } from "../(search)/_layout";
 
@@ -22,6 +15,34 @@ export const unstable_settings = {
   countdown: {
     initialRouteName: "countdown",
   },
+};
+
+// Reusable header item placeholders (actual handlers set in screen components)
+const HEADER_ITEMS = {
+  share: {
+    type: "button",
+    label: "Share",
+    icon: { type: "sfSymbol", name: "square.and.arrow.up" },
+    onPress: () => {},
+  } as const,
+  editPlus: {
+    type: "button",
+    label: "Edit",
+    icon: { type: "sfSymbol", name: "plus" },
+    onPress: () => {},
+  } as const,
+  editPencil: {
+    type: "button",
+    label: "Edit",
+    icon: { type: "sfSymbol", name: "pencil" },
+    onPress: () => {},
+  } as const,
+  filter: {
+    type: "button",
+    label: "Filter",
+    icon: { type: "sfSymbol", name: "line.3.horizontal.decrease" },
+    onPress: () => {},
+  } as const,
 };
 
 const FindHeader = () => {
@@ -87,17 +108,19 @@ function SharedLayout({ children }) {
         options={() => ({
           ...AppleStackPreset,
           headerTitle: "",
-          headerRight: MultiItemHeader,
+          unstable_headerRightItems: () => [
+            HEADER_ITEMS.editPlus,
+            HEADER_ITEMS.share,
+          ],
         })}
       />
       <Stack.Screen
         name="person/[id]"
-        options={({ route }) => ({
-          title: route.params.name,
-          headerTransparent: Platform.OS === "ios",
-          headerBlurEffect: "dark",
-          // Add a placeholder button without the `onPress` to avoid flicker
-          headerRight: MultiItemHeader,
+        options={() => ({
+          ...AppleStackPreset,
+          headerTitle: "",
+          headerLargeTitle: false,
+          unstable_headerRightItems: () => [HEADER_ITEMS.share],
         })}
       />
       <Stack.Screen
@@ -105,55 +128,39 @@ function SharedLayout({ children }) {
         options={({ route }) => ({
           title: route.params.screenTitle,
           ...AppleStackPreset,
-          // Add a placeholder button without the `onPress` to avoid flicker
-          headerRight: MultiItemHeader,
+          unstable_headerRightItems: () => [HEADER_ITEMS.filter],
         })}
       />
       <Stack.Screen
         name="movie-collection/[id]"
         options={({ route }) => ({
-          title: route.params.name,
-          headerTransparent: Platform.OS === "ios",
-          headerBlurEffect: "dark",
-          // Add a placeholder button without the `onPress` to avoid flicker
-          headerRight: MultiItemHeader,
+          headerTitle: "",
+          ...AppleStackPreset,
+          unstable_headerRightItems: () => [HEADER_ITEMS.share],
         })}
       />
       <Stack.Screen
         name="game/[id]"
         options={({ route }) => ({
-          title: JSON.parse(route.params.game).name,
-          headerTransparent: Platform.OS === "ios",
-          headerBlurEffect: "dark",
-          // Add a placeholder button without the `onPress` to avoid flicker
-          headerRight: MultiItemHeader,
+          ...AppleStackPreset,
+          headerTitle: "",
+          headerLargeTitle: false,
+          unstable_headerRightItems: () => [HEADER_ITEMS.editPlus],
         })}
       />
       <Stack.Screen
         name="game-discover"
         options={({ route }) => ({
           title: JSON.parse(route.params.genre).name,
-          headerTransparent: Platform.OS === "ios",
-          headerBlurEffect: "dark",
-          // Add a placeholder button without the `onPress` to avoid flicker
-          headerRight: MultiItemHeader,
+          ...AppleStackPreset,
         })}
       />
     </Stack>
   );
 }
 
-const ConditionalDeleteHeader = () => {
-  const { isEditing } = useCountdownStore();
-  return isEditing ? <DeleteHeader /> : null;
-};
-
-const ConditionalRightHeader = () => {
-  const { movieSubs, gameSubs } = useSubscriptionStore();
-  return movieSubs.length || gameSubs.length ? <MyHeaderRight /> : null;
-};
-
 export default function DynamicLayout({ segment }) {
+  const { movieSubs, gameSubs } = useSubscriptionStore();
   if (segment === "(find)") {
     return (
       <SharedLayout>
@@ -176,8 +183,10 @@ export default function DynamicLayout({ segment }) {
         options={{
           title: "Countdown",
           ...AppleStackPreset,
-          headerLeft: ConditionalDeleteHeader,
-          headerRight: ConditionalRightHeader,
+          unstable_headerRightItems: () =>
+            movieSubs.length || gameSubs.length
+              ? [HEADER_ITEMS.editPencil]
+              : [],
         }}
       />
     </SharedLayout>

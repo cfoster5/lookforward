@@ -1,9 +1,4 @@
-import {
-  useLocalSearchParams,
-  useNavigation,
-  useRouter,
-  useSegments,
-} from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect } from "react";
 import { View } from "react-native";
 import Animated, {
@@ -15,26 +10,21 @@ import { DetailedCollection } from "tmdb-ts";
 
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { ExpandableText } from "@/components/ExpandableText";
-import { DynamicShareHeader } from "@/components/Headers";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
 import { useCollection } from "@/screens/Collection/api/getCollection";
-import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+import { onShare } from "@/utils/share";
 
 // import { useGetCollection } from "./api/useGetCollection";
 
 const spacing = 16;
 
 export default function Collection() {
-  const segments = useSegments();
-  const stack = segments[1] as "(find)" | "(countdown)";
   const navigation = useNavigation();
-  const router = useRouter();
   const { id } = useLocalSearchParams();
   const { data: collection, isLoading } = useCollection(id);
-  const paddingBottom = useBottomTabOverflow();
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
     (e) => (scrollOffset.value = e.contentOffset.y),
@@ -42,15 +32,16 @@ export default function Collection() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      // eslint-disable-next-line react/no-unstable-nested-components
-      headerRight: () => (
-        <DynamicShareHeader
-          title={collection?.name}
-          urlSegment={`movie-collection/${id}`}
-        />
-      ),
+      unstable_headerRightItems: () => [
+        {
+          type: "button",
+          label: "Share",
+          icon: { type: "sfSymbol", name: "square.and.arrow.up" },
+          onPress: () => onShare(`movie-collection/${id}`, "headerButton"),
+        },
+      ],
     });
-  }, [collection?.name, navigation, id]);
+  }, [id, navigation]);
 
   if (isLoading) return <LoadingScreen />;
 

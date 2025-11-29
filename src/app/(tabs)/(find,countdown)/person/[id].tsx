@@ -1,9 +1,4 @@
-import {
-  useLocalSearchParams,
-  useNavigation,
-  useRouter,
-  useSegments,
-} from "expo-router";
+import { useLocalSearchParams, useNavigation } from "expo-router";
 import { useLayoutEffect, useRef, useState } from "react";
 import { Dimensions, FlatList, Platform, Text, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
@@ -12,7 +7,6 @@ import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
 
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { ExpandableText } from "@/components/ExpandableText";
-import { DynamicShareHeader } from "@/components/Headers";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
@@ -22,7 +16,7 @@ import useAddRecent from "@/hooks/useAddRecent";
 import { usePerson } from "@/screens/Actor/api/getPerson";
 import { CarouselItem } from "@/screens/Actor/components/CarouselItem";
 import { dateToFullLocale, timestamp } from "@/utils/dates";
-import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
+import { onShare } from "@/utils/share";
 
 const width = 200;
 const horizontalMargin = 4;
@@ -60,23 +54,24 @@ function getUniqueSortedCrewJobs(crew?: PersonMovieCrew[]) {
 }
 
 export default function Actor() {
-  const segments = useSegments();
-  const stack = segments[1] as "(find)" | "(countdown)";
   const navigation = useNavigation();
-  const router = useRouter();
   const { id } = useLocalSearchParams();
   const { data: person, isLoading } = usePerson(id);
-  const paddingBottom = useBottomTabOverflow();
   const ref = useRef<Carousel<any>>(null);
   const [selectedJob, setSelectedJob] = useState("Actor");
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: person?.name,
-      // eslint-disable-next-line react/no-unstable-nested-components
-      headerRight: () => <DynamicShareHeader urlSegment={`person/${id}`} />,
+      unstable_headerRightItems: () => [
+        {
+          type: "button",
+          label: "Share",
+          icon: { type: "sfSymbol", name: "square.and.arrow.up" },
+          onPress: () => onShare(`person/${id}`, "headerButton"),
+        },
+      ],
     });
-  }, [navigation, id, person?.name]);
+  }, [navigation, id]);
 
   const recentPerson: Recent = {
     id: id,

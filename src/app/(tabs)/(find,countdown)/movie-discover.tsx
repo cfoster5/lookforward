@@ -11,13 +11,10 @@ import { FlatList, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import { Movie } from "tmdb-ts";
 
 import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
-import { IoniconsHeaderButton } from "@/components/IoniconsHeaderButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth, targetedProviders } from "@/helpers/helpers";
@@ -91,19 +88,14 @@ export default function MovieDiscover() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <HeaderButtons
-          HeaderButtonComponent={(props) =>
-            IoniconsHeaderButton({ ...props, iconSize: 23 })
-          }
-        >
-          <Item
-            title="search"
-            iconName="funnel-outline"
-            onPress={() => modalRef.current?.present()}
-          />
-        </HeaderButtons>
-      ),
+      unstable_headerRightItems: () => [
+        {
+          type: "button",
+          label: "Filter",
+          icon: { type: "sfSymbol", name: "line.3.horizontal.decrease" },
+          onPress: () => modalRef.current?.present(),
+        },
+      ],
     });
   }, [navigation]);
 

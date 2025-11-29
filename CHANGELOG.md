@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.7.0](https://github.com/cfoster5/lookforward/compare/v7.6.0...v7.7.0) (2025-11-29)
+
+
+### Features
+
+* update movie screen with Apple header options ([0bc3d9b](https://github.com/cfoster5/lookforward/commit/0bc3d9b85c26283b50da288de6325acc88bbf3ad))
+
 ## [7.6.0](https://github.com/cfoster5/lookforward/compare/v7.5.0...v7.6.0) (2025-11-23)
 
 

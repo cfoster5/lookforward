@@ -267,13 +267,8 @@ export default function MovieScreen() {
       <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}
-        automaticallyAdjustsScrollIndicatorInsets
         contentInsetAdjustmentBehavior="automatic"
-        // contentInset={{ bottom: paddingBottom }}
-        // scrollIndicatorInsets={{ bottom: paddingBottom }}
-        contentContainerStyle={Platform.select({
-          ios: { paddingTop: headerHeight },
-        })}
+        contentContainerStyle={Platform.select({})}
         showsVerticalScrollIndicator={detailIndex === 0}
       >
         {movieDetails.backdrop_path && (

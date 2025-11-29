@@ -85,9 +85,8 @@ function SharedLayout({ children }) {
       <Stack.Screen
         name="movie/[id]"
         options={() => ({
-          headerTransparent: Platform.OS === "ios",
-          headerBlurEffect: "dark",
-          // Add a placeholder button without the `onPress` to avoid flicker
+          ...AppleStackPreset,
+          headerTitle: "",
           headerRight: MultiItemHeader,
         })}
       />

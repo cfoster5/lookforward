@@ -78,7 +78,10 @@ export default function Game() {
         {
           type: "button",
           label: "Edit",
-          icon: { type: "sfSymbol", name: "plus" },
+          icon: {
+            type: "sfSymbol",
+            name: countdownId ? "checkmark" : "plus",
+          },
           onPress: () => {
             if (!countdownId) {
               bottomSheetModalRef.current?.present({

@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.8.2](https://github.com/cfoster5/lookforward/compare/v7.8.1...v7.8.2) (2025-11-30)
+
+
+### Bug Fixes
+
+* add transparent screen titles for proper back navigation ([c71fe16](https://github.com/cfoster5/lookforward/commit/c71fe1654e47b452009b0ee65f56f3b2cd2b2b84))
+* update game screen header button icon based on sub status ([aaf8293](https://github.com/cfoster5/lookforward/commit/aaf8293aa01c90feedc3a41295b373cabe7cada5))
+
 ## [7.8.1](https://github.com/cfoster5/lookforward/compare/v7.8.0...v7.8.1) (2025-11-29)
 
 

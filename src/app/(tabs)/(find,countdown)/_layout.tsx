@@ -107,7 +107,7 @@ function SharedLayout({ children }) {
         name="movie/[id]"
         options={() => ({
           ...AppleStackPreset,
-          headerTitle: "",
+          headerTitleStyle: { color: "transparent" },
           unstable_headerRightItems: () => [
             HEADER_ITEMS.editPlus,
             HEADER_ITEMS.share,
@@ -116,9 +116,10 @@ function SharedLayout({ children }) {
       />
       <Stack.Screen
         name="person/[id]"
-        options={() => ({
+        options={({ route }) => ({
           ...AppleStackPreset,
-          headerTitle: "",
+          title: route.params.name,
+          headerTitleStyle: { color: "transparent" },
           headerLargeTitle: false,
           unstable_headerRightItems: () => [HEADER_ITEMS.share],
         })}
@@ -134,8 +135,9 @@ function SharedLayout({ children }) {
       <Stack.Screen
         name="movie-collection/[id]"
         options={({ route }) => ({
-          headerTitle: "",
           ...AppleStackPreset,
+          title: route.params.name,
+          headerTitleStyle: { color: "transparent" },
           unstable_headerRightItems: () => [HEADER_ITEMS.share],
         })}
       />
@@ -143,8 +145,9 @@ function SharedLayout({ children }) {
         name="game/[id]"
         options={({ route }) => ({
           ...AppleStackPreset,
-          headerTitle: "",
+          title: JSON.parse(route.params.game).name,
           headerLargeTitle: false,
+          headerTitleStyle: { color: "transparent" },
           unstable_headerRightItems: () => [HEADER_ITEMS.editPlus],
         })}
       />

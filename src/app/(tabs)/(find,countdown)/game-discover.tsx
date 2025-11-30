@@ -36,9 +36,9 @@ export default function GameDiscover() {
       }) => (
         <Pressable
           onPress={() =>
-            router.push(`/(tabs)/${stack}/game/[id]`, {
-              id: game.id,
-              game: JSON.stringify(game),
+            router.navigate({
+              pathname: `(tabs)/${stack}/game/[id]`,
+              params: { game: JSON.stringify(game) },
             })
           }
         >

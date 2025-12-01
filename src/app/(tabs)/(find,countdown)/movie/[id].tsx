@@ -28,8 +28,8 @@ import Animated, {
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
 import {
-  BackdropSizes,
-  PosterSizes,
+  BackdropSize,
+  PosterSize,
   ReleaseDate,
   ReleaseDateType,
 } from "tmdb-ts";
@@ -134,6 +134,7 @@ export function getReleaseDate(releaseDates: ReleaseDate[]) {
   const nonPremiereDates = releaseDates.filter(
     (release) => release.type !== ReleaseDateType.Premiere,
   );
+  // TODO: handle empty array case
   const sortedNonPremiereDates = nonPremiereDates.sort(
     ({ release_date: a }, { release_date: b }) =>
       compareDates(isoToUTC(a), isoToUTC(b)),
@@ -223,6 +224,37 @@ export default function MovieScreen() {
           icon: { type: "sfSymbol", name: "square.and.arrow.up" },
           onPress: () => onShare(`movie/${id}`, "headerButton"),
         },
+        // {
+        //   type: "menu",
+        //   label: "Options",
+        //   icon: {
+        //     type: "sfSymbol",
+        //     name: "ellipsis",
+        //   },
+        //   menu: {
+        //     title: "Options",
+        //     items: [
+        //       {
+        //         type: "action",
+        //         label: "Edit",
+        //         icon: {
+        //           type: "sfSymbol",
+        //           name: "square.and.arrow.up",
+        //         },
+        //         onPress: () => {},
+        //       },
+        //       {
+        //         type: "action",
+        //         label: "Calendar",
+        //         icon: {
+        //           type: "sfSymbol",
+        //           name: "calendar",
+        //         },
+        //         onPress: () => {},
+        //       },
+        //     ],
+        //   },
+        // },
       ],
     });
   }, [
@@ -437,7 +469,7 @@ export default function MovieScreen() {
                 renderItem={({ item }) => (
                   <Image
                     source={{
-                      uri: `https://image.tmdb.org/t/p/${PosterSizes.W154}${item.logo_path}`,
+                      uri: `https://image.tmdb.org/t/p/${PosterSize.W154}${item.logo_path}`,
                     }}
                     style={{
                       height: calculateWidth(16, 8, 6),
@@ -628,7 +660,7 @@ export default function MovieScreen() {
                         borderRadius: 12,
                       }}
                       source={{
-                        uri: `https://image.tmdb.org/t/p/${BackdropSizes.W780}${collection.backdrop_path}`,
+                        uri: `https://image.tmdb.org/t/p/${BackdropSize.W780}${collection.backdrop_path}`,
                       }}
                     />
                     <BlurView

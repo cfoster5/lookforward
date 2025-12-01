@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import { FlatList, Linking, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSColors, iOSUIKit } from "react-native-typography";
-import { LogoSizes, WatchLocale } from "tmdb-ts";
+import { LogoSize, WatchLocale } from "tmdb-ts";
 
 import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
@@ -81,7 +81,7 @@ function WatchProvidersModal({
                     <View style={{ width: calculateWidth(16, 8, 4.5) }}>
                       <Image
                         source={{
-                          uri: `https://image.tmdb.org/t/p/${LogoSizes.W154}${item.logo_path}`,
+                          uri: `https://image.tmdb.org/t/p/${LogoSize.W154}${item.logo_path}`,
                         }}
                         style={{
                           height: calculateWidth(16, 8, 4.5),

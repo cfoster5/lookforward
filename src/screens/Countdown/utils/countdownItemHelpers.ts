@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { PosterSizes } from "tmdb-ts";
+import { PosterSize } from "tmdb-ts";
 
 import {
   formatGameReleaseDate,
@@ -21,7 +21,7 @@ export function getImageSource(
 ): string {
   if (sectionName === "Movies") {
     const movieItem = item as MovieCountdown;
-    return `https://image.tmdb.org/t/p/${PosterSizes.W300}${movieItem.poster_path}`;
+    return `https://image.tmdb.org/t/p/${PosterSize.W300}${movieItem.poster_path}`;
   }
 
   const gameItem = item as GameCountdown;

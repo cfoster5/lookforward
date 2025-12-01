@@ -1,6 +1,6 @@
 import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
-import { PosterSizes } from "tmdb-ts";
+import { PosterSize } from "tmdb-ts";
 
 import { MyPerson } from "../types";
 
@@ -13,7 +13,7 @@ type Props = {
 export const CarouselItem = ({ item, width, horizontalMargin }: Props) => (
   <Image
     source={{
-      uri: `https://image.tmdb.org/t/p/${PosterSizes.W300}${item.file_path}`,
+      uri: `https://image.tmdb.org/t/p/${PosterSize.W300}${item.file_path}`,
     }}
     style={{
       borderRadius: 12,

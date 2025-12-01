@@ -52,6 +52,7 @@ export const CountdownLimitBanner = ({
   } else if (isAtLimit) {
     mainMessage = "Countdown limit reached";
   } else {
+    // TODO: Use Intl.PluralRules when available in React Native
     mainMessage = `${remaining} free countdown${remaining === 1 ? "" : "s"} remaining`;
   }
 

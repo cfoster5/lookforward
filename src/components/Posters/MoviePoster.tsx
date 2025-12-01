@@ -2,7 +2,7 @@ import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
 import { useSegments } from "expo-router";
 import { ImageStyle, Pressable, StyleProp, ViewStyle } from "react-native";
-import { Movie, PosterSizes, Recommendation } from "tmdb-ts";
+import { Movie, PosterSize, Recommendation } from "tmdb-ts";
 
 import { useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle } from "@/helpers/helpers";
@@ -73,7 +73,7 @@ export function MoviePoster({
               style,
             ]}
             source={{
-              uri: `https://image.tmdb.org/t/p/${PosterSizes.W300}${posterPath}`,
+              uri: `https://image.tmdb.org/t/p/${PosterSize.W300}${posterPath}`,
             }}
           />
         ) : (

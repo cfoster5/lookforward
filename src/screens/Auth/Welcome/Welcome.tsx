@@ -5,7 +5,7 @@ import { useRef } from "react";
 import { Dimensions, SafeAreaView, Text, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
-import { PosterSizes, TrendingResults } from "tmdb-ts";
+import { PosterSize, TrendingResults } from "tmdb-ts";
 
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { LargeFilledButton } from "@/components/LargeFilledButton";
@@ -42,7 +42,7 @@ const CarouselItem = ({ item, index }: CarouselItemProps) => {
   let imageUri: string | undefined;
 
   if (isTrendingMovie(item, index)) {
-    imageUri = `https://image.tmdb.org/t/p/${PosterSizes.W500}${item.poster_path}`;
+    imageUri = `https://image.tmdb.org/t/p/${PosterSize.W500}${item.poster_path}`;
   } else if (isHypedGame(item, index)) {
     imageUri = `https:${item.cover?.url.replace("thumb", "cover_big_2x")}`;
   } else {

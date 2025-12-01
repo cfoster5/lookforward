@@ -1,3 +1,4 @@
+// TODO: Use Intl.DurationFormat when available in React Native
 export function composeRuntime(runtime?: number): string | undefined {
   if (runtime) {
     const minutes = runtime % 60;

@@ -1,6 +1,6 @@
 import { Galeria } from "@nandorojo/galeria";
 import { FlatList } from "react-native";
-import { PosterSizes, Images } from "tmdb-ts";
+import { PosterSize, Images } from "tmdb-ts";
 
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { calculateWidth } from "@/helpers/helpers";
@@ -19,7 +19,7 @@ export const ImageGallery = ({ images, selection }: ImageGalleryProps) => {
   const selectedImages = images[imageType];
   const urls = selectedImages.map(
     (image) =>
-      `https://image.tmdb.org/t/p/${PosterSizes.ORIGINAL}${image.file_path}`,
+      `https://image.tmdb.org/t/p/${PosterSize.ORIGINAL}${image.file_path}`,
   );
 
   return (
@@ -36,7 +36,7 @@ export const ImageGallery = ({ images, selection }: ImageGalleryProps) => {
                 : calculateWidth(16, 8, 1.5)
             }
             aspectRatio={item.aspect_ratio}
-            uri={`https://image.tmdb.org/t/p/${PosterSizes.ORIGINAL}${item.file_path}`}
+            uri={`https://image.tmdb.org/t/p/${PosterSize.ORIGINAL}${item.file_path}`}
           />
         )}
         {...horizontalListProps}

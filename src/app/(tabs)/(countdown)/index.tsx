@@ -6,7 +6,7 @@ import {
 } from "@react-native-firebase/firestore";
 import { useScrollToTop } from "@react-navigation/native";
 import { useNavigation } from "expo-router";
-import { useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { Platform, SectionList } from "react-native";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -34,6 +34,7 @@ export default function Countdown() {
   const movies = useMovieCountdowns();
   const gameReleases = useGameCountdowns();
   const { movieSubs, gameSubs } = useSubscriptionStore();
+  const [filter, setFilter] = useState<"all" | "movies" | "games">("all");
 
   const isLoading =
     movies.some((movie) => movie.isLoading) ||
@@ -75,6 +76,41 @@ export default function Countdown() {
       unstable_headerRightItems: () =>
         movieSubs.length || gameSubs.length
           ? [
+              !isEditing && {
+                type: "menu",
+                changesSelectionAsPrimaryAction: true,
+                label: "Filter",
+                icon: { type: "sfSymbol", name: "line.3.horizontal.decrease" },
+                menu: {
+                  title: "Filter",
+                  items: [
+                    {
+                      type: "action",
+                      label: "All Items",
+                      icon: {
+                        type: "sfSymbol",
+                        name: "square.grid.3x1.below.line.grid.1x2",
+                      },
+                      onPress: () => setFilter("all"),
+                      state: filter === "all" ? "on" : "off",
+                    },
+                    {
+                      type: "action",
+                      label: "Movies",
+                      icon: { type: "sfSymbol", name: "film" },
+                      onPress: () => setFilter("movies"),
+                      state: filter === "movies" ? "on" : "off",
+                    },
+                    {
+                      type: "action",
+                      label: "Games",
+                      icon: { type: "sfSymbol", name: "gamecontroller" },
+                      onPress: () => setFilter("games"),
+                      state: filter === "games" ? "on" : "off",
+                    },
+                  ],
+                },
+              },
               {
                 type: "button",
                 label: "Edit",
@@ -85,7 +121,7 @@ export default function Countdown() {
                 },
                 variant: !isEditing ? "plain" : "done",
               },
-            ]
+            ].filter(Boolean) // Remove falsey values
           : [],
     });
   }, [
@@ -124,6 +160,16 @@ export default function Countdown() {
   // Show empty state when user has no countdowns
   if (totalCountdowns === 0) return <EmptyState />;
 
+  // Filter sections based on selected filter
+  const sections = [
+    ...(filter === "all" || filter === "movies"
+      ? [{ data: flattenedMovies, title: "Movies" }]
+      : []),
+    ...(filter === "all" || filter === "games"
+      ? [{ data: flattenedGames, title: "Games" }]
+      : []),
+  ];
+
   return (
     <SectionList
       contentContainerStyle={{
@@ -133,10 +179,7 @@ export default function Countdown() {
       automaticallyAdjustsScrollIndicatorInsets
       contentInsetAdjustmentBehavior="automatic"
       // scrollIndicatorInsets={{ bottom: paddingBottom }}
-      sections={[
-        { data: flattenedMovies, title: "Movies" },
-        { data: flattenedGames, title: "Games" },
-      ]}
+      sections={sections}
       stickySectionHeadersEnabled={false}
       keyExtractor={(item, index) => item + index}
       renderItem={({ item, section, index }) => (
@@ -154,7 +197,7 @@ export default function Countdown() {
       renderSectionHeader={({ section }) => (
         <SectionHeader
           section={section}
-          sectionIndex={section.title === "Movies" ? 0 : 1}
+          sectionIndex={sections.findIndex((s) => s.title === section.title)}
         />
       )}
       ListHeaderComponent={<CountdownLimitBanner />}

@@ -43,6 +43,12 @@ const HEADER_ITEMS = {
     icon: { type: "sfSymbol", name: "line.3.horizontal.decrease" },
     onPress: () => {},
   } as const,
+  allItemsFilter: {
+    type: "button",
+    label: "All Items",
+    icon: { type: "sfSymbol", name: "square.grid.3x1.below.line.grid.1x2" },
+    onPress: () => {},
+  } as const,
 };
 
 const FindHeader = () => {
@@ -188,7 +194,7 @@ export default function DynamicLayout({ segment }) {
           ...AppleStackPreset,
           unstable_headerRightItems: () =>
             movieSubs.length || gameSubs.length
-              ? [HEADER_ITEMS.editPencil]
+              ? [HEADER_ITEMS.editPencil, HEADER_ITEMS.share]
               : [],
         }}
       />

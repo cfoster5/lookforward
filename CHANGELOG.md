@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.9.0](https://github.com/cfoster5/lookforward/compare/v7.8.2...v7.9.0) (2025-12-02)
+
+
+### Features
+
+* add media type filter functionality to countdown screen ([79dbb77](https://github.com/cfoster5/lookforward/commit/79dbb777f6b27b217e97023a85a7ddc50f1e69f0))
+
+
+### Bug Fixes
+
+* update tmdb-ts package version and refactor related imports ([d99e2a1](https://github.com/cfoster5/lookforward/commit/d99e2a1ce52d160fb38b5bd804b76b02469ff08b))
+
 ## [7.8.2](https://github.com/cfoster5/lookforward/compare/v7.8.1...v7.8.2) (2025-11-30)
 
 

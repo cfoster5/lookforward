@@ -17,8 +17,8 @@ export const unstable_settings = {
   },
 };
 
-// Reusable header item placeholders (actual handlers set in screen components)
-const HEADER_ITEMS = {
+// Reusable header item base definitions
+export const HEADER_ITEMS = {
   share: {
     type: "button",
     label: "Share",
@@ -38,10 +38,11 @@ const HEADER_ITEMS = {
     onPress: () => {},
   } as const,
   filter: {
-    type: "button",
+    type: "menu",
     label: "Filter",
     icon: { type: "sfSymbol", name: "line.3.horizontal.decrease" },
     onPress: () => {},
+    items: [],
   } as const,
   allItemsFilter: {
     type: "button",
@@ -49,7 +50,21 @@ const HEADER_ITEMS = {
     icon: { type: "sfSymbol", name: "square.grid.3x1.below.line.grid.1x2" },
     onPress: () => {},
   } as const,
+  delete: {
+    type: "button",
+    label: "Delete",
+    icon: { type: "sfSymbol", name: "trash" },
+    onPress: () => {},
+  } as const,
 };
+
+// Helper to extend header items with custom properties
+export function createHeaderItem<T extends keyof typeof HEADER_ITEMS>(
+  itemKey: T,
+  overrides: Partial<(typeof HEADER_ITEMS)[T]> & Record<string, unknown>,
+) {
+  return { ...HEADER_ITEMS[itemKey], ...overrides };
+}
 
 const FindHeader = () => {
   const {
@@ -194,7 +209,7 @@ export default function DynamicLayout({ segment }) {
           ...AppleStackPreset,
           unstable_headerRightItems: () =>
             movieSubs.length || gameSubs.length
-              ? [HEADER_ITEMS.editPencil, HEADER_ITEMS.share]
+              ? [HEADER_ITEMS.filter, HEADER_ITEMS.editPencil]
               : [],
         }}
       />

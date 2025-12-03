@@ -171,7 +171,8 @@ export default function Countdown() {
     .flatMap((movie) => movie.data)
     .filter((movie) => {
       if (statusFilter === "all") return true;
-      if (!movie?.releaseDate) return false;
+      // Treat movies without release dates (TBD) as unreleased
+      if (!movie?.releaseDate) return statusFilter === "unreleased";
       const isReleased = movie.releaseDate <= todayString;
       return statusFilter === "released" ? isReleased : !isReleased;
     })
@@ -185,7 +186,8 @@ export default function Countdown() {
     .flatMap((release) => release.data)
     .filter((game) => {
       if (statusFilter === "all") return true;
-      if (!game?.date) return false;
+      // Treat games without dates (TBD) as unreleased
+      if (!game?.date) return statusFilter === "unreleased";
       // Convert string timestamp to number, then to date string
       const gameDateString = new Date(Number(game.date) * 1000)
         .toISOString()

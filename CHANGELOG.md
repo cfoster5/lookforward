@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.10.0](https://github.com/cfoster5/lookforward/compare/v7.9.0...v7.10.0) (2025-12-03)
+
+
+### Features
+
+* add status filter to countdown screen and add filtered empty state component ([f13ca6e](https://github.com/cfoster5/lookforward/commit/f13ca6eb05c0cc75b62b112937de4a778027c124))
+
+
+### Bug Fixes
+
+* update status filtering to treat movies and games without release dates as unreleased ([7bc1357](https://github.com/cfoster5/lookforward/commit/7bc135749173d20b96e47bb721fc7a23939c81d1))
+
 ## [7.9.0](https://github.com/cfoster5/lookforward/compare/v7.8.2...v7.9.0) (2025-12-02)
 
 

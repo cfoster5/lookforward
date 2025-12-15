@@ -27,6 +27,7 @@ export default {
       associatedDomains: ["applinks:getlookforward.app"],
       entitlements: {
         "aps-environment": "production",
+        "com.apple.developer.applesignin": ["Default"],
       },
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,

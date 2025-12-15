@@ -1,7 +1,8 @@
 import { getAuth, signOut } from "@react-native-firebase/auth";
 import { Link } from "expo-router";
-import { Alert, ScrollView } from "react-native";
+import { Alert, Platform, ScrollView, View } from "react-native";
 
+import { AppleSignInButton } from "@/components/AppleSignInButton";
 import { ViewSeparator } from "@/components/ViewSeparator";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 import { useAuthStore } from "@/stores";
@@ -19,6 +20,13 @@ export default function AccountScreen() {
     <ScrollView style={{ paddingHorizontal: 16 }}>
       {isAnonymous ? (
         <>
+          {/* {Platform.OS === "ios" && (
+            <>
+              <View style={{ marginBottom: 16 }}>
+                <AppleSignInButton buttonType="sign-up" />
+              </View>
+            </>
+          )} */}
           <Link href="/(tabs)/(settings)/create-account" asChild>
             <SettingNavButton
               text="Create Account"

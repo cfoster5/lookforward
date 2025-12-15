@@ -15,6 +15,7 @@ import {
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { AppleSignInButton } from "@/components/AppleSignInButton";
 import { IconSymbol } from "@/components/IconSymbol";
 import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { reusableStyles } from "@/helpers/styles";
@@ -36,11 +37,12 @@ export default function Login() {
       Alert.alert("Signed In", "You have successfully signed in.");
       router.dismissAll();
       // console.log('User account created & signed in!');
-    } catch (error: any) {
-      if (error.code === "auth/invalid-email") {
+    } catch (error) {
+      const firebaseError = error as { code?: string };
+      if (firebaseError.code === "auth/invalid-email") {
         Alert.alert("Invalid Email", "That email address is invalid!");
       }
-      if (error.code === "auth/wrong-password") {
+      if (firebaseError.code === "auth/wrong-password") {
         Alert.alert(
           "Wrong Password",
           "That password is invalid or the user does not have a password!",
@@ -111,6 +113,19 @@ export default function Login() {
           handlePress={() => (email && password ? signIn() : null)}
           text="Continue"
         />
+        <Text
+          style={[
+            iOSUIKit.footnote,
+            {
+              color: Colors.secondaryLabel,
+              textAlign: "center",
+              marginVertical: 16,
+            },
+          ]}
+        >
+          or
+        </Text>
+        <AppleSignInButton buttonType="sign-in" />
       </View>
     </ScrollView>
   );

@@ -5,14 +5,21 @@ import { Alert, Pressable, ScrollView, Text, TextInput } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { reusableStyles } from "@/helpers/styles";
+import { revokeAppleToken } from "@/utils/appleAuth";
 
 export default function DeleteAccountScreen() {
   const [password, setPassword] = useState("");
-  function deleteAccount() {
+  async function deleteAccount() {
     const auth = getAuth();
     const currentUser = auth.currentUser;
     if (currentUser) {
-      deleteUser(currentUser).then(() => console.log("User deleted"));
+      // Revoke Apple token if user signed in with Apple
+      // This is required by Apple's guidelines
+      await revokeAppleToken();
+
+      // Delete the user account
+      await deleteUser(currentUser);
+      console.log("User deleted");
     }
   }
 

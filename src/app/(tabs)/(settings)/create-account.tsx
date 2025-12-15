@@ -11,6 +11,7 @@ import { Alert, Text, TextInput, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { iOSUIKit } from "react-native-typography";
 
+import { AppleSignInButton } from "@/components/AppleSignInButton";
 import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { reusableStyles } from "@/helpers/styles";
 
@@ -34,20 +35,21 @@ export default function CreateAccount() {
         Alert.alert("Account Created", "Your account has been created.");
         router.dismissAll();
       }
-    } catch (error: any) {
-      if (error.code === "auth/email-already-in-use") {
+    } catch (error) {
+      const firebaseError = error as { code?: string };
+      if (firebaseError.code === "auth/email-already-in-use") {
         Alert.alert(
           "Email Already in Use",
           "That email address is already in use!",
         );
       }
-      if (error.code === "auth/invalid-email") {
+      if (firebaseError.code === "auth/invalid-email") {
         Alert.alert("Invalid Email", "That email address is invalid!");
       }
-      if (error.code === "auth/weak-password") {
+      if (firebaseError.code === "auth/weak-password") {
         Alert.alert("Weak Password", "That password is invalid!");
       }
-      if (error.code === "auth/credential-already-in-use") {
+      if (firebaseError.code === "auth/credential-already-in-use") {
         Alert.alert(
           "Email Already in Use",
           "That email address is already in use!",
@@ -92,6 +94,19 @@ export default function CreateAccount() {
           handlePress={() => (email && password ? createAccount() : null)}
           text="Continue"
         />
+        <Text
+          style={[
+            iOSUIKit.footnote,
+            {
+              color: Colors.secondaryLabel,
+              textAlign: "center",
+              marginVertical: 16,
+            },
+          ]}
+        >
+          or
+        </Text>
+        <AppleSignInButton buttonType="sign-up" />
       </View>
     </ScrollView>
   );

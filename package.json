@@ -1,6 +1,6 @@
 {
   "name": "lookforward",
-  "version": "7.10.0",
+  "version": "7.11.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",
@@ -21,6 +21,7 @@
     "@expo/metro-runtime": "~6.1.2",
     "@expo/vector-icons": "^15.0.3",
     "@gorhom/bottom-sheet": "^5",
+    "@invertase/react-native-apple-authentication": "^2.5.0",
     "@nandorojo/galeria": "^1.2.0",
     "@react-native-firebase/analytics": "^23.1.1",
     "@react-native-firebase/app": "^23.1.1",

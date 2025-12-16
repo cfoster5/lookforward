@@ -1,5 +1,4 @@
 import * as Colors from "@bacons/apple-colors";
-import { Ionicons } from "@expo/vector-icons";
 import React from "react";
 import {
   Pressable,
@@ -9,6 +8,8 @@ import {
   View,
 } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { IconSymbol } from "@/components/IconSymbol";
 
 type ButtonProps = PressableProps & {
   text: string;
@@ -32,10 +33,11 @@ export const SettingNavButton = React.forwardRef<
     >
       <View style={[styles.button, { justifyContent: "space-between" }]}>
         <Text style={[iOSUIKit.body, { color: Colors.label }]}>{text}</Text>
-        <Ionicons
-          name="chevron-forward"
+        <IconSymbol
           color={Colors.tertiaryLabel}
+          name="chevron.forward"
           size={iOSUIKit.bodyObject.fontSize}
+          weight="semibold"
           style={{ alignSelf: "center" }}
         />
       </View>

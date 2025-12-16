@@ -1,9 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { TMDB_KEY } from "@/constants/ApiKeys";
+import { useAppConfigStore } from "@/stores/appConfig";
 
 async function getMovies({ pageParam, queryKey }) {
   const params = queryKey[1];
+  const { language, region } = queryKey[2];
   // Remove undefined params or watch_providers when set to 0
   const filteredParamsArrays = Object.entries(params).filter(
     (param) => param[1],
@@ -12,7 +14,7 @@ async function getMovies({ pageParam, queryKey }) {
     .map(([key, value]) => `&${key}=${value}`)
     .join("");
   const response = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}${queryString}&region=US&watch_region=US&page=${pageParam}`,
+    `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_KEY}${queryString}&language=${language}-${region}&region=${region}&watch_region=${region}&page=${pageParam}`,
   );
   const json = await response.json();
   return {
@@ -34,6 +36,9 @@ export function useDiscoverMovies({
   sortMethod: string;
   watchProvider: number;
 }) {
+  const movieLanguage = useAppConfigStore((state) => state.movieLanguage);
+  const movieRegion = useAppConfigStore((state) => state.movieRegion);
+
   if (watchProvider === 119) {
     // Using updated Amazon Prime id
     watchProvider = 9;
@@ -49,6 +54,7 @@ export function useDiscoverMovies({
         with_watch_providers: watchProvider,
         sort_by: sortMethod,
       },
+      { language: movieLanguage, region: movieRegion },
     ],
     queryFn: getMovies,
     initialPageParam: 1,

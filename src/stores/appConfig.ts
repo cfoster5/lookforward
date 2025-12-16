@@ -16,11 +16,15 @@ type AppConfigState = {
   hasRequestedReview: boolean;
   lastRequestedReviewTimestamp: number;
   hasSeenOnboardingModal: boolean;
+  movieRegion: string;
+  movieLanguage: string;
 };
 
 type AppConfigActions = {
   setHasRequestedReview: () => void;
   setHasSeenOnboardingModal: () => void;
+  setMovieRegion: (region: string) => void;
+  setMovieLanguage: (language: string) => void;
 };
 
 export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
@@ -29,6 +33,8 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
       hasRequestedReview: false,
       lastRequestedReviewTimestamp: 0,
       hasSeenOnboardingModal: false,
+      movieRegion: "US",
+      movieLanguage: "en",
       setHasRequestedReview: () =>
         set(() => ({
           hasRequestedReview: true,
@@ -37,6 +43,14 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
       setHasSeenOnboardingModal: () =>
         set(() => ({
           hasSeenOnboardingModal: true,
+        })),
+      setMovieRegion: (region) =>
+        set(() => ({
+          movieRegion: region,
+        })),
+      setMovieLanguage: (language) =>
+        set(() => ({
+          movieLanguage: language,
         })),
     }),
     {

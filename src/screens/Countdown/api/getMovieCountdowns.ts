@@ -5,18 +5,23 @@ import { getReleaseDatesByCountry } from "@/helpers/getReleaseDatesByCountry";
 import { FirestoreMovie } from "@/interfaces/firebase";
 import { tmdb } from "@/providers/app";
 import { useSubscriptionStore } from "@/stores";
+import { useAppConfigStore } from "@/stores/appConfig";
 import { compareDates, isoToUTC } from "@/utils/dates";
 
-export async function getMovie(movieId: FirestoreMovie["documentID"]) {
+export async function getMovie(
+  movieId: FirestoreMovie["documentID"],
+  language: string,
+  region: string,
+) {
   const json = await tmdb.movies.details(
     Number(movieId),
     ["release_dates"],
-    "en-US",
+    `${language}-${region}`,
   );
 
-  const usReleaseDates = getReleaseDatesByCountry(json.release_dates, "US");
+  const releaseDates = getReleaseDatesByCountry(json.release_dates);
 
-  const sortedNonPremiereDates = usReleaseDates
+  const sortedNonPremiereDates = releaseDates
     ?.filter((release) => release.type !== ReleaseDateType.Premiere)
     .sort(({ release_date: a }, { release_date: b }) =>
       compareDates(isoToUTC(a), isoToUTC(b)),
@@ -34,10 +39,13 @@ export async function getMovie(movieId: FirestoreMovie["documentID"]) {
 // Rename this function and this file
 export function useMovieCountdowns() {
   const { movieSubs } = useSubscriptionStore();
+  const movieLanguage = useAppConfigStore((state) => state.movieLanguage);
+  const movieRegion = useAppConfigStore((state) => state.movieRegion);
+
   return useQueries({
     queries: movieSubs.map((sub) => ({
-      queryKey: ["movieSub", sub.documentID],
-      queryFn: () => getMovie(sub.documentID),
+      queryKey: ["movieSub", sub.documentID, movieLanguage, movieRegion],
+      queryFn: () => getMovie(sub.documentID, movieLanguage, movieRegion),
     })),
   });
 }

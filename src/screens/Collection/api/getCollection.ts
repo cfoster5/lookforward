@@ -1,12 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { tmdb } from "@/providers/app";
+import { useAppConfigStore } from "@/stores/appConfig";
 
-const getCollection = async (collectionId: number) =>
-  await tmdb.collections.details(collectionId, { language: "en-US" });
+const getCollection = async (collectionId: number, language: string) =>
+  await tmdb.collections.details(collectionId, { language });
 
-export const useCollection = (collectionId: number) =>
-  useQuery({
-    queryKey: ["collection", collectionId],
-    queryFn: () => getCollection(collectionId),
+export const useCollection = (collectionId: number) => {
+  const movieLanguage = useAppConfigStore((state) => state.movieLanguage);
+  const movieRegion = useAppConfigStore((state) => state.movieRegion);
+
+  return useQuery({
+    queryKey: ["collection", collectionId, movieLanguage, movieRegion],
+    queryFn: () => getCollection(collectionId, `${movieLanguage}-${movieRegion}`),
   });
+};

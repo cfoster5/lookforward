@@ -181,10 +181,7 @@ export default function MovieScreen() {
 
   const modalRef = useRef<BottomSheetModal>();
 
-  const usReleaseDates = getReleaseDatesByCountry(
-    movieDetails?.release_dates,
-    "US",
-  );
+  const usReleaseDates = getReleaseDatesByCountry(movieDetails?.release_dates);
   // Narrow belongs_to_collection to a local variable so TS can refine its type
   const collection = movieDetails?.belongs_to_collection;
 

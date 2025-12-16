@@ -1,5 +1,18 @@
 # Changelog
 
+## [7.11.0](https://github.com/cfoster5/lookforward/compare/v7.10.0...v7.11.0) (2025-12-16)
+
+
+### Features
+
+* add support for movie region and language selection ([e0b46f2](https://github.com/cfoster5/lookforward/commit/e0b46f22700797bd19f1b268ed5e3cf330d8e82e))
+* add support for Sign in with Apple ([6e0e3b3](https://github.com/cfoster5/lookforward/commit/6e0e3b3d5e3aa37393c546395d726a8b7997e481))
+
+
+### Bug Fixes
+
+* disable headerRightItems in SharedLayout for movie-discover ([bdec343](https://github.com/cfoster5/lookforward/commit/bdec343be4c2d4c4261377263bf863529c6387ae))
+
 ## [7.10.0](https://github.com/cfoster5/lookforward/compare/v7.9.0...v7.10.0) (2025-12-03)
 
 

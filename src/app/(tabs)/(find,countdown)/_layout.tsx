@@ -150,7 +150,7 @@ function SharedLayout({ children }) {
         options={({ route }) => ({
           title: route.params.screenTitle,
           ...AppleStackPreset,
-          unstable_headerRightItems: () => [HEADER_ITEMS.filter],
+          // unstable_headerRightItems: () => [HEADER_ITEMS.filter],
         })}
       />
       <Stack.Screen

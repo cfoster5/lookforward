@@ -28,11 +28,13 @@ export default {
       entitlements: {
         "aps-environment": "production",
         "com.apple.developer.applesignin": ["Default"],
+        "com.apple.security.application-groups": ["group.com.lookforward.app"],
       },
       infoPlist: {
         ITSAppUsesNonExemptEncryption: false,
       },
       appStoreUrl: "https://apps.apple.com/app/id1492748952",
+      appleTeamId: "8F5TGKNLXU",
     },
     android: {
       adaptiveIcon: {
@@ -49,6 +51,7 @@ export default {
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
       "@bacons/apple-colors",
+      "@bacons/apple-targets",
       [
         "expo-build-properties",
         {

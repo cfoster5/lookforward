@@ -11,10 +11,12 @@
     "lint": "expo lint",
     "lint:file": "expo lint > lint.log 2>&1 || true",
     "test": "jest --watchAll",
-    "clean-install": "rm -rf ios node_modules bun.lock build-*.tar.gz LookForward.app && bun install"
+    "clean-install": "rm -rf ios node_modules bun.lock build-*.tar.gz LookForward.app && bun install",
+    "prewidget": "EXPO_NO_GIT_STATUS=1 npx expo prebuild --template ./node_modules/@bacons/apple-targets/prebuild-blank.tgz --clean"
   },
   "dependencies": {
     "@bacons/apple-colors": "^0.0.8",
+    "@bacons/apple-targets": "^3.0.6",
     "@dev-plugins/react-native-mmkv": "^0.4.0",
     "@dev-plugins/react-navigation": "^0.4.0",
     "@dev-plugins/react-query": "^0.4.0",

@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { Platform } from "react-native";
 
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
+import { useWidgetSync } from "@/hooks/useWidgetSync";
 import { FirestoreMovie } from "@/interfaces/firebase";
 import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
 import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";
@@ -30,6 +31,9 @@ export default function TabStack() {
   const { onboardingModalRef } = useInterfaceStore();
   const { hasSeenOnboardingModal, setHasSeenOnboardingModal } =
     useAppConfigStore();
+
+  // Sync subscription data to the widget
+  useWidgetSync();
 
   useEffect(() => {
     const db = getFirestore();

@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.12.0](https://github.com/cfoster5/lookforward/compare/v7.11.0...v7.12.0) (2025-12-18)
+
+
+### Features
+
+* add upcoming countdowns widget ([40a08f1](https://github.com/cfoster5/lookforward/commit/40a08f116545d5d67dc2fd361e8ae936cd625e5f))
+
 ## [7.11.0](https://github.com/cfoster5/lookforward/compare/v7.10.0...v7.11.0) (2025-12-16)
 
 

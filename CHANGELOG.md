@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.12.2](https://github.com/cfoster5/lookforward/compare/v7.12.1...v7.12.2) (2025-12-20)
+
+
+### Bug Fixes
+
+* update widget font styles for improved readability ([53d0d59](https://github.com/cfoster5/lookforward/commit/53d0d59b565562389ef10ea1da334b5e7cd88d26))
+
 ## [7.12.1](https://github.com/cfoster5/lookforward/compare/v7.12.0...v7.12.1) (2025-12-20)
 
 

@@ -122,10 +122,10 @@ struct SmallWidgetView: View {
       if entry.subscriptions.isEmpty {
         VStack(spacing: 4) {
           Text("LookForward Pro")
-            .font(.system(size: 13, weight: .semibold))
+            .font(.subheadline).fontWeight(.semibold)
             .foregroundColor(.primary)
           Text("Upgrade to see your countdowns here")
-            .font(.system(size: 10, weight: .regular))
+            .font(.footnote)
             .foregroundColor(.secondary)
             .multilineTextAlignment(.center)
         }
@@ -142,7 +142,7 @@ struct SmallWidgetView: View {
 
               if !subscription.releaseDate.isEmpty {
                 Text(formatDate(subscription.releaseDate).uppercased())
-                  .font(.caption).fontWeight(.semibold)
+                  .font(.footnote).fontWeight(.semibold)
                   .foregroundColor(.secondary)
               }
             }
@@ -171,10 +171,10 @@ struct MediumWidgetView: View {
       if entry.subscriptions.isEmpty {
         VStack(spacing: 4) {
           Text("LookForward Pro")
-            .font(.system(size: 14, weight: .semibold))
+            .font(.body).fontWeight(.semibold)
             .foregroundColor(.primary)
           Text("Upgrade to see your countdowns here")
-            .font(.system(size: 11, weight: .regular))
+            .font(.subheadline)
             .foregroundColor(.secondary)
             .multilineTextAlignment(.center)
         }
@@ -244,10 +244,10 @@ struct LargeWidgetView: View {
       if entry.subscriptions.isEmpty {
         VStack(spacing: 6) {
           Text("LookForward Pro")
-            .font(.system(size: 16, weight: .semibold))
+            .font(.body).fontWeight(.semibold)
             .foregroundColor(.primary)
           Text("Upgrade to see your countdowns here")
-            .font(.system(size: 13, weight: .regular))
+            .font(.subheadline)
             .foregroundColor(.secondary)
             .multilineTextAlignment(.center)
         }
@@ -398,7 +398,7 @@ struct widget: Widget {
   SimpleEntry(
     date: .now,
     subscriptions: mockData
-      //    subscriptions: []
+      //          subscriptions: []
   )
 }
 
@@ -407,8 +407,8 @@ struct widget: Widget {
 } timeline: {
   SimpleEntry(
     date: .now,
-    subscriptions: mockData
-      //        subscriptions: []
+    //    subscriptions: mockData
+    subscriptions: []
   )
 }
 
@@ -417,7 +417,7 @@ struct widget: Widget {
 } timeline: {
   SimpleEntry(
     date: .now,
-    subscriptions: mockData
-      //        subscriptions: []
+    //    subscriptions: mockData
+    subscriptions: []
   )
 }

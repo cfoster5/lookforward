@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.12.1](https://github.com/cfoster5/lookforward/compare/v7.12.0...v7.12.1) (2025-12-20)
+
+
+### Bug Fixes
+
+* update widget design to use predefined font sizes ([b15aaf5](https://github.com/cfoster5/lookforward/commit/b15aaf5037b9c1a2edd973c8a3e8a8450209b2dd))
+
 ## [7.12.0](https://github.com/cfoster5/lookforward/compare/v7.11.0...v7.12.0) (2025-12-18)
 
 

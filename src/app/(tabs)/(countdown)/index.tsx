@@ -20,7 +20,7 @@ import { SectionHeader } from "@/screens/Countdown/components/SectionHeader";
 import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
 import { useCountdownStore, useSubscriptionStore } from "@/stores";
 
-import { createHeaderItem, HEADER_ITEMS } from "../(find,countdown)/_layout";
+import { createHeaderItem } from "../(find,countdown)/_layout";
 
 export default function Countdown() {
   const navigation = useNavigation();
@@ -34,17 +34,13 @@ export default function Countdown() {
   const user = useAuthenticatedUser();
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
-  const movies = useMovieCountdowns();
-  const gameReleases = useGameCountdowns();
+  const { data: movies, pending: isMoviesPending } = useMovieCountdowns();
+  const { data: gameReleases, pending: isGamesPending } = useGameCountdowns();
   const { movieSubs, gameSubs } = useSubscriptionStore();
   const [filter, setFilter] = useState<"all" | "movies" | "games">("all");
   const [statusFilter, setStatusFilter] = useState<
     "all" | "released" | "unreleased"
   >("all");
-
-  const isLoading =
-    movies.some((movie) => movie.isLoading) ||
-    gameReleases.some((release) => release.isLoading);
 
   useLayoutEffect(() => {
     const deleteItems = async () => {
@@ -162,13 +158,12 @@ export default function Countdown() {
     user.uid,
   ]);
 
-  if (isLoading) return <LoadingScreen />;
+  if (isMoviesPending || isGamesPending) return <LoadingScreen />;
 
   const todayString = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
 
   // Precompute flattened and sorted data
   const flattenedMovies = movies
-    .flatMap((movie) => movie.data)
     .filter((movie) => {
       if (statusFilter === "all") return true;
       // Treat movies without release dates (TBD) as unreleased
@@ -183,7 +178,6 @@ export default function Countdown() {
     });
 
   const flattenedGames = gameReleases
-    .flatMap((release) => release.data)
     .filter((game) => {
       if (statusFilter === "all") return true;
       // Treat games without dates (TBD) as unreleased

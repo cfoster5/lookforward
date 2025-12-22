@@ -18,5 +18,9 @@ export function useGameCountdowns() {
       queryFn: () => getGameRelease(Number(sub.documentID)),
       select: (releaseDates) => releaseDates[0],
     })),
+    combine: (results) => ({
+      data: results.map((result) => result.data),
+      pending: results.some((result) => result.isPending),
+    }),
   });
 }

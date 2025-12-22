@@ -47,5 +47,9 @@ export function useMovieCountdowns() {
       queryKey: ["movieSub", sub.documentID, movieLanguage, movieRegion],
       queryFn: () => getMovie(sub.documentID, movieLanguage, movieRegion),
     })),
+    combine: (results) => ({
+      data: results.map((result) => result.data),
+      pending: results.some((result) => result.isPending),
+    }),
   });
 }

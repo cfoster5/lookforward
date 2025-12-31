@@ -43,13 +43,9 @@ export default function Layout() {
         name="index"
         options={{
           title: "Recents",
-          headerSearchBarOptions: {},
-
-          // headerRight: () => (
-          //   <div className="web:px-4">
-          //     <LaunchButton />
-          //   </div>
-          // ),
+          headerSearchBarOptions: {
+            // Only used as a placeholder, overridden in useSearch
+          },
         }}
       />
     </Stack>

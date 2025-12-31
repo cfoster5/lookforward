@@ -2,8 +2,11 @@ import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { SearchBarProps } from "react-native-screens";
 
+import { useInterfaceStore } from "@/stores";
+
 export function useSearch(options: Omit<SearchBarProps, "ref"> = {}) {
   const [search, setSearch] = useState("");
+  const { categoryIndex } = useInterfaceStore();
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -21,13 +24,14 @@ export function useSearch(options: Omit<SearchBarProps, "ref"> = {}) {
         setSearch("");
         options.onCancelButtonPress?.(e);
       },
+      placeholder: categoryIndex === 0 ? "Movies and People" : "Games",
     };
 
     navigation.setOptions({
       headerShown: true,
       headerSearchBarOptions: interceptedOptions,
     });
-  }, [options, navigation]);
+  }, [options, navigation, categoryIndex]);
 
   return search;
 }

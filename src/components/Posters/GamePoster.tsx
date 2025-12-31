@@ -7,7 +7,7 @@ import { timestamp } from "@/utils/dates";
 import { reusableStyles } from "../../helpers/styles";
 import PosterButton from "../PosterButton";
 
-import { TextPoster } from "./TextPoster";
+import { PosterFallback } from "./PosterFallback";
 
 export function GamePoster({
   game,
@@ -42,7 +42,7 @@ export function GamePoster({
           contentFit="cover"
         />
       ) : (
-        <TextPoster text={game.name} />
+        <PosterFallback text={game.name} />
       )}
     </>
   );

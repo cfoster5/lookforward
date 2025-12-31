@@ -4,6 +4,7 @@ import { groupReleasesByGame } from "@/helpers/helpers";
 import { igdb } from "@/providers/app";
 import { timestamp } from "@/utils/dates";
 
+// Fetch release dates then group by game
 async function getGames() {
   const query = `fields *, game.name, game.cover.*, platform.abbreviation, platform.name; where date > ${Math.floor(timestamp)} & release_region = (2,8); limit 100; sort date;`;
   const response = await igdb.releaseDates.retreiveReleaseDate(query);

@@ -6,13 +6,14 @@ import { Movie, PosterSize, Recommendation } from "tmdb-ts";
 
 import { useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle } from "@/helpers/helpers";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
 import { onShare } from "@/utils/share";
 
 import { ContextMenuLink } from "../ContextMenuLink";
 import PosterButton from "../PosterButton";
 
-import { TextPoster } from "./TextPoster";
+import { PosterFallback } from "./PosterFallback";
 
 export function MoviePoster({
   movie,
@@ -20,7 +21,7 @@ export function MoviePoster({
   style,
   buttonStyle,
 }: {
-  movie?: Movie | Recommendation;
+  movie: Movie | Recommendation;
   posterPath: string;
   style?: StyleProp<ImageStyle>;
   buttonStyle?: StyleProp<ViewStyle>;
@@ -29,13 +30,15 @@ export function MoviePoster({
   // segment is undefined from MovieLayout, research why
   const stack = (segments[1] as "(find)" | "(countdown)") ?? "(find)";
 
-  const { user, isPro } = useAuthStore();
+  const { isPro } = useAuthStore();
+  const user = useAuthenticatedUser();
+
   const { movieSubs, hasReachedLimit } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
 
-  const isMovieSub = () =>
-    movie!.id &&
-    movieSubs.some((sub) => sub.documentID === movie!.id.toString());
+  const isMovieSub = movieSubs.some(
+    (sub) => sub.documentID === movie.id.toString(),
+  );
 
   return (
     <ContextMenuLink
@@ -43,16 +46,16 @@ export function MoviePoster({
       handleCountdownToggle={{
         action: () =>
           handleMovieToggle({
-            movieId: movie!.id.toString(),
-            userId: user!.uid,
-            isCurrentlySubbed: isMovieSub(),
+            movieId: movie.id.toString(),
+            userId: user.uid,
+            isCurrentlySubbed: isMovieSub,
             isPro,
             hasReachedLimit,
             proOffering: pro,
           }),
-        buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
+        buttonText: isMovieSub ? "Remove from Countdown" : "Add to Countdown",
       }}
-      handleShareSelect={() => onShare(`movie/${movie!.id}`, "poster")}
+      handleShareSelect={() => onShare(`movie/${movie.id}`, "poster")}
     >
       <Pressable
         style={buttonStyle}
@@ -77,7 +80,7 @@ export function MoviePoster({
             }}
           />
         ) : (
-          <TextPoster text={movie.title} style={style} />
+          <PosterFallback text={movie.title} style={style} />
         )}
       </Pressable>
     </ContextMenuLink>

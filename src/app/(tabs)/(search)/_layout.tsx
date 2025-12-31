@@ -40,7 +40,7 @@ export default function Layout() {
   return (
     <Stack screenOptions={AppleStackPreset}>
       <Stack.Screen
-        name="search"
+        name="index"
         options={{
           title: "Recents",
           headerSearchBarOptions: {},

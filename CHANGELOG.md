@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.13.0](https://github.com/cfoster5/lookforward/compare/v7.12.2...v7.13.0) (2025-12-31)
+
+
+### Features
+
+* add search count tracking for review request ([7104ce4](https://github.com/cfoster5/lookforward/commit/7104ce4da9b871e21bcb4151080d3f99d3fc378f))
+* update search bar placeholder text ([5215ff8](https://github.com/cfoster5/lookforward/commit/5215ff88f2a75fa7a9313423724d41704c2dc8c2))
+
 ## [7.12.2](https://github.com/cfoster5/lookforward/compare/v7.12.1...v7.12.2) (2025-12-20)
 
 

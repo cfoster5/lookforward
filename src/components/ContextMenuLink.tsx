@@ -5,6 +5,7 @@ import { Link, LinkProps } from "expo-router";
 type BaseProps = {
   href: LinkProps["href"];
   children: React.ReactNode;
+  onPress?: () => void;
 };
 
 type ContextMenuLinkProps = BaseProps &
@@ -33,8 +34,9 @@ export const ContextMenuLink = ({
   handleRemoveSelect,
   handleCountdownToggle,
   isOnboarding,
+  onPress,
 }: ContextMenuLinkProps) => (
-  <Link href={href} asChild>
+  <Link href={href} asChild onPress={onPress}>
     <Link.Trigger>{children}</Link.Trigger>
     <Link.Menu>
       {handleCountdownToggle && (

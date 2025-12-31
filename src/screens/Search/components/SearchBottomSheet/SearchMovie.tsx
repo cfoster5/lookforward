@@ -9,8 +9,13 @@ import { MovieWithMediaType } from "tmdb-ts";
 import { useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth, handleMovieToggle } from "@/helpers/helpers";
-import { useAuthStore, useSubscriptionStore } from "@/stores";
+import {
+  useAppConfigStore,
+  useAuthStore,
+  useSubscriptionStore,
+} from "@/stores";
 import { dateToFullLocale } from "@/utils/dates";
+import { tryRequestReview } from "@/utils/requestReview";
 import { onShare } from "@/utils/share";
 
 type ResultProps = PressableProps &
@@ -111,9 +116,17 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
   const { user, isPro } = useAuthStore();
   const { movieSubs, hasReachedLimit } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
+  const { incrementSearchCount } = useAppConfigStore();
 
   const isMovieSub = () =>
-    item.id && movieSubs.some((sub) => sub.documentID === item.id.toString());
+    Boolean(
+      item.id && movieSubs.some((sub) => sub.documentID === item.id.toString()),
+    );
+
+  const handlePress = () => {
+    incrementSearchCount();
+    tryRequestReview();
+  };
 
   return (
     <ContextMenuLink
@@ -124,6 +137,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
           name: item.title,
         },
       }}
+      onPress={handlePress}
       handleCountdownToggle={{
         action: () =>
           handleMovieToggle({

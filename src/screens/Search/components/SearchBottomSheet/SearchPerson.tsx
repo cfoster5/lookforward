@@ -8,6 +8,8 @@ import { PersonWithMediaType } from "tmdb-ts";
 
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth } from "@/helpers/helpers";
+import { useAppConfigStore } from "@/stores/appConfig";
+import { tryRequestReview } from "@/utils/requestReview";
 import { onShare } from "@/utils/share";
 
 type ResultProps = PressableProps &
@@ -109,17 +111,27 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
 
 Result.displayName = "Result";
 
-export const SearchPerson = ({ item }: { item: PersonWithMediaType }) => (
-  <ContextMenuLink
-    href={{
-      pathname: "/(tabs)/(find)/person/[id]",
-      params: {
-        id: item.id,
-        name: item.name,
-      },
-    }}
-    handleShareSelect={() => onShare(`person/${item.id}`, "search")}
-  >
-    <Result item={item} />
-  </ContextMenuLink>
-);
+export const SearchPerson = ({ item }: { item: PersonWithMediaType }) => {
+  const { incrementSearchCount } = useAppConfigStore();
+
+  const handlePress = () => {
+    incrementSearchCount();
+    tryRequestReview();
+  };
+
+  return (
+    <ContextMenuLink
+      href={{
+        pathname: "/(tabs)/(find)/person/[id]",
+        params: {
+          id: item.id,
+          name: item.name,
+        },
+      }}
+      onPress={handlePress}
+      handleShareSelect={() => onShare(`person/${item.id}`, "search")}
+    >
+      <Result item={item} />
+    </ContextMenuLink>
+  );
+};

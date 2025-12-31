@@ -6,23 +6,30 @@ import { Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { calculateWidth, getGameReleaseDate } from "@/helpers/helpers";
-import { Game, ReleaseDate } from "@/types";
+import { useAppConfigStore } from "@/stores/appConfig";
+import { Games, ReleaseDate } from "@/types/igdb";
+import { tryRequestReview } from "@/utils/requestReview";
 
 export function SearchGame({
   item,
 }: {
-  item: Game & { release_dates: ReleaseDate[] };
+  item: Games & { release_dates: ReleaseDate[] };
 }) {
   const router = useRouter();
+  const { incrementSearchCount } = useAppConfigStore();
+
+  const handlePress = () => {
+    incrementSearchCount();
+    tryRequestReview();
+    router.navigate({
+      pathname: "/(tabs)/(find)/game/[id]",
+      params: { id: item.id?.toString() ?? "", game: JSON.stringify(item) },
+    });
+  };
 
   return (
     <Pressable
-      onPress={() =>
-        router.navigate({
-          pathname: "/(tabs)/(find)/game/[id]",
-          params: { id: item.id, game: JSON.stringify(item) },
-        })
-      }
+      onPress={handlePress}
       style={({ pressed }) => [
         {
           flexDirection: "row",

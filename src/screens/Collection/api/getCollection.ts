@@ -12,6 +12,7 @@ export const useCollection = (collectionId: number) => {
 
   return useQuery({
     queryKey: ["collection", collectionId, movieLanguage, movieRegion],
-    queryFn: () => getCollection(collectionId, `${movieLanguage}-${movieRegion}`),
+    queryFn: () =>
+      getCollection(collectionId, `${movieLanguage}-${movieRegion}`),
   });
 };

@@ -54,7 +54,8 @@ export function CountdownItem({
   const { slideStyle, radioButtonStyle } = useCountdownItemAnimation(isEditing);
 
   const documentId = getDocumentId(item, sectionName);
-  const selectedItems = sectionName === "Movies" ? selectedMovies : selectedGames;
+  const selectedItems =
+    sectionName === "Movies" ? selectedMovies : selectedGames;
   const isSelected = selectedItems.includes(documentId);
 
   const styles = createCountdownItemStyles(

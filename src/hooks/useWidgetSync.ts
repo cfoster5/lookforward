@@ -29,20 +29,14 @@ export function useWidgetSync() {
         return;
       }
 
-      // Only sync when we have data and all queries are successful
-      const allMovieQueriesSuccessful = movieCountdowns.every(
-        (query) => query.isSuccess,
-      );
-      const allGameQueriesSuccessful = gameCountdowns.every(
-        (query) => query.isSuccess,
-      );
-
+      // Only sync when we have data and queries are not pending
       if (
-        (!allMovieQueriesSuccessful && movieSubs.length > 0) ||
-        (!allGameQueriesSuccessful && gameSubs.length > 0)
+        (movieCountdowns.pending && movieSubs.length > 0) ||
+        (gameCountdowns.pending && gameSubs.length > 0)
       ) {
         return;
       }
+
       try {
         const storage = new ExtensionStorage(APP_GROUP);
         const now = new Date();
@@ -73,10 +67,9 @@ export function useWidgetSync() {
         };
 
         // Get the movie data
-        const movieDataPromises = movieCountdowns
-          .filter((query) => query.isSuccess && query.data)
-          .map(async (query) => {
-            const movie = query.data!;
+        const movieDataPromises = movieCountdowns.data
+          .filter((movie) => movie)
+          .map(async (movie) => {
             const posterUrl = movie.poster_path
               ? `https://image.tmdb.org/t/p/${PosterSize.W300}${movie.poster_path}`
               : "";
@@ -98,10 +91,9 @@ export function useWidgetSync() {
           });
 
         // Get the game data
-        const gameDataPromises = gameCountdowns
-          .filter((query) => query.isSuccess && query.data)
-          .map(async (query) => {
-            const game = query.data!;
+        const gameDataPromises = gameCountdowns.data
+          .filter((game) => game)
+          .map(async (game) => {
             const releaseDate = game.date
               ? new Date(parseInt(game.date) * 1000)
               : null;

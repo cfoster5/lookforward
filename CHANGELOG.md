@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.13.1](https://github.com/cfoster5/lookforward/compare/v7.13.0...v7.13.1) (2026-01-02)
+
+
+### Bug Fixes
+
+* update useWidgetSync to work with combine API ([081db39](https://github.com/cfoster5/lookforward/commit/081db39ae958848c7fadc5af762473cb3656b6bd))
+
 ## [7.13.0](https://github.com/cfoster5/lookforward/compare/v7.12.2...v7.13.0) (2025-12-31)
 
 

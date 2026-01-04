@@ -19,7 +19,7 @@ type Props = {
   person: Cast | Crew;
 };
 
-function Person({ person }: Props) {
+export function Person({ person }: Props) {
   const segments = useSegments();
   const stack = segments[1] as "(find)" | "(countdown)";
   const { theme } = useInterfaceStore();
@@ -104,5 +104,3 @@ function Person({ person }: Props) {
     </ContextMenuLink>
   );
 }
-
-export default Person;

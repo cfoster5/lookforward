@@ -11,7 +11,7 @@ import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { calculateWidth } from "@/helpers/helpers";
 import { useInterfaceStore } from "@/stores";
 
-function WatchProvidersModal({
+export function WatchProvidersModal({
   modalRef,
   providers,
 }: {
@@ -143,5 +143,3 @@ function WatchProvidersModal({
     </CustomBottomSheetModal>
   );
 }
-
-export default WatchProvidersModal;

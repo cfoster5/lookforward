@@ -36,8 +36,6 @@ import {
 
 import { useProOfferings } from "@/api/getProOfferings";
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
-import { ApplePillButton } from "@/components/ApplePillButton";
-import { BlueBullet } from "@/components/BlueBullet";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { CategoryControl } from "@/components/CategoryControl";
 import { DropdownMenu } from "@/components/DropdownMenu";
@@ -46,6 +44,15 @@ import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { ListLabel } from "@/components/ListLabel";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
+import {
+  ApplePillButton,
+  BlueBullet,
+  DiscoverListLabel,
+  ImageGallery,
+  Person,
+  Rating,
+  WatchProvidersModal,
+} from "@/components/screens/Movie";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
@@ -59,11 +66,6 @@ import useAddRecent from "@/hooks/useAddRecent";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useMovie } from "@/screens/Movie/api/getMovie";
 import { useMovieRatings } from "@/screens/Movie/api/getMovieRatings";
-import { DiscoverListLabel } from "@/screens/Movie/components/DiscoverListLabel";
-import { ImageGallery } from "@/screens/Movie/components/ImageGallery";
-import Person from "@/screens/Movie/components/Person";
-import { Rating } from "@/screens/Movie/components/Rating";
-import WatchProvidersModal from "@/screens/Movie/components/WatchProvidersModal";
 import {
   VideoSelectionProps,
   ImageSelectionProps,

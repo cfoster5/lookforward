@@ -5,7 +5,7 @@ import { iOSUIKit } from "react-native-typography";
 
 import { useAuthStore } from "@/stores";
 
-import { OMDBMovie } from "../types/omdb";
+import { OMDBMovie } from "../../../screens/Movie/types/omdb";
 
 export const Rating = ({
   source,

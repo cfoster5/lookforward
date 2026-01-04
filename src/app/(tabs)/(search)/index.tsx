@@ -14,16 +14,18 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useProOfferings } from "@/api/getProOfferings";
 import { CategoryControl } from "@/components/CategoryControl";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
+import {
+  RecentPerson,
+  RecentTitle,
+  SearchGame,
+  SearchMovie,
+  SearchPerson,
+  SectionHeader,
+} from "@/components/screens/Search";
 import { calculateWidth } from "@/helpers/helpers";
 import { useSearch } from "@/hooks/useSearch";
 import { useGamesSearch } from "@/screens/Search/api/getGamesSearch";
 import { useMultiSearch } from "@/screens/Search/api/getMultiSearch";
-import { RecentPerson } from "@/screens/Search/components/SearchBottomSheet/RecentPerson";
-import { RecentTitle } from "@/screens/Search/components/SearchBottomSheet/RecentTitle";
-import { SearchGame } from "@/screens/Search/components/SearchBottomSheet/SearchGame";
-import { SearchMovie } from "@/screens/Search/components/SearchBottomSheet/SearchMovie";
-import { SearchPerson } from "@/screens/Search/components/SearchBottomSheet/SearchPerson";
-import { SectionHeader } from "@/screens/Search/components/SearchBottomSheet/SectionHeader";
 import useDebounce from "@/screens/Search/hooks/useDebounce";
 import { useAuthStore, useInterfaceStore } from "@/stores";
 import { useRecentItemsStore } from "@/stores/recents";

@@ -44,15 +44,6 @@ import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { ListLabel } from "@/components/ListLabel";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
-import {
-  ApplePillButton,
-  BlueBullet,
-  DiscoverListLabel,
-  ImageGallery,
-  Person,
-  Rating,
-  WatchProvidersModal,
-} from "@/components/screens/Movie";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
@@ -66,6 +57,15 @@ import useAddRecent from "@/hooks/useAddRecent";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useMovie } from "@/screens/Movie/api/getMovie";
 import { useMovieRatings } from "@/screens/Movie/api/getMovieRatings";
+import {
+  ApplePillButton,
+  BlueBullet,
+  DiscoverListLabel,
+  ImageGallery,
+  Person,
+  Rating,
+  WatchProvidersModal,
+} from "@/screens/Movie/components";
 import {
   VideoSelectionProps,
   ImageSelectionProps,

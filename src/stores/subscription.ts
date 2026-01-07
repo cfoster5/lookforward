@@ -2,8 +2,8 @@ import { create } from "zustand";
 
 import { FirestoreGame, FirestoreMovie } from "@/interfaces/firebase";
 
-// Free tier limit: max 5 total countdowns (movies + games combined)
-export const FREE_TIER_COUNTDOWN_LIMIT = 5;
+// Free tier limit: max 3 total countdowns (movies + games combined)
+export const FREE_TIER_COUNTDOWN_LIMIT = 3;
 
 type SubscriptionState = {
   movieSubs: FirestoreMovie[];

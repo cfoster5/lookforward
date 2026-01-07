@@ -1,6 +1,6 @@
 {
   "name": "lookforward",
-  "version": "7.13.1",
+  "version": "7.14.0",
   "main": "expo-router/entry",
   "scripts": {
     "start": "expo start",

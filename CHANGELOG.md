@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.14.0](https://github.com/cfoster5/lookforward/compare/v7.13.1...v7.14.0) (2026-01-07)
+
+
+### Features
+
+* reduce free tier countdown limit from 5 to 3 ([87bf126](https://github.com/cfoster5/lookforward/commit/87bf126f3ef76dc7777ea13425c947a0553163be))
+
 ## [7.13.1](https://github.com/cfoster5/lookforward/compare/v7.13.0...v7.13.1) (2026-01-02)
 
 

@@ -61,6 +61,19 @@ export default {
           },
         },
       ],
+      [
+        "expo-alternate-app-icons",
+        [
+          {
+            name: "Original",
+            ios: "./assets/adaptive-icon.png",
+            android: {
+              foregroundImage: "./assets/adaptive-icon.png",
+              backgroundColor: "#000000",
+            },
+          },
+        ],
+      ],
     ],
     experiments: {
       tsconfigPaths: true,

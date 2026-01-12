@@ -1,4 +1,6 @@
+import { isLiquidGlassAvailable } from "expo-glass-effect";
 import { Stack } from "expo-router";
+import { Platform } from "react-native";
 
 import { AppleStackPreset } from "../(search)/_layout";
 
@@ -19,6 +21,32 @@ export default function SettingsStack() {
       <Stack.Screen
         name="reset-password"
         options={{ title: "Reset Password" }}
+      />
+      <Stack.Screen
+        name="app-icon"
+        options={{
+          headerShown: true,
+          headerTransparent: Platform.OS === "ios",
+          headerLargeTitle: false,
+          title: "App Icon",
+          presentation: "formSheet",
+          sheetGrabberVisible: true,
+          sheetAllowedDetents: [0.5, 1],
+          sheetInitialDetentIndex: Platform.OS === "ios" ? 0 : undefined,
+          contentStyle: {
+            backgroundColor:
+              Platform.OS === "ios" && isLiquidGlassAvailable()
+                ? "transparent"
+                : "#F2F2F7",
+          },
+          headerStyle: {
+            backgroundColor: Platform.OS === "ios" ? "transparent" : "#F2F2F7",
+          },
+          headerBlurEffect:
+            Platform.OS === "ios" && isLiquidGlassAvailable()
+              ? undefined
+              : "light",
+        }}
       />
     </Stack>
   );

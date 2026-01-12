@@ -224,8 +224,15 @@ export default function Settings() {
         }}
         text="Explore Pro Features"
         isFirstInGroup
-        style={{ borderRadius: 26 }}
+        style={{ borderTopLeftRadius: 26, borderTopRightRadius: 26 }}
       />
+      <ViewSeparator />
+      <Link href="/(tabs)/(settings)/app-icon" asChild>
+        <SettingNavButton
+          text="App Icon"
+          style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
+        />
+      </Link>
       <SettingNavButton
         onPress={async () => {
           await RevenueCatUI.presentPaywall({ offering: tips });

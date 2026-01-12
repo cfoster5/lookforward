@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.15.0](https://github.com/cfoster5/lookforward/compare/v7.14.0...v7.15.0) (2026-01-12)
+
+
+### Features
+
+* add app icon customization ([388e27a](https://github.com/cfoster5/lookforward/commit/388e27a95b4d4099b704fe7b661e350f2dd0032a))
+
 ## [7.14.0](https://github.com/cfoster5/lookforward/compare/v7.13.1...v7.14.0) (2026-01-07)
 
 

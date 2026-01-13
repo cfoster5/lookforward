@@ -16,6 +16,7 @@ import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
+import Purchases from "react-native-purchases";
 
 import { OnboardingModal } from "@/components/OnboardingModal";
 import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
@@ -88,6 +89,9 @@ export default function RootLayout() {
         const db = getFirestore();
         const userRef = doc(db, "users", uid);
         await updateDoc(userRef, { deviceToken: token });
+
+        // Also send token to RevenueCat for push notification targeting
+        await Purchases.setPushToken(token);
       } catch (error) {
         console.error("Error saving token to database:", error);
       }

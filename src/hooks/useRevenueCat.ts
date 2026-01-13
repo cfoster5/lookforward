@@ -16,6 +16,11 @@ export function useRevenueCat() {
       appUserID: user?.uid,
     });
 
+    // Set email if available (for customer support and communication)
+    if (user?.email) {
+      Purchases.setEmail(user.email);
+    }
+
     const customerInfoUpdated = (info: CustomerInfo) => {
       setIsPro(!!info.entitlements.active.pro);
       // handle any changes to customerInfo

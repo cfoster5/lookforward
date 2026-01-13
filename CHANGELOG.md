@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.16.0](https://github.com/cfoster5/lookforward/compare/v7.15.0...v7.16.0) (2026-01-13)
+
+
+### Features
+
+* sync email and push tokens to RevenueCat ([92ccc85](https://github.com/cfoster5/lookforward/commit/92ccc8532c24593728a1614eae9c6942004d9cb7))
+
 ## [7.15.0](https://github.com/cfoster5/lookforward/compare/v7.14.0...v7.15.0) (2026-01-12)
 
 

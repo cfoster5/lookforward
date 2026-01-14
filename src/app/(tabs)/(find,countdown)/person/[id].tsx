@@ -1,5 +1,5 @@
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useLayoutEffect, useRef, useState } from "react";
+import { Stack, useLocalSearchParams } from "expo-router";
+import { useRef, useState } from "react";
 import { Dimensions, FlatList, Platform, Text, View } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
@@ -54,24 +54,10 @@ function getUniqueSortedCrewJobs(crew?: PersonMovieCrew[]) {
 }
 
 export default function Actor() {
-  const navigation = useNavigation();
   const { id } = useLocalSearchParams();
   const { data: person, isLoading } = usePerson(id);
   const ref = useRef<Carousel<any>>(null);
   const [selectedJob, setSelectedJob] = useState("Actor");
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      unstable_headerRightItems: () => [
-        {
-          type: "button",
-          label: "Share",
-          icon: { type: "sfSymbol", name: "square.and.arrow.up" },
-          onPress: () => onShare(`person/${id}`, "headerButton"),
-        },
-      ],
-    });
-  }, [navigation, id]);
 
   const recentPerson: Recent = {
     id: id,
@@ -90,98 +76,113 @@ export default function Actor() {
   if (isLoading) return <LoadingScreen />;
 
   return (
-    <FlatList
-      data={selectedJob === "Actor" ? castCredits : crewCredits}
-      renderItem={({ item, index }) => (
-        <MoviePoster
-          key={item.id.toString()}
-          movie={item}
-          posterPath={item.poster_path}
-          style={{
-            width: calculateWidth(spacing, spacing, 2),
-            aspectRatio: 2 / 3,
-          }}
-          buttonStyle={{
-            marginRight: index % 2 === 0 ? spacing / 2 : 0,
-            marginLeft: index % 2 === 1 ? spacing / 2 : 0,
-          }}
-        />
-      )}
-      keyExtractor={(item) => item.id.toString()}
-      numColumns={2}
-      automaticallyAdjustsScrollIndicatorInsets
-      contentInsetAdjustmentBehavior="automatic"
-      // contentInset={{ bottom: paddingBottom }}
-      // scrollIndicatorInsets={{ bottom: paddingBottom }}
-      contentContainerStyle={{
-        marginHorizontal: spacing,
-      }}
-      columnWrapperStyle={{
-        justifyContent: "space-between",
-        marginBottom: spacing,
-      }}
-      // do not use arrow functions for header and footer components
-      // fixed issue where carousel would re-render
-      // https://stackoverflow.com/a/70232246/5648619
-      ListHeaderComponent={
-        <>
-          {person?.images?.profiles && (
-            <Carousel
-              vertical={false}
-              ref={ref}
-              data={person?.images?.profiles}
-              renderItem={({ item }) => (
-                <CarouselItem
-                  item={item}
-                  width={width}
-                  horizontalMargin={horizontalMargin}
-                />
-              )}
-              layout="default"
-              loop
-              sliderWidth={Dimensions.get("window").width}
-              itemWidth={width + horizontalMargin * 2}
-              // removeClippedSubviews={true}
-              containerCustomStyle={{
-                marginVertical: 16,
-                marginHorizontal: -16,
-              }}
-            />
-          )}
-          <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-            {person?.name}
-          </ThemedText>
-          {person?.birthday && (
-            <Text style={reusableStyles.date}>
-              {dateToFullLocale(person?.birthday).toUpperCase()}
-            </Text>
-          )}
-          <ExpandableText text={person!.biography} />
-          <View
-            style={{
-              flexDirection: "row",
-              paddingBottom: 16,
-              flexWrap: "wrap",
-            }}
+    <>
+      <Stack.Header>
+        {/* Set title for back navigation but set to transparent to hide title */}
+        <Stack.Header.Title style={{ color: "transparent" }}>
+          {person?.name}
+        </Stack.Header.Title>
+        <Stack.Header.Right>
+          <Stack.Header.Button
+            onPress={() => onShare(`person/${id}`, "headerButton")}
           >
-            <ButtonMultiState
-              text="Actor"
-              selectedVal={selectedJob}
-              onPress={() => setSelectedJob("Actor")}
-            />
-            {getUniqueSortedCrewJobs(person?.movie_credits.crew)?.map(
-              (credit) => (
-                <ButtonMultiState
-                  key={credit.job}
-                  text={credit.job}
-                  selectedVal={selectedJob}
-                  onPress={() => setSelectedJob(credit.job)}
-                />
-              ),
+            <Stack.Header.Icon sf="square.and.arrow.up" />
+          </Stack.Header.Button>
+        </Stack.Header.Right>
+      </Stack.Header>
+      <FlatList
+        data={selectedJob === "Actor" ? castCredits : crewCredits}
+        renderItem={({ item, index }) => (
+          <MoviePoster
+            key={item.id.toString()}
+            movie={item}
+            posterPath={item.poster_path}
+            style={{
+              width: calculateWidth(spacing, spacing, 2),
+              aspectRatio: 2 / 3,
+            }}
+            buttonStyle={{
+              marginRight: index % 2 === 0 ? spacing / 2 : 0,
+              marginLeft: index % 2 === 1 ? spacing / 2 : 0,
+            }}
+          />
+        )}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
+        automaticallyAdjustsScrollIndicatorInsets
+        contentInsetAdjustmentBehavior="automatic"
+        // contentInset={{ bottom: paddingBottom }}
+        // scrollIndicatorInsets={{ bottom: paddingBottom }}
+        contentContainerStyle={{
+          marginHorizontal: spacing,
+        }}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          marginBottom: spacing,
+        }}
+        // do not use arrow functions for header and footer components
+        // fixed issue where carousel would re-render
+        // https://stackoverflow.com/a/70232246/5648619
+        ListHeaderComponent={
+          <>
+            {person?.images?.profiles && (
+              <Carousel
+                vertical={false}
+                ref={ref}
+                data={person?.images?.profiles}
+                renderItem={({ item }) => (
+                  <CarouselItem
+                    item={item}
+                    width={width}
+                    horizontalMargin={horizontalMargin}
+                  />
+                )}
+                layout="default"
+                loop
+                sliderWidth={Dimensions.get("window").width}
+                itemWidth={width + horizontalMargin * 2}
+                // removeClippedSubviews={true}
+                containerCustomStyle={{
+                  marginVertical: 16,
+                  marginHorizontal: -16,
+                }}
+              />
             )}
-          </View>
-        </>
-      }
-    />
+            <ThemedText style={iOSUIKit.largeTitleEmphasized}>
+              {person?.name}
+            </ThemedText>
+            {person?.birthday && (
+              <Text style={reusableStyles.date}>
+                {dateToFullLocale(person?.birthday).toUpperCase()}
+              </Text>
+            )}
+            <ExpandableText text={person!.biography} />
+            <View
+              style={{
+                flexDirection: "row",
+                paddingBottom: 16,
+                flexWrap: "wrap",
+              }}
+            >
+              <ButtonMultiState
+                text="Actor"
+                selectedVal={selectedJob}
+                onPress={() => setSelectedJob("Actor")}
+              />
+              {getUniqueSortedCrewJobs(person?.movie_credits.crew)?.map(
+                (credit) => (
+                  <ButtonMultiState
+                    key={credit.job}
+                    text={credit.job}
+                    selectedVal={selectedJob}
+                    onPress={() => setSelectedJob(credit.job)}
+                  />
+                ),
+              )}
+            </View>
+          </>
+        }
+      />
+    </>
   );
 }

@@ -133,13 +133,11 @@ function SharedLayout({ children }) {
       />
       <Stack.Screen
         name="person/[id]"
-        options={({ route }) => ({
+        options={{
           ...AppleStackPreset,
-          title: route.params.name,
           headerTitleStyle: { color: "transparent" },
           headerLargeTitle: false,
-          unstable_headerRightItems: () => [HEADER_ITEMS.share],
-        })}
+        }}
       />
       <Stack.Screen
         name="movie-discover"

@@ -52,6 +52,7 @@ export default {
       "@react-native-firebase/auth",
       "@bacons/apple-colors",
       "@bacons/apple-targets",
+      "expo-image",
       [
         "expo-build-properties",
         {

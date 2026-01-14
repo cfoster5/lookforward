@@ -1,12 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import {
-  useLocalSearchParams,
-  useNavigation,
-  useRouter,
-  useSegments,
-} from "expo-router";
-import { useLayoutEffect, useRef, useState } from "react";
+import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
+import { useRef, useState } from "react";
 import { FlatList, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -19,17 +14,14 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth, targetedProviders } from "@/helpers/helpers";
 import { useDiscoverMovies } from "@/screens/MovieDiscover/api/getDiscoverMovies";
-import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 const spacing = 16;
 
 export default function MovieDiscover() {
-  const segments = useSegments();
-  const stack = segments[1] as "(find)" | "(countdown)";
   const navigation = useNavigation();
-  const router = useRouter();
   const { bottom: safeBottomArea } = useSafeAreaInsets();
   const {
+    screenTitle,
     genre: genreString,
     company: companyString,
     keyword: keywordString,
@@ -41,7 +33,6 @@ export default function MovieDiscover() {
   const keyword = keywordString ? JSON.parse(keywordString) : undefined;
   const provider = providerString ? JSON.parse(providerString) : undefined;
   const scrollRef = useRef<FlatList>(null);
-  const paddingBottom = useBottomTabOverflow();
   const [sortMethod, setSortMethod] = useState("popularity.desc");
   const [selectedMovieWatchProvider, setSelectedMovieWatchProvider] =
     useState<number>(provider?.provider_id ?? 0);
@@ -85,19 +76,6 @@ export default function MovieDiscover() {
     // "vote_count.asc",
     // "vote_count.desc"
   ];
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      unstable_headerRightItems: () => [
-        {
-          type: "button",
-          label: "Filter",
-          icon: { type: "sfSymbol", name: "line.3.horizontal.decrease" },
-          onPress: () => modalRef.current?.present(),
-        },
-      ],
-    });
-  }, [navigation]);
 
   function ModalListWrapper({
     text,
@@ -215,6 +193,15 @@ export default function MovieDiscover() {
 
   return (
     <>
+      <Stack.Header>
+        {/* Set title for back navigation but set to transparent to hide title */}
+        <Stack.Header.Title large>{screenTitle}</Stack.Header.Title>
+        <Stack.Header.Right>
+          <Stack.Header.Button onPress={() => modalRef.current?.present()}>
+            <Stack.Header.Icon sf="line.3.horizontal.decrease" />
+          </Stack.Header.Button>
+        </Stack.Header.Right>
+      </Stack.Header>
       <FlatList
         data={movies}
         renderItem={({ item, index }) => (

@@ -139,14 +139,7 @@ function SharedLayout({ children }) {
           headerLargeTitle: false,
         }}
       />
-      <Stack.Screen
-        name="movie-discover"
-        options={({ route }) => ({
-          title: route.params.screenTitle,
-          ...AppleStackPreset,
-          // unstable_headerRightItems: () => [HEADER_ITEMS.filter],
-        })}
-      />
+      <Stack.Screen name="movie-discover" options={{ ...AppleStackPreset }} />
       <Stack.Screen
         name="movie-collection/[id]"
         options={({ route }) => ({

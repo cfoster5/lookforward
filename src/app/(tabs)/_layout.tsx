@@ -7,14 +7,9 @@ import {
   where,
 } from "@react-native-firebase/firestore";
 import { useQueryClient } from "@tanstack/react-query";
-import {
-  Icon,
-  Label,
-  NativeTabs,
-  VectorIcon,
-} from "expo-router/build/native-tabs";
+import { VectorIcon } from "expo-router";
+import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { useEffect } from "react";
-import { Platform } from "react-native";
 
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useWidgetSync } from "@/hooks/useWidgetSync";
@@ -106,40 +101,35 @@ export default function TabStack() {
   return (
     <NativeTabs>
       <NativeTabs.Trigger name="(find)">
-        <Label>Home</Label>
-        {Platform.select({
-          ios: <Icon sf="house.fill" />,
-          android: (
-            <Icon src={<VectorIcon family={MaterialIcons} name="home" />} />
-          ),
-        })}
+        <NativeTabs.Trigger.Icon
+          sf="house.fill"
+          src={<VectorIcon family={MaterialIcons} name="home" />}
+        />
+        <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
+
       <NativeTabs.Trigger name="(countdown)">
-        <Label>Countdown</Label>
-        {Platform.select({
-          ios: <Icon sf="timer" />,
-          android: (
-            <Icon src={<VectorIcon family={MaterialIcons} name="timer" />} />
-          ),
-        })}
+        <NativeTabs.Trigger.Icon
+          sf="timer"
+          src={<VectorIcon family={MaterialIcons} name="timer" />}
+        />
+        <NativeTabs.Trigger.Label>Countdown</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
+
       <NativeTabs.Trigger name="(settings)">
-        <Label>Settings</Label>
-        {Platform.select({
-          ios: <Icon sf="gear" />,
-          android: (
-            <Icon src={<VectorIcon family={MaterialIcons} name="settings" />} />
-          ),
-        })}
+        <NativeTabs.Trigger.Icon
+          sf="gear"
+          src={<VectorIcon family={MaterialIcons} name="settings" />}
+        />
+        <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
+
       <NativeTabs.Trigger name="(search)" role="search">
-        <Label>Search</Label>
-        {Platform.select({
-          ios: <Icon sf="magnifyingglass" />,
-          android: (
-            <Icon src={<VectorIcon family={MaterialIcons} name="search" />} />
-          ),
-        })}
+        <NativeTabs.Trigger.Icon
+          sf="magnifyingglass"
+          src={<VectorIcon family={MaterialIcons} name="search" />}
+        />
+        <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
     </NativeTabs>
   );

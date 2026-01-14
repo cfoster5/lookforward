@@ -6,7 +6,7 @@ import { iOSUIKit } from "react-native-typography";
 
 import { CategoryControl } from "@/components/CategoryControl";
 import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
-import { useInterfaceStore, useSubscriptionStore } from "@/stores";
+import { useInterfaceStore } from "@/stores";
 
 import { AppleStackPreset } from "../(search)/_layout";
 
@@ -169,7 +169,6 @@ function SharedLayout({ children }) {
 }
 
 export default function DynamicLayout({ segment }) {
-  const { movieSubs, gameSubs } = useSubscriptionStore();
   if (segment === "(find)") {
     return (
       <SharedLayout>
@@ -187,17 +186,7 @@ export default function DynamicLayout({ segment }) {
 
   return (
     <SharedLayout>
-      <Stack.Screen
-        name="index"
-        options={{
-          title: "Countdown",
-          ...AppleStackPreset,
-          unstable_headerRightItems: () =>
-            movieSubs.length || gameSubs.length
-              ? [HEADER_ITEMS.filter, HEADER_ITEMS.editPencil]
-              : [],
-        }}
-      />
+      <Stack.Screen name="index" options={AppleStackPreset} />
     </SharedLayout>
   );
 }

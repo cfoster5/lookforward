@@ -5,8 +5,8 @@ import {
   writeBatch,
 } from "@react-native-firebase/firestore";
 import { useScrollToTop } from "@react-navigation/native";
-import { useNavigation } from "expo-router";
-import { useLayoutEffect, useRef, useState } from "react";
+import { Stack } from "expo-router";
+import { useRef, useState } from "react";
 import { Platform, SectionList } from "react-native";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -20,10 +20,7 @@ import { SectionHeader } from "@/screens/Countdown/components/SectionHeader";
 import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
 import { useCountdownStore, useSubscriptionStore } from "@/stores";
 
-import { createHeaderItem } from "../(find,countdown)/_layout";
-
 export default function Countdown() {
-  const navigation = useNavigation();
   const {
     isEditing,
     toggleIsEditing,
@@ -42,121 +39,41 @@ export default function Countdown() {
     "all" | "released" | "unreleased"
   >("all");
 
-  useLayoutEffect(() => {
-    const deleteItems = async () => {
-      const db = getFirestore();
-      const batch = writeBatch(db);
-      selectedMovies.map((selection) => {
-        const docRef = doc(db, "movies", selection.toString());
-        batch.update(docRef, {
-          subscribers: arrayRemove(user.uid),
-        });
-      });
-      selectedGames.map((selection) => {
-        const docRef = doc(db, "gameReleases", selection.toString());
-        batch.update(docRef, {
-          subscribers: arrayRemove(user.uid),
-        });
-      });
-      await batch.commit();
-      toggleIsEditing();
-      clearSelections();
-    };
+  const mediaFilterActions = [
+    {
+      id: "all",
+      label: "All Items",
+      icon: "square.grid.3x1.below.line.grid.1x2",
+    },
+    { id: "movies", label: "Movies", icon: "film" },
+    { id: "games", label: "Games", icon: "gamecontroller" },
+  ] as const;
 
-    navigation.setOptions({
-      unstable_headerLeftItems: () =>
-        !isEditing
-          ? []
-          : [createHeaderItem("delete", { onPress: () => deleteItems() })],
-      unstable_headerRightItems: () =>
-        movieSubs.length || gameSubs.length
-          ? [
-              !isEditing &&
-                createHeaderItem("filter", {
-                  type: "menu",
-                  // changesSelectionAsPrimaryAction: true,
-                  menu: {
-                    // title: "Filter",
-                    items: [
-                      {
-                        type: "action",
-                        label: "All Items",
-                        icon: {
-                          type: "sfSymbol",
-                          name: "square.grid.3x1.below.line.grid.1x2",
-                        },
-                        onPress: () => setFilter("all"),
-                        state: filter === "all" ? "on" : "off",
-                      },
-                      {
-                        type: "action",
-                        label: "Movies",
-                        icon: { type: "sfSymbol", name: "film" },
-                        onPress: () => setFilter("movies"),
-                        state: filter === "movies" ? "on" : "off",
-                      },
-                      {
-                        type: "action",
-                        label: "Games",
-                        icon: { type: "sfSymbol", name: "gamecontroller" },
-                        onPress: () => setFilter("games"),
-                        state: filter === "games" ? "on" : "off",
-                      },
-                      {
-                        type: "submenu",
-                        // changesSelectionAsPrimaryAction: true,
-                        // icon: {
-                        //   type: "sfSymbol",
-                        //   name: "line.3.horizontal.decrease",
-                        // },
-                        label: "Status Options",
-                        items: [
-                          {
-                            type: "action",
-                            label: "All Items",
-                            onPress: () => setStatusFilter("all"),
-                            state: statusFilter === "all" ? "on" : "off",
-                          },
-                          {
-                            type: "action",
-                            label: "Unreleased",
-                            onPress: () => setStatusFilter("unreleased"),
-                            state: statusFilter === "unreleased" ? "on" : "off",
-                          },
-                          {
-                            type: "action",
-                            label: "Released",
-                            onPress: () => setStatusFilter("released"),
-                            state: statusFilter === "released" ? "on" : "off",
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                }),
-              createHeaderItem("editPencil", {
-                onPress: () => {
-                  toggleIsEditing();
-                  if (isEditing) clearSelections();
-                },
-                variant: !isEditing ? "plain" : "done",
-              }),
-            ].filter(Boolean)
-          : [],
+  const statusFilterActions = [
+    { id: "all", label: "All Items" },
+    { id: "unreleased", label: "Unreleased" },
+    { id: "released", label: "Released" },
+  ] as const;
+
+  const deleteItems = async () => {
+    const db = getFirestore();
+    const batch = writeBatch(db);
+    selectedMovies.map((selection) => {
+      const docRef = doc(db, "movies", selection.toString());
+      batch.update(docRef, {
+        subscribers: arrayRemove(user.uid),
+      });
     });
-  }, [
-    clearSelections,
-    filter,
-    gameSubs.length,
-    isEditing,
-    movieSubs.length,
-    navigation,
-    selectedGames,
-    selectedMovies,
-    statusFilter,
-    toggleIsEditing,
-    user.uid,
-  ]);
+    selectedGames.map((selection) => {
+      const docRef = doc(db, "gameReleases", selection.toString());
+      batch.update(docRef, {
+        subscribers: arrayRemove(user.uid),
+      });
+    });
+    await batch.commit();
+    toggleIsEditing();
+    clearSelections();
+  };
 
   if (isMoviesPending || isGamesPending) return <LoadingScreen />;
 
@@ -218,37 +135,84 @@ export default function Countdown() {
   }
 
   return (
-    <SectionList
-      contentContainerStyle={{
-        marginHorizontal: 16,
-        ...Platform.select({ ios: { paddingBottom: 16 } }),
-      }}
-      automaticallyAdjustsScrollIndicatorInsets
-      contentInsetAdjustmentBehavior="automatic"
-      // scrollIndicatorInsets={{ bottom: paddingBottom }}
-      sections={sections}
-      stickySectionHeadersEnabled={false}
-      keyExtractor={(item, index) => item + index}
-      renderItem={({ item, section, index }) => (
-        <CountdownItem
-          item={item}
-          sectionName={section.title}
-          isFirstInSection={index === 0}
-          isLastInSection={
-            section.title === "Movies"
-              ? index + 1 === flattenedMovies.length
-              : index + 1 === flattenedGames.length
-          }
-        />
-      )}
-      renderSectionHeader={({ section }) => (
-        <SectionHeader
-          section={section}
-          sectionIndex={sections.findIndex((s) => s.title === section.title)}
-        />
-      )}
-      ListHeaderComponent={<CountdownLimitBanner />}
-      ref={scrollRef}
-    />
+    <>
+      <Stack.Header>
+        <Stack.Header.Left>
+          {isEditing && (
+            <Stack.Header.Button onPress={deleteItems}>
+              <Stack.Header.Icon sf="trash" />
+            </Stack.Header.Button>
+          )}
+        </Stack.Header.Left>
+        <Stack.Header.Title large>Countdown</Stack.Header.Title>
+        <Stack.Header.Right>
+          <Stack.Header.Menu>
+            <Stack.Header.Icon sf="line.3.horizontal.decrease" />
+            {mediaFilterActions.map((action) => (
+              <Stack.Header.MenuAction
+                key={action.id}
+                icon={action.icon}
+                isOn={filter === action.id}
+                onPress={() => setFilter(action.id)}
+              >
+                {action.label}
+              </Stack.Header.MenuAction>
+            ))}
+            <Stack.Header.Menu title="Status Options">
+              {statusFilterActions.map((action) => (
+                <Stack.Header.MenuAction
+                  key={action.id}
+                  isOn={statusFilter === action.id}
+                  onPress={() => setStatusFilter(action.id)}
+                >
+                  {action.label}
+                </Stack.Header.MenuAction>
+              ))}
+            </Stack.Header.Menu>
+          </Stack.Header.Menu>
+          <Stack.Header.Button
+            onPress={() => {
+              toggleIsEditing();
+              if (isEditing) clearSelections();
+            }}
+            variant={!isEditing ? "plain" : "done"}
+          >
+            <Stack.Header.Icon sf="pencil" />
+          </Stack.Header.Button>
+        </Stack.Header.Right>
+      </Stack.Header>
+      <SectionList
+        contentContainerStyle={{
+          marginHorizontal: 16,
+          ...Platform.select({ ios: { paddingBottom: 16 } }),
+        }}
+        automaticallyAdjustsScrollIndicatorInsets
+        contentInsetAdjustmentBehavior="automatic"
+        // scrollIndicatorInsets={{ bottom: paddingBottom }}
+        sections={sections}
+        stickySectionHeadersEnabled={false}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({ item, section, index }) => (
+          <CountdownItem
+            item={item}
+            sectionName={section.title}
+            isFirstInSection={index === 0}
+            isLastInSection={
+              section.title === "Movies"
+                ? index + 1 === flattenedMovies.length
+                : index + 1 === flattenedGames.length
+            }
+          />
+        )}
+        renderSectionHeader={({ section }) => (
+          <SectionHeader
+            section={section}
+            sectionIndex={sections.findIndex((s) => s.title === section.title)}
+          />
+        )}
+        ListHeaderComponent={<CountdownLimitBanner />}
+        ref={scrollRef}
+      />
+    </>
   );
 }

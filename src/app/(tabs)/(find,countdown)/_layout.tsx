@@ -126,14 +126,10 @@ function SharedLayout({ children }) {
       {children}
       <Stack.Screen
         name="movie/[id]"
-        options={() => ({
+        options={{
           ...AppleStackPreset,
           headerTitleStyle: { color: "transparent" },
-          unstable_headerRightItems: () => [
-            HEADER_ITEMS.editPlus,
-            HEADER_ITEMS.share,
-          ],
-        })}
+        }}
       />
       <Stack.Screen
         name="person/[id]"

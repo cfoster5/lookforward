@@ -4,13 +4,13 @@ import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import {
+  Stack,
   useLocalSearchParams,
-  useNavigation,
   useRouter,
   useSegments,
 } from "expo-router";
 import { DateTime } from "luxon";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   FlatList,
@@ -149,7 +149,6 @@ export function getReleaseDate(releaseDates: ReleaseDate[]) {
 export default function MovieScreen() {
   const segments = useSegments();
   const stack = segments[1] as "(find)" | "(countdown)";
-  const navigation = useNavigation();
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const user = useAuthenticatedUser();
@@ -196,77 +195,6 @@ export default function MovieScreen() {
   const runtime = composeRuntime(movieDetails?.runtime);
   const { data: pro } = useProOfferings();
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      title: movieDetails?.title,
-      unstable_headerRightItems: () => [
-        {
-          type: "button",
-          label: "Edit",
-          icon: {
-            type: "sfSymbol",
-            name: isSubbed ? "checkmark" : "plus",
-          },
-          onPress: () =>
-            handleMovieToggle({
-              movieId: id.toString(),
-              userId: user.uid,
-              isCurrentlySubbed: !!isSubbed,
-              isPro,
-              hasReachedLimit,
-              proOffering: pro,
-            }),
-        },
-        {
-          type: "button",
-          label: "Share",
-          icon: { type: "sfSymbol", name: "square.and.arrow.up" },
-          onPress: () => onShare(`movie/${id}`, "headerButton"),
-        },
-        // {
-        //   type: "menu",
-        //   label: "Options",
-        //   icon: {
-        //     type: "sfSymbol",
-        //     name: "ellipsis",
-        //   },
-        //   menu: {
-        //     title: "Options",
-        //     items: [
-        //       {
-        //         type: "action",
-        //         label: "Edit",
-        //         icon: {
-        //           type: "sfSymbol",
-        //           name: "square.and.arrow.up",
-        //         },
-        //         onPress: () => {},
-        //       },
-        //       {
-        //         type: "action",
-        //         label: "Calendar",
-        //         icon: {
-        //           type: "sfSymbol",
-        //           name: "calendar",
-        //         },
-        //         onPress: () => {},
-        //       },
-        //     ],
-        //   },
-        // },
-      ],
-    });
-  }, [
-    isSubbed,
-    id,
-    navigation,
-    user,
-    movieDetails?.title,
-    isPro,
-    hasReachedLimit,
-    pro,
-  ]);
-
   const recentMovie: Recent = {
     id: id,
     name: movieDetails?.title,
@@ -297,6 +225,33 @@ export default function MovieScreen() {
 
   return (
     <>
+      <Stack.Header>
+        {/* Set title for back navigation but set to transparent to hide title */}
+        <Stack.Header.Title style={{ color: "transparent" }}>
+          {movieDetails.title}
+        </Stack.Header.Title>
+        <Stack.Header.Right>
+          <Stack.Header.Button
+            onPress={() =>
+              handleMovieToggle({
+                movieId: id.toString(),
+                userId: user.uid,
+                isCurrentlySubbed: !!isSubbed,
+                isPro,
+                hasReachedLimit,
+                proOffering: pro,
+              })
+            }
+          >
+            <Stack.Header.Icon sf={isSubbed ? "checkmark" : "plus"} />
+          </Stack.Header.Button>
+          <Stack.Header.Button
+            onPress={() => onShare(`movie/${id}`, "headerButton")}
+          >
+            <Stack.Header.Icon sf="square.and.arrow.up" />
+          </Stack.Header.Button>
+        </Stack.Header.Right>
+      </Stack.Header>
       <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}

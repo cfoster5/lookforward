@@ -1,4 +1,9 @@
-import { useLocalSearchParams, useRouter, useSegments } from "expo-router";
+import {
+  Stack,
+  useLocalSearchParams,
+  useRouter,
+  useSegments,
+} from "expo-router";
 import { useRef } from "react";
 import { FlatList, Platform, Pressable } from "react-native";
 
@@ -19,41 +24,46 @@ export default function GameDiscover() {
   const { data: games, isLoading } = useDiscoverGames({ genreId: genre.id });
 
   return !isLoading ? (
-    <FlatList
-      contentContainerStyle={{
-        marginHorizontal: 16,
-        ...Platform.select({ ios: { paddingTop: 16 } }),
-      }}
-      automaticallyAdjustsScrollIndicatorInsets
-      contentInsetAdjustmentBehavior="automatic"
-      contentInset={{ bottom: paddingBottom }}
-      scrollIndicatorInsets={{ bottom: paddingBottom }}
-      data={games}
-      renderItem={({
-        item: game,
-      }: {
-        item: Games & { release_dates: ReleaseDate[] };
-      }) => (
-        <Pressable
-          onPress={() =>
-            router.navigate({
-              pathname: `(tabs)/${stack}/game/[id]`,
-              params: { game: JSON.stringify(game) },
-            })
-          }
-        >
-          <GamePoster game={game} />
-        </Pressable>
-      )}
-      numColumns={2}
-      columnWrapperStyle={{
-        justifyContent: "space-between",
-        marginBottom: 16,
-      }}
-      ref={scrollRef}
-      keyExtractor={(item) => item.id.toString()}
-      initialNumToRender={6}
-    />
+    <>
+      <Stack.Header>
+        <Stack.Header.Title large>{genre.name}</Stack.Header.Title>
+      </Stack.Header>
+      <FlatList
+        contentContainerStyle={{
+          marginHorizontal: 16,
+          ...Platform.select({ ios: { paddingTop: 16 } }),
+        }}
+        automaticallyAdjustsScrollIndicatorInsets
+        contentInsetAdjustmentBehavior="automatic"
+        contentInset={{ bottom: paddingBottom }}
+        scrollIndicatorInsets={{ bottom: paddingBottom }}
+        data={games}
+        renderItem={({
+          item: game,
+        }: {
+          item: Games & { release_dates: ReleaseDate[] };
+        }) => (
+          <Pressable
+            onPress={() =>
+              router.navigate({
+                pathname: `(tabs)/${stack}/game/[id]`,
+                params: { game: JSON.stringify(game) },
+              })
+            }
+          >
+            <GamePoster game={game} />
+          </Pressable>
+        )}
+        numColumns={2}
+        columnWrapperStyle={{
+          justifyContent: "space-between",
+          marginBottom: 16,
+        }}
+        ref={scrollRef}
+        keyExtractor={(item) => item.id.toString()}
+        initialNumToRender={6}
+      />
+    </>
   ) : (
     <LoadingScreen />
   );

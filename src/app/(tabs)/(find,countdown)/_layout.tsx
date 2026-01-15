@@ -17,55 +17,6 @@ export const unstable_settings = {
   },
 };
 
-// Reusable header item base definitions
-export const HEADER_ITEMS = {
-  share: {
-    type: "button",
-    label: "Share",
-    icon: { type: "sfSymbol", name: "square.and.arrow.up" },
-    onPress: () => {},
-  } as const,
-  editPlus: {
-    type: "button",
-    label: "Edit",
-    icon: { type: "sfSymbol", name: "plus" },
-    onPress: () => {},
-  } as const,
-  editPencil: {
-    type: "button",
-    label: "Edit",
-    icon: { type: "sfSymbol", name: "pencil" },
-    onPress: () => {},
-  } as const,
-  filter: {
-    type: "menu",
-    label: "Filter",
-    icon: { type: "sfSymbol", name: "line.3.horizontal.decrease" },
-    onPress: () => {},
-    items: [],
-  } as const,
-  allItemsFilter: {
-    type: "button",
-    label: "All Items",
-    icon: { type: "sfSymbol", name: "square.grid.3x1.below.line.grid.1x2" },
-    onPress: () => {},
-  } as const,
-  delete: {
-    type: "button",
-    label: "Delete",
-    icon: { type: "sfSymbol", name: "trash" },
-    onPress: () => {},
-  } as const,
-};
-
-// Helper to extend header items with custom properties
-export function createHeaderItem<T extends keyof typeof HEADER_ITEMS>(
-  itemKey: T,
-  overrides: Partial<(typeof HEADER_ITEMS)[T]> & Record<string, unknown>,
-) {
-  return { ...HEADER_ITEMS[itemKey], ...overrides };
-}
-
 const FindHeader = () => {
   const {
     categoryIndex,

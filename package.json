@@ -21,6 +21,7 @@
     "@dev-plugins/react-navigation": "^0.4.0",
     "@dev-plugins/react-query": "^0.4.0",
     "@expo/metro-runtime": "6.2.0-canary-20260114-d8e19f5",
+    "@expo/ui": "0.2.0-canary-20260114-d8e19f5",
     "@expo/vector-icons": "^15.0.3",
     "@gorhom/bottom-sheet": "^5",
     "@invertase/react-native-apple-authentication": "^2.5.0",

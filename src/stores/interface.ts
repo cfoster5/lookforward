@@ -6,13 +6,11 @@ import { create } from "zustand";
 import { MovieOption } from "@/screens/Search/types";
 
 const bottomSheetModalRef = createRef<BottomSheetModal>();
-const onboardingModalRef = createRef<BottomSheetModal>();
 const movieSearchModalRef = createRef<BottomSheetModal>();
 
 type InterfaceState = {
   theme: ColorSchemeName;
   bottomSheetModalRef: typeof bottomSheetModalRef;
-  onboardingModalRef: typeof onboardingModalRef;
   movieSearchModalRef: typeof movieSearchModalRef;
   movieSearchOption: MovieOption;
   categoryIndex: number;
@@ -29,7 +27,6 @@ export const useInterfaceStore = create<InterfaceState & InterfaceActions>(
     theme: "dark",
     setTheme: (theme) => set(() => ({ theme })),
     bottomSheetModalRef,
-    onboardingModalRef,
     movieSearchModalRef,
     movieSearchOption: MovieOption.ComingSoon,
     setMovieSearchOption: (option) =>

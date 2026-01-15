@@ -11,14 +11,15 @@ import {
   onTokenRefresh,
   requestPermission,
 } from "@react-native-firebase/messaging";
+import { isLiquidGlassAvailable } from "expo-glass-effect";
 import * as Linking from "expo-linking";
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
+import { Platform } from "react-native";
 import Purchases from "react-native-purchases";
 
-import { OnboardingModal } from "@/components/OnboardingModal";
 import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
 import { AuthStack } from "@/navigation/AuthStack";
@@ -114,8 +115,41 @@ export default function RootLayout() {
 
   return (
     <AppProvider>
-      <OnboardingModal />
-      {!user ? <AuthStack /> : <Slot />}
+      {!user ? (
+        <AuthStack />
+      ) : (
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="onboarding"
+            options={{
+              headerShown: true,
+              headerTransparent: Platform.OS === "ios",
+              headerLargeTitle: false,
+              title: "Getting Started",
+              presentation: "formSheet",
+              sheetGrabberVisible: true,
+              // sheetAllowedDetents: [0.5, 1],
+              sheetAllowedDetents: "fitToContents",
+              // sheetInitialDetentIndex: Platform.OS === "ios" ? 0 : undefined,
+              contentStyle: {
+                backgroundColor:
+                  Platform.OS === "ios" && isLiquidGlassAvailable()
+                    ? "transparent"
+                    : "#F2F2F7",
+              },
+              headerStyle: {
+                backgroundColor:
+                  Platform.OS === "ios" ? "transparent" : "#F2F2F7",
+              },
+              headerBlurEffect:
+                Platform.OS === "ios" && isLiquidGlassAvailable()
+                  ? undefined
+                  : "light",
+            }}
+          />
+        </Stack>
+      )}
       {/* Below launches app with the Countdown screen */}
       {/* {user && (
         <HeaderButtonsProvider stackType="native">

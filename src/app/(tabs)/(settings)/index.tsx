@@ -260,12 +260,13 @@ export default function Settings() {
           style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
         />
       </Link>
-      <SettingNavButton
-        onPress={() => onboardingModalRef.current?.present()}
-        text="Show Getting Started"
-        isFirstInGroup
-        style={{ borderRadius: 26 }}
-      />
+      <Link href="/onboarding" asChild>
+        <SettingNavButton
+          text="Show Getting Started"
+          isFirstInGroup
+          style={{ borderRadius: 26 }}
+        />
+      </Link>
       <Link href="/(tabs)/(settings)/account" asChild>
         <SettingNavButton
           text="Account"

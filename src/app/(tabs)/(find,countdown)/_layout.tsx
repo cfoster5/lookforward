@@ -149,13 +149,11 @@ function SharedLayout({ children }) {
       />
       <Stack.Screen
         name="game/[id]"
-        options={({ route }) => ({
+        options={{
           ...AppleStackPreset,
-          title: JSON.parse(route.params.game).name,
           headerLargeTitle: false,
           headerTitleStyle: { color: "transparent" },
-          unstable_headerRightItems: () => [HEADER_ITEMS.editPlus],
-        })}
+        }}
       />
       <Stack.Screen
         name="game-discover"

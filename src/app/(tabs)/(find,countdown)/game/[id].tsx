@@ -2,12 +2,12 @@ import * as Colors from "@bacons/apple-colors";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { Image } from "expo-image";
 import {
+  Stack,
   useLocalSearchParams,
-  useNavigation,
   useRouter,
   useSegments,
 } from "expo-router";
-import { useLayoutEffect, useState, Fragment } from "react";
+import { useState, Fragment } from "react";
 import { ScrollView, View, FlatList, Text } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
@@ -60,7 +60,6 @@ export default function Game() {
   const segments = useSegments();
   const stack = segments[1] as "(find)" | "(countdown)";
   const router = useRouter();
-  const navigation = useNavigation();
   const { game: gameString } = useLocalSearchParams();
   const game = gameString ? JSON.parse(gameString) : undefined;
   const user = useAuthenticatedUser();
@@ -71,31 +70,6 @@ export default function Game() {
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
   const paddingBottom = useBottomTabOverflow();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      unstable_headerRightItems: () => [
-        {
-          type: "button",
-          label: "Edit",
-          icon: {
-            type: "sfSymbol",
-            name: countdownId ? "checkmark" : "plus",
-          },
-          onPress: () => {
-            if (!countdownId) {
-              bottomSheetModalRef.current?.present({
-                ...game,
-                release_dates: data?.release_dates,
-              });
-            } else {
-              removeSub("gameReleases", countdownId, user.uid);
-            }
-          },
-        },
-      ],
-    });
-  }, [bottomSheetModalRef, countdownId, game, navigation, user, data]);
 
   const recentGame: Recent = {
     id: game.id,
@@ -111,6 +85,28 @@ export default function Game() {
 
   return (
     <>
+      <Stack.Header>
+        {/* Set title for back navigation but set to transparent to hide title */}
+        <Stack.Header.Title style={{ color: "transparent" }}>
+          {game.name}
+        </Stack.Header.Title>
+        <Stack.Header.Right>
+          <Stack.Header.Button
+            onPress={() => {
+              if (!countdownId) {
+                bottomSheetModalRef.current?.present({
+                  ...game,
+                  release_dates: data?.release_dates,
+                });
+              } else {
+                removeSub("gameReleases", countdownId, user.uid);
+              }
+            }}
+          >
+            <Stack.Header.Icon sf={countdownId ? "checkmark" : "plus"} />
+          </Stack.Header.Button>
+        </Stack.Header.Right>
+      </Stack.Header>
       <ScrollView
         automaticallyAdjustsScrollIndicatorInsets
         contentInsetAdjustmentBehavior="automatic"

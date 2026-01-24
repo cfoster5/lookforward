@@ -77,19 +77,17 @@ export default function Actor() {
 
   return (
     <>
-      <Stack.Header>
-        {/* Set title for back navigation but set to transparent to hide title */}
-        <Stack.Header.Title style={{ color: "transparent" }}>
-          {person?.name}
-        </Stack.Header.Title>
-        <Stack.Header.Right>
-          <Stack.Header.Button
-            onPress={() => onShare(`person/${id}`, "headerButton")}
-          >
-            <Stack.Header.Icon sf="square.and.arrow.up" />
-          </Stack.Header.Button>
-        </Stack.Header.Right>
-      </Stack.Header>
+      {/* Set title for back navigation but set to transparent to hide title */}
+      <Stack.Screen.Title style={{ color: "transparent" }}>
+        {person?.name}
+      </Stack.Screen.Title>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Button
+          onPress={() => onShare(`person/${id}`, "headerButton")}
+        >
+          <Stack.Toolbar.Icon sf="square.and.arrow.up" />
+        </Stack.Toolbar.Button>
+      </Stack.Toolbar>
       <FlatList
         data={selectedJob === "Actor" ? castCredits : crewCredits}
         renderItem={({ item, index }) => (

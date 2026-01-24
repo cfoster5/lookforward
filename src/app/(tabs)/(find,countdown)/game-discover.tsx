@@ -25,9 +25,7 @@ export default function GameDiscover() {
 
   return !isLoading ? (
     <>
-      <Stack.Header>
-        <Stack.Header.Title large>{genre.name}</Stack.Header.Title>
-      </Stack.Header>
+      <Stack.Screen.Title large>{genre.name}</Stack.Screen.Title>
       <FlatList
         contentContainerStyle={{
           marginHorizontal: 16,

@@ -1,5 +1,5 @@
-import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
+import { Color } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
@@ -80,20 +80,22 @@ export function CountdownItem({
         </View>
         <View style={styles.middle}>
           <Text
-            style={[iOSUIKit.body, { color: Colors.label }]}
+            style={[iOSUIKit.body, { color: Color.ios.label }]}
             numberOfLines={2}
           >
             {title}
           </Text>
-          <Text style={[iOSUIKit.subhead, { color: Colors.secondaryLabel }]}>
+          <Text style={[iOSUIKit.subhead, { color: Color.ios.secondaryLabel }]}>
             {formattedDate}
           </Text>
         </View>
         <View style={styles.countdown}>
-          <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.systemBlue }]}>
+          <Text
+            style={[iOSUIKit.bodyEmphasized, { color: Color.ios.systemBlue }]}
+          >
             {daysUntil ?? "TBD"}
           </Text>
-          <Text style={[iOSUIKit.body, { color: Colors.systemBlue }]}>
+          <Text style={[iOSUIKit.body, { color: Color.ios.systemBlue }]}>
             days
           </Text>
         </View>

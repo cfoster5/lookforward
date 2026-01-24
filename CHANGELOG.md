@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.17.0](https://github.com/cfoster5/lookforward/compare/v7.16.0...v7.17.0) (2026-01-24)
+
+
+### Features
+
+* simplify PosterButton component and update icon rendering ([6aca110](https://github.com/cfoster5/lookforward/commit/6aca1105af1004e2f505bb36b5c211ab556eb3d7))
+
 ## [7.16.0](https://github.com/cfoster5/lookforward/compare/v7.15.0...v7.16.0) (2026-01-13)
 
 

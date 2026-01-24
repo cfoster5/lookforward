@@ -1,7 +1,6 @@
-import * as Colors from "@bacons/apple-colors";
-import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
+import { Color } from "expo-router";
 import { View } from "react-native";
-import { iOSColors } from "react-native-typography";
 
 export const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
   <View
@@ -10,7 +9,7 @@ export const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
       width: 24,
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: Colors.systemGray,
+      borderColor: Color.ios.systemGray,
       alignItems: "center",
       justifyContent: "center",
     }}
@@ -21,15 +20,17 @@ export const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
           height: 24,
           width: 24,
           borderRadius: 12,
-          backgroundColor: Colors.systemBlue,
+          backgroundColor: Color.ios.systemBlue,
           justifyContent: "center",
         }}
       >
-        <Ionicons
-          name="checkmark-outline"
-          color={iOSColors.white}
-          size={20}
-          style={{ textAlign: "center" }}
+        <Image
+          source="sf:checkmark"
+          style={{
+            fontSize: 16,
+            alignSelf: "center",
+          }}
+          tintColor={Color.ios.label}
         />
       </View>
     )}

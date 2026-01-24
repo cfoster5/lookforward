@@ -136,51 +136,49 @@ export default function Countdown() {
 
   return (
     <>
-      <Stack.Header>
-        <Stack.Header.Left>
-          {isEditing && (
-            <Stack.Header.Button onPress={deleteItems}>
-              <Stack.Header.Icon sf="trash" />
-            </Stack.Header.Button>
-          )}
-        </Stack.Header.Left>
-        <Stack.Header.Title large>Countdown</Stack.Header.Title>
-        <Stack.Header.Right>
-          <Stack.Header.Menu>
-            <Stack.Header.Icon sf="line.3.horizontal.decrease" />
-            {mediaFilterActions.map((action) => (
-              <Stack.Header.MenuAction
+      <Stack.Toolbar placement="left">
+        {isEditing && (
+          <Stack.Toolbar.Button onPress={deleteItems}>
+            <Stack.Toolbar.Icon sf="trash" />
+          </Stack.Toolbar.Button>
+        )}
+      </Stack.Toolbar>
+      <Stack.Screen.Title large>Countdown</Stack.Screen.Title>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Menu>
+          <Stack.Toolbar.Icon sf="line.3.horizontal.decrease" />
+          {mediaFilterActions.map((action) => (
+            <Stack.Toolbar.MenuAction
+              key={action.id}
+              icon={action.icon}
+              isOn={filter === action.id}
+              onPress={() => setFilter(action.id)}
+            >
+              {action.label}
+            </Stack.Toolbar.MenuAction>
+          ))}
+          <Stack.Toolbar.Menu title="Status Options">
+            {statusFilterActions.map((action) => (
+              <Stack.Toolbar.MenuAction
                 key={action.id}
-                icon={action.icon}
-                isOn={filter === action.id}
-                onPress={() => setFilter(action.id)}
+                isOn={statusFilter === action.id}
+                onPress={() => setStatusFilter(action.id)}
               >
                 {action.label}
-              </Stack.Header.MenuAction>
+              </Stack.Toolbar.MenuAction>
             ))}
-            <Stack.Header.Menu title="Status Options">
-              {statusFilterActions.map((action) => (
-                <Stack.Header.MenuAction
-                  key={action.id}
-                  isOn={statusFilter === action.id}
-                  onPress={() => setStatusFilter(action.id)}
-                >
-                  {action.label}
-                </Stack.Header.MenuAction>
-              ))}
-            </Stack.Header.Menu>
-          </Stack.Header.Menu>
-          <Stack.Header.Button
-            onPress={() => {
-              toggleIsEditing();
-              if (isEditing) clearSelections();
-            }}
-            variant={!isEditing ? "plain" : "done"}
-          >
-            <Stack.Header.Icon sf="pencil" />
-          </Stack.Header.Button>
-        </Stack.Header.Right>
-      </Stack.Header>
+          </Stack.Toolbar.Menu>
+        </Stack.Toolbar.Menu>
+        <Stack.Toolbar.Button
+          onPress={() => {
+            toggleIsEditing();
+            if (isEditing) clearSelections();
+          }}
+          variant={!isEditing ? "plain" : "done"}
+        >
+          <Stack.Toolbar.Icon sf="pencil" />
+        </Stack.Toolbar.Button>
+      </Stack.Toolbar>
       <SectionList
         contentContainerStyle={{
           marginHorizontal: 16,

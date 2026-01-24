@@ -1,6 +1,6 @@
-import { Ionicons } from "@expo/vector-icons";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
-import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
+import { Image } from "expo-image";
+import { Color, Stack, useLocalSearchParams, useNavigation } from "expo-router";
 import { useRef, useState } from "react";
 import { FlatList, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -127,9 +127,14 @@ export default function MovieDiscover() {
                   test={item.actual}
                 >
                   {" "}
-                  <Ionicons
-                    name={item.direction === "Up" ? "arrow-up" : "arrow-down"}
-                    color="white"
+                  <Image
+                    source={
+                      item.direction === "Up" ? "sf:arrow.up" : "sf:arrow.down"
+                    }
+                    style={{
+                      fontSize: iOSUIKit.footnoteEmphasizedObject.fontSize,
+                    }}
+                    tintColor={Color.ios.label}
                   />
                 </ButtonMultiState>
               )}
@@ -193,15 +198,13 @@ export default function MovieDiscover() {
 
   return (
     <>
-      <Stack.Header>
-        {/* Set title for back navigation but set to transparent to hide title */}
-        <Stack.Header.Title large>{screenTitle}</Stack.Header.Title>
-        <Stack.Header.Right>
-          <Stack.Header.Button onPress={() => modalRef.current?.present()}>
-            <Stack.Header.Icon sf="line.3.horizontal.decrease" />
-          </Stack.Header.Button>
-        </Stack.Header.Right>
-      </Stack.Header>
+      {/* Set title for back navigation but set to transparent to hide title */}
+      <Stack.Screen.Title large>{screenTitle}</Stack.Screen.Title>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Button onPress={() => modalRef.current?.present()}>
+          <Stack.Toolbar.Icon sf="line.3.horizontal.decrease" />
+        </Stack.Toolbar.Button>
+      </Stack.Toolbar>
       <FlatList
         data={movies}
         renderItem={({ item, index }) => (

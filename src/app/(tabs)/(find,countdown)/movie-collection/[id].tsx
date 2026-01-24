@@ -31,19 +31,17 @@ export default function Collection() {
 
   return (
     <>
-      <Stack.Header>
-        {/* Set title for back navigation but set to transparent to hide title */}
-        <Stack.Header.Title style={{ color: "transparent" }}>
-          {collection?.name}
-        </Stack.Header.Title>
-        <Stack.Header.Right>
-          <Stack.Header.Button
-            onPress={() => onShare(`movie-collection/${id}`, "headerButton")}
-          >
-            <Stack.Header.Icon sf="square.and.arrow.up" />
-          </Stack.Header.Button>
-        </Stack.Header.Right>
-      </Stack.Header>
+      {/* Set title for back navigation but set to transparent to hide title */}
+      <Stack.Screen.Title style={{ color: "transparent" }}>
+        {collection?.name}
+      </Stack.Screen.Title>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Button
+          onPress={() => onShare(`movie-collection/${id}`, "headerButton")}
+        >
+          <Stack.Toolbar.Icon sf="square.and.arrow.up" />
+        </Stack.Toolbar.Button>
+      </Stack.Toolbar>
       <Animated.FlatList
         ListHeaderComponent={
           <>

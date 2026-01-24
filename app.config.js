@@ -12,7 +12,6 @@ export default {
     // TODO: allow switching appearance
     // userInterfaceStyle: "automatic",
     userInterfaceStyle: "dark",
-    newArchEnabled: true,
     splash: {
       image: "./assets/splash.png",
       resizeMode: "contain",
@@ -79,6 +78,7 @@ export default {
     experiments: {
       tsconfigPaths: true,
       typedRoutes: true,
+      reactCompiler: true,
     },
     extra: {
       eas: {

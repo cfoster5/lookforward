@@ -1,7 +1,7 @@
-import * as Colors from "@bacons/apple-colors";
 import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { Image } from "expo-image";
 import {
+  Color,
   Stack,
   useLocalSearchParams,
   useRouter,
@@ -85,28 +85,26 @@ export default function Game() {
 
   return (
     <>
-      <Stack.Header>
-        {/* Set title for back navigation but set to transparent to hide title */}
-        <Stack.Header.Title style={{ color: "transparent" }}>
-          {game.name}
-        </Stack.Header.Title>
-        <Stack.Header.Right>
-          <Stack.Header.Button
-            onPress={() => {
-              if (!countdownId) {
-                bottomSheetModalRef.current?.present({
-                  ...game,
-                  release_dates: data?.release_dates,
-                });
-              } else {
-                removeSub("gameReleases", countdownId, user.uid);
-              }
-            }}
-          >
-            <Stack.Header.Icon sf={countdownId ? "checkmark" : "plus"} />
-          </Stack.Header.Button>
-        </Stack.Header.Right>
-      </Stack.Header>
+      {/* Set title for back navigation but set to transparent to hide title */}
+      <Stack.Screen.Title style={{ color: "transparent" }}>
+        {game.name}
+      </Stack.Screen.Title>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Button
+          onPress={() => {
+            if (!countdownId) {
+              bottomSheetModalRef.current?.present({
+                ...game,
+                release_dates: data?.release_dates,
+              });
+            } else {
+              removeSub("gameReleases", countdownId, user.uid);
+            }
+          }}
+        >
+          <Stack.Toolbar.Icon sf={countdownId ? "checkmark" : "plus"} />
+        </Stack.Toolbar.Button>
+      </Stack.Toolbar>
       <ScrollView
         automaticallyAdjustsScrollIndicatorInsets
         contentInsetAdjustmentBehavior="automatic"
@@ -128,7 +126,7 @@ export default function Game() {
           <Text
             style={[
               iOSUIKit.subheadEmphasized,
-              { color: Colors.secondaryLabel },
+              { color: Color.ios.secondaryLabel },
             ]}
           >
             {getGameReleaseDate(data)}
@@ -172,8 +170,8 @@ export default function Game() {
                   })
                 }
                 buttonStyle={{
-                  backgroundColor: Colors.secondarySystemGroupedBackground,
-                  borderColor: Colors.secondarySystemGroupedBackground,
+                  backgroundColor: Color.ios.secondarySystemGroupedBackground,
+                  borderColor: Color.ios.secondarySystemGroupedBackground,
                 }}
               />
             ))}

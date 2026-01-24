@@ -225,33 +225,31 @@ export default function MovieScreen() {
 
   return (
     <>
-      <Stack.Header>
-        {/* Set title for back navigation but set to transparent to hide title */}
-        <Stack.Header.Title style={{ color: "transparent" }}>
-          {movieDetails.title}
-        </Stack.Header.Title>
-        <Stack.Header.Right>
-          <Stack.Header.Button
-            onPress={() =>
-              handleMovieToggle({
-                movieId: id.toString(),
-                userId: user.uid,
-                isCurrentlySubbed: !!isSubbed,
-                isPro,
-                hasReachedLimit,
-                proOffering: pro,
-              })
-            }
-          >
-            <Stack.Header.Icon sf={isSubbed ? "checkmark" : "plus"} />
-          </Stack.Header.Button>
-          <Stack.Header.Button
-            onPress={() => onShare(`movie/${id}`, "headerButton")}
-          >
-            <Stack.Header.Icon sf="square.and.arrow.up" />
-          </Stack.Header.Button>
-        </Stack.Header.Right>
-      </Stack.Header>
+      {/* Set title for back navigation but set to transparent to hide title */}
+      <Stack.Screen.Title style={{ color: "transparent" }}>
+        {movieDetails.title}
+      </Stack.Screen.Title>
+      <Stack.Toolbar placement="right">
+        <Stack.Toolbar.Button
+          onPress={() =>
+            handleMovieToggle({
+              movieId: id.toString(),
+              userId: user.uid,
+              isCurrentlySubbed: !!isSubbed,
+              isPro,
+              hasReachedLimit,
+              proOffering: pro,
+            })
+          }
+        >
+          <Stack.Toolbar.Icon sf={isSubbed ? "checkmark" : "plus"} />
+        </Stack.Toolbar.Button>
+        <Stack.Toolbar.Button
+          onPress={() => onShare(`movie/${id}`, "headerButton")}
+        >
+          <Stack.Toolbar.Icon sf="square.and.arrow.up" />
+        </Stack.Toolbar.Button>
+      </Stack.Toolbar>
       <Animated.ScrollView
         onScroll={scrollHandler}
         scrollEventThrottle={16}
@@ -667,10 +665,12 @@ export default function MovieScreen() {
           )}
         </View>
       </Animated.ScrollView>
-      <WatchProvidersModal
-        modalRef={modalRef}
-        providers={movieDetails["watch/providers"].results.US}
-      />
+      {movieDetails["watch/providers"].results.US && (
+        <WatchProvidersModal
+          modalRef={modalRef}
+          providers={movieDetails["watch/providers"].results.US}
+        />
+      )}
     </>
   );
 }

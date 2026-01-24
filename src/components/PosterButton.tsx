@@ -1,8 +1,8 @@
-import * as Colors from "@bacons/apple-colors";
 import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
-import { Pressable, View } from "react-native";
+import { Image } from "expo-image";
+import { Color } from "expo-router";
+import { Pressable, StyleSheet, View } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
-import Animated, { FadeIn } from "react-native-reanimated";
 
 import { useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle, removeSub } from "@/helpers/helpers";
@@ -12,8 +12,6 @@ import {
   useInterfaceStore,
 } from "@/stores";
 import { Game, ReleaseDate } from "@/types";
-
-import { IconSymbol } from "./IconSymbol";
 
 interface Props {
   movieId?: string;
@@ -59,62 +57,61 @@ function PosterButton({ movieId, game }: Props) {
       : bottomSheetModalRef.current?.present(game);
   }
 
+  const isSubscribed = isMovieSub() || isGameSub();
+
+  const icon = (
+    <Image
+      transition={{ effect: "sf:replace" }}
+      source={isSubscribed ? "sf:checkmark" : "sf:plus"}
+      style={{ fontSize: 24 }}
+      tintColor={Color.ios.label}
+    />
+  );
+
+  const Container = isLiquidGlassAvailable() ? GlassView : View;
+  const containerStyle = isLiquidGlassAvailable()
+    ? styles.container
+    : styles.fallbackContainer;
+
   return (
     <Pressable
-      onPress={movieId ? () => toggleMovieSub() : () => toggleGameSub()}
-      style={{ position: "absolute", zIndex: 1, bottom: 4, right: 4 }}
+      onPress={movieId ? toggleMovieSub : toggleGameSub}
+      style={styles.button}
     >
-      {isLiquidGlassAvailable() ? (
-        <GlassView
-          glassEffectStyle="regular"
-          style={{
-            height: 36,
-            width: 36,
-            borderRadius: 18,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Animated.View entering={FadeIn} key={isMovieSub() || isGameSub()}>
-            <IconSymbol
-              color={Colors.label}
-              name={isMovieSub() || isGameSub() ? "checkmark" : "plus"}
-            />
-          </Animated.View>
-        </GlassView>
-      ) : (
-        <View
-          style={{
-            height: 36,
-            width: 36,
-            borderRadius: 18,
-            borderWidth: 1,
-            borderColor: Colors.separator,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <View
-            style={{
-              height: 36,
-              width: 36,
-              borderRadius: 18,
-              backgroundColor: Colors.systemGray5,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Animated.View entering={FadeIn} key={isMovieSub() || isGameSub()}>
-              <IconSymbol
-                color={Colors.label}
-                name={isMovieSub() || isGameSub() ? "checkmark" : "plus"}
-              />
-            </Animated.View>
-          </View>
-        </View>
-      )}
+      <Container
+        {...(isLiquidGlassAvailable() && { glassEffectStyle: "regular" })}
+        style={containerStyle}
+      >
+        {icon}
+      </Container>
     </Pressable>
   );
 }
+
+const styles = StyleSheet.create({
+  button: {
+    position: "absolute",
+    zIndex: 1,
+    bottom: 4,
+    right: 4,
+  },
+  container: {
+    height: 36,
+    width: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  fallbackContainer: {
+    height: 36,
+    width: 36,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: Color.ios.systemGray5,
+    borderColor: Color.ios.separator,
+    borderWidth: StyleSheet.hairlineWidth,
+  },
+});
 
 export default PosterButton;

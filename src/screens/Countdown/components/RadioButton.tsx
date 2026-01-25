@@ -8,31 +8,20 @@ export const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
       height: 24,
       width: 24,
       borderRadius: 12,
-      borderWidth: 1,
+      borderWidth: !isSelected ? 1 : 0,
       borderColor: Color.ios.systemGray,
       alignItems: "center",
       justifyContent: "center",
+      backgroundColor: !isSelected ? undefined : Color.ios.systemBlue,
     }}
   >
     {isSelected && (
-      <View
-        style={{
-          height: 24,
-          width: 24,
-          borderRadius: 12,
-          backgroundColor: Color.ios.systemBlue,
-          justifyContent: "center",
-        }}
-      >
-        <Image
-          source="sf:checkmark"
-          style={{
-            fontSize: 16,
-            alignSelf: "center",
-          }}
-          tintColor={Color.ios.label}
-        />
-      </View>
+      <Image
+        source="sf:checkmark"
+        sfEffect="draw/on"
+        style={{ fontSize: 16 }}
+        tintColor={Color.ios.label}
+      />
     )}
   </View>
 );

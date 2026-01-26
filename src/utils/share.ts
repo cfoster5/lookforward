@@ -1,9 +1,13 @@
-import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
+import type PostHog from "posthog-react-native";
 import { Alert, Share } from "react-native";
 
 import { tryCatch } from "./try-catch";
 
-export const onShare = async (urlSegment: string, method: string) => {
+export const onShare = async (
+  urlSegment: string,
+  method: string,
+  posthog?: PostHog | null,
+) => {
   const { data, error } = await tryCatch(
     Share.share({ url: `https://getlookforward.app/${urlSegment}` }),
   );
@@ -15,9 +19,7 @@ export const onShare = async (urlSegment: string, method: string) => {
 
   const { action, activityType } = data;
   if (action === Share.sharedAction) {
-    // optionally do something with activityType
-    const analytics = getAnalytics();
-    await logEvent(analytics, "share", {
+    posthog?.capture("item_send", {
       content_type: "url",
       item_id: urlSegment,
       method,

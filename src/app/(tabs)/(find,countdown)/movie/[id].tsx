@@ -1,6 +1,5 @@
 import * as Colors from "@bacons/apple-colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import {
@@ -10,6 +9,7 @@ import {
   useSegments,
 } from "expo-router";
 import { DateTime } from "luxon";
+import { usePostHog } from "posthog-react-native";
 import { useEffect, useRef, useState } from "react";
 import {
   Dimensions,
@@ -194,6 +194,7 @@ export default function MovieScreen() {
 
   const runtime = composeRuntime(movieDetails?.runtime);
   const { data: pro } = useProOfferings();
+  const posthog = usePostHog();
 
   const recentMovie: Recent = {
     id: id,
@@ -245,7 +246,7 @@ export default function MovieScreen() {
           <Stack.Toolbar.Icon sf={isSubbed ? "checkmark" : "plus"} />
         </Stack.Toolbar.Button>
         <Stack.Toolbar.Button
-          onPress={() => onShare(`movie/${id}`, "headerButton")}
+          onPress={() => onShare(`movie/${id}`, "headerButton", posthog)}
         >
           <Stack.Toolbar.Icon sf="square.and.arrow.up" />
         </Stack.Toolbar.Button>
@@ -290,18 +291,26 @@ export default function MovieScreen() {
                 <>
                   <BlueBullet />
                   {!isPro ? (
-                    <>
+                    <Pressable
+                      onPress={async () => {
+                        await RevenueCatUI.presentPaywall({ offering: pro });
+                        posthog.capture("movie:paywall_view", {
+                          type: "pro",
+                          source: "box_office",
+                        });
+                      }}
+                      style={{ flexDirection: "row" }}
+                    >
                       <Text style={styles.secondarySubhedEmphasized}>$</Text>
                       <View
                         style={{
                           width: 44 * 2,
-                          // backgroundColor: "rgba(120, 120, 120, 0.12)",
                           backgroundColor: Colors.placeholderText,
                           opacity: 0.5,
                           borderRadius: 4,
                         }}
                       />
-                    </>
+                    </Pressable>
                   ) : (
                     <Text style={styles.secondarySubhedEmphasized}>
                       ${movieDetails.revenue.toLocaleString()}
@@ -319,6 +328,13 @@ export default function MovieScreen() {
                   key={rating.Source}
                   source={rating.Source}
                   rating={rating.Value}
+                  onPress={async () => {
+                    await RevenueCatUI.presentPaywall({ offering: pro });
+                    posthog.capture("movie:paywall_view", {
+                      type: "pro",
+                      source: "rating",
+                    });
+                  }}
                 />
               ))}
             </View>
@@ -328,11 +344,7 @@ export default function MovieScreen() {
             <LargeBorderlessButton
               handlePress={async () => {
                 await RevenueCatUI.presentPaywall({ offering: pro });
-                const analytics = getAnalytics();
-                await logEvent(analytics, "select_promotion", {
-                  name: "Pro",
-                  id: "com.lookforward.pro",
-                });
+                posthog.capture("movie:paywall_view", { type: "pro" });
               }}
               text="Explore Pro Features"
               style={{ paddingBottom: 0 }}

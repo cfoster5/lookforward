@@ -14,6 +14,7 @@ import {
 } from "@react-navigation/native";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNavigationContainerRef } from "expo-router";
+import { PostHogProvider } from "posthog-react-native";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TMDB } from "tmdb-ts";
@@ -65,15 +66,26 @@ export function AppProvider({ children }: AppProviderProps) {
   }, [setUser]);
 
   return (
-    <GestureHandlerRootView>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider
-          // value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-          value={theme === "dark" ? DarkTheme : DefaultTheme}
-        >
-          <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </GestureHandlerRootView>
+    <PostHogProvider
+      apiKey="phc_diTHFV13CPZdclusrkGwC0v8beszFxK3k1cLTUcg2PH"
+      options={{
+        host: "https://us.i.posthog.com",
+      }}
+      autocapture={{
+        captureScreens: false, // Screen events are handled differently for v7 and higher
+        captureTouches: true,
+      }}
+    >
+      <GestureHandlerRootView>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider
+            // value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+            value={theme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <BottomSheetModalProvider>{children}</BottomSheetModalProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </GestureHandlerRootView>
+    </PostHogProvider>
   );
 }

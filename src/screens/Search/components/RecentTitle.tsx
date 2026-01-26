@@ -1,8 +1,8 @@
 import * as Colors from "@bacons/apple-colors";
-import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { SymbolView } from "expo-symbols";
+import { usePostHog } from "posthog-react-native";
 import { Pressable, Text, View } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
@@ -20,6 +20,7 @@ export function RecentTitle({ item }: { item: Recent }) {
   const { movieSubs, hasReachedLimit } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
   const { removeRecent } = useRecentItemsStore();
+  const posthog = usePostHog();
 
   const isMovieSub = () =>
     item.id && movieSubs.some((sub) => sub.documentID === item.id.toString());
@@ -29,11 +30,7 @@ export function RecentTitle({ item }: { item: Recent }) {
       <Pressable
         onPress={async () => {
           await RevenueCatUI.presentPaywall({ offering: pro });
-          const analytics = getAnalytics();
-          logEvent(analytics, "select_promotion", {
-            name: "Pro",
-            id: "com.lookforward.pro",
-          });
+          posthog.capture("recent_title:paywall_view", { type: "pro" });
         }}
         style={{ paddingVertical: 8 }}
       >
@@ -204,7 +201,7 @@ export function RecentTitle({ item }: { item: Recent }) {
       }
       handleShareSelect={
         item.media_type === "movie"
-          ? () => onShare(`movie/${item.id}`, "recent")
+          ? () => onShare(`movie/${item.id}`, "recent", posthog)
           : undefined
       }
       handleRemoveSelect={() =>

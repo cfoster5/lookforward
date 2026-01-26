@@ -1,6 +1,7 @@
 import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
 import { Image } from "expo-image";
 import { Color } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { Pressable, StyleSheet, View } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 
@@ -23,6 +24,7 @@ function PosterButton({ movieId, game }: Props) {
   const { movieSubs, gameSubs, hasReachedLimit } = useSubscriptionStore();
   const { bottomSheetModalRef } = useInterfaceStore();
   const { data: pro } = useProOfferings();
+  const posthog = usePostHog();
 
   const isMovieSub = () =>
     movieId && movieSubs.some((sub) => sub.documentID === movieId.toString());
@@ -49,6 +51,7 @@ function PosterButton({ movieId, game }: Props) {
     // If trying to add and limit reached, show Pro modal
     if (!isGameSub() && hasReachedLimit(isPro)) {
       await RevenueCatUI.presentPaywall({ offering: pro });
+      posthog.capture("poster_button:paywall_view", { type: "pro" });
       return;
     }
 

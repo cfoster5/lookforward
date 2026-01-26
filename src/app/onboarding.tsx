@@ -1,5 +1,5 @@
-import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { router } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { Linking, Pressable, View } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,14 +13,11 @@ import { Row } from "@/components/Row";
 export default function OnboardingLayout() {
   const { top } = useSafeAreaInsets();
   const { data: pro } = useProOfferings();
+  const posthog = usePostHog();
 
   async function handlePresentProPaywall() {
     await RevenueCatUI.presentPaywall({ offering: pro });
-    const analytics = getAnalytics();
-    await logEvent(analytics, "select_promotion", {
-      name: "Pro",
-      id: "com.lookforward.pro",
-    });
+    posthog.capture("onboarding:paywall_view", { type: "pro" });
     // Should we dismiss the onboarding after this?
     router.dismiss();
   }

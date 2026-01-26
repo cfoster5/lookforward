@@ -1,4 +1,5 @@
 import * as Colors from "@bacons/apple-colors";
+import { usePostHog } from "posthog-react-native";
 import {
   Pressable,
   StyleProp,
@@ -30,6 +31,7 @@ export const CountdownLimitBanner = ({
   const { isPro } = useAuthStore();
   const { movieSubs, gameSubs } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
+  const posthog = usePostHog();
 
   const iconSize = iOSUIKit.bodyObject.fontSize;
 
@@ -58,7 +60,10 @@ export const CountdownLimitBanner = ({
 
   return (
     <Pressable
-      onPress={async () => await RevenueCatUI.presentPaywall({ offering: pro })}
+      onPress={async () => {
+        await RevenueCatUI.presentPaywall({ offering: pro });
+        posthog.capture("countdown:paywall_view", { type: "pro" });
+      }}
       style={[
         {
           backgroundColor: Colors.secondarySystemBackground,

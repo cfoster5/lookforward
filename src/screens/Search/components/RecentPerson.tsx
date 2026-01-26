@@ -1,8 +1,8 @@
 import * as Colors from "@bacons/apple-colors";
-import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { SymbolView } from "expo-symbols";
+import { usePostHog } from "posthog-react-native";
 import { Pressable, Text, View } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
@@ -19,17 +19,14 @@ export function RecentPerson({ item }: { item: Recent }) {
   const { isPro } = useAuthStore();
   const { data: pro } = useProOfferings();
   const { removeRecent } = useRecentItemsStore();
+  const posthog = usePostHog();
 
   if (!isPro)
     return (
       <Pressable
         onPress={async () => {
           await RevenueCatUI.presentPaywall({ offering: pro });
-          const analytics = getAnalytics();
-          logEvent(analytics, "select_promotion", {
-            name: "Pro",
-            id: "com.lookforward.pro",
-          });
+          posthog.capture("recent_person:paywall_view", { type: "pro" });
         }}
         style={{ paddingVertical: 8 }}
       >
@@ -170,7 +167,7 @@ export function RecentPerson({ item }: { item: Recent }) {
           name: item.name,
         },
       }}
-      handleShareSelect={() => onShare(`person/${item.id}`, "recent")}
+      handleShareSelect={() => onShare(`person/${item.id}`, "recent", posthog)}
       handleRemoveSelect={() => removeRecent("recentPeople", item)}
     >
       <Pressable

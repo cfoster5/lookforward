@@ -1,5 +1,4 @@
 import * as Colors from "@bacons/apple-colors";
-import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import {
   doc,
   getFirestore,
@@ -9,8 +8,16 @@ import {
 import { getMessaging, hasPermission } from "@react-native-firebase/messaging";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
-import { Linking, Pressable, ScrollView, Text, View } from "react-native";
+import {
+  Linking,
+  Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  View,
+} from "react-native";
 import Purchases from "react-native-purchases";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
@@ -22,12 +29,12 @@ import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { tmdb } from "@/providers/app";
 import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
-import { useInterfaceStore } from "@/stores";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { useAuthStore } from "@/stores/auth";
 
 export default function Settings() {
   const user = useAuthenticatedUser();
-  const { onboardingModalRef } = useInterfaceStore();
+  const { isPro } = useAuthStore();
   const { movieRegion, movieLanguage, setMovieRegion, setMovieLanguage } =
     useAppConfigStore();
   const [notificationPermissions, setNotificationPermissions] = useState(true);
@@ -35,6 +42,7 @@ export default function Settings() {
     day: false,
     week: false,
   });
+  const posthog = usePostHog();
 
   async function getNotificationPermissions() {
     const messaging = getMessaging();
@@ -216,11 +224,7 @@ export default function Settings() {
       <SettingNavButton
         onPress={async () => {
           await RevenueCatUI.presentPaywall({ offering: pro });
-          const analytics = getAnalytics();
-          await logEvent(analytics, "select_promotion", {
-            name: "Pro",
-            id: "com.lookforward.pro",
-          });
+          posthog.capture("settings:paywall_view", { type: "pro" });
         }}
         text="Explore Pro Features"
         isFirstInGroup
@@ -230,21 +234,31 @@ export default function Settings() {
       <Link href="/(tabs)/(settings)/app-icon" asChild>
         <SettingNavButton
           text="App Icon"
-          style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
+          style={
+            !(isPro && Platform.OS === "ios")
+              ? { borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }
+              : undefined
+          }
         />
       </Link>
+      {isPro && Platform.OS === "ios" && (
+        <>
+          <ViewSeparator />
+          <Link href="/(tabs)/(settings)/widget-promotion" asChild>
+            <SettingNavButton
+              text="Home Screen Widget"
+              style={{
+                borderBottomLeftRadius: 26,
+                borderBottomRightRadius: 26,
+              }}
+            />
+          </Link>
+        </>
+      )}
       <SettingNavButton
         onPress={async () => {
           await RevenueCatUI.presentPaywall({ offering: tips });
-          const analytics = getAnalytics();
-          await logEvent(analytics, "select_promotion", {
-            name: "Tip Jar",
-            items: [
-              { id: "com.lookforward.tip1" },
-              { id: "com.lookforward.tip3" },
-              { id: "com.lookforward.tip5" },
-            ],
-          });
+          posthog.capture("settings:paywall_view", { type: "tips" });
         }}
         text="Tip Jar"
         isFirstInGroup

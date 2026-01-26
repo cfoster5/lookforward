@@ -1,4 +1,3 @@
-import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
 import { Image } from "expo-image";
 import {
   Color,
@@ -7,6 +6,7 @@ import {
   useRouter,
   useSegments,
 } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { useState, Fragment } from "react";
 import { ScrollView, View, FlatList, Text } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
@@ -70,6 +70,7 @@ export default function Game() {
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(game.id);
   const paddingBottom = useBottomTabOverflow();
+  const posthog = usePostHog();
 
   const recentGame: Recent = {
     id: game.id,
@@ -136,11 +137,7 @@ export default function Game() {
             <LargeBorderlessButton
               handlePress={async () => {
                 await RevenueCatUI.presentPaywall({ offering: pro });
-                const analytics = getAnalytics();
-                await logEvent(analytics, "select_promotion", {
-                  name: "Pro",
-                  id: "com.lookforward.pro",
-                });
+                posthog.capture("game:paywall_view", { type: "pro" });
               }}
               text="Explore Pro Features"
               style={{ paddingBottom: 0 }}

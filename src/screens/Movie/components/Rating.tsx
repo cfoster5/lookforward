@@ -1,6 +1,6 @@
 import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { useAuthStore } from "@/stores";
@@ -10,9 +10,11 @@ import { OMDBMovie } from "../../../screens/Movie/types/omdb";
 export const Rating = ({
   source,
   rating,
+  onPress,
 }: {
   source: OMDBMovie["Ratings"][number]["Source"];
   rating: OMDBMovie["Ratings"][number]["Value"];
+  onPress?: () => void;
 }) => {
   const { isPro } = useAuthStore();
   const imageMap = {
@@ -32,14 +34,9 @@ export const Rating = ({
       aspectRatio: 1 / 1,
     },
   };
-  return (
-    <View
-      style={{
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "center",
-      }}
-    >
+
+  const content = (
+    <>
       <Image
         style={{
           aspectRatio: imageMap[source].aspectRatio,
@@ -53,7 +50,6 @@ export const Rating = ({
         <View
           style={{
             width: 44,
-            // backgroundColor: "rgba(120, 120, 120, 0.12)",
             backgroundColor: Colors.placeholderText,
             opacity: 0.5,
             borderRadius: 4,
@@ -62,6 +58,33 @@ export const Rating = ({
       ) : (
         <Text style={[iOSUIKit.body, { color: Colors.label }]}>{rating}</Text>
       )}
+    </>
+  );
+
+  if (!isPro && onPress) {
+    return (
+      <Pressable
+        onPress={onPress}
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "center",
+        }}
+      >
+        {content}
+      </Pressable>
+    );
+  }
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: "center",
+      }}
+    >
+      {content}
     </View>
   );
 };

@@ -1,6 +1,7 @@
 import * as Colors from "@bacons/apple-colors";
 import * as AlternateAppIcons from "expo-alternate-app-icons";
 import { Image, ImageSource } from "expo-image";
+import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -49,6 +50,7 @@ export default function AppIconScreen() {
   const { data: pro } = useProOfferings();
   const { bottom } = useSafeAreaInsets();
   const [selectedAppIcon, setSelectedAppIcon] = useState<string | null>(null);
+  const posthog = usePostHog();
 
   useEffect(() => {
     const getCurrentIcon = async () => {
@@ -63,6 +65,7 @@ export default function AppIconScreen() {
 
     if (!isPro && !isDefaultIcon) {
       await RevenueCatUI.presentPaywall({ offering: pro });
+      posthog.capture("app_icon:paywall_view", { type: "pro" });
       return;
     }
 

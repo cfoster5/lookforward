@@ -1,5 +1,5 @@
 import * as Colors from "@bacons/apple-colors";
-import { getAnalytics, logEvent } from "@react-native-firebase/analytics";
+import { usePostHog } from "posthog-react-native";
 import {
   ActivityIndicator,
   FlatList,
@@ -45,6 +45,7 @@ const ListHeader = () => {
   const { isPro } = useAuthStore();
   const { categoryIndex, setCategoryIndex } = useInterfaceStore();
   const { data: pro } = useProOfferings();
+  const posthog = usePostHog();
 
   return (
     <>
@@ -63,11 +64,7 @@ const ListHeader = () => {
           handlePress={async () => {
             Keyboard.dismiss();
             await RevenueCatUI.presentPaywall({ offering: pro });
-            const analytics = getAnalytics();
-            await logEvent(analytics, "select_promotion", {
-              name: "Pro",
-              id: "com.lookforward.pro",
-            });
+            posthog.capture("search:paywall_view", { type: "pro" });
           }}
           text="Explore Pro Features"
         />

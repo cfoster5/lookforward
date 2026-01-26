@@ -52,6 +52,7 @@ export default {
       "@bacons/apple-colors",
       "@bacons/apple-targets",
       "expo-image",
+      "expo-localization",
       [
         "expo-build-properties",
         {

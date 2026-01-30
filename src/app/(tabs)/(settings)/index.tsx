@@ -161,8 +161,12 @@ export default function Settings() {
               .sort((a, b) => a.label.localeCompare(b.label)) ?? []
           }
           selectedValue={movieRegion}
-          handleSelect={(value) => {
+          handleSelect={async (value) => {
             setMovieRegion(value as string);
+            // Sync to Firestore for cloud notifications
+            const db = getFirestore();
+            const userRef = doc(db, "users", user.uid);
+            await updateDoc(userRef, { movieRegion: value });
           }}
         >
           <Pressable

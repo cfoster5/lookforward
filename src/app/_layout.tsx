@@ -20,7 +20,6 @@ import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import Purchases from "react-native-purchases";
 
-import { useFirebaseAnalyticsCheck } from "@/hooks/useFirebaseAnalyticsCheck";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
 import { AuthStack } from "@/navigation/AuthStack";
 import { AppProvider } from "@/providers/app";
@@ -38,8 +37,6 @@ export default function RootLayout() {
   useEffect(() => {
     Linking.getInitialURL().then((url) => console.log("Initial URL:", url));
   }, []);
-
-  useFirebaseAnalyticsCheck();
 
   useRevenueCat();
 

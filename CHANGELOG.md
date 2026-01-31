@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.18.0](https://github.com/cfoster5/lookforward/compare/v7.17.0...v7.18.0) (2026-01-30)
+
+
+### Features
+
+* make blurred ratings and box office trigger paywall ([5e1ee55](https://github.com/cfoster5/lookforward/commit/5e1ee5591c58c29ddf574418e87210f1285c28d4))
+* sync movieRegion to Firestore when changed in settings ([32a298a](https://github.com/cfoster5/lookforward/commit/32a298a8f454f6f146c7f5bdd0fd5502a710d283))
+
 ## [7.17.0](https://github.com/cfoster5/lookforward/compare/v7.16.0...v7.17.0) (2026-01-24)
 
 

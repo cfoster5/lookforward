@@ -1,5 +1,14 @@
 # Changelog
 
+## [7.18.3](https://github.com/cfoster5/lookforward/compare/v7.18.2...v7.18.3) (2026-01-31)
+
+
+### Bug Fixes
+
+* remove link for not yet created widget-promotion screen ([31c49a0](https://github.com/cfoster5/lookforward/commit/31c49a0544cb43b34b148058020a0def3c14f560))
+* update onboarding modal navigation and remove unused interface store ([376036a](https://github.com/cfoster5/lookforward/commit/376036a9960f33b390f7f7954a05c702e764aacd))
+* update sheetAllowedDetents to use 'fitToContents' for better layout handling ([b8cfdfa](https://github.com/cfoster5/lookforward/commit/b8cfdfa183a47308bb7b392fd7852e5d3144338d))
+
 ## [7.18.2](https://github.com/cfoster5/lookforward/compare/v7.18.1...v7.18.2) (2026-01-31)
 
 

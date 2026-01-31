@@ -31,7 +31,7 @@ export default function SettingsStack() {
           title: "App Icon",
           presentation: "formSheet",
           sheetGrabberVisible: true,
-          sheetAllowedDetents: [0.5, 1],
+          sheetAllowedDetents: "fitToContents",
           sheetInitialDetentIndex: Platform.OS === "ios" ? 0 : undefined,
           contentStyle: {
             backgroundColor:

@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.18.2](https://github.com/cfoster5/lookforward/compare/v7.18.1...v7.18.2) (2026-01-31)
+
+
+### Bug Fixes
+
+* remove unused useFirebaseAnalyticsCheck hook ([f6803b8](https://github.com/cfoster5/lookforward/commit/f6803b89d4ab65325e849daa135a08d34a0928ee))
+
 ## [7.18.1](https://github.com/cfoster5/lookforward/compare/v7.18.0...v7.18.1) (2026-01-31)
 
 

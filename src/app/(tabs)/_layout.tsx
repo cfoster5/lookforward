@@ -7,7 +7,7 @@ import {
   where,
 } from "@react-native-firebase/firestore";
 import { useQueryClient } from "@tanstack/react-query";
-import { VectorIcon } from "expo-router";
+import { router, VectorIcon } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { useEffect } from "react";
 
@@ -16,14 +16,13 @@ import { useWidgetSync } from "@/hooks/useWidgetSync";
 import { FirestoreMovie } from "@/interfaces/firebase";
 import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
 import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";
-import { useSubscriptionStore, useInterfaceStore } from "@/stores";
+import { useSubscriptionStore } from "@/stores";
 import { useAppConfigStore } from "@/stores/appConfig";
 
 export default function TabStack() {
   const user = useAuthenticatedUser();
   const { setMovieSubs, setGameSubs, movieSubs, gameSubs } =
     useSubscriptionStore();
-  const { onboardingModalRef } = useInterfaceStore();
   const { hasSeenOnboardingModal, setHasSeenOnboardingModal } =
     useAppConfigStore();
 
@@ -72,10 +71,10 @@ export default function TabStack() {
 
   useEffect(() => {
     if (!hasSeenOnboardingModal) {
-      onboardingModalRef.current?.present();
+      router.push("/onboarding");
       setHasSeenOnboardingModal();
     }
-  }, [hasSeenOnboardingModal, onboardingModalRef, setHasSeenOnboardingModal]);
+  }, [hasSeenOnboardingModal, setHasSeenOnboardingModal]);
 
   const queryClient = useQueryClient();
 

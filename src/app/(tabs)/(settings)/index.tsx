@@ -238,14 +238,10 @@ export default function Settings() {
       <Link href="/(tabs)/(settings)/app-icon" asChild>
         <SettingNavButton
           text="App Icon"
-          style={
-            !(isPro && Platform.OS === "ios")
-              ? { borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }
-              : undefined
-          }
+          style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
         />
       </Link>
-      {isPro && Platform.OS === "ios" && (
+      {/* {isPro && Platform.OS === "ios" && (
         <>
           <ViewSeparator />
           <Link href="/(tabs)/(settings)/widget-promotion" asChild>
@@ -258,7 +254,7 @@ export default function Settings() {
             />
           </Link>
         </>
-      )}
+      )} */}
       <SettingNavButton
         onPress={async () => {
           await RevenueCatUI.presentPaywall({ offering: tips });

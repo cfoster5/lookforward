@@ -4,11 +4,13 @@ import { create } from "zustand";
 type AuthState = {
   user: FirebaseAuthTypes.User | null;
   isPro: boolean;
+  hasSeenWidgetPromotion: boolean;
 };
 
 type AuthActions = {
   setUser: (user: FirebaseAuthTypes.User | null) => void;
   setIsPro: (isPro: boolean) => void;
+  setHasSeenWidgetPromotion: (hasSeenWidgetPromotion: boolean) => void;
 };
 
 export const useAuthStore = create<AuthState & AuthActions>((set) => ({
@@ -16,4 +18,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
   setUser: (user) => set(() => ({ user })),
   isPro: false,
   setIsPro: (isPro) => set(() => ({ isPro })),
+  hasSeenWidgetPromotion: false,
+  setHasSeenWidgetPromotion: (hasSeenWidgetPromotion) =>
+    set(() => ({ hasSeenWidgetPromotion })),
 }));

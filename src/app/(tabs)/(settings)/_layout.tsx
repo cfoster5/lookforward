@@ -32,6 +32,32 @@ export default function SettingsStack() {
           presentation: "formSheet",
           sheetGrabberVisible: true,
           sheetAllowedDetents: "fitToContents",
+          // sheetInitialDetentIndex: Platform.OS === "ios" ? 0 : undefined,
+          contentStyle: {
+            backgroundColor:
+              Platform.OS === "ios" && isLiquidGlassAvailable()
+                ? "transparent"
+                : "#F2F2F7",
+          },
+          headerStyle: {
+            backgroundColor: Platform.OS === "ios" ? "transparent" : "#F2F2F7",
+          },
+          headerBlurEffect:
+            Platform.OS === "ios" && isLiquidGlassAvailable()
+              ? undefined
+              : "light",
+        }}
+      />
+      <Stack.Screen
+        name="widget-promotion"
+        options={{
+          headerShown: true,
+          headerTransparent: Platform.OS === "ios",
+          headerLargeTitle: false,
+          title: "Add Widget",
+          presentation: "formSheet",
+          sheetGrabberVisible: true,
+          sheetAllowedDetents: [0.5, 1],
           sheetInitialDetentIndex: Platform.OS === "ios" ? 0 : undefined,
           contentStyle: {
             backgroundColor:

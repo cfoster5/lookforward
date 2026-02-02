@@ -1,12 +1,16 @@
+import { useRouter } from "expo-router";
 import { usePostHog } from "posthog-react-native";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { Platform } from "react-native";
 import Purchases, { CustomerInfo } from "react-native-purchases";
 
 import { useAuthStore } from "@/stores";
 
 export function useRevenueCat() {
-  const { user, setIsPro } = useAuthStore();
+  const router = useRouter();
   const posthog = usePostHog();
+  const { user, setIsPro, isPro, hasSeenWidgetPromotion } = useAuthStore();
+  const previousIsPro = useRef(isPro);
   useEffect(() => {
     /* Enable debug logs before calling `setup`. */
     if (__DEV__) Purchases.setLogLevel(Purchases.LOG_LEVEL.ERROR);
@@ -38,4 +42,18 @@ export function useRevenueCat() {
       Purchases.removeCustomerInfoUpdateListener(customerInfoUpdated);
     };
   }, [user, setIsPro, posthog]);
+
+  // Detect Pro unlock and navigate to widget promotion sheet
+  useEffect(() => {
+    // Check if user just became Pro (transition from false to true)
+    const justUnlockedPro = !previousIsPro.current && isPro;
+
+    if (justUnlockedPro && !hasSeenWidgetPromotion && Platform.OS === "ios") {
+      // Navigate to widget promotion screen
+      router.push("/(tabs)/(settings)/widget-promotion");
+    }
+
+    // Update the previous value for next check
+    previousIsPro.current = isPro;
+  }, [isPro, hasSeenWidgetPromotion, router]);
 }

@@ -20,7 +20,6 @@ import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 import Purchases from "react-native-purchases";
 
-import { useRevenueCat } from "@/hooks/useRevenueCat";
 import { AuthStack } from "@/navigation/AuthStack";
 import { AppProvider } from "@/providers/app";
 import { useAuthStore, useInterfaceStore } from "@/stores";
@@ -37,8 +36,6 @@ export default function RootLayout() {
   useEffect(() => {
     Linking.getInitialURL().then((url) => console.log("Initial URL:", url));
   }, []);
-
-  useRevenueCat();
 
   useEffect(() => {
     // Check for a valid user before proceeding

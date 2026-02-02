@@ -20,6 +20,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TMDB } from "tmdb-ts";
 
 import { IGDB_AWS_KEY, TMDB_TOKEN } from "@/constants/ApiKeys";
+import { useRevenueCat } from "@/hooks/useRevenueCat";
 import { useAuthStore, useInterfaceStore } from "@/stores";
 import { IGDB_API } from "@/types/igdb";
 
@@ -36,6 +37,11 @@ export const igdb = new IGDB_API({
 type AppProviderProps = {
   children: React.ReactNode;
 };
+
+function RevenueCatBootstrap() {
+  useRevenueCat();
+  return null;
+}
 
 export function AppProvider({ children }: AppProviderProps) {
   // const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
@@ -76,6 +82,7 @@ export function AppProvider({ children }: AppProviderProps) {
         captureTouches: true,
       }}
     >
+      <RevenueCatBootstrap />
       <GestureHandlerRootView>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider

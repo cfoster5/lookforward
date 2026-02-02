@@ -1,3 +1,4 @@
+import { usePostHog } from "posthog-react-native";
 import { useEffect } from "react";
 import Purchases, { CustomerInfo } from "react-native-purchases";
 
@@ -5,6 +6,7 @@ import { useAuthStore } from "@/stores";
 
 export function useRevenueCat() {
   const { user, setIsPro } = useAuthStore();
+  const posthog = usePostHog();
   useEffect(() => {
     /* Enable debug logs before calling `setup`. */
     if (__DEV__) Purchases.setLogLevel(Purchases.LOG_LEVEL.ERROR);
@@ -17,8 +19,12 @@ export function useRevenueCat() {
     });
 
     // Set email if available (for customer support and communication)
-    if (user?.email) {
-      Purchases.setEmail(user.email);
+    if (user?.email) Purchases.setEmail(user.email);
+
+    if (posthog) {
+      if (user?.uid) posthog.identify(user.uid);
+      const distinctId = posthog.getDistinctId?.();
+      if (distinctId) Purchases.setAttributes({ $posthogUserId: distinctId });
     }
 
     const customerInfoUpdated = (info: CustomerInfo) => {
@@ -31,5 +37,5 @@ export function useRevenueCat() {
       // Clean up the listener when the component unmounts
       Purchases.removeCustomerInfoUpdateListener(customerInfoUpdated);
     };
-  }, [user, setIsPro]);
+  }, [user, setIsPro, posthog]);
 }

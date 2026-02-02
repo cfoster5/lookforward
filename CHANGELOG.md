@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.19.0](https://github.com/cfoster5/lookforward/compare/v7.18.3...v7.19.0) (2026-02-02)
+
+
+### Features
+
+* integrate in-app subscription events from RevenueCat with PostHog ([d0f076e](https://github.com/cfoster5/lookforward/commit/d0f076efeefb51e0489db20e6a35707eb0b49761))
+
 ## [7.18.3](https://github.com/cfoster5/lookforward/compare/v7.18.2...v7.18.3) (2026-01-31)
 
 

@@ -9,6 +9,7 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { router, VectorIcon } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
+import { usePostHog } from "posthog-react-native";
 import { useEffect } from "react";
 
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
@@ -25,6 +26,7 @@ export default function TabStack() {
     useSubscriptionStore();
   const { hasSeenOnboardingModal, setHasSeenOnboardingModal } =
     useAppConfigStore();
+  const posthog = usePostHog();
 
   // Sync subscription data to the widget
   useWidgetSync();
@@ -71,10 +73,11 @@ export default function TabStack() {
 
   useEffect(() => {
     if (!hasSeenOnboardingModal) {
+      posthog.capture("first_open");
       router.push("/onboarding");
       setHasSeenOnboardingModal();
     }
-  }, [hasSeenOnboardingModal, setHasSeenOnboardingModal]);
+  }, [hasSeenOnboardingModal, posthog, setHasSeenOnboardingModal]);
 
   const queryClient = useQueryClient();
 

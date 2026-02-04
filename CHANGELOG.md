@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.20.0](https://github.com/cfoster5/lookforward/compare/v7.19.0...v7.20.0) (2026-02-04)
+
+
+### Features
+
+* capture first_open event for Posthog ([592a283](https://github.com/cfoster5/lookforward/commit/592a283f09a9a1d849076056d3e0b3da67ab5c2a))
+
+
+### Bug Fixes
+
+* correct Countdown screen title when empty state is shown ([d33c3ac](https://github.com/cfoster5/lookforward/commit/d33c3ac5b7b96657a1b0e88b164ba09ebce97dba))
+
 ## [7.19.0](https://github.com/cfoster5/lookforward/compare/v7.18.3...v7.19.0) (2026-02-02)
 
 

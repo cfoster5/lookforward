@@ -25,8 +25,8 @@ export function RecentPerson({ item }: { item: Recent }) {
     return (
       <Pressable
         onPress={async () => {
-          await RevenueCatUI.presentPaywall({ offering: pro });
           posthog.capture("recent_person:paywall_view", { type: "pro" });
+          await RevenueCatUI.presentPaywall({ offering: pro });
         }}
         style={{ paddingVertical: 8 }}
       >

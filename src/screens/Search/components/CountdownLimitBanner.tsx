@@ -61,8 +61,8 @@ export const CountdownLimitBanner = ({
   return (
     <Pressable
       onPress={async () => {
-        await RevenueCatUI.presentPaywall({ offering: pro });
         posthog.capture("countdown:paywall_view", { type: "pro" });
+        await RevenueCatUI.presentPaywall({ offering: pro });
       }}
       style={[
         {

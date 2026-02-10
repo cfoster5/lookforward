@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { Linking, Pressable, View } from "react-native";
+import Purchases from "react-native-purchases";
 import RevenueCatUI from "react-native-purchases-ui";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -16,9 +17,24 @@ export default function OnboardingLayout() {
   const posthog = usePostHog();
 
   async function handlePresentProPaywall() {
-    await RevenueCatUI.presentPaywall({ offering: pro });
+    // Track CTA tap and paywall view BEFORE presenting
+    posthog.capture("onboarding:cta_tap", { button: "explore_pro" });
     posthog.capture("onboarding:paywall_view", { type: "pro" });
-    // Should we dismiss the onboarding after this?
+
+    await RevenueCatUI.presentPaywall({ offering: pro });
+
+    // Check if user converted after paywall was dismissed
+    const customerInfo = await Purchases.getCustomerInfo();
+    const converted = !!customerInfo.entitlements.active.pro;
+    posthog.capture("onboarding:paywall_dismiss", { converted });
+
+    posthog.capture("onboarding:complete", { converted });
+    router.dismiss();
+  }
+
+  function handleContinue() {
+    posthog.capture("onboarding:cta_tap", { button: "continue" });
+    posthog.capture("onboarding:complete", { converted: false });
     router.dismiss();
   }
 
@@ -55,10 +71,7 @@ export default function OnboardingLayout() {
         handlePress={handlePresentProPaywall}
         text="Explore Pro Features"
       />
-      <LargeBorderlessButton
-        handlePress={() => router.dismiss()}
-        text="Continue"
-      />
+      <LargeBorderlessButton handlePress={handleContinue} text="Continue" />
     </View>
   );
 }

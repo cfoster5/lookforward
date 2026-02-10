@@ -227,8 +227,8 @@ export default function Settings() {
       </View>
       <SettingNavButton
         onPress={async () => {
-          await RevenueCatUI.presentPaywall({ offering: pro });
           posthog.capture("settings:paywall_view", { type: "pro" });
+          await RevenueCatUI.presentPaywall({ offering: pro });
         }}
         text="Explore Pro Features"
         isFirstInGroup
@@ -257,8 +257,8 @@ export default function Settings() {
       )} */}
       <SettingNavButton
         onPress={async () => {
-          await RevenueCatUI.presentPaywall({ offering: tips });
           posthog.capture("settings:paywall_view", { type: "tips" });
+          await RevenueCatUI.presentPaywall({ offering: tips });
         }}
         text="Tip Jar"
         isFirstInGroup

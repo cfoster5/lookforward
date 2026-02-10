@@ -50,8 +50,8 @@ function PosterButton({ movieId, game }: Props) {
 
     // If trying to add and limit reached, show Pro modal
     if (!isGameSub() && hasReachedLimit(isPro)) {
-      await RevenueCatUI.presentPaywall({ offering: pro });
       posthog.capture("poster_button:paywall_view", { type: "pro" });
+      await RevenueCatUI.presentPaywall({ offering: pro });
       return;
     }
 

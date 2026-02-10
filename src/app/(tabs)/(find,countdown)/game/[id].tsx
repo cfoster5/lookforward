@@ -136,8 +136,8 @@ export default function Game() {
           {!isPro && (
             <LargeBorderlessButton
               handlePress={async () => {
-                await RevenueCatUI.presentPaywall({ offering: pro });
                 posthog.capture("game:paywall_view", { type: "pro" });
+                await RevenueCatUI.presentPaywall({ offering: pro });
               }}
               text="Explore Pro Features"
               style={{ paddingBottom: 0 }}

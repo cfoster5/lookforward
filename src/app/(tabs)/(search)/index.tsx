@@ -63,8 +63,8 @@ const ListHeader = () => {
         <LargeBorderlessButton
           handlePress={async () => {
             Keyboard.dismiss();
-            await RevenueCatUI.presentPaywall({ offering: pro });
             posthog.capture("search:paywall_view", { type: "pro" });
+            await RevenueCatUI.presentPaywall({ offering: pro });
           }}
           text="Explore Pro Features"
         />

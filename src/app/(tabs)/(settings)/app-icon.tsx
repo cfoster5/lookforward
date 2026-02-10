@@ -64,8 +64,8 @@ export default function AppIconScreen() {
     const isDefaultIcon = iconName === null;
 
     if (!isPro && !isDefaultIcon) {
-      await RevenueCatUI.presentPaywall({ offering: pro });
       posthog.capture("app_icon:paywall_view", { type: "pro" });
+      await RevenueCatUI.presentPaywall({ offering: pro });
       return;
     }
 

@@ -293,11 +293,11 @@ export default function MovieScreen() {
                   {!isPro ? (
                     <Pressable
                       onPress={async () => {
-                        await RevenueCatUI.presentPaywall({ offering: pro });
                         posthog.capture("movie:paywall_view", {
                           type: "pro",
                           source: "box_office",
                         });
+                        await RevenueCatUI.presentPaywall({ offering: pro });
                       }}
                       style={{ flexDirection: "row" }}
                     >
@@ -329,11 +329,11 @@ export default function MovieScreen() {
                   source={rating.Source}
                   rating={rating.Value}
                   onPress={async () => {
-                    await RevenueCatUI.presentPaywall({ offering: pro });
                     posthog.capture("movie:paywall_view", {
                       type: "pro",
                       source: "rating",
                     });
+                    await RevenueCatUI.presentPaywall({ offering: pro });
                   }}
                 />
               ))}
@@ -343,8 +343,8 @@ export default function MovieScreen() {
           {!isPro && (
             <LargeBorderlessButton
               handlePress={async () => {
-                await RevenueCatUI.presentPaywall({ offering: pro });
                 posthog.capture("movie:paywall_view", { type: "pro" });
+                await RevenueCatUI.presentPaywall({ offering: pro });
               }}
               text="Explore Pro Features"
               style={{ paddingBottom: 0 }}

@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.21.0](https://github.com/cfoster5/lookforward/compare/v7.20.0...v7.21.0) (2026-02-10)
+
+
+### Features
+
+* **analytics:** improve PostHog event timing and onboarding tracking ([#205](https://github.com/cfoster5/lookforward/issues/205)) ([617074b](https://github.com/cfoster5/lookforward/commit/617074b6becf83b330d30a766dfd3ad9b8361b90))
+
 ## [7.20.0](https://github.com/cfoster5/lookforward/compare/v7.19.0...v7.20.0) (2026-02-04)
 
 

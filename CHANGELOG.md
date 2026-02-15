@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.23.0](https://github.com/cfoster5/lookforward/compare/v7.22.0...v7.23.0) (2026-02-15)
+
+
+### Features
+
+* add PostHog tracking to collections feature ([49af52b](https://github.com/cfoster5/lookforward/commit/49af52b919f55f2cdca210d33baf4cacdf68a4db))
+
+
+### Bug Fixes
+
+* update renderItem to use CarouselItem component directly ([f5b62a3](https://github.com/cfoster5/lookforward/commit/f5b62a3cd6f421718ab832661e1f1e6d30e8fce2))
+
 ## [7.22.0](https://github.com/cfoster5/lookforward/compare/v7.21.0...v7.22.0) (2026-02-15)
 
 

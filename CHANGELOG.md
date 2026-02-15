@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.22.0](https://github.com/cfoster5/lookforward/compare/v7.21.0...v7.22.0) (2026-02-15)
+
+
+### Features
+
+* add collection tracking for Oscars and others ([942aa12](https://github.com/cfoster5/lookforward/commit/942aa12d1cae4ed8b9f4d7fd1738e310379cae9c))
+
 ## [7.21.0](https://github.com/cfoster5/lookforward/compare/v7.20.0...v7.21.0) (2026-02-10)
 
 

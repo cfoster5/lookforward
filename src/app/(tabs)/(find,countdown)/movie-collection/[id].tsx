@@ -1,4 +1,6 @@
 import { Stack, useLocalSearchParams } from "expo-router";
+import { usePostHog } from "posthog-react-native";
+import { useEffect, useRef } from "react";
 import { View } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
@@ -20,12 +22,31 @@ import { onShare } from "@/utils/share";
 const spacing = 16;
 
 export default function Collection() {
+  const posthog = usePostHog();
   const { id } = useLocalSearchParams();
   const { data: collection, isLoading } = useCollection(id);
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(
     (e) => (scrollOffset.value = e.contentOffset.y),
   );
+  const trackedViewId = useRef<number | null>(null);
+  const resolvedCollectionId = collection?.id ?? null;
+
+  useEffect(() => {
+    if (
+      !isLoading &&
+      collection &&
+      resolvedCollectionId &&
+      trackedViewId.current !== resolvedCollectionId
+    ) {
+      trackedViewId.current = resolvedCollectionId;
+      posthog.capture("movie_collection:view", {
+        collection_id: collection.id,
+        collection_name: collection.name,
+        movie_count: collection.parts.length,
+      });
+    }
+  }, [isLoading, resolvedCollectionId, collection, posthog]);
 
   if (isLoading) return <LoadingScreen />;
 
@@ -37,7 +58,9 @@ export default function Collection() {
       </Stack.Screen.Title>
       <Stack.Toolbar placement="right">
         <Stack.Toolbar.Button
-          onPress={() => onShare(`movie-collection/${id}`, "headerButton")}
+          onPress={() =>
+            onShare(`movie-collection/${id}`, "headerButton", posthog)
+          }
         >
           <Stack.Toolbar.Icon sf="square.and.arrow.up" />
         </Stack.Toolbar.Button>

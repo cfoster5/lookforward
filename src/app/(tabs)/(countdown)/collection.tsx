@@ -23,6 +23,8 @@ import { useQueries } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { Color, Link, Stack, useLocalSearchParams } from "expo-router";
 import { SFSymbol } from "expo-symbols";
+import { usePostHog } from "posthog-react-native";
+import { useEffect, useRef } from "react";
 import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -157,6 +159,7 @@ function ItemSeparator() {
 }
 
 export default function CollectionScreen() {
+  const posthog = usePostHog();
   const headerHeight = useHeaderHeight();
   const { bottom } = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -188,6 +191,29 @@ export default function CollectionScreen() {
 
   const progress = useCollectionProgress(collection ?? null);
   const trackedMovieIds = new Set(progress?.trackedMovieIds ?? []);
+  const trackedViewId = useRef<string | null>(null);
+  const resolvedCollectionId = collection?.id ?? null;
+  const trackedCount = movies.filter((m) =>
+    trackedMovieIds.has(m.id.toString()),
+  ).length;
+
+  useEffect(() => {
+    if (
+      !isLoading &&
+      collection &&
+      resolvedCollectionId &&
+      trackedViewId.current !== resolvedCollectionId
+    ) {
+      trackedViewId.current = resolvedCollectionId;
+      posthog.capture("collection:view", {
+        collection_id: collection.id,
+        collection_name: collection.name,
+        category: collection.category,
+        total_movies: collection.movieIds.length,
+        tracked_count: trackedCount,
+      });
+    }
+  }, [isLoading, resolvedCollectionId, collection, trackedCount, posthog]);
 
   if (isCollectionPending) return <LoadingScreen />;
 
@@ -220,9 +246,6 @@ export default function CollectionScreen() {
 
   const iconName =
     (collection.badgeIcon as SFSymbol) ?? getCategoryIcon(collection.category);
-  const trackedCount = movies.filter((m) =>
-    trackedMovieIds.has(m.id.toString()),
-  ).length;
 
   return (
     <>
@@ -239,7 +262,16 @@ export default function CollectionScreen() {
                 asChild
               >
                 {/* Wrap HStack in Button to pass onPress to child component */}
-                <Button>
+                <Button
+                  onPress={() => {
+                    posthog.capture("collection:movie_tap", {
+                      collection_id: collection.id,
+                      movie_id: movie.id,
+                      movie_title: movie.title,
+                      is_tracked: trackedMovieIds.has(movie.id.toString()),
+                    });
+                  }}
+                >
                   <HStack spacing={18}>
                     <RNHostView matchContents>
                       {/* We shouldn't need to worry about missing posters since this is the Oscars */}

@@ -2,6 +2,7 @@ import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
 import { Color, Link } from "expo-router";
 import { SFSymbol } from "expo-symbols";
+import { usePostHog } from "posthog-react-native";
 import { View, Text, StyleSheet } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -20,6 +21,7 @@ export function CollectionProgressCard({
   collection,
   progress,
 }: CollectionProgressCardProps) {
+  const posthog = usePostHog();
   const earlyTrackedCount = progress.trackedBeforeAnnouncement.length;
   const hasEarlyTracked = earlyTrackedCount > 0;
 
@@ -49,6 +51,15 @@ export function CollectionProgressCard({
         params: { id: collection.id },
       }}
       style={styles.card}
+      onPress={() => {
+        posthog.capture("collection_card:tap", {
+          collection_id: collection.id,
+          category: collection.category,
+          tracked_count: progress.trackedMovieIds.length,
+          total_movies: collection.movieIds.length,
+          has_early_tracked: hasEarlyTracked,
+        });
+      }}
     >
       <View style={styles.row}>
         <View style={styles.content}>

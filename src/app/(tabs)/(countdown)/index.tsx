@@ -9,8 +9,10 @@ import { Stack } from "expo-router";
 import { useRef, useState } from "react";
 import { Platform, SectionList } from "react-native";
 
+import { CollectionProgressCard } from "@/components/Collections/CollectionProgressCard";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
+import { useCollectionsProgress } from "@/hooks/useCollectionProgress";
 import { useGameCountdowns } from "@/screens/Countdown/api/getGameCountdowns";
 import { useMovieCountdowns } from "@/screens/Countdown/api/getMovieCountdowns";
 import { CountdownItem } from "@/screens/Countdown/components/CountdownItem";
@@ -19,6 +21,7 @@ import { FilteredEmptyState } from "@/screens/Countdown/components/FilteredEmpty
 import { SectionHeader } from "@/screens/Countdown/components/SectionHeader";
 import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
 import { useCountdownStore, useSubscriptionStore } from "@/stores";
+import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 
 export default function Countdown() {
   const {
@@ -34,6 +37,7 @@ export default function Countdown() {
   const { data: movies, pending: isMoviesPending } = useMovieCountdowns();
   const { data: gameReleases, pending: isGamesPending } = useGameCountdowns();
   const { movieSubs, gameSubs } = useSubscriptionStore();
+  const { collectionsWithProgress } = useCollectionsProgress();
   const [filter, setFilter] = useState<"all" | "movies" | "games">("all");
   const [statusFilter, setStatusFilter] = useState<
     "all" | "released" | "unreleased"
@@ -58,6 +62,7 @@ export default function Countdown() {
   const deleteItems = async () => {
     const db = getFirestore();
     const batch = writeBatch(db);
+    const { removeFromHistory } = useSubscriptionHistoryStore.getState();
     selectedMovies.map((selection) => {
       const docRef = doc(db, "movies", selection.toString());
       batch.update(docRef, {
@@ -71,6 +76,9 @@ export default function Countdown() {
       });
     });
     await batch.commit();
+    for (const movieId of selectedMovies) {
+      removeFromHistory(movieId.toString());
+    }
     toggleIsEditing();
     clearSelections();
   };
@@ -208,7 +216,18 @@ export default function Countdown() {
             sectionIndex={sections.findIndex((s) => s.title === section.title)}
           />
         )}
-        ListHeaderComponent={<CountdownLimitBanner />}
+        ListHeaderComponent={
+          <>
+            <CountdownLimitBanner />
+            {collectionsWithProgress.map(({ collection, progress }) => (
+              <CollectionProgressCard
+                key={collection.id}
+                collection={collection}
+                progress={progress}
+              />
+            ))}
+          </>
+        }
         ref={scrollRef}
       />
     </>

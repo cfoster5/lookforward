@@ -11,6 +11,7 @@ import { Dimensions } from "react-native";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import RevenueCatUI from "react-native-purchases-ui";
 
+import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 import { ReleaseDate, Games } from "@/types/igdb";
 import { timestampToUTC } from "@/utils/dates";
 import { tryRequestReview } from "@/utils/requestReview";
@@ -90,6 +91,7 @@ export async function subToMovie(
     const db = getFirestore();
     const docRef = doc(db, "movies", movieId);
     await setDoc(docRef, { subscribers: arrayUnion(user) }, { merge: true });
+    useSubscriptionHistoryStore.getState().addToHistory(movieId);
     ReactNativeHapticFeedback.trigger("impactLight", {
       enableVibrateFallback: true,
       ignoreAndroidSystemSettings: false,
@@ -111,6 +113,9 @@ export async function removeSub(
     await updateDoc(docRef, {
       subscribers: arrayRemove(user),
     });
+    if (collection === "movies") {
+      useSubscriptionHistoryStore.getState().removeFromHistory(countdownId);
+    }
   } catch (error) {
     console.error("Error writing document: ", error);
   }

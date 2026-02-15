@@ -19,11 +19,13 @@ import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
 import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";
 import { useSubscriptionStore } from "@/stores";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 
 export default function TabStack() {
   const user = useAuthenticatedUser();
   const { setMovieSubs, setGameSubs, movieSubs, gameSubs } =
     useSubscriptionStore();
+  const { backfillFromCurrentSubs } = useSubscriptionHistoryStore();
   const { hasSeenOnboardingModal, setHasSeenOnboardingModal } =
     useAppConfigStore();
   const posthog = usePostHog();
@@ -48,6 +50,10 @@ export default function TabStack() {
         }),
       );
       setMovieSubs(movieSubsData);
+
+      // Backfill subscription history for existing users
+      const movieIds = movieSubsData.map((movie) => movie.documentID);
+      backfillFromCurrentSubs(movieIds);
     });
 
     const gameQuery = query(
@@ -69,7 +75,7 @@ export default function TabStack() {
       movieSubscription();
       gameSubscription();
     };
-  }, [setGameSubs, setMovieSubs, user]);
+  }, [backfillFromCurrentSubs, setGameSubs, setMovieSubs, user]);
 
   useEffect(() => {
     if (!hasSeenOnboardingModal) {

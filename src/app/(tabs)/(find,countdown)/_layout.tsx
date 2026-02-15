@@ -1,5 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
-import { Stack } from "expo-router";
+import { Color, Stack } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -46,7 +45,7 @@ const FindHeader = () => {
           alignItems: "center",
         }}
       >
-        <Text style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}>
+        <Text style={[iOSUIKit.title3Emphasized, { color: Color.ios.label }]}>
           {movieSearchOption}
         </Text>
         <Pressable
@@ -61,7 +60,7 @@ const FindHeader = () => {
           }}
         >
           {categoryIndex === 0 && (
-            <Text style={[iOSUIKit.body, { color: Colors.systemBlue }]}>
+            <Text style={[iOSUIKit.body, { color: Color.ios.systemBlue }]}>
               More
             </Text>
           )}
@@ -71,7 +70,7 @@ const FindHeader = () => {
   );
 };
 
-function SharedLayout({ children }) {
+function SharedLayout({ children }: { children: React.ReactNode }) {
   return (
     <Stack>
       {children}
@@ -111,7 +110,7 @@ function SharedLayout({ children }) {
   );
 }
 
-export default function DynamicLayout({ segment }) {
+export default function DynamicLayout({ segment }: { segment: string }) {
   if (segment === "(find)") {
     return (
       <SharedLayout>
@@ -130,6 +129,10 @@ export default function DynamicLayout({ segment }) {
   return (
     <SharedLayout>
       <Stack.Screen name="index" options={AppleStackPreset} />
+      <Stack.Screen
+        name="collection"
+        options={{ headerBackButtonDisplayMode: "minimal" }}
+      />
     </SharedLayout>
   );
 }

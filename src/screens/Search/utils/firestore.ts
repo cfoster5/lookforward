@@ -9,6 +9,7 @@ import {
 } from "@react-native-firebase/firestore";
 import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 
+import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 import { tryRequestReview } from "@/utils/requestReview";
 
 type CountdownToggleProps = {
@@ -26,6 +27,9 @@ export async function removeCountdownItem(
     const db = getFirestore();
     const docRef = doc(db, collection, id.toString());
     await updateDoc(docRef, { subscribers: arrayRemove(user.uid) });
+    if (collection === "movies") {
+      useSubscriptionHistoryStore.getState().removeFromHistory(id.toString());
+    }
   } catch (error) {
     console.error("Error writing document: ", error);
   }
@@ -44,6 +48,9 @@ export async function addCountdownItem(
       { subscribers: arrayUnion(user.uid) },
       { merge: true },
     );
+    if (collection === "movies") {
+      useSubscriptionHistoryStore.getState().addToHistory(id.toString());
+    }
     ReactNativeHapticFeedback.trigger("impactLight", {
       enableVibrateFallback: true,
       ignoreAndroidSystemSettings: false,

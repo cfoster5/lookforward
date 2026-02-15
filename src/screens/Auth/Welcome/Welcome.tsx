@@ -88,7 +88,9 @@ function Welcome({ navigation }: Props) {
               ?.slice(0, 10)
               .map((movie, i) => [movie, hypedGames[i]])
               .reduce((a, b) => a.concat(b))}
-            renderItem={CarouselItem}
+            renderItem={({ item, index }) => (
+              <CarouselItem item={item} index={index} />
+            )}
             layout="default"
             loop
             autoplay

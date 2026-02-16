@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.23.1](https://github.com/cfoster5/lookforward/compare/v7.23.0...v7.23.1) (2026-02-16)
+
+
+### Bug Fixes
+
+* refactor messaging permission to avoid try/catch/finally for React Compiler ([f7c2861](https://github.com/cfoster5/lookforward/commit/f7c286150d1890da5e58c9571371c3af5f8827a6))
+* remove AuthStack and fix anonymous auth race condition ([1f2da07](https://github.com/cfoster5/lookforward/commit/1f2da0725382a15a9dfc546f0c07d888bbbba8ec))
+
 ## [7.23.0](https://github.com/cfoster5/lookforward/compare/v7.22.0...v7.23.0) (2026-02-15)
 
 

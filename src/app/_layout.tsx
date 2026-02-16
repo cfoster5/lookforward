@@ -53,33 +53,38 @@ function RootLayoutContent() {
     let unsubscribe: (() => void) | undefined;
 
     async function requestUserPermission() {
-      try {
-        const messaging = getMessaging();
-        const authStatus = await requestPermission(messaging);
-        const enabled =
-          authStatus === AuthorizationStatus.AUTHORIZED ||
-          authStatus === AuthorizationStatus.PROVISIONAL;
-        if (enabled) {
-          const db = getFirestore();
-          const userRef = doc(db, "users", uid);
-          const docSnapshot = await getDoc(userRef);
-          if (!docSnapshot.data()?.notifications) {
-            await updateDoc(userRef, {
-              notifications: { day: true, week: true },
-            });
-          }
-          const token = await getToken(messaging);
-          await saveTokenToDatabase(token);
-          unsubscribe = onTokenRefresh(messaging, async (token) => {
-            await saveTokenToDatabase(token);
+      const messaging = getMessaging();
+      const authStatus = await requestPermission(messaging);
+      const enabled =
+        authStatus === AuthorizationStatus.AUTHORIZED ||
+        authStatus === AuthorizationStatus.PROVISIONAL;
+
+      if (enabled) {
+        const db = getFirestore();
+        const userRef = doc(db, "users", uid);
+        const docSnapshot = await getDoc(userRef);
+
+        if (!docSnapshot.data()?.notifications) {
+          await updateDoc(userRef, {
+            notifications: { day: true, week: true },
           });
         }
-      } catch (error) {
-        console.error("Error in messaging useEffect:", error);
-      } finally {
-        setInitializing(false);
+
+        const token = await getToken(messaging);
+        await saveTokenToDatabase(token);
+        unsubscribe = onTokenRefresh(messaging, async (token) => {
+          await saveTokenToDatabase(token);
+        });
       }
     }
+
+    requestUserPermission()
+      .catch((error) => {
+        console.error("Error in messaging useEffect:", error);
+      })
+      .finally(() => {
+        setInitializing(false);
+      });
 
     async function saveTokenToDatabase(token: string) {
       try {

@@ -20,7 +20,7 @@ export const RadioButton = ({ isSelected }: { isSelected: boolean }) => (
         source="sf:checkmark"
         sfEffect="draw/on"
         style={{ fontSize: 16 }}
-        tintColor={Color.ios.label}
+        tintColor={Color.ios.label as string}
       />
     )}
   </View>

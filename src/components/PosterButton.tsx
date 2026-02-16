@@ -67,7 +67,7 @@ function PosterButton({ movieId, game }: Props) {
       transition={{ effect: "sf:replace" }}
       source={isSubscribed ? "sf:checkmark" : "sf:plus"}
       style={{ fontSize: 24 }}
-      tintColor={Color.ios.label}
+      tintColor={Color.ios.label as string}
     />
   );
 

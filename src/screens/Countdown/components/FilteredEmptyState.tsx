@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -32,14 +32,14 @@ export const FilteredEmptyState = ({
       <IconSymbol
         name="line.3.horizontal.decrease"
         size={64}
-        color={Colors.secondaryLabel}
+        color={Color.ios.secondaryLabel as string}
         style={{ marginBottom: 16 }}
       />
       <Text
         style={[
           iOSUIKit.title3Emphasized,
           {
-            color: Colors.label,
+            color: Color.ios.label,
             textAlign: "center",
             marginBottom: 8,
           },
@@ -51,7 +51,7 @@ export const FilteredEmptyState = ({
         style={[
           iOSUIKit.body,
           {
-            color: Colors.secondaryLabel,
+            color: Color.ios.secondaryLabel,
             textAlign: "center",
           },
         ]}

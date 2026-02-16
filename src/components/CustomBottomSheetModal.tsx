@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -23,10 +23,10 @@ export function CustomBottomSheetModal({
       ref={modalRef}
       backdropComponent={RenderBackdrop}
       backgroundStyle={{
-        backgroundColor: Colors.secondarySystemBackground,
+        backgroundColor: Color.ios.secondarySystemBackground,
       }}
       handleIndicatorStyle={{
-        backgroundColor: Colors.systemGray,
+        backgroundColor: Color.ios.systemGray,
       }}
     >
       {children}

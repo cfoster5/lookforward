@@ -1,6 +1,5 @@
-import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
-import { useSegments } from "expo-router";
+import { Color, useSegments } from "expo-router";
 import {
   Pressable,
   StyleSheet,
@@ -31,7 +30,7 @@ export function Person({ person }: Props) {
       aspectRatio: 2 / 3,
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: theme === "dark" ? Colors.separator : "#e0e0e0",
+      borderColor: theme === "dark" ? Color.ios.separator : "#e0e0e0",
     },
   });
 
@@ -80,7 +79,7 @@ export function Person({ person }: Props) {
                     }
                   : {
                       ...iOSUIKit.title3EmphasizedObject,
-                      color: Colors.systemGray,
+                      color: Color.ios.systemGray,
                       textAlign: "center",
                     }
               }
@@ -96,7 +95,7 @@ export function Person({ person }: Props) {
           <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>
             {person.name}
           </Text>
-          <Text style={[iOSUIKit.callout, { color: Colors.systemGray }]}>
+          <Text style={[iOSUIKit.callout, { color: Color.ios.systemGray }]}>
             {"character" in person ? person.character : person.job?.join(", ")}
           </Text>
         </View>

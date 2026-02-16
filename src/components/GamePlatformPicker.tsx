@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import {
   arrayUnion,
@@ -49,7 +49,7 @@ const ItemSeparator = () => (
     style={{
       marginVertical: 4,
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderColor: Colors.separator,
+      borderColor: Color.ios.separator,
     }}
   />
 );

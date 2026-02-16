@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
 import { FlatList, Linking, Pressable, Text, View } from "react-native";
@@ -51,7 +51,7 @@ export function WatchProvidersModal({
             <Text
               style={{
                 ...iOSUIKit.bodyEmphasizedObject,
-                color: Colors.systemBlue,
+                color: Color.ios.systemBlue,
               }}
             >
               More Info
@@ -88,7 +88,7 @@ export function WatchProvidersModal({
                           width: calculateWidth(16, 8, 4.5),
                           borderWidth: 1,
                           borderColor:
-                            theme === "dark" ? Colors.separator : "#e0e0e0",
+                            theme === "dark" ? Color.ios.separator : "#e0e0e0",
                           borderRadius: 12,
                         }}
                       />
@@ -125,7 +125,7 @@ export function WatchProvidersModal({
           <Text
             style={{
               ...iOSUIKit.footnoteObject,
-              color: Colors.systemGray,
+              color: Color.ios.systemGray,
               marginRight: 8,
             }}
           >

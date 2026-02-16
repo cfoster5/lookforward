@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import {
   ActivityIndicator,
@@ -34,7 +34,7 @@ const ItemSeparator = () => (
   <View
     style={{
       height: StyleSheet.hairlineWidth,
-      backgroundColor: Colors.separator,
+      backgroundColor: Color.ios.separator,
       marginLeft: calculateWidth(12, 12, 3.5) + 12,
       marginRight: 12,
     }}

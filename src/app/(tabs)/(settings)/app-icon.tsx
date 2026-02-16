@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import * as AlternateAppIcons from "expo-alternate-app-icons";
 import { Image, ImageSource } from "expo-image";
 import { usePostHog } from "posthog-react-native";
@@ -101,14 +101,14 @@ export default function AppIconScreen() {
           <IconSymbol
             name="checkmark"
             size={iOSUIKit.bodyObject.fontSize}
-            color={Colors.systemBlue}
+            color={Color.ios.systemBlue as string}
           />
         )}
         {isLocked && (
           <IconSymbol
             name="lock.fill"
             size={iOSUIKit.bodyObject.fontSize}
-            color={Colors.secondaryLabel}
+            color={Color.ios.secondaryLabel as string}
           />
         )}
       </Pressable>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   section: {
-    backgroundColor: Colors.secondarySystemGroupedBackground,
+    backgroundColor: Color.ios.secondarySystemGroupedBackground,
     borderRadius: 10,
     overflow: "hidden",
   },
@@ -169,27 +169,27 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 13,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: Colors.separator,
+    borderColor: Color.ios.separator,
   },
   iconInfo: {
     flex: 1,
   },
   iconTitle: {
     ...iOSUIKit.bodyObject,
-    color: Colors.label,
+    color: Color.ios.label,
   },
   iconSubtitle: {
     ...iOSUIKit.footnoteObject,
-    color: Colors.secondaryLabel,
+    color: Color.ios.secondaryLabel,
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: Colors.separator,
+    backgroundColor: Color.ios.separator,
     marginLeft: 84,
   },
   footer: {
     ...iOSUIKit.footnoteObject,
-    color: Colors.secondaryLabel,
+    color: Color.ios.secondaryLabel,
     marginTop: 8,
     marginHorizontal: 16,
   },

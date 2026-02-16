@@ -1,4 +1,3 @@
-import * as Colors from "@bacons/apple-colors";
 import {
   Host,
   List,
@@ -58,8 +57,8 @@ function NomineeItem({ movie, isTracked }: NomineeItemProps) {
       <Pressable
         style={({ pressed }) => ({
           backgroundColor: pressed
-            ? Colors.tertiarySystemBackground
-            : Colors.secondarySystemGroupedBackground,
+            ? Color.ios.tertiarySystemBackground
+            : Color.ios.secondarySystemGroupedBackground,
         })}
       >
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -85,13 +84,13 @@ function NomineeItem({ movie, isTracked }: NomineeItemProps) {
                   marginTop: 8,
                   marginBottom: 8,
                   borderWidth: 1,
-                  borderColor: Colors.separator,
+                  borderColor: Color.ios.separator,
                 }}
               />
             ) : (
               <View
                 style={{
-                  backgroundColor: Colors.systemGray,
+                  backgroundColor: Color.ios.systemGray,
                   aspectRatio: 2 / 3,
                   width: 60,
                   borderRadius: 6,
@@ -99,7 +98,7 @@ function NomineeItem({ movie, isTracked }: NomineeItemProps) {
                   marginTop: 8,
                   marginBottom: 8,
                   borderWidth: 1,
-                  borderColor: Colors.separator,
+                  borderColor: Color.ios.separator,
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -113,13 +112,13 @@ function NomineeItem({ movie, isTracked }: NomineeItemProps) {
 
           <View style={{ flex: 1, marginHorizontal: 12 }}>
             <Text
-              style={[iOSUIKit.body, { color: Colors.label }]}
+              style={[iOSUIKit.body, { color: Color.ios.label }]}
               numberOfLines={2}
             >
               {movie.title}
             </Text>
             <Text
-              style={[iOSUIKit.subhead, { color: Colors.secondaryLabel }]}
+              style={[iOSUIKit.subhead, { color: Color.ios.secondaryLabel }]}
               numberOfLines={1}
             >
               {dateToFullLocale(movie.release_date)}
@@ -137,7 +136,7 @@ function NomineeItem({ movie, isTracked }: NomineeItemProps) {
             <Ionicons
               name="chevron-forward"
               size={20}
-              color={Colors.tertiaryLabel}
+              color={Color.ios.tertiaryLabel}
             />
           </View>
         </View>
@@ -151,7 +150,7 @@ function ItemSeparator() {
     <View
       style={{
         height: 1,
-        backgroundColor: Colors.separator,
+        backgroundColor: Color.ios.separator,
         marginLeft: 16 + 60 + 16, // marginLeft + posterWidth + gap
       }}
     />
@@ -220,7 +219,7 @@ export default function CollectionScreen() {
   if (!collection) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={[iOSUIKit.body, { color: Colors.secondaryLabel }]}>
+        <Text style={[iOSUIKit.body, { color: Color.ios.secondaryLabel }]}>
           Collection not found
         </Text>
       </View>
@@ -286,7 +285,7 @@ export default function CollectionScreen() {
                           aspectRatio: 2 / 3,
                           borderRadius: 13,
                           borderWidth: StyleSheet.hairlineWidth,
-                          borderColor: Colors.separator,
+                          borderColor: Color.ios.separator,
                         }}
                         contentFit="cover"
                       />
@@ -354,16 +353,16 @@ export default function CollectionScreen() {
   //             >
   //               <IconSymbol name={iconName} size={24} color="#FFD60A" />
   //               <Text
-  //                 style={[iOSUIKit.title3Emphasized, { color: Colors.label }]}
+  //                 style={[iOSUIKit.title3Emphasized, { color: Color.ios.label }]}
   //               >
   //                 {collection.name}
   //               </Text>
   //             </View> */}
-  //             <Text style={[iOSUIKit.body, { color: Colors.secondaryLabel }]}>
+  //             <Text style={[iOSUIKit.body, { color: Color.ios.secondaryLabel }]}>
   //               {collection.description}
   //             </Text>
   //             <Text
-  //               style={[iOSUIKit.footnote, { color: Colors.tertiaryLabel }]}
+  //               style={[iOSUIKit.footnote, { color: Color.ios.tertiaryLabel }]}
   //             >
   //               {trackedCount} of {movies.length} tracked
   //             </Text>
@@ -372,7 +371,7 @@ export default function CollectionScreen() {
   //         </>
   //       }
   //       contentContainerStyle={{
-  //         // backgroundColor: Colors.secondarySystemGroupedBackground,
+  //         // backgroundColor: Color.ios.secondarySystemGroupedBackground,
   //         // borderRadius: 12,
   //         // marginTop: headerHeight,
   //         // margin: 16,

@@ -1,4 +1,3 @@
-import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
 import { Color, Link } from "expo-router";
 import { SFSymbol } from "expo-symbols";
@@ -109,7 +108,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...iOSUIKit.bodyEmphasizedObject,
-    color: Colors.label,
+    color: Color.ios.label,
     flex: 1,
   },
   earlyTrackerRow: {
@@ -120,6 +119,6 @@ const styles = StyleSheet.create({
   },
   earlyTrackerText: {
     ...iOSUIKit.footnoteEmphasizedObject,
-    color: Colors.systemOrange,
+    color: Color.ios.systemOrange,
   },
 });

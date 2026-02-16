@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { deleteUser, getAuth } from "@react-native-firebase/auth";
 import { useState } from "react";
 import { Alert, Pressable, ScrollView, Text, TextInput } from "react-native";
@@ -28,7 +28,7 @@ export default function DeleteAccountScreen() {
       <Text
         style={[
           iOSUIKit.title3Emphasized,
-          { color: Colors.label, marginBottom: 16 },
+          { color: Color.ios.label, marginBottom: 16 },
         ]}
       >
         Confirm request
@@ -37,7 +37,7 @@ export default function DeleteAccountScreen() {
         style={[
           iOSUIKit.body,
           {
-            color: Colors.secondaryLabel,
+            color: Color.ios.secondaryLabel,
             marginBottom: 8,
           },
         ]}
@@ -51,7 +51,7 @@ export default function DeleteAccountScreen() {
       />
       <Pressable
         style={{
-          backgroundColor: Colors.systemRed,
+          backgroundColor: Color.ios.systemRed,
           width: "100%",
           marginTop: 16,
           paddingVertical: 16,

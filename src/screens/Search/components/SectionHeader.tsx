@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -31,12 +31,12 @@ export const SectionHeader = ({ text, categoryIndex }: SectionHeaderProps) => {
       }}
     >
       <Text
-        style={[iOSUIKit.subheadEmphasized, { color: Colors.secondaryLabel }]}
+        style={[iOSUIKit.subheadEmphasized, { color: Color.ios.secondaryLabel }]}
       >
         {text}
       </Text>
       <Pressable onPress={() => handleClearPress(text)}>
-        <Text style={[iOSUIKit.subhead, { color: Colors.systemBlue }]}>
+        <Text style={[iOSUIKit.subhead, { color: Color.ios.systemBlue }]}>
           Clear
         </Text>
       </Pressable>

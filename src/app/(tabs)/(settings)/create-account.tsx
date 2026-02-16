@@ -1,11 +1,10 @@
-import * as Colors from "@bacons/apple-colors";
 import {
   createUserWithEmailAndPassword,
   EmailAuthProvider,
   getAuth,
   linkWithCredential,
 } from "@react-native-firebase/auth";
-import { useRouter } from "expo-router";
+import { Color, useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Text, TextInput, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -64,7 +63,7 @@ export default function CreateAccount() {
         <Text
           style={[
             iOSUIKit.body,
-            { color: Colors.secondaryLabel, marginBottom: 8 },
+            { color: Color.ios.secondaryLabel, marginBottom: 8 },
           ]}
         >
           {`Create an account with an email to get your countdown items across devices.`}
@@ -72,7 +71,7 @@ export default function CreateAccount() {
         <TextInput
           style={reusableStyles.textInput}
           placeholder="Email"
-          placeholderTextColor={Colors.secondaryLabel}
+          placeholderTextColor={Color.ios.secondaryLabel}
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="username"
@@ -82,7 +81,7 @@ export default function CreateAccount() {
         <TextInput
           style={reusableStyles.textInput}
           placeholder="Password"
-          placeholderTextColor={Colors.secondaryLabel}
+          placeholderTextColor={Color.ios.secondaryLabel}
           secureTextEntry
           textContentType="password"
           value={password}
@@ -98,7 +97,7 @@ export default function CreateAccount() {
           style={[
             iOSUIKit.footnote,
             {
-              color: Colors.secondaryLabel,
+              color: Color.ios.secondaryLabel,
               textAlign: "center",
               marginVertical: 16,
             },

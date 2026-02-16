@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import {
   Pressable,
@@ -66,7 +66,7 @@ export const CountdownLimitBanner = ({
       }}
       style={[
         {
-          backgroundColor: Colors.secondarySystemBackground,
+          backgroundColor: Color.ios.secondarySystemBackground,
           paddingVertical: 10,
           paddingHorizontal: 16,
           marginBottom: 16,
@@ -80,11 +80,11 @@ export const CountdownLimitBanner = ({
       {/* Invisible spacer to balance right chevron and center content */}
       <View style={{ width: iconSize }} />
       <View style={{ paddingLeft: 16, flex: 1, alignItems: "center" }}>
-        <Text style={[iOSUIKit.footnoteEmphasized, { color: Colors.label }]}>
+        <Text style={[iOSUIKit.footnoteEmphasized, { color: Color.ios.label }]}>
           {/* {mainMessage} */}
           Get more countdowns with Pro
         </Text>
-        <Text style={[iOSUIKit.footnote, { color: Colors.secondaryLabel }]}>
+        <Text style={[iOSUIKit.footnote, { color: Color.ios.secondaryLabel }]}>
           {/* Get more with LookForward Pro */}
           {mainMessage}
         </Text>
@@ -92,7 +92,7 @@ export const CountdownLimitBanner = ({
       <IconSymbol
         name="chevron.forward"
         size={iconSize}
-        color={Colors.tertiaryLabel}
+        color={Color.ios.tertiaryLabel as string}
       />
     </Pressable>
   );

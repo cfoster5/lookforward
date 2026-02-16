@@ -1,5 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
-import { router, Stack } from "expo-router";
+import { Color, router, Stack } from "expo-router";
 import { Text, View, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -30,14 +29,14 @@ export const EmptyState = () => {
         <IconSymbol
           name="calendar.badge.clock"
           size={64}
-          color={Colors.secondaryLabel}
+          color={Color.ios.secondaryLabel as string}
           style={{ marginBottom: 16 }}
         />
         <Text
           style={[
             iOSUIKit.title3Emphasized,
             {
-              color: Colors.label,
+              color: Color.ios.label,
               textAlign: "center",
               marginBottom: 8,
             },
@@ -50,7 +49,7 @@ export const EmptyState = () => {
             style={[
               iOSUIKit.body,
               {
-                color: Colors.secondaryLabel,
+                color: Color.ios.secondaryLabel,
                 textAlign: "center",
                 // marginBottom: 24,
                 // marginBottom: 8,
@@ -71,7 +70,7 @@ export const EmptyState = () => {
             style={{
               flex: 1,
               alignItems: "center",
-              backgroundColor: Colors.secondarySystemBackground,
+              backgroundColor: Color.ios.secondarySystemBackground,
               paddingHorizontal: 20,
               paddingVertical: 12,
               borderRadius: 10,
@@ -91,7 +90,7 @@ export const EmptyState = () => {
             style={{
               flex: 1,
               alignItems: "center",
-              backgroundColor: Colors.secondarySystemBackground,
+              backgroundColor: Color.ios.secondarySystemBackground,
               paddingHorizontal: 20,
               paddingVertical: 12,
               borderRadius: 10,
@@ -99,7 +98,7 @@ export const EmptyState = () => {
               justifyContent: "center",
             }}
           >
-            <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.label }]}>
+            <Text style={[iOSUIKit.bodyEmphasized, { color: Color.ios.label }]}>
               Browse Games
             </Text>
           </Pressable>

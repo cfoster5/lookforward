@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Pressable, StyleProp, Text, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -29,7 +29,7 @@ export const LargeBorderlessButton = ({
     ]}
     onPress={handlePress}
   >
-    <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.systemBlue }]}>
+    <Text style={[iOSUIKit.bodyEmphasized, { color: Color.ios.systemBlue }]}>
       {text}
     </Text>
   </Pressable>

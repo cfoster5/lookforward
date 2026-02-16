@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Image } from "expo-image";
 import { useState } from "react";
 import {
@@ -56,7 +56,7 @@ function Trailer({ video }: TrailerProps) {
             aspectRatio: 16 / 9,
             borderRadius: 12,
             borderWidth: 1,
-            borderColor: Colors.separator,
+            borderColor: Color.ios.separator,
           }}
           source={{
             uri: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
@@ -65,7 +65,7 @@ function Trailer({ video }: TrailerProps) {
         />
         <Text
           numberOfLines={2}
-          style={[iOSUIKit.subhead, { color: Colors.label, marginTop: 8 }]}
+          style={[iOSUIKit.subhead, { color: Color.ios.label, marginTop: 8 }]}
         >
           {video.name}
         </Text>
@@ -90,7 +90,7 @@ function Trailer({ video }: TrailerProps) {
             accessibilityLabel="Close video"
             onPress={() => setModalVisible(false)}
           >
-            <Text style={[iOSUIKit.body, { color: Colors.label }]}>Close</Text>
+            <Text style={[iOSUIKit.body, { color: Color.ios.label }]}>Close</Text>
           </Pressable>
         </View>
       </Modal>

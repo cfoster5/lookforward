@@ -1,7 +1,6 @@
-import * as Colors from "@bacons/apple-colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { Color, useRouter } from "expo-router";
 import { Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -39,7 +38,7 @@ export function SearchGame({
           paddingLeft: 12,
         },
         pressed && {
-          backgroundColor: Colors.tertiarySystemBackground,
+          backgroundColor: Color.ios.tertiarySystemBackground,
         },
       ]}
     >
@@ -65,18 +64,18 @@ export function SearchGame({
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: Colors.separator,
+              borderColor: Color.ios.separator,
             }}
           />
         ) : (
           <View
             style={{
-              backgroundColor: Colors.systemGray,
+              backgroundColor: Color.ios.systemGray,
               aspectRatio: 3 / 4,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: Colors.separator,
+              borderColor: Color.ios.separator,
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -89,13 +88,13 @@ export function SearchGame({
       </View>
       <View style={{ flex: 1, marginHorizontal: 12 }}>
         <Text
-          style={[iOSUIKit.body, { color: Colors.label }]}
+          style={[iOSUIKit.body, { color: Color.ios.label }]}
           numberOfLines={2}
         >
           {item.name}
         </Text>
         <Text
-          style={[iOSUIKit.subhead, { color: Colors.secondaryLabel }]}
+          style={[iOSUIKit.subhead, { color: Color.ios.secondaryLabel }]}
           numberOfLines={2}
         >
           {getGameReleaseDate(item)}
@@ -105,7 +104,7 @@ export function SearchGame({
         name="chevron-forward"
         size={28}
         style={{ marginRight: 12 }}
-        color={Colors.tertiaryLabel}
+        color={Color.ios.tertiaryLabel}
       />
     </Pressable>
   );

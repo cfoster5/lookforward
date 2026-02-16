@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Switch, Text, View, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -23,16 +23,16 @@ export const NotificationSetting = ({
         justifyContent: "space-between",
         alignItems: "center",
         paddingHorizontal: 16,
-        backgroundColor: Colors.secondarySystemGroupedBackground,
+        backgroundColor: Color.ios.secondarySystemGroupedBackground,
         minHeight: 44,
       },
       style,
     ]}
   >
-    <Text style={{ ...iOSUIKit.bodyObject, color: Colors.label }}>{title}</Text>
+    <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.label }}>{title}</Text>
     <Switch
       style={{ alignSelf: "center" }}
-      // trackColor={{ false: "red", true: Colors.systemBlue }}
+      // trackColor={{ false: "red", true: Color.ios.systemBlue }}
       onValueChange={onValueChange}
       value={value}
     />

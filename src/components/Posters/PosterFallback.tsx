@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { StyleProp, Text, View, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -16,7 +16,7 @@ export const PosterFallback = ({
       reusableStyles.gamePoster,
       {
         // borderWidth: 1,
-        borderColor: Colors.separator,
+        borderColor: Color.ios.separator,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
@@ -29,7 +29,7 @@ export const PosterFallback = ({
     <Text
       style={[
         iOSUIKit.title3Emphasized,
-        { color: Colors.label, textAlign: "center" },
+        { color: Color.ios.label, textAlign: "center" },
       ]}
     >
       {text}

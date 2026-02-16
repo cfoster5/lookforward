@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Image } from "expo-image";
 import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
@@ -50,13 +50,13 @@ export const Rating = ({
         <View
           style={{
             width: 44,
-            backgroundColor: Colors.placeholderText,
+            backgroundColor: Color.ios.placeholderText,
             opacity: 0.5,
             borderRadius: 4,
           }}
         />
       ) : (
-        <Text style={[iOSUIKit.body, { color: Colors.label }]}>{rating}</Text>
+        <Text style={[iOSUIKit.body, { color: Color.ios.label }]}>{rating}</Text>
       )}
     </>
   );

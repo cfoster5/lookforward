@@ -1,6 +1,5 @@
-import * as Colors from "@bacons/apple-colors";
 import { getAuth, sendPasswordResetEmail } from "@react-native-firebase/auth";
-import { router } from "expo-router";
+import { Color, router } from "expo-router";
 import { useState } from "react";
 import { Alert, ScrollView, Text, TextInput, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
@@ -35,7 +34,7 @@ export default function PasswordReset() {
       <Text
         style={[
           iOSUIKit.body,
-          { color: Colors.secondaryLabel, marginBottom: 8 },
+          { color: Color.ios.secondaryLabel, marginBottom: 8 },
         ]}
       >
         {`Enter your email. We'll send a link to reset your password.`}
@@ -43,7 +42,7 @@ export default function PasswordReset() {
       <TextInput
         style={reusableStyles.textInput}
         placeholder="Email"
-        placeholderTextColor={Colors.systemGray}
+        placeholderTextColor={Color.ios.systemGray}
         autoCapitalize="none"
         keyboardType="email-address"
         textContentType="username"

@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -25,9 +25,9 @@ export default function ButtonMultiState({
         // Below colors extracted from Apple Fitness category buttons
         backgroundColor:
           selectedVal === (test !== undefined ? test : text)
-            ? Colors.systemGray4
+            ? Color.ios.systemGray4
             : undefined,
-        borderColor: Colors.systemGray4,
+        borderColor: Color.ios.systemGray4,
         borderWidth: 1,
         borderRadius: 22,
         paddingHorizontal: 24,

@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { ComponentRef, forwardRef } from "react";
@@ -38,7 +38,7 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
           paddingLeft: 12,
         },
         pressed && {
-          backgroundColor: Colors.tertiarySystemBackground,
+          backgroundColor: Color.ios.tertiarySystemBackground,
         },
       ]}
     >
@@ -64,18 +64,18 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: Colors.separator,
+              borderColor: Color.ios.separator,
             }}
           />
         ) : (
           <View
             style={{
-              backgroundColor: Colors.systemGray,
+              backgroundColor: Color.ios.systemGray,
               aspectRatio: 2 / 3,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: Colors.separator,
+              borderColor: Color.ios.separator,
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -88,13 +88,13 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
       </View>
       <View style={{ flex: 1, marginHorizontal: 12 }}>
         <Text
-          style={[iOSUIKit.body, { color: Colors.label }]}
+          style={[iOSUIKit.body, { color: Color.ios.label }]}
           numberOfLines={2}
         >
           {item.title}
         </Text>
         <Text
-          style={[iOSUIKit.subhead, { color: Colors.secondaryLabel }]}
+          style={[iOSUIKit.subhead, { color: Color.ios.secondaryLabel }]}
           numberOfLines={2}
         >
           {dateToFullLocale(item.release_date)}
@@ -104,7 +104,7 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
         name="chevron-forward"
         size={28}
         style={{ marginRight: 12 }}
-        color={Colors.tertiaryLabel}
+        color={Color.ios.tertiaryLabel}
       />
     </Pressable>
   ),

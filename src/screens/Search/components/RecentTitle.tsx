@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { SymbolView } from "expo-symbols";
@@ -59,19 +59,19 @@ export function RecentTitle({ item }: { item: Recent }) {
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: Colors.separator,
+                borderColor: Color.ios.separator,
                 marginBottom: 8,
               }}
             />
           ) : (
             <View
               style={{
-                backgroundColor: Colors.systemGray,
+                backgroundColor: Color.ios.systemGray,
                 aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: Colors.separator,
+                borderColor: Color.ios.separator,
                 marginBottom: 8,
                 justifyContent: "center",
                 alignItems: "center",
@@ -110,7 +110,7 @@ export function RecentTitle({ item }: { item: Recent }) {
               <SymbolView
                 name="lock"
                 size={36}
-                tintColor={Colors.label}
+                tintColor={Color.ios.label}
                 resizeMode="scaleAspectFit"
                 style={{
                   height: 36,
@@ -129,7 +129,7 @@ export function RecentTitle({ item }: { item: Recent }) {
             style={[
               iOSUIKit.subhead,
               {
-                color: Colors.label,
+                color: Color.ios.label,
                 maxWidth: 96,
                 textAlign: "center",
               },
@@ -242,19 +242,19 @@ export function RecentTitle({ item }: { item: Recent }) {
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: Colors.separator,
+                borderColor: Color.ios.separator,
                 marginBottom: 8,
               }}
             />
           ) : (
             <View
               style={{
-                backgroundColor: Colors.systemGray,
+                backgroundColor: Color.ios.systemGray,
                 aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: Colors.separator,
+                borderColor: Color.ios.separator,
                 marginBottom: 8,
                 justifyContent: "center",
                 alignItems: "center",
@@ -270,7 +270,7 @@ export function RecentTitle({ item }: { item: Recent }) {
           style={[
             iOSUIKit.subhead,
             {
-              color: Colors.label,
+              color: Color.ios.label,
               maxWidth: 96,
               textAlign: "center",
               alignSelf: "center",

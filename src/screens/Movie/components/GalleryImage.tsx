@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Galeria } from "@nandorojo/galeria";
 import { Image } from "expo-image";
 
@@ -20,7 +20,7 @@ export const GalleryImage = ({
       style={{
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: Colors.separator,
+        borderColor: Color.ios.separator,
         width,
         aspectRatio,
         // aspectRatio:

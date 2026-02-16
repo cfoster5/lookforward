@@ -1,4 +1,3 @@
-import * as Colors from "@bacons/apple-colors";
 import {
   doc,
   getFirestore,
@@ -7,7 +6,7 @@ import {
 } from "@react-native-firebase/firestore";
 import { getMessaging, hasPermission } from "@react-native-firebase/messaging";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "expo-router";
+import { Color, Link } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
 import {
@@ -89,7 +88,7 @@ export default function Settings() {
       <Text
         style={{
           ...iOSUIKit.bodyEmphasizedObject,
-          color: Colors.secondaryLabel,
+          color: Color.ios.secondaryLabel,
           marginHorizontal: 16,
           paddingBottom: 9,
         }}
@@ -126,7 +125,7 @@ export default function Settings() {
           <Text
             style={{
               ...iOSUIKit.footnoteObject,
-              color: Colors.systemBlue,
+              color: Color.ios.systemBlue,
               paddingTop: 8,
               paddingHorizontal: 16,
             }}
@@ -137,7 +136,7 @@ export default function Settings() {
       )}
       <View
         style={{
-          backgroundColor: Colors.secondarySystemGroupedBackground,
+          backgroundColor: Color.ios.secondarySystemGroupedBackground,
           borderTopLeftRadius: 26,
           borderTopRightRadius: 26,
           paddingHorizontal: 16,
@@ -148,7 +147,7 @@ export default function Settings() {
           alignItems: "center",
         }}
       >
-        <Text style={{ ...iOSUIKit.bodyObject, color: Colors.label }}>
+        <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.label }}>
           Movie Region
         </Text>
         <DropdownMenu
@@ -175,7 +174,7 @@ export default function Settings() {
               paddingHorizontal: 12,
             }}
           >
-            <Text style={{ ...iOSUIKit.bodyObject, color: Colors.systemBlue }}>
+            <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.systemBlue }}>
               {countries?.find((c) => c.iso_3166_1 === movieRegion)
                 ?.english_name ?? movieRegion}
             </Text>
@@ -185,7 +184,7 @@ export default function Settings() {
       <ViewSeparator />
       <View
         style={{
-          backgroundColor: Colors.secondarySystemGroupedBackground,
+          backgroundColor: Color.ios.secondarySystemGroupedBackground,
           borderBottomLeftRadius: 26,
           borderBottomRightRadius: 26,
           paddingHorizontal: 16,
@@ -195,7 +194,7 @@ export default function Settings() {
           alignItems: "center",
         }}
       >
-        <Text style={{ ...iOSUIKit.bodyObject, color: Colors.label }}>
+        <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.label }}>
           Movie Language
         </Text>
         <DropdownMenu
@@ -218,7 +217,7 @@ export default function Settings() {
               paddingHorizontal: 12,
             }}
           >
-            <Text style={{ ...iOSUIKit.bodyObject, color: Colors.systemBlue }}>
+            <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.systemBlue }}>
               {languages?.find((l) => l.iso_639_1 === movieLanguage)
                 ?.english_name ?? movieLanguage}
             </Text>

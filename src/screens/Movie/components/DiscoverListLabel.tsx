@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -8,7 +8,7 @@ export function DiscoverListLabel({ text }: { text: string }) {
       style={[
         iOSUIKit.subheadEmphasized,
         {
-          color: Colors.secondaryLabel,
+          color: Color.ios.secondaryLabel,
           textAlign: "center",
           marginTop: 16,
         },

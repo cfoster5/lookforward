@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Dimensions, StyleSheet } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
@@ -10,16 +10,16 @@ export const reusableStyles = StyleSheet.create({
     borderRadius: 12,
     resizeMode: "cover",
     borderWidth: 1,
-    borderColor: Colors.separator,
+    borderColor: Color.ios.separator,
   },
   date: {
     ...iOSUIKit.footnoteEmphasizedObject,
-    color: Colors.systemGray,
+    color: Color.ios.systemGray,
   },
   textInput: {
     ...iOSUIKit.bodyObject,
-    backgroundColor: Colors.systemGray6,
-    color: Colors.label,
+    backgroundColor: Color.ios.systemGray6,
+    color: Color.ios.label,
     padding: 16,
     borderRadius: 12,
     marginVertical: 8,

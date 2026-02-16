@@ -5,7 +5,6 @@
     "": {
       "name": "lookforward",
       "dependencies": {
-        "@bacons/apple-colors": "^0.0.8",
         "@bacons/apple-targets": "^3.0.6",
         "@dev-plugins/react-native-mmkv": "^0.4.0",
         "@dev-plugins/react-navigation": "^0.4.0",
@@ -282,8 +281,6 @@
     "@babel/traverse--for-generate-function-map": ["@babel/traverse@7.28.6", "", { "dependencies": { "@babel/code-frame": "^7.28.6", "@babel/generator": "^7.28.6", "@babel/helper-globals": "^7.28.0", "@babel/parser": "^7.28.6", "@babel/template": "^7.28.6", "@babel/types": "^7.28.6", "debug": "^4.3.1" } }, "sha512-fgWX62k02qtjqdSNTAGxmKYY/7FSL9WAS1o2Hu5+I5m9T0yxZzr4cnrfXQ/MX0rIifthCSs6FKTlzYbJcPtMNg=="],
 
     "@babel/types": ["@babel/types@7.28.6", "", { "dependencies": { "@babel/helper-string-parser": "^7.27.1", "@babel/helper-validator-identifier": "^7.28.5" } }, "sha512-0ZrskXVEHSWIqZM/sQZ4EV3jZJXRkio/WCxaqKZP1g//CEWEPSfeZFcms4XeKBCHU0ZKnIkdJeU/kF+eRp5lBg=="],
-
-    "@bacons/apple-colors": ["@bacons/apple-colors@0.0.8", "", { "peerDependencies": { "react-native": "*" } }, "sha512-Fd23H9b8ge3hjMn2VQzhSyN5SHKeOP+NyDXRit45q0I7aVkD2OcheiLoGGmpPm2RiH+PW+8vikgDcrL0SCsIow=="],
 
     "@bacons/apple-targets": ["@bacons/apple-targets@3.0.7", "", { "dependencies": { "@bacons/xcode": "1.0.0-alpha.27", "@react-native/normalize-colors": "^0.79.2", "debug": "^4.3.4", "glob": "^10.4.2" } }, "sha512-RpzofKGvll8BPrvgf1Xj5raoHffJRW2qfWl7Q9F/25eo6lZeRa9R5NRIZCpUYoVnsL7whCQV9NIp0/ai4O+Ejw=="],
 

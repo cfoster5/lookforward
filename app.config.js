@@ -49,7 +49,6 @@ export default {
       "expo-router",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
-      "@bacons/apple-colors",
       "@bacons/apple-targets",
       "expo-image",
       "expo-localization",

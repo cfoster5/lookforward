@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { View } from "react-native";
 
 export function BlueBullet() {
@@ -9,7 +9,7 @@ export function BlueBullet() {
         height: 5,
         borderRadius: 5,
         marginHorizontal: 5,
-        backgroundColor: Colors.systemBlue,
+        backgroundColor: Color.ios.systemBlue,
         alignSelf: "center",
       }}
     />

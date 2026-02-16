@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { Image } from "expo-image";
 import { PosterSize } from "tmdb-ts";
 
@@ -17,7 +17,7 @@ export const CarouselItem = ({ item, width, horizontalMargin }: Props) => (
     }}
     style={{
       borderRadius: 12,
-      borderColor: Colors.separator,
+      borderColor: Color.ios.separator,
       borderWidth: 1,
       width,
       height: width * 1.5,

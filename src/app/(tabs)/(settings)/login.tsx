@@ -1,9 +1,8 @@
-import * as Colors from "@bacons/apple-colors";
 import {
   getAuth,
   signInWithEmailAndPassword,
 } from "@react-native-firebase/auth";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { Color, useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   Alert,
@@ -58,7 +57,7 @@ export default function Login() {
         <Text
           style={[
             iOSUIKit.body,
-            { color: Colors.secondaryLabel, marginBottom: 8 },
+            { color: Color.ios.secondaryLabel, marginBottom: 8 },
           ]}
         >
           {!emailParam
@@ -68,7 +67,7 @@ export default function Login() {
         <TextInput
           style={reusableStyles.textInput}
           placeholder="Email"
-          placeholderTextColor={Colors.secondaryLabel}
+          placeholderTextColor={Color.ios.secondaryLabel}
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="username"
@@ -78,7 +77,7 @@ export default function Login() {
         <TextInput
           style={reusableStyles.textInput}
           placeholder="Password"
-          placeholderTextColor={Colors.secondaryLabel}
+          placeholderTextColor={Color.ios.secondaryLabel}
           secureTextEntry
           textContentType="password"
           value={password}
@@ -94,12 +93,12 @@ export default function Login() {
               <IconSymbol
                 name="info.circle.fill"
                 size={iOSUIKit.bodyObject.fontSize}
-                color={Colors.systemBlue}
+                color={Color.ios.systemBlue as string}
               />
               <Text
                 style={[
                   iOSUIKit.body,
-                  { color: Colors.systemBlue, marginVertical: 8 },
+                  { color: Color.ios.systemBlue, marginVertical: 8 },
                 ]}
               >
                 Forgot your password?
@@ -117,7 +116,7 @@ export default function Login() {
           style={[
             iOSUIKit.footnote,
             {
-              color: Colors.secondaryLabel,
+              color: Color.ios.secondaryLabel,
               textAlign: "center",
               marginVertical: 16,
             },

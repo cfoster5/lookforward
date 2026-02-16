@@ -1,8 +1,8 @@
-import * as Colors from "@bacons/apple-colors";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import {
+  Color,
   Stack,
   useLocalSearchParams,
   useRouter,
@@ -121,8 +121,8 @@ function ScrollViewWithFlatList({
               })
             }
             buttonStyle={{
-              backgroundColor: Colors.secondarySystemGroupedBackground,
-              borderColor: Colors.secondarySystemGroupedBackground,
+              backgroundColor: Color.ios.secondarySystemGroupedBackground,
+              borderColor: Color.ios.secondarySystemGroupedBackground,
             }}
           />
         )}
@@ -305,7 +305,7 @@ export default function MovieScreen() {
                       <View
                         style={{
                           width: 44 * 2,
-                          backgroundColor: Colors.placeholderText,
+                          backgroundColor: Color.ios.placeholderText,
                           opacity: 0.5,
                           borderRadius: 4,
                         }}
@@ -358,7 +358,7 @@ export default function MovieScreen() {
                 {
                   paddingTop: 16,
                   fontStyle: "italic",
-                  color: Colors.systemGray,
+                  color: Color.ios.systemGray,
                 },
               ]}
             >
@@ -385,8 +385,8 @@ export default function MovieScreen() {
                 buttonStyle={{
                   paddingHorizontal: 16,
                   flexDirection: "row",
-                  backgroundColor: Colors.secondarySystemGroupedBackground,
-                  borderColor: Colors.secondarySystemGroupedBackground,
+                  backgroundColor: Color.ios.secondarySystemGroupedBackground,
+                  borderColor: Color.ios.secondarySystemGroupedBackground,
                 }}
                 icon={tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon}
                 textStyle={{ alignSelf: "center" }}
@@ -407,7 +407,7 @@ export default function MovieScreen() {
               >
                 <ListLabel text="Watch on" style={{ marginBottom: 0 }} />
                 <Pressable onPress={() => modalRef.current?.present()}>
-                  <Text style={[iOSUIKit.body, { color: Colors.systemBlue }]}>
+                  <Text style={[iOSUIKit.body, { color: Color.ios.systemBlue }]}>
                     More
                   </Text>
                 </Pressable>
@@ -439,7 +439,7 @@ export default function MovieScreen() {
                       height: calculateWidth(16, 8, 6),
                       aspectRatio: 1 / 1,
                       borderWidth: 1,
-                      borderColor: Colors.separator,
+                      borderColor: Color.ios.separator,
                       borderRadius: 12,
                     }}
                   />
@@ -620,7 +620,7 @@ export default function MovieScreen() {
                         width: Dimensions.get("screen").width - 32,
                         aspectRatio: 16 / 9,
                         borderWidth: 1,
-                        borderColor: Colors.separator,
+                        borderColor: Color.ios.separator,
                         borderRadius: 12,
                       }}
                       source={{
@@ -690,6 +690,6 @@ export default function MovieScreen() {
 const styles = StyleSheet.create({
   secondarySubhedEmphasized: {
     ...iOSUIKit.subheadEmphasizedObject,
-    color: Colors.secondaryLabel,
+    color: Color.ios.secondaryLabel,
   },
 });

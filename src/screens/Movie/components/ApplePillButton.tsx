@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import { SymbolView } from "expo-symbols";
 import { Pressable, Text, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
@@ -19,7 +19,7 @@ export const ApplePillButton = ({
     style={[
       {
         flexDirection: "row",
-        backgroundColor: Colors.secondarySystemGroupedBackground,
+        backgroundColor: Color.ios.secondarySystemGroupedBackground,
         minWidth: 44,
         minHeight: 44,
         borderRadius: 12,
@@ -36,15 +36,15 @@ export const ApplePillButton = ({
     ]}
   >
     {text && (
-      <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.systemBlue }]}>
+      <Text style={[iOSUIKit.bodyEmphasized, { color: Color.ios.systemBlue }]}>
         {text}
       </Text>
     )}
     {iconName && (
-      // <Ionicons name={iconName} size={36} color={Colors.systemBlue} />
+      // <Ionicons name={iconName} size={36} color={Color.ios.systemBlue} />
       <SymbolView
         name={iconName}
-        tintColor={Colors.systemBlue}
+        tintColor={Color.ios.systemBlue}
         resizeMode="scaleAspectFill"
         style={{ marginRight: 4 }}
       />
@@ -54,7 +54,7 @@ export const ApplePillButton = ({
       weight={"semibold"}
       // size={iOSUIKit.bodyObject.lineHeight}
       resizeMode="center"
-      tintColor={Colors.systemBlue}
+      tintColor={Color.ios.systemBlue}
     />
   </Pressable>
 );

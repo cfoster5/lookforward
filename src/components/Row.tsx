@@ -1,4 +1,4 @@
-import * as Colors from "@bacons/apple-colors";
+import { Color } from "expo-router";
 import Ionicons from "@expo/vector-icons/build/Ionicons";
 import { SFSymbol, SymbolView } from "expo-symbols";
 import { View, Text } from "react-native";
@@ -37,15 +37,19 @@ export const Row = ({
     }}
   >
     {!useAltIcon ? (
-      <Ionicons name={icon} size={36} color={Colors.systemBlue} />
+      <Ionicons name={icon} size={36} color={Color.ios.systemBlue} />
     ) : (
-      <IconSymbol name={icon} size={36} color={Colors.systemBlue} />
+      <IconSymbol
+        name={icon}
+        size={36}
+        color={Color.ios.systemBlue as string}
+      />
     )}
     <View style={{ paddingLeft: 16, flex: 1, alignItems: "flex-start" }}>
-      <Text style={[iOSUIKit.bodyEmphasized, { color: Colors.label }]}>
+      <Text style={[iOSUIKit.bodyEmphasized, { color: Color.ios.label }]}>
         {title}
       </Text>
-      <Text style={[iOSUIKit.body, { color: Colors.secondaryLabel }]}>
+      <Text style={[iOSUIKit.body, { color: Color.ios.secondaryLabel }]}>
         {body}
       </Text>
     </View>
@@ -53,7 +57,7 @@ export const Row = ({
       <Ionicons
         name="chevron-forward"
         size={iOSUIKit.bodyObject.lineHeight}
-        color={Colors.secondaryLabel}
+        color={Color.ios.secondaryLabel}
         style={{ paddingLeft: 8 }}
       />
     )}

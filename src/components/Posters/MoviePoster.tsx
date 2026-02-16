@@ -1,6 +1,5 @@
-import * as Colors from "@bacons/apple-colors";
 import { Image } from "expo-image";
-import { useSegments } from "expo-router";
+import { Color, useSegments } from "expo-router";
 import { ImageStyle, Pressable, StyleProp, ViewStyle } from "react-native";
 import { Movie, PosterSize, Recommendation } from "tmdb-ts";
 
@@ -71,7 +70,7 @@ export function MoviePoster({
               {
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: Colors.separator,
+                borderColor: Color.ios.separator,
               },
               style,
             ]}

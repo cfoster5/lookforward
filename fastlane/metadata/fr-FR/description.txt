@@ -1,14 +1,19 @@
-LookForward – Votre outil ultime pour suivre les sorties de films et jeux vidéo.
+LookForward – Votre outil ultime pour suivre les sorties de films et jeux vidéo !
 
-Ne manquez plus jamais une sortie. LookForward vous aide à suivre les prochains films et jeux vidéo pour toujours savoir ce qui arrive. Que vous attendiez les blockbusters ou les derniers lancements de jeux, gardez une longueur d'avance avec des comptes à rebours, des calendriers de sorties et la disponibilité en streaming.
+Marre de chercher les dates de sortie sur Google ? LookForward rassemble tous les films et jeux vidéo à venir qui vous intéressent dans une seule watchlist avec compte à rebours — pour ne plus jamais manquer une première. Suivez les sorties, recevez des rappels et découvrez quoi regarder ensuite, le tout sans créer de compte. Conçu avec Liquid Glass pour une expérience iOS native et élégante.
 
-• Compte à rebours - Ajoutez des films et jeux à votre liste et suivez leurs dates de sortie.
-• Rappels de sorties - Recevez une notification un jour ou une semaine avant vos comptes à rebours.
-• Où regarder - Découvrez sur quelles plateformes de streaming vos films préférés sont disponibles.
-• Découvrez les prochaines sorties - Parcourez une sélection de prochains films et jeux.
-• Informations détaillées - Consultez les notes, le casting, les bandes-annonces et les résultats au box-office.
-• Design élégant - Conçu pour ressembler à une app iOS familière, maintenant avec Liquid Glass.
+• Watchlist avec compte à rebours - Ajoutez des films et jeux à votre watchlist avec des comptes à rebours. Choisissez des plateformes spécifiques pour les jeux et suivez les collections des Oscars pendant la saison des prix.
+• Widget écran d'accueil - Consultez vos prochaines sorties d'un coup d'œil sans ouvrir l'app. Disponible en petit, moyen et grand format.
+• Où regarder - Découvrez ce qui est en streaming sur Netflix, Disney+, Apple TV+ et plus encore. Filtrez par plateforme pour trouver quelque chose à regarder ce soir.
+• Notes et casting - Les scores IMDb, Rotten Tomatoes et Metacritic réunis. Explorez les filmographies, regardez les bandes-annonces et parcourez les crédits de l'équipe.
+• Rappels de sorties - Recevez une notification un jour ou une semaine avant vos comptes à rebours pour être prêt le jour J. Ne manquez plus jamais une sortie.
 
-Planifiez vos divertissements avec LookForward, l'app incontournable pour les cinéphiles et les gamers. Commencez à suivre les sorties dès aujourd'hui.
+Noté 4,6 étoiles sur l'App Store. Voici ce que disent nos utilisateurs :
+
+« A wonderful app that has helped me keep track of all the games I'm interested in! Plus, gotta love the Dark Mode integration! »
+
+« This is a super convenient way to keep track of movies and games coming out soon. I can just keep everything I want to follow in one list. »
+
+Téléchargez LookForward gratuitement et commencez à suivre vos films et jeux les plus attendus dès aujourd'hui. Aucune inscription requise — cherchez, ajoutez et lancez le compte à rebours vers votre prochaine sortie préférée.
 
 Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula

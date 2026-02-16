@@ -1,1 +1,1 @@
-estrenos,películas,videojuegos,cuenta regresiva,próximos,cine,lanzamiento,nuevos,fechas
+countdown,seguimiento,estreno,próximo,premiere,streaming,recordar,igdb,película,cine,reparto,tráiler

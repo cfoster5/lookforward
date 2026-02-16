@@ -1,1 +1,1 @@
-upcoming,upcoming movie,igdb,movie countdown,game releases,discover movies,releases,new,dates
+countdown,watchlist,release,upcoming,premiere,streaming,remind,igdb,film,cinema,cast,trailer,rating

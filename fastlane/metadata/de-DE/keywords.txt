@@ -1,1 +1,1 @@
-Releases,Filme,Videospiele,Countdown,kommende,Kino,Neuerscheinung,neu,Termine
+Countdown,Merkliste,Release,kommend,Premiere,Streaming,erinnern,igdb,Film,Kino,Besetzung,Trailer

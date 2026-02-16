@@ -1,0 +1,14 @@
+LookForward – Your Ultimate Movie & Game Release Tracker!
+
+Never miss a release again! LookForward helps you track upcoming movies and video games, so you always know what's next. Whether you're excited about blockbuster films or the latest game launches, stay ahead with countdowns, release calendars, and streaming availability.
+
+• Countdown to Release - Add movies and games to your countdown list and track their premiere dates.
+• Release Reminders - Get notified a day or a week before your countdowns.
+• Where to Watch - See which streaming platforms offer your favorite films.
+• Discover Upcoming Releases - Browse a curated list of upcoming movies and games.
+• Detailed Insights - View ratings, cast, trailers, and box office performance.
+• Beautiful Design - Built to look and feel like an immediately familiar iOS app, now with Liquid Glass.
+
+Plan your entertainment with LookForward, the must-have countdown app for movie lovers and gamers! Start tracking today and never miss an upcoming release!
+
+Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula

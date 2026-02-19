@@ -26,10 +26,12 @@ export default function TabStack() {
   const { setMovieSubs, setGameSubs, movieSubs, gameSubs } =
     useSubscriptionStore();
   const { backfillFromCurrentSubs } = useSubscriptionHistoryStore();
-  const { hasSeenOnboardingModal, setHasSeenOnboardingModal } =
-    useAppConfigStore();
+  const {
+    hasCompletedCommitment,
+    hasSeenOnboardingModal,
+    setHasSeenOnboardingModal,
+  } = useAppConfigStore();
   const posthog = usePostHog();
-
   // Sync subscription data to the widget
   useWidgetSync();
 
@@ -78,12 +80,23 @@ export default function TabStack() {
   }, [backfillFromCurrentSubs, setGameSubs, setMovieSubs, user]);
 
   useEffect(() => {
-    if (!hasSeenOnboardingModal) {
+    if (!hasCompletedCommitment) {
+      router.replace("/commitment");
+    }
+  }, [hasCompletedCommitment]);
+
+  useEffect(() => {
+    if (hasCompletedCommitment && !hasSeenOnboardingModal) {
       posthog.capture("first_open");
       router.push("/onboarding");
       setHasSeenOnboardingModal();
     }
-  }, [hasSeenOnboardingModal, posthog, setHasSeenOnboardingModal]);
+  }, [
+    hasCompletedCommitment,
+    hasSeenOnboardingModal,
+    posthog,
+    setHasSeenOnboardingModal,
+  ]);
 
   const queryClient = useQueryClient();
 

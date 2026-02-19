@@ -117,6 +117,13 @@ function RootLayoutContent() {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen
+        name="commitment"
+        options={{
+          title: "Commitment",
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name="onboarding"
         options={{
           headerShown: true,
@@ -124,7 +131,7 @@ function RootLayoutContent() {
           headerLargeTitle: false,
           title: "Getting Started",
           presentation: "formSheet",
-          sheetGrabberVisible: true,
+          // sheetGrabberVisible: true,
           sheetAllowedDetents: "fitToContents",
           contentStyle: {
             backgroundColor:

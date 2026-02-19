@@ -7,7 +7,6 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
-import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { Row } from "@/components/Row";
 
@@ -17,19 +16,36 @@ export default function OnboardingLayout() {
   const posthog = usePostHog();
 
   async function handlePresentProPaywall() {
-    // Track CTA tap and paywall view BEFORE presenting
-    posthog.capture("onboarding:cta_tap", { button: "explore_pro" });
-    posthog.capture("onboarding:paywall_view", { type: "pro" });
+    if (!pro) {
+      posthog.capture("onboarding:paywall_error", {
+        reason: "offering_missing",
+      });
+      handleContinue();
+      return;
+    }
 
-    await RevenueCatUI.presentPaywall({ offering: pro });
+    try {
+      // Track CTA tap and paywall view BEFORE presenting
+      posthog.capture("onboarding:cta_tap", { button: "explore_pro" });
+      posthog.capture("onboarding:paywall_view", { type: "pro" });
+      posthog.capture("paywall:viewed", { source: "onboarding" });
 
-    // Check if user converted after paywall was dismissed
-    const customerInfo = await Purchases.getCustomerInfo();
-    const converted = !!customerInfo.entitlements.active.pro;
-    posthog.capture("onboarding:paywall_dismiss", { converted });
+      await RevenueCatUI.presentPaywall({ offering: pro });
 
-    posthog.capture("onboarding:complete", { converted });
-    router.dismiss();
+      // Check if user converted after paywall was dismissed
+      const customerInfo = await Purchases.getCustomerInfo();
+      const converted = !!customerInfo.entitlements.active.pro;
+      posthog.capture("onboarding:paywall_dismiss", { converted });
+
+      posthog.capture("onboarding:complete", { converted });
+      router.dismiss();
+    } catch (error) {
+      posthog.capture("onboarding:paywall_error", {
+        reason: "presentation_failed",
+        message: error instanceof Error ? error.message : String(error),
+      });
+      handleContinue();
+    }
   }
 
   function handleContinue() {
@@ -69,9 +85,9 @@ export default function OnboardingLayout() {
         disabled={false}
         style={{ marginVertical: 16, borderRadius: 1000 }}
         handlePress={handlePresentProPaywall}
-        text="Explore Pro Features"
+        text="Continue"
       />
-      <LargeBorderlessButton handlePress={handleContinue} text="Continue" />
+      {/* <LargeBorderlessButton handlePress={handleContinue} text="Continue" /> */}
     </View>
   );
 }

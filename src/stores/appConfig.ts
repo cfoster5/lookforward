@@ -15,6 +15,7 @@ const zustandStorage: StateStorage = {
 type AppConfigState = {
   hasRequestedReview: boolean;
   lastRequestedReviewTimestamp: number;
+  hasCompletedCommitment: boolean;
   hasSeenOnboardingModal: boolean;
   movieRegion: string;
   movieLanguage: string;
@@ -23,6 +24,7 @@ type AppConfigState = {
 
 type AppConfigActions = {
   setHasRequestedReview: () => void;
+  completeCommitment: () => void;
   setHasSeenOnboardingModal: () => void;
   setMovieRegion: (region: string) => void;
   setMovieLanguage: (language: string) => void;
@@ -34,6 +36,7 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
     (set) => ({
       hasRequestedReview: false,
       lastRequestedReviewTimestamp: 0,
+      hasCompletedCommitment: false,
       hasSeenOnboardingModal: false,
       movieRegion: "US",
       movieLanguage: "en",
@@ -42,6 +45,10 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
         set(() => ({
           hasRequestedReview: true,
           lastRequestedReviewTimestamp: timestamp,
+        })),
+      completeCommitment: () =>
+        set(() => ({
+          hasCompletedCommitment: true,
         })),
       setHasSeenOnboardingModal: () =>
         set(() => ({

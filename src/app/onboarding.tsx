@@ -69,9 +69,9 @@ export default function OnboardingLayout() {
         disabled={false}
         style={{ marginVertical: 16, borderRadius: 1000 }}
         handlePress={handlePresentProPaywall}
-        text="Explore Pro Features"
+        text="Continue"
       />
-      <LargeBorderlessButton handlePress={handleContinue} text="Continue" />
+      {/* <LargeBorderlessButton handlePress={handleContinue} text="Continue" /> */}
     </View>
   );
 }

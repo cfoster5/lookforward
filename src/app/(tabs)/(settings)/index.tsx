@@ -273,9 +273,9 @@ export default function Settings() {
           style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
         />
       </Link>
-      <Link href="/onboarding" asChild>
+      <Link href="/commitment" asChild>
         <SettingNavButton
-          text="Show Getting Started"
+          text="Restart Onboarding"
           isFirstInGroup
           style={{ borderRadius: 26 }}
         />

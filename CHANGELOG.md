@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.24.1](https://github.com/cfoster5/lookforward/compare/v7.24.0...v7.24.1) (2026-02-19)
+
+
+### Bug Fixes
+
+* reset full onboarding flow when restarted ([#213](https://github.com/cfoster5/lookforward/issues/213)) ([a612b7c](https://github.com/cfoster5/lookforward/commit/a612b7c047f839f3678d091835c62a2d58328df9))
+
 ## [7.24.0](https://github.com/cfoster5/lookforward/compare/v7.23.1...v7.24.0) (2026-02-19)
 
 

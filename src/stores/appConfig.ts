@@ -26,6 +26,7 @@ type AppConfigActions = {
   setHasRequestedReview: () => void;
   completeCommitment: () => void;
   setHasSeenOnboardingModal: () => void;
+  resetOnboardingFlow: () => void;
   setMovieRegion: (region: string) => void;
   setMovieLanguage: (language: string) => void;
   incrementSearchCount: () => void;
@@ -53,6 +54,11 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
       setHasSeenOnboardingModal: () =>
         set(() => ({
           hasSeenOnboardingModal: true,
+        })),
+      resetOnboardingFlow: () =>
+        set(() => ({
+          hasCompletedCommitment: false,
+          hasSeenOnboardingModal: false,
         })),
       setMovieRegion: (region) =>
         set(() => ({

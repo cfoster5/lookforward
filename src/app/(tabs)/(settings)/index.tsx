@@ -6,17 +6,10 @@ import {
 } from "@react-native-firebase/firestore";
 import { getMessaging, hasPermission } from "@react-native-firebase/messaging";
 import { useQuery } from "@tanstack/react-query";
-import { Color, Link } from "expo-router";
+import { Color, Link, router } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
-import {
-  Linking,
-  Platform,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
+import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 import Purchases from "react-native-purchases";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
@@ -29,13 +22,16 @@ import { tmdb } from "@/providers/app";
 import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 import { useAppConfigStore } from "@/stores/appConfig";
-import { useAuthStore } from "@/stores/auth";
 
 export default function Settings() {
   const user = useAuthenticatedUser();
-  const { isPro } = useAuthStore();
-  const { movieRegion, movieLanguage, setMovieRegion, setMovieLanguage } =
-    useAppConfigStore();
+  const {
+    movieRegion,
+    movieLanguage,
+    resetOnboardingFlow,
+    setMovieRegion,
+    setMovieLanguage,
+  } = useAppConfigStore();
   const [notificationPermissions, setNotificationPermissions] = useState(true);
   const [notifications, setNotifications] = useState({
     day: false,
@@ -174,7 +170,9 @@ export default function Settings() {
               paddingHorizontal: 12,
             }}
           >
-            <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.systemBlue }}>
+            <Text
+              style={{ ...iOSUIKit.bodyObject, color: Color.ios.systemBlue }}
+            >
               {countries?.find((c) => c.iso_3166_1 === movieRegion)
                 ?.english_name ?? movieRegion}
             </Text>
@@ -217,7 +215,9 @@ export default function Settings() {
               paddingHorizontal: 12,
             }}
           >
-            <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.systemBlue }}>
+            <Text
+              style={{ ...iOSUIKit.bodyObject, color: Color.ios.systemBlue }}
+            >
               {languages?.find((l) => l.iso_639_1 === movieLanguage)
                 ?.english_name ?? movieLanguage}
             </Text>
@@ -273,13 +273,15 @@ export default function Settings() {
           style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
         />
       </Link>
-      <Link href="/commitment" asChild>
-        <SettingNavButton
-          text="Restart Onboarding"
-          isFirstInGroup
-          style={{ borderRadius: 26 }}
-        />
-      </Link>
+      <SettingNavButton
+        onPress={() => {
+          resetOnboardingFlow();
+          router.push("/commitment");
+        }}
+        text="Restart Onboarding"
+        isFirstInGroup
+        style={{ borderRadius: 26 }}
+      />
       <Link href="/(tabs)/(settings)/account" asChild>
         <SettingNavButton
           text="Account"

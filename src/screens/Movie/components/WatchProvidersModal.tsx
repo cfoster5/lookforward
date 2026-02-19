@@ -1,9 +1,9 @@
-import { Color } from "expo-router";
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
+import { Color } from "expo-router";
 import { FlatList, Linking, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { iOSColors, iOSUIKit } from "react-native-typography";
+import { iOSUIKit } from "react-native-typography";
 import { LogoSize, WatchLocale } from "tmdb-ts";
 
 import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
@@ -96,7 +96,7 @@ export function WatchProvidersModal({
                         style={[
                           iOSUIKit.caption2,
                           {
-                            color: iOSColors.white,
+                            color: Color.ios.label,
                             marginTop: 8,
                             textAlign: "center",
                           },

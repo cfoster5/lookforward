@@ -6,7 +6,7 @@ import {
 } from "@react-native-firebase/firestore";
 import { getMessaging, hasPermission } from "@react-native-firebase/messaging";
 import { useQuery } from "@tanstack/react-query";
-import { Color, Link, router } from "expo-router";
+import { Color, Link } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
 import { Linking, Pressable, ScrollView, Text, View } from "react-native";
@@ -276,7 +276,6 @@ export default function Settings() {
       <SettingNavButton
         onPress={() => {
           resetOnboardingFlow();
-          router.push("/commitment");
         }}
         text="Restart Onboarding"
         isFirstInGroup

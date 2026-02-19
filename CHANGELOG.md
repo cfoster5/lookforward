@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.24.0](https://github.com/cfoster5/lookforward/compare/v7.23.1...v7.24.0) (2026-02-19)
+
+
+### Features
+
+* finalize onboarding flow from [#210](https://github.com/cfoster5/lookforward/issues/210) for release ([#211](https://github.com/cfoster5/lookforward/issues/211)) ([e7738e5](https://github.com/cfoster5/lookforward/commit/e7738e57929626369d2f22ad125b18f2dcddd25c))
+
 ## [7.23.1](https://github.com/cfoster5/lookforward/compare/v7.23.0...v7.23.1) (2026-02-16)
 
 

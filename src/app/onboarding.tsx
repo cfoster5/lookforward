@@ -20,6 +20,7 @@ export default function OnboardingLayout() {
     // Track CTA tap and paywall view BEFORE presenting
     posthog.capture("onboarding:cta_tap", { button: "explore_pro" });
     posthog.capture("onboarding:paywall_view", { type: "pro" });
+    posthog.capture("paywall:viewed", { source: "onboarding" });
 
     await RevenueCatUI.presentPaywall({ offering: pro });
 

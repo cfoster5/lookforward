@@ -14,6 +14,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { usePostHog } from "posthog-react-native";
 
 import { useAppConfigStore } from "@/stores/appConfig";
 
@@ -43,8 +44,11 @@ export default function CommitmentScreen() {
   const router = useRouter();
   const [committed, setCommitted] = useState(false);
   const { completeCommitment } = useAppConfigStore();
+  const posthog = usePostHog();
 
   useEffect(() => {
+    posthog.capture("first_open");
+    posthog.capture("commitment:viewed");
     const timers = commitments.map((_, i) =>
       setTimeout(
         () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
@@ -98,6 +102,7 @@ export default function CommitmentScreen() {
       circleScale.current.value = withSequence(withSpring(1.12), withSpring(1));
 
       completeCommitment();
+      posthog.capture("commitment:completed");
       setTimeout(() => {
         router.replace("/");
         setTimeout(() => {

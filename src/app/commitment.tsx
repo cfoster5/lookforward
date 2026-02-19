@@ -1,6 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, {
@@ -14,13 +15,11 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { usePostHog } from "posthog-react-native";
 
 import { useAppConfigStore } from "@/stores/appConfig";
 
 const HOLD_DURATION = 1500;
 const NAVIGATION_DELAY_MS = 1000;
-const ONBOARDING_DELAY_MS = 500;
 
 const commitments = [
   "Never miss a movie or game release",
@@ -47,7 +46,6 @@ export default function CommitmentScreen() {
   const posthog = usePostHog();
 
   useEffect(() => {
-    posthog.capture("first_open");
     posthog.capture("commitment:viewed");
     const timers = commitments.map((_, i) =>
       setTimeout(
@@ -56,7 +54,7 @@ export default function CommitmentScreen() {
       ),
     );
     return () => timers.forEach(clearTimeout);
-  }, []);
+  }, [posthog]);
 
   const circleScale = useRef(useSharedValue(1));
   const glowProgress = useRef(useSharedValue(0));
@@ -105,9 +103,6 @@ export default function CommitmentScreen() {
       posthog.capture("commitment:completed");
       setTimeout(() => {
         router.replace("/");
-        setTimeout(() => {
-          router.push("/onboarding");
-        }, ONBOARDING_DELAY_MS);
       }, NAVIGATION_DELAY_MS);
     }, HOLD_DURATION);
   }

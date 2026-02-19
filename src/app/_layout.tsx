@@ -146,7 +146,6 @@ function RootLayoutContent() {
             Platform.OS === "ios" && isLiquidGlassAvailable()
               ? undefined
               : "light",
-          gestureEnabled: false,
         }}
       />
     </Stack>

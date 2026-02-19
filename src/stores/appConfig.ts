@@ -70,6 +70,20 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
     {
       name: "app.config",
       storage: createJSONStorage(() => zustandStorage),
+      version: 1,
+      migrate: (persistedState) => {
+        const state = persistedState as Partial<
+          AppConfigState & AppConfigActions
+        >;
+        // Existing installs should not be forced through the new commitment gate.
+        if (state.hasCompletedCommitment === undefined) {
+          return {
+            ...state,
+            hasCompletedCommitment: true,
+          };
+        }
+        return state as AppConfigState & AppConfigActions;
+      },
     },
   ),
 );

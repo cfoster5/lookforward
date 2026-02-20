@@ -7,7 +7,7 @@ import {
   setDoc,
   updateDoc,
 } from "@react-native-firebase/firestore";
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
+import * as Haptics from "expo-haptics";
 
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 import { tryRequestReview } from "@/utils/requestReview";
@@ -51,10 +51,7 @@ export async function addCountdownItem(
     if (collection === "movies") {
       useSubscriptionHistoryStore.getState().addToHistory(id.toString());
     }
-    ReactNativeHapticFeedback.trigger("impactLight", {
-      enableVibrateFallback: true,
-      ignoreAndroidSystemSettings: false,
-    });
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     await tryRequestReview();
   } catch (error) {
     console.error("Error writing document: ", error);

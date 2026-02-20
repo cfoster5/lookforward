@@ -1,4 +1,3 @@
-import { Color } from "expo-router";
 import { BottomSheetFlatList } from "@gorhom/bottom-sheet";
 import {
   arrayUnion,
@@ -6,8 +5,9 @@ import {
   getFirestore,
   setDoc,
 } from "@react-native-firebase/firestore";
+import * as Haptics from "expo-haptics";
+import { Color } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
@@ -77,10 +77,7 @@ export function GamePlatformPicker() {
         },
         { merge: true },
       );
-      ReactNativeHapticFeedback.trigger("impactLight", {
-        enableVibrateFallback: true,
-        ignoreAndroidSystemSettings: false,
-      });
+      Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       await tryRequestReview();
       bottomSheetModalRef.current?.dismiss();
     } catch (error) {

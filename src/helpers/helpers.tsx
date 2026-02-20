@@ -6,9 +6,9 @@ import {
   setDoc,
   updateDoc,
 } from "@react-native-firebase/firestore";
+import * as Haptics from "expo-haptics";
 import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
-import ReactNativeHapticFeedback from "react-native-haptic-feedback";
 import RevenueCatUI from "react-native-purchases-ui";
 
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
@@ -92,10 +92,7 @@ export async function subToMovie(
     const docRef = doc(db, "movies", movieId);
     await setDoc(docRef, { subscribers: arrayUnion(user) }, { merge: true });
     useSubscriptionHistoryStore.getState().addToHistory(movieId);
-    ReactNativeHapticFeedback.trigger("impactLight", {
-      enableVibrateFallback: true,
-      ignoreAndroidSystemSettings: false,
-    });
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     await tryRequestReview();
   } catch (error) {
     console.error("Error writing document: ", error);

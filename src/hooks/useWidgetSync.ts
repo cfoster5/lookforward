@@ -140,7 +140,7 @@ export function useWidgetSync() {
         storage.set("subscriptions", JSON.stringify(widgetData));
 
         // Debug: Log the widget data to see what's being stored
-        console.log("Widget data:", JSON.stringify(widgetData, null, 2));
+        // console.log("Widget data:", JSON.stringify(widgetData, null, 2));
 
         // Reload the widget to show new data
         ExtensionStorage.reloadWidget();

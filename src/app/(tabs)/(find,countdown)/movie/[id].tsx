@@ -231,20 +231,28 @@ export default function MovieScreen() {
         {movieDetails.title}
       </Stack.Screen.Title>
       <Stack.Toolbar placement="right">
-        <Stack.Toolbar.Button
-          onPress={() =>
-            handleMovieToggle({
-              movieId: id.toString(),
-              userId: user.uid,
-              isCurrentlySubbed: !!isSubbed,
-              isPro,
-              hasReachedLimit,
-              proOffering: pro,
-            })
-          }
-        >
-          <Stack.Toolbar.Icon sf={isSubbed ? "checkmark" : "plus"} />
-        </Stack.Toolbar.Button>
+        <Stack.Toolbar.View>
+          <Pressable
+            onPress={() =>
+              handleMovieToggle({
+                movieId: id.toString(),
+                userId: user.uid,
+                isCurrentlySubbed: !!isSubbed,
+                isPro,
+                hasReachedLimit,
+                proOffering: pro,
+              })
+            }
+            hitSlop={8}
+          >
+            <Image
+              source={isSubbed ? "sf:checkmark" : "sf:plus"}
+              style={{ fontSize: 28 }}
+              transition={{ effect: "sf:replace" }}
+              tintColor={Color.ios.label as string}
+            />
+          </Pressable>
+        </Stack.Toolbar.View>
         <Stack.Toolbar.Button
           onPress={() => onShare(`movie/${id}`, "headerButton", posthog)}
         >
@@ -407,7 +415,9 @@ export default function MovieScreen() {
               >
                 <ListLabel text="Watch on" style={{ marginBottom: 0 }} />
                 <Pressable onPress={() => modalRef.current?.present()}>
-                  <Text style={[iOSUIKit.body, { color: Color.ios.systemBlue }]}>
+                  <Text
+                    style={[iOSUIKit.body, { color: Color.ios.systemBlue }]}
+                  >
                     More
                   </Text>
                 </Pressable>

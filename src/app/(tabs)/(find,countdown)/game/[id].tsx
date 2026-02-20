@@ -8,7 +8,7 @@ import {
 } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useState, Fragment } from "react";
-import { ScrollView, View, FlatList, Text } from "react-native";
+import { ScrollView, View, FlatList, Pressable, Text } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
@@ -91,20 +91,28 @@ export default function Game() {
         {game.name}
       </Stack.Screen.Title>
       <Stack.Toolbar placement="right">
-        <Stack.Toolbar.Button
-          onPress={() => {
-            if (!countdownId) {
-              bottomSheetModalRef.current?.present({
-                ...game,
-                release_dates: data?.release_dates,
-              });
-            } else {
-              removeSub("gameReleases", countdownId, user.uid);
-            }
-          }}
-        >
-          <Stack.Toolbar.Icon sf={countdownId ? "checkmark" : "plus"} />
-        </Stack.Toolbar.Button>
+        <Stack.Toolbar.View>
+          <Pressable
+            onPress={() => {
+              if (!countdownId) {
+                bottomSheetModalRef.current?.present({
+                  ...game,
+                  release_dates: data?.release_dates,
+                });
+              } else {
+                removeSub("gameReleases", countdownId, user.uid);
+              }
+            }}
+            hitSlop={8}
+          >
+            <Image
+              source={countdownId ? "sf:checkmark" : "sf:plus"}
+              style={{ fontSize: 28 }}
+              transition={{ effect: "sf:replace" }}
+              tintColor={Color.ios.label as string}
+            />
+          </Pressable>
+        </Stack.Toolbar.View>
       </Stack.Toolbar>
       <ScrollView
         automaticallyAdjustsScrollIndicatorInsets

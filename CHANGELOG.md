@@ -1,5 +1,19 @@
 # Changelog
 
+## [7.25.0](https://github.com/cfoster5/lookforward/compare/v7.24.1...v7.25.0) (2026-02-22)
+
+
+### Features
+
+* add follow/subscribe to movie people ([3d9ec78](https://github.com/cfoster5/lookforward/commit/3d9ec780f696fbb8a6df0b5dac3c1a371b79bb99))
+* animate toolbar icon transition on movie and game details ([7fafa64](https://github.com/cfoster5/lookforward/commit/7fafa641e59b8f9d98da8268e9db8b8a56c91d9e))
+* follow/subscribe to movie people ([4593949](https://github.com/cfoster5/lookforward/commit/45939499fb63e5720b90ea257d0277cf0f02e2c0))
+
+
+### Bug Fixes
+
+* update color import and usage in WatchProvidersModal ([3781cb7](https://github.com/cfoster5/lookforward/commit/3781cb72415c71fd722893424b5c91ea897b0f3c))
+
 ## [7.24.1](https://github.com/cfoster5/lookforward/compare/v7.24.0...v7.24.1) (2026-02-19)
 
 

@@ -15,6 +15,7 @@ import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useCollectionsProgress } from "@/hooks/useCollectionProgress";
 import { useGameCountdowns } from "@/screens/Countdown/api/getGameCountdowns";
 import { useMovieCountdowns } from "@/screens/Countdown/api/getMovieCountdowns";
+import { usePersonCountdowns } from "@/screens/Countdown/api/getPersonCountdowns";
 import { CountdownItem } from "@/screens/Countdown/components/CountdownItem";
 import { EmptyState } from "@/screens/Countdown/components/EmptyState";
 import { FilteredEmptyState } from "@/screens/Countdown/components/FilteredEmptyState";
@@ -30,28 +31,36 @@ export default function Countdown() {
     clearSelections,
     movies: selectedMovies,
     games: selectedGames,
+    people: selectedPeople,
   } = useCountdownStore();
   const user = useAuthenticatedUser();
   const scrollRef = useRef<SectionList>(null);
   useScrollToTop(scrollRef);
   const { data: movies, pending: isMoviesPending } = useMovieCountdowns();
   const { data: gameReleases, pending: isGamesPending } = useGameCountdowns();
-  const { movieSubs, gameSubs } = useSubscriptionStore();
+  const { data: personCountdowns, pending: isPersonPending } =
+    usePersonCountdowns();
+  const { movieSubs, gameSubs, personSubs } = useSubscriptionStore();
   const { collectionsWithProgress } = useCollectionsProgress();
-  const [filter, setFilter] = useState<"all" | "movies" | "games">("all");
+  const [filter, setFilter] = useState<
+    "all" | "movies" | "games" | "people"
+  >("all");
   const [statusFilter, setStatusFilter] = useState<
     "all" | "released" | "unreleased"
   >("all");
 
   const mediaFilterActions = [
     {
-      id: "all",
+      id: "all" as const,
       label: "All Items",
       icon: "square.grid.3x1.below.line.grid.1x2",
     },
-    { id: "movies", label: "Movies", icon: "film" },
-    { id: "games", label: "Games", icon: "gamecontroller" },
-  ] as const;
+    { id: "movies" as const, label: "Movies", icon: "film" },
+    ...(personSubs.length > 0
+      ? [{ id: "people" as const, label: "People", icon: "person.2" }]
+      : []),
+    { id: "games" as const, label: "Games", icon: "gamecontroller" },
+  ];
 
   const statusFilterActions = [
     { id: "all", label: "All Items" },
@@ -75,6 +84,12 @@ export default function Countdown() {
         subscribers: arrayRemove(user.uid),
       });
     });
+    selectedPeople.forEach((selection) => {
+      const docRef = doc(db, "people", selection.toString());
+      batch.update(docRef, {
+        subscribers: arrayRemove(user.uid),
+      });
+    });
     await batch.commit();
     for (const movieId of selectedMovies) {
       removeFromHistory(movieId.toString());
@@ -83,7 +98,12 @@ export default function Countdown() {
     clearSelections();
   };
 
-  if (isMoviesPending || isGamesPending) return <LoadingScreen />;
+  if (
+    isMoviesPending ||
+    isGamesPending ||
+    (personSubs.length > 0 && isPersonPending)
+  )
+    return <LoadingScreen />;
 
   const todayString = new Date().toISOString().split("T")[0]; // YYYY-MM-DD format
 
@@ -120,7 +140,7 @@ export default function Countdown() {
       return a.date - b.date; // Numeric comparison for valid dates
     });
 
-  const totalCountdowns = movieSubs.length + gameSubs.length;
+  const totalCountdowns = movieSubs.length + gameSubs.length + personSubs.length;
 
   // Show empty state when user has no countdowns
   if (totalCountdowns === 0) return <EmptyState />;
@@ -130,13 +150,16 @@ export default function Countdown() {
     ...(filter === "all" || filter === "movies"
       ? [{ data: flattenedMovies, title: "Movies" }]
       : []),
+    ...(personSubs.length > 0 && (filter === "all" || filter === "people")
+      ? [{ data: personCountdowns, title: "People" }]
+      : []),
     ...(filter === "all" || filter === "games"
       ? [{ data: flattenedGames, title: "Games" }]
       : []),
   ].filter((section) => section.data.length > 0);
 
   // Show filtered empty state when no items match the status filter
-  if (sections.length === 0 && statusFilter !== "all") {
+  if (sections.length === 0 && (statusFilter !== "all" || filter !== "all")) {
     return (
       <FilteredEmptyState statusFilter={statusFilter} mediaFilter={filter} />
     );
@@ -165,17 +188,19 @@ export default function Countdown() {
               {action.label}
             </Stack.Toolbar.MenuAction>
           ))}
-          <Stack.Toolbar.Menu title="Status Options">
-            {statusFilterActions.map((action) => (
-              <Stack.Toolbar.MenuAction
-                key={action.id}
-                isOn={statusFilter === action.id}
-                onPress={() => setStatusFilter(action.id)}
-              >
-                {action.label}
-              </Stack.Toolbar.MenuAction>
-            ))}
-          </Stack.Toolbar.Menu>
+          {filter !== "people" && (
+            <Stack.Toolbar.Menu title="Status Options">
+              {statusFilterActions.map((action) => (
+                <Stack.Toolbar.MenuAction
+                  key={action.id}
+                  isOn={statusFilter === action.id}
+                  onPress={() => setStatusFilter(action.id)}
+                >
+                  {action.label}
+                </Stack.Toolbar.MenuAction>
+              ))}
+            </Stack.Toolbar.Menu>
+          )}
         </Stack.Toolbar.Menu>
         <Stack.Toolbar.Button
           onPress={() => {
@@ -194,7 +219,6 @@ export default function Countdown() {
         }}
         automaticallyAdjustsScrollIndicatorInsets
         contentInsetAdjustmentBehavior="automatic"
-        // scrollIndicatorInsets={{ bottom: paddingBottom }}
         sections={sections}
         stickySectionHeadersEnabled={false}
         keyExtractor={(item, index) => item + index}
@@ -203,11 +227,7 @@ export default function Countdown() {
             item={item}
             sectionName={section.title}
             isFirstInSection={index === 0}
-            isLastInSection={
-              section.title === "Movies"
-                ? index + 1 === flattenedMovies.length
-                : index + 1 === flattenedGames.length
-            }
+            isLastInSection={index + 1 === section.data.length}
           />
         )}
         renderSectionHeader={({ section }) => (

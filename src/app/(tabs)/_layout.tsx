@@ -7,23 +7,27 @@ import {
   where,
 } from "@react-native-firebase/firestore";
 import { useQueryClient } from "@tanstack/react-query";
+import * as Linking from "expo-linking";
 import { router, VectorIcon } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { usePostHog } from "posthog-react-native";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useWidgetSync } from "@/hooks/useWidgetSync";
-import { FirestoreMovie } from "@/interfaces/firebase";
+import { FirestoreMovie, FirestorePerson } from "@/interfaces/firebase";
 import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
 import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";
+import { getPersonCountdown } from "@/screens/Countdown/api/getPersonCountdowns";
 import { useSubscriptionStore } from "@/stores";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 
 export default function TabStack() {
+  const [hasResolvedInitialUrl, setHasResolvedInitialUrl] = useState(false);
+  const [hasLaunchDeepLink, setHasLaunchDeepLink] = useState(false);
   const user = useAuthenticatedUser();
-  const { setMovieSubs, setGameSubs, movieSubs, gameSubs } =
+  const { setMovieSubs, setGameSubs, setPersonSubs, movieSubs, gameSubs, personSubs } =
     useSubscriptionStore();
   const { backfillFromCurrentSubs } = useSubscriptionHistoryStore();
   const {
@@ -34,6 +38,24 @@ export default function TabStack() {
   const posthog = usePostHog();
   // Sync subscription data to the widget
   useWidgetSync();
+
+  useEffect(() => {
+    let isMounted = true;
+
+    Linking.getInitialURL()
+      .then((url) => {
+        if (!isMounted) return;
+        setHasLaunchDeepLink(Boolean(url));
+      })
+      .finally(() => {
+        if (!isMounted) return;
+        setHasResolvedInitialUrl(true);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   useEffect(() => {
     const db = getFirestore();
@@ -71,21 +93,37 @@ export default function TabStack() {
       setGameSubs(gameSubsData);
     });
 
+    const personQuery = query(
+      collection(db, "people"),
+      where("subscribers", "array-contains", user.uid),
+    );
+
+    const personSubscription = onSnapshot(personQuery, (snapshot) => {
+      const personSubsData: FirestorePerson[] = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        documentID: doc.id,
+      }));
+      setPersonSubs(personSubsData);
+    });
+
     // Stop listening for updates when no longer required
     return () => {
       // Unmounting
       movieSubscription();
       gameSubscription();
+      personSubscription();
     };
-  }, [backfillFromCurrentSubs, setGameSubs, setMovieSubs, user]);
+  }, [backfillFromCurrentSubs, setGameSubs, setMovieSubs, setPersonSubs, user]);
 
   useEffect(() => {
+    if (!hasResolvedInitialUrl || hasLaunchDeepLink) return;
     if (!hasCompletedCommitment) {
       router.replace("/commitment");
     }
-  }, [hasCompletedCommitment]);
+  }, [hasCompletedCommitment, hasLaunchDeepLink, hasResolvedInitialUrl]);
 
   useEffect(() => {
+    if (!hasResolvedInitialUrl || hasLaunchDeepLink) return;
     if (hasCompletedCommitment && !hasSeenOnboardingModal) {
       posthog.capture("first_open");
       router.push("/onboarding");
@@ -93,6 +131,8 @@ export default function TabStack() {
     }
   }, [
     hasCompletedCommitment,
+    hasLaunchDeepLink,
+    hasResolvedInitialUrl,
     hasSeenOnboardingModal,
     posthog,
     setHasSeenOnboardingModal,
@@ -100,15 +140,18 @@ export default function TabStack() {
 
   const queryClient = useQueryClient();
 
+  const movieLanguage = useAppConfigStore((state) => state.movieLanguage);
+  const movieRegion = useAppConfigStore((state) => state.movieRegion);
+
   // Prefetch movie and game relase date details and place them in the cache
   useEffect(() => {
     movieSubs.forEach((sub) => {
       queryClient.prefetchQuery({
-        queryKey: ["movieSub", sub.documentID],
-        queryFn: () => getMovie(sub.documentID),
+        queryKey: ["movieSub", sub.documentID, movieLanguage, movieRegion],
+        queryFn: () => getMovie(sub.documentID, movieLanguage, movieRegion),
       });
     });
-  }, [movieSubs, queryClient]);
+  }, [movieSubs, queryClient, movieLanguage, movieRegion]);
 
   useEffect(() => {
     gameSubs.map((sub) => {
@@ -118,6 +161,22 @@ export default function TabStack() {
       });
     });
   }, [gameSubs, queryClient]);
+
+  useEffect(() => {
+    personSubs.forEach((sub) => {
+      queryClient.prefetchQuery({
+        queryKey: ["personCountdown", sub.documentID, movieLanguage, movieRegion],
+        queryFn: () =>
+          getPersonCountdown(
+            Number(sub.documentID),
+            sub.name,
+            sub.profilePath,
+            movieLanguage,
+            movieRegion,
+          ),
+      });
+    });
+  }, [personSubs, queryClient, movieLanguage, movieRegion]);
 
   return (
     <NativeTabs>

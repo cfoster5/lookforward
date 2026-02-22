@@ -1,6 +1,8 @@
 import { useGameCountdowns } from "../api/getGameCountdowns";
 import { useMovieCountdowns } from "../api/getMovieCountdowns";
+import { PersonCountdownData } from "../api/getPersonCountdowns";
 import {
+  SectionName,
   calculateDaysUntil,
   formatReleaseDate,
   getAspectRatio,
@@ -10,11 +12,11 @@ import {
 
 type MovieCountdown = ReturnType<typeof useMovieCountdowns>[number]["data"];
 type GameCountdown = ReturnType<typeof useGameCountdowns>[number]["data"];
-type CountdownItem = MovieCountdown | GameCountdown;
+type CountdownItem = MovieCountdown | GameCountdown | PersonCountdownData;
 
 export function useCountdownItemData(
   item: CountdownItem,
-  sectionName: "Movies" | "Games",
+  sectionName: SectionName,
 ) {
   const imageSource = getImageSource(item, sectionName);
   const title = getTitle(item, sectionName);

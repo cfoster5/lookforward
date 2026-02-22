@@ -12,3 +12,11 @@ export interface FirestoreGame extends FirebaseFirestoreTypes.DocumentData {
   subscribers: string[];
   isSelected?: boolean;
 }
+
+export interface FirestorePerson {
+  documentID: string;
+  name: string;
+  profilePath: string | null;
+  subscribers: string[];
+  isSelected?: boolean;
+}

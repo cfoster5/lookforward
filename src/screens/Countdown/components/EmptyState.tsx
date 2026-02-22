@@ -56,7 +56,7 @@ export const EmptyState = () => {
               },
             ]}
           >
-            Search for movies and games to add to your countdown list
+            Search for movies, games, or people to add to your countdown list
           </Text>
         )}
 

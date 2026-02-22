@@ -128,19 +128,33 @@ export function CountdownItem({
           >
             {title}
           </Text>
-          <Text style={[iOSUIKit.subhead, { color: Color.ios.secondaryLabel }]}>
+          <Text
+            style={[iOSUIKit.subhead, { color: Color.ios.secondaryLabel }]}
+            numberOfLines={2}
+          >
             {formattedDate}
           </Text>
         </View>
         <View style={styles.countdown}>
-          <Text
-            style={[iOSUIKit.bodyEmphasized, { color: Color.ios.systemBlue }]}
-          >
-            {daysUntil ?? "TBD"}
-          </Text>
-          <Text style={[iOSUIKit.body, { color: Color.ios.systemBlue }]}>
-            days
-          </Text>
+          {daysUntil !== null && daysUntil <= 0 ? (
+            <Text style={[iOSUIKit.body, { color: Color.ios.secondaryLabel }]}>
+              Released
+            </Text>
+          ) : (
+            <>
+              <Text
+                style={[
+                  iOSUIKit.bodyEmphasized,
+                  { color: Color.ios.systemBlue },
+                ]}
+              >
+                {daysUntil ?? "TBD"}
+              </Text>
+              <Text style={[iOSUIKit.body, { color: Color.ios.systemBlue }]}>
+                days
+              </Text>
+            </>
+          )}
         </View>
       </Animated.View>
     </Pressable>

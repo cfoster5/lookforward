@@ -20,6 +20,8 @@ agent-device close
 agent-device record stop
 ```
 
+`record` is iOS simulator-only.
+
 ## Android Emulator/Device
 
 Use `agent-device record` commands (wrapper around adb):

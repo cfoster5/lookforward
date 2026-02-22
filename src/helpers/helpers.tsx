@@ -16,7 +16,7 @@ import { ReleaseDate, Games } from "@/types/igdb";
 import { timestampToUTC } from "@/utils/dates";
 import { tryRequestReview } from "@/utils/requestReview";
 
-import { FirestoreMovie } from "../interfaces/firebase";
+import { FirestoreMovie, FirestorePerson } from "../interfaces/firebase";
 
 export const targetedProviders = [
   "Any",
@@ -164,6 +164,58 @@ export function calculateWidth(
   const totalEmptySpace =
     headerSpace + separatingSpace * Math.floor(elementCount);
   return (windowWidth - totalEmptySpace) / elementCount;
+}
+
+export async function subToPerson(
+  personId: FirestorePerson["documentID"],
+  name: string,
+  profilePath: string | null,
+  userId: string,
+) {
+  try {
+    const db = getFirestore();
+    const docRef = doc(db, "people", personId);
+    await setDoc(
+      docRef,
+      { subscribers: arrayUnion(userId), name, profilePath },
+      { merge: true },
+    );
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    await tryRequestReview();
+  } catch (error) {
+    console.error("Error writing document: ", error);
+  }
+}
+
+export async function handlePersonToggle(params: {
+  personId: string;
+  personName: string;
+  profilePath: string | null;
+  userId: string;
+  isCurrentlySubbed: boolean;
+  isPro: boolean;
+  proOffering: unknown;
+}): Promise<void> {
+  const {
+    personId,
+    personName,
+    profilePath,
+    userId,
+    isCurrentlySubbed,
+    isPro,
+    proOffering,
+  } = params;
+
+  // Non-Pro trying to follow: show paywall
+  if (!isCurrentlySubbed && !isPro) {
+    await RevenueCatUI.presentPaywall({ offering: proOffering });
+    return;
+  }
+
+  // Otherwise toggle
+  return isCurrentlySubbed
+    ? removeSub("people", personId, userId)
+    : subToPerson(personId, personName, profilePath, userId);
 }
 
 export function getGameReleaseDate(

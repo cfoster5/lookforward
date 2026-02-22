@@ -4,11 +4,15 @@ import { immer } from "zustand/middleware/immer";
 type CountdownState = {
   movies: string[];
   games: string[];
+  people: string[];
   isEditing: boolean;
 };
 
 type CountdownActions = {
-  toggleSelection: (documentId: string, section: "movies" | "games") => void;
+  toggleSelection: (
+    documentId: string,
+    section: "movies" | "games" | "people",
+  ) => void;
   clearSelections: () => void;
   toggleIsEditing: () => void;
 };
@@ -17,6 +21,7 @@ export const useCountdownStore = create<CountdownState & CountdownActions>()(
   immer((set) => ({
     movies: [],
     games: [],
+    people: [],
     toggleSelection: (documentId: string, section) =>
       set((state) => {
         const index = state[section].findIndex(
@@ -29,6 +34,7 @@ export const useCountdownStore = create<CountdownState & CountdownActions>()(
       set((state) => {
         state.movies = [];
         state.games = [];
+        state.people = [];
       }),
     isEditing: false,
     toggleIsEditing: () =>

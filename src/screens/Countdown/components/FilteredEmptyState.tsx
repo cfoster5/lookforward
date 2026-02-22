@@ -5,8 +5,8 @@ import { iOSUIKit } from "react-native-typography";
 import { IconSymbol } from "@/components/IconSymbol";
 
 interface FilteredEmptyStateProps {
-  statusFilter: "released" | "unreleased";
-  mediaFilter: "all" | "movies" | "games";
+  statusFilter: "all" | "released" | "unreleased";
+  mediaFilter: "all" | "movies" | "games" | "people";
 }
 
 export const FilteredEmptyState = ({
@@ -16,6 +16,7 @@ export const FilteredEmptyState = ({
   const getMediaText = () => {
     if (mediaFilter === "movies") return "movies";
     if (mediaFilter === "games") return "games";
+    if (mediaFilter === "people") return "people you follow";
     return "movies or games";
   };
 
@@ -45,7 +46,8 @@ export const FilteredEmptyState = ({
           },
         ]}
       >
-        No {statusFilter} {getMediaText()}
+        No {statusFilter !== "all" ? `${statusFilter} ` : ""}
+        {getMediaText()}
       </Text>
       <Text
         style={[

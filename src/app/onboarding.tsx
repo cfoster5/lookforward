@@ -58,24 +58,24 @@ export default function OnboardingLayout() {
     <View style={{ marginTop: top, marginHorizontal: 16 }}>
       <ContextMenuLink href="/" isOnboarding>
         <Row
-          icon="search"
+              icon="sf:magnifyingglass"
           title="Find"
           body="Discover movie and game releases by searching for title, cast, or crew. Holding down on an item will give you more options. Give it a try!"
         />
       </ContextMenuLink>
       <Row
-        icon="timer-outline"
+          icon="sf:timer"
         title="Countdown"
         body="Add titles to your list so you can see release dates on the Countdown tab."
       />
       <Row
-        icon="information-circle-outline"
+          icon="sf:info.circle"
         title="Details"
         body="Tap on a title to see genres, credits, trailers, and so much more."
       />
       <Pressable onPress={() => Linking.openSettings()}>
         <Row
-          icon="notifications-outline"
+            icon="sf:bell"
           title="Notifications"
           body="Allow push notifications to be reminded about releases in your list that are a week or day away."
           showDrillIn

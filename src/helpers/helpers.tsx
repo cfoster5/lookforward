@@ -9,6 +9,7 @@ import {
 import * as Haptics from "expo-haptics";
 import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
+import type { PurchasesOffering } from "react-native-purchases";
 import RevenueCatUI from "react-native-purchases-ui";
 
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
@@ -129,7 +130,7 @@ export async function handleMovieToggle(params: {
   isCurrentlySubbed: boolean;
   isPro: boolean;
   hasReachedLimit: (isPro: boolean) => boolean;
-  proOffering: unknown;
+  proOffering: PurchasesOffering | undefined;
   onLimitPaywallView?: () => void;
   onLimitPaywallDismiss?: () => void;
 }): Promise<void> {

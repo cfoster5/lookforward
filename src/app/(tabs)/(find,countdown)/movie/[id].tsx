@@ -34,7 +34,7 @@ import {
   ReleaseDateType,
 } from "tmdb-ts";
 
-import { useProOfferings } from "@/api/getProOfferings";
+import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { CategoryControl } from "@/components/CategoryControl";
@@ -194,6 +194,7 @@ export default function MovieScreen() {
 
   const runtime = composeRuntime(movieDetails?.runtime);
   const { data: pro } = useProOfferings();
+  const { data: limitHit } = useLimitHitOffering();
   const posthog = usePostHog();
 
   const recentMovie: Recent = {
@@ -240,7 +241,13 @@ export default function MovieScreen() {
                 isCurrentlySubbed: !!isSubbed,
                 isPro,
                 hasReachedLimit,
-                proOffering: pro,
+                proOffering: limitHit ?? pro,
+                onLimitPaywallView: limitHit
+                  ? () => posthog.capture("limit:paywall_view")
+                  : undefined,
+                onLimitPaywallDismiss: limitHit
+                  ? () => posthog.capture("limit:paywall_dismiss")
+                  : undefined,
               })
             }
             hitSlop={8}

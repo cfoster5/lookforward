@@ -7,7 +7,7 @@ import { Pressable, Text, View } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
-import { useProOfferings } from "@/api/getProOfferings";
+import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth, handleMovieToggle } from "@/helpers/helpers";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
@@ -19,6 +19,7 @@ export function RecentTitle({ item }: { item: Recent }) {
   const { user, isPro } = useAuthStore();
   const { movieSubs, hasReachedLimit } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
+  const { data: limitHit } = useLimitHitOffering();
   const { removeRecent } = useRecentItemsStore();
   const posthog = usePostHog();
 
@@ -191,7 +192,13 @@ export function RecentTitle({ item }: { item: Recent }) {
                   isCurrentlySubbed: isMovieSub(),
                   isPro,
                   hasReachedLimit,
-                  proOffering: pro,
+                  proOffering: limitHit ?? pro,
+                  onLimitPaywallView: limitHit
+                    ? () => posthog.capture("limit:paywall_view")
+                    : undefined,
+                  onLimitPaywallDismiss: limitHit
+                    ? () => posthog.capture("limit:paywall_dismiss")
+                    : undefined,
                 }),
               buttonText: isMovieSub()
                 ? "Remove from Countdown"

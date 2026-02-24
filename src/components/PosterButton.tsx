@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import { Color } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { Pressable, StyleSheet, View } from "react-native";
-import RevenueCatUI from "react-native-purchases-ui";
+import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle, removeSub } from "@/helpers/helpers";
@@ -58,8 +58,10 @@ function PosterButton({ movieId, game }: Props) {
       } else {
         posthog.capture("poster_button:paywall_view", { type: "pro" });
       }
-      await RevenueCatUI.presentPaywall({ offering: limitHit ?? pro });
-      if (limitHit) {
+      const result = await RevenueCatUI.presentPaywall({
+        offering: limitHit ?? pro,
+      });
+      if (limitHit && result === PAYWALL_RESULT.CANCELLED) {
         posthog.capture("limit:paywall_dismiss");
       }
       return;

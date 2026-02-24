@@ -62,12 +62,8 @@ export const CountdownLimitBanner = ({
   return (
     <Pressable
       onPress={async () => {
-        if (isAtLimit) {
-          if (limitHit) {
-            posthog.capture("limit:paywall_view");
-          } else {
-            posthog.capture("countdown:paywall_view", { type: "pro" });
-          }
+        if (isAtLimit && limitHit) {
+          posthog.capture("limit:paywall_view");
         } else {
           posthog.capture("countdown:paywall_view", { type: "pro" });
         }

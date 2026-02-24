@@ -7,3 +7,10 @@ export const useProOfferings = () =>
     queryFn: async () => await Purchases.getOfferings(),
     select: (data) => data.all["pro"],
   });
+
+export const useLimitHitOffering = () =>
+  useQuery({
+    queryKey: ["proPackages"],
+    queryFn: async () => await Purchases.getOfferings(),
+    select: (data) => data.all["limit_hit"],
+  });

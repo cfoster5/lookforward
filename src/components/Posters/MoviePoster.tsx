@@ -1,9 +1,10 @@
 import { Image } from "expo-image";
 import { Color, useSegments } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { ImageStyle, Pressable, StyleProp, ViewStyle } from "react-native";
 import { Movie, PosterSize, Recommendation } from "tmdb-ts";
 
-import { useProOfferings } from "@/api/getProOfferings";
+import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle } from "@/helpers/helpers";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
@@ -31,9 +32,11 @@ export function MoviePoster({
 
   const { isPro } = useAuthStore();
   const user = useAuthenticatedUser();
+  const posthog = usePostHog();
 
   const { movieSubs, hasReachedLimit } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
+  const { data: limitHit } = useLimitHitOffering();
 
   const isMovieSub = movieSubs.some(
     (sub) => sub.documentID === movie.id.toString(),
@@ -50,7 +53,13 @@ export function MoviePoster({
             isCurrentlySubbed: isMovieSub,
             isPro,
             hasReachedLimit,
-            proOffering: pro,
+            proOffering: limitHit ?? pro,
+            onLimitPaywallView: limitHit
+              ? () => posthog.capture("limit:paywall_view")
+              : undefined,
+            onLimitPaywallDismiss: limitHit
+              ? () => posthog.capture("limit:paywall_dismiss")
+              : undefined,
           }),
         buttonText: isMovieSub ? "Remove from Countdown" : "Add to Countdown",
       }}

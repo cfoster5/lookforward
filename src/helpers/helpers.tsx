@@ -130,6 +130,8 @@ export async function handleMovieToggle(params: {
   isPro: boolean;
   hasReachedLimit: (isPro: boolean) => boolean;
   proOffering: unknown;
+  onLimitPaywallView?: () => void;
+  onLimitPaywallDismiss?: () => void;
 }): Promise<void> {
   const {
     movieId,
@@ -138,11 +140,15 @@ export async function handleMovieToggle(params: {
     isPro,
     hasReachedLimit,
     proOffering,
+    onLimitPaywallView,
+    onLimitPaywallDismiss,
   } = params;
 
   // If trying to add and limit reached, show Pro modal
   if (!isCurrentlySubbed && hasReachedLimit(isPro)) {
+    onLimitPaywallView?.();
     await RevenueCatUI.presentPaywall({ offering: proOffering });
+    onLimitPaywallDismiss?.();
     return;
   }
 

@@ -10,7 +10,7 @@ import * as Haptics from "expo-haptics";
 import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
 import type { PurchasesOffering } from "react-native-purchases";
-import RevenueCatUI from "react-native-purchases-ui";
+import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 import { ReleaseDate, Games } from "@/types/igdb";
@@ -148,8 +148,10 @@ export async function handleMovieToggle(params: {
   // If trying to add and limit reached, show Pro modal
   if (!isCurrentlySubbed && hasReachedLimit(isPro)) {
     onLimitPaywallView?.();
-    await RevenueCatUI.presentPaywall({ offering: proOffering });
-    onLimitPaywallDismiss?.();
+    const result = await RevenueCatUI.presentPaywall({ offering: proOffering });
+    if (result === PAYWALL_RESULT.CANCELLED) {
+      onLimitPaywallDismiss?.();
+    }
     return;
   }
 

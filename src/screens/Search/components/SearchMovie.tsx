@@ -2,11 +2,12 @@ import { Color } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { ComponentRef, forwardRef } from "react";
+import { usePostHog } from "posthog-react-native";
 import { Pressable, View, Text, PressableProps } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { MovieWithMediaType } from "tmdb-ts";
 
-import { useProOfferings } from "@/api/getProOfferings";
+import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth, handleMovieToggle } from "@/helpers/helpers";
 import {
@@ -116,7 +117,9 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
   const { user, isPro } = useAuthStore();
   const { movieSubs, hasReachedLimit } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
+  const { data: limitHit } = useLimitHitOffering();
   const { incrementSearchCount } = useAppConfigStore();
+  const posthog = usePostHog();
 
   const isMovieSub = () =>
     Boolean(
@@ -146,7 +149,13 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
             isCurrentlySubbed: isMovieSub(),
             isPro,
             hasReachedLimit,
-            proOffering: pro,
+            proOffering: limitHit ?? pro,
+            onLimitPaywallView: limitHit
+              ? () => posthog.capture("limit:paywall_view")
+              : undefined,
+            onLimitPaywallDismiss: limitHit
+              ? () => posthog.capture("limit:paywall_dismiss")
+              : undefined,
           }),
         buttonText: isMovieSub() ? "Remove from Countdown" : "Add to Countdown",
       }}

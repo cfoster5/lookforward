@@ -3,15 +3,11 @@ import { Image } from "expo-image";
 import { Color } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { Pressable, StyleSheet, View } from "react-native";
-import RevenueCatUI from "react-native-purchases-ui";
+import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 
-import { useProOfferings } from "@/api/getProOfferings";
+import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle, removeSub } from "@/helpers/helpers";
-import {
-  useAuthStore,
-  useSubscriptionStore,
-  useInterfaceStore,
-} from "@/stores";
+import { useAuthStore, useInterfaceStore, useSubscriptionStore } from "@/stores";
 import { Game, ReleaseDate } from "@/types";
 
 interface Props {
@@ -24,6 +20,7 @@ function PosterButton({ movieId, game }: Props) {
   const { movieSubs, gameSubs, hasReachedLimit } = useSubscriptionStore();
   const { bottomSheetModalRef } = useInterfaceStore();
   const { data: pro } = useProOfferings();
+  const { data: limitHit } = useLimitHitOffering();
   const posthog = usePostHog();
 
   const isMovieSub = () =>
@@ -39,7 +36,13 @@ function PosterButton({ movieId, game }: Props) {
       isCurrentlySubbed: isMovieSub(),
       isPro,
       hasReachedLimit,
-      proOffering: pro,
+      proOffering: limitHit ?? pro,
+      onLimitPaywallView: limitHit
+        ? () => posthog.capture("limit:paywall_view")
+        : undefined,
+      onLimitPaywallDismiss: limitHit
+        ? () => posthog.capture("limit:paywall_dismiss")
+        : undefined,
     });
   }
 
@@ -50,8 +53,17 @@ function PosterButton({ movieId, game }: Props) {
 
     // If trying to add and limit reached, show Pro modal
     if (!isGameSub() && hasReachedLimit(isPro)) {
-      posthog.capture("poster_button:paywall_view", { type: "pro" });
-      await RevenueCatUI.presentPaywall({ offering: pro });
+      if (limitHit) {
+        posthog.capture("limit:paywall_view");
+      } else {
+        posthog.capture("poster_button:paywall_view", { type: "pro" });
+      }
+      const result = await RevenueCatUI.presentPaywall({
+        offering: limitHit ?? pro,
+      });
+      if (limitHit && result === PAYWALL_RESULT.CANCELLED) {
+        posthog.capture("limit:paywall_dismiss");
+      }
       return;
     }
 

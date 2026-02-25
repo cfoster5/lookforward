@@ -8,10 +8,10 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-import RevenueCatUI from "react-native-purchases-ui";
+import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
-import { useProOfferings } from "@/api/getProOfferings";
+import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { IconSymbol } from "@/components/IconSymbol";
 import { useAuthStore } from "@/stores";
 import {
@@ -31,6 +31,7 @@ export const CountdownLimitBanner = ({
   const { isPro } = useAuthStore();
   const { movieSubs, gameSubs } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
+  const { data: limitHit } = useLimitHitOffering();
   const posthog = usePostHog();
 
   const iconSize = iOSUIKit.bodyObject.fontSize;
@@ -61,8 +62,21 @@ export const CountdownLimitBanner = ({
   return (
     <Pressable
       onPress={async () => {
-        posthog.capture("countdown:paywall_view", { type: "pro" });
-        await RevenueCatUI.presentPaywall({ offering: pro });
+        if (isAtLimit && limitHit) {
+          posthog.capture("limit:paywall_view");
+        } else {
+          posthog.capture("countdown:paywall_view", { type: "pro" });
+        }
+        const result = await RevenueCatUI.presentPaywall({
+          offering: isAtLimit ? limitHit ?? pro : pro,
+        });
+        if (
+          isAtLimit &&
+          limitHit &&
+          result === PAYWALL_RESULT.CANCELLED
+        ) {
+          posthog.capture("limit:paywall_dismiss");
+        }
       }}
       style={[
         {

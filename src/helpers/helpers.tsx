@@ -9,7 +9,8 @@ import {
 import * as Haptics from "expo-haptics";
 import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
-import RevenueCatUI from "react-native-purchases-ui";
+import type { PurchasesOffering } from "react-native-purchases";
+import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 import { ReleaseDate, Games } from "@/types/igdb";
@@ -129,7 +130,9 @@ export async function handleMovieToggle(params: {
   isCurrentlySubbed: boolean;
   isPro: boolean;
   hasReachedLimit: (isPro: boolean) => boolean;
-  proOffering: unknown;
+  proOffering: PurchasesOffering | undefined;
+  onLimitPaywallView?: () => void;
+  onLimitPaywallDismiss?: () => void;
 }): Promise<void> {
   const {
     movieId,
@@ -138,11 +141,17 @@ export async function handleMovieToggle(params: {
     isPro,
     hasReachedLimit,
     proOffering,
+    onLimitPaywallView,
+    onLimitPaywallDismiss,
   } = params;
 
   // If trying to add and limit reached, show Pro modal
   if (!isCurrentlySubbed && hasReachedLimit(isPro)) {
-    await RevenueCatUI.presentPaywall({ offering: proOffering });
+    onLimitPaywallView?.();
+    const result = await RevenueCatUI.presentPaywall({ offering: proOffering });
+    if (result === PAYWALL_RESULT.CANCELLED) {
+      onLimitPaywallDismiss?.();
+    }
     return;
   }
 

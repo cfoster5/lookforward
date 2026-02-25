@@ -1,7 +1,14 @@
 import { Image } from "expo-image";
 import { Color, Stack, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
-import { Dimensions, FlatList, Platform, Pressable, Text, View } from "react-native";
+import {
+  Dimensions,
+  FlatList,
+  Platform,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
 import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
@@ -14,8 +21,8 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth, handlePersonToggle } from "@/helpers/helpers";
 import { reusableStyles } from "@/helpers/styles";
-import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import useAddRecent from "@/hooks/useAddRecent";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { usePerson } from "@/screens/Actor/api/getPerson";
 import { CarouselItem } from "@/screens/Actor/components/CarouselItem";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
@@ -91,29 +98,31 @@ export default function Actor() {
         {person?.name}
       </Stack.Screen.Title>
       <Stack.Toolbar placement="right">
-        <Stack.Toolbar.View>
-          <Pressable
-            onPress={() =>
-              handlePersonToggle({
-                personId: id.toString(),
-                personName: person?.name ?? "",
-                profilePath: person?.profile_path ?? null,
-                userId: user.uid,
-                isCurrentlySubbed: isFollowed,
-                isPro,
-                proOffering: pro,
-              })
-            }
-            hitSlop={8}
-          >
-            <Image
-              source={isFollowed ? "sf:checkmark" : "sf:person.badge.plus"}
-              style={{ fontSize: 28 }}
-              transition={{ effect: "sf:replace" }}
-              tintColor={Color.ios.label as string}
-            />
-          </Pressable>
-        </Stack.Toolbar.View>
+        {__DEV__ && (
+          <Stack.Toolbar.View>
+            <Pressable
+              onPress={() =>
+                handlePersonToggle({
+                  personId: id.toString(),
+                  personName: person?.name ?? "",
+                  profilePath: person?.profile_path ?? null,
+                  userId: user.uid,
+                  isCurrentlySubbed: isFollowed,
+                  isPro,
+                  proOffering: pro,
+                })
+              }
+              hitSlop={8}
+            >
+              <Image
+                source={isFollowed ? "sf:checkmark" : "sf:person.badge.plus"}
+                style={{ fontSize: 28 }}
+                transition={{ effect: "sf:replace" }}
+                tintColor={Color.ios.label as string}
+              />
+            </Pressable>
+          </Stack.Toolbar.View>
+        )}
         <Stack.Toolbar.Button
           onPress={() => onShare(`person/${id}`, "headerButton")}
         >

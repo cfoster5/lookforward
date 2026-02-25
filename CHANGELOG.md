@@ -1,5 +1,18 @@
 # Changelog
 
+## [7.26.0](https://github.com/cfoster5/lookforward/compare/v7.25.0...v7.26.0) (2026-02-25)
+
+
+### Features
+
+* use limit_hit paywall for countdown cap ([#218](https://github.com/cfoster5/lookforward/issues/218)) ([e85955e](https://github.com/cfoster5/lookforward/commit/e85955e15bf7b6b75db70f5166b3478535aa7edc))
+
+
+### Bug Fixes
+
+* add line limits to people rows and show Released for past dates ([0bef118](https://github.com/cfoster5/lookforward/commit/0bef118909a9ebfc5b64eb1e95d429d2a5526ea6))
+* hide person follow button for prod ([e181fde](https://github.com/cfoster5/lookforward/commit/e181fdeada49d54e4c51827bc61168de4bbcc3f9))
+
 ## [7.25.0](https://github.com/cfoster5/lookforward/compare/v7.24.1...v7.25.0) (2026-02-22)
 
 

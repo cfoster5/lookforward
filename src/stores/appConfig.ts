@@ -2,8 +2,6 @@ import { MMKV } from "react-native-mmkv";
 import { create } from "zustand";
 import { persist, createJSONStorage, StateStorage } from "zustand/middleware";
 
-import { timestamp } from "@/utils/dates";
-
 const storage = new MMKV();
 
 const zustandStorage: StateStorage = {
@@ -45,7 +43,7 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
       setHasRequestedReview: () =>
         set(() => ({
           hasRequestedReview: true,
-          lastRequestedReviewTimestamp: timestamp,
+          lastRequestedReviewTimestamp: Date.now(),
         })),
       completeCommitment: () =>
         set(() => ({

@@ -3,23 +3,32 @@ import * as StoreReview from "expo-store-review";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useSubscriptionStore } from "@/stores/subscription";
 
-/**
- * Requests an app store review if the user has 3+ subscriptions or 5+ searches
- * and hasn't been asked before. Should be called after successfully
- * adding a subscription or completing a search.
- */
+const REVIEW_COOLDOWN_DAYS = 60;
+const MS_PER_DAY = 1000 * 60 * 60 * 24;
+
 export async function tryRequestReview() {
-  const { hasRequestedReview, searchCount, setHasRequestedReview } =
+  const { lastRequestedReviewTimestamp, searchCount, setHasRequestedReview } =
     useAppConfigStore.getState();
   const { movieSubs, gameSubs } = useSubscriptionStore.getState();
-
   const totalSubs = movieSubs.length + gameSubs.length;
+  const normalizedLastRequest =
+    lastRequestedReviewTimestamp > 0 &&
+    lastRequestedReviewTimestamp < 1_000_000_000_000
+      ? lastRequestedReviewTimestamp * 1000
+      : lastRequestedReviewTimestamp;
 
-  if ((totalSubs >= 3 || searchCount >= 5) && !hasRequestedReview) {
-    const isAvailable = await StoreReview.isAvailableAsync();
-    if (isAvailable) {
-      await StoreReview.requestReview();
-      setHasRequestedReview();
-    }
-  }
+  const daysSinceLastRequest = normalizedLastRequest
+    ? (Date.now() - normalizedLastRequest) / MS_PER_DAY
+    : Infinity;
+
+  if (daysSinceLastRequest < REVIEW_COOLDOWN_DAYS) return;
+
+  const hasRealEngagement = totalSubs >= 2 && searchCount >= 3;
+  if (!hasRealEngagement) return;
+
+  const isAvailable = await StoreReview.isAvailableAsync();
+  if (!isAvailable) return;
+
+  await StoreReview.requestReview();
+  setHasRequestedReview();
 }

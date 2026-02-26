@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.26.1](https://github.com/cfoster5/lookforward/compare/v7.26.0...v7.26.1) (2026-02-26)
+
+
+### Bug Fixes
+
+* add limit hit paywall handling in Game detail screen ([6dfc7f4](https://github.com/cfoster5/lookforward/commit/6dfc7f479dc93b619e0339d2b178f73254d38853))
+
 ## [7.26.0](https://github.com/cfoster5/lookforward/compare/v7.25.0...v7.26.0) (2026-02-25)
 
 

@@ -11,7 +11,8 @@ import * as Linking from "expo-linking";
 import { router, VectorIcon } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { usePostHog } from "posthog-react-native";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { InteractionManager } from "react-native";
 
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useWidgetSync } from "@/hooks/useWidgetSync";
@@ -26,15 +27,19 @@ import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 export default function TabStack() {
   const [hasResolvedInitialUrl, setHasResolvedInitialUrl] = useState(false);
   const [hasLaunchDeepLink, setHasLaunchDeepLink] = useState(false);
+  const hasQueuedOnboarding = useRef(false);
   const user = useAuthenticatedUser();
-  const { setMovieSubs, setGameSubs, setPersonSubs, movieSubs, gameSubs, personSubs } =
-    useSubscriptionStore();
-  const { backfillFromCurrentSubs } = useSubscriptionHistoryStore();
   const {
-    hasCompletedCommitment,
-    hasSeenOnboardingModal,
-    setHasSeenOnboardingModal,
-  } = useAppConfigStore();
+    setMovieSubs,
+    setGameSubs,
+    setPersonSubs,
+    movieSubs,
+    gameSubs,
+    personSubs,
+  } = useSubscriptionStore();
+  const { backfillFromCurrentSubs } = useSubscriptionHistoryStore();
+  const { hasCompletedCommitment, hasSeenOnboardingModal } =
+    useAppConfigStore();
   const posthog = usePostHog();
   // Sync subscription data to the widget
   useWidgetSync();
@@ -125,9 +130,25 @@ export default function TabStack() {
   useEffect(() => {
     if (!hasResolvedInitialUrl || hasLaunchDeepLink) return;
     if (hasCompletedCommitment && !hasSeenOnboardingModal) {
+      if (hasQueuedOnboarding.current) return;
+      hasQueuedOnboarding.current = true;
+
       posthog.capture("first_open");
-      router.push("/onboarding");
-      setHasSeenOnboardingModal();
+      const timeout = setTimeout(() => {
+        const task = InteractionManager.runAfterInteractions(() => {
+          router.push("/onboarding");
+        });
+
+        // Cleanup path if effect is re-run/unmounted before task executes.
+        cleanupTask = () => task.cancel();
+      }, 250);
+
+      let cleanupTask = () => {};
+
+      return () => {
+        clearTimeout(timeout);
+        cleanupTask();
+      };
     }
   }, [
     hasCompletedCommitment,
@@ -135,7 +156,6 @@ export default function TabStack() {
     hasResolvedInitialUrl,
     hasSeenOnboardingModal,
     posthog,
-    setHasSeenOnboardingModal,
   ]);
 
   const queryClient = useQueryClient();
@@ -165,7 +185,12 @@ export default function TabStack() {
   useEffect(() => {
     personSubs.forEach((sub) => {
       queryClient.prefetchQuery({
-        queryKey: ["personCountdown", sub.documentID, movieLanguage, movieRegion],
+        queryKey: [
+          "personCountdown",
+          sub.documentID,
+          movieLanguage,
+          movieRegion,
+        ],
         queryFn: () =>
           getPersonCountdown(
             Number(sub.documentID),

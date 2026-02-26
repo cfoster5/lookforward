@@ -7,6 +7,7 @@ import { useAuthStore } from "@/stores";
 export function useRevenueCat() {
   const { user, setIsPro } = useAuthStore();
   const posthog = usePostHog();
+
   useEffect(() => {
     /* Enable debug logs before calling `setup`. */
     if (__DEV__) Purchases.setLogLevel(Purchases.LOG_LEVEL.ERROR);
@@ -15,17 +16,7 @@ export function useRevenueCat() {
     // Initialize the RevenueCat Purchases SDK.
     Purchases.configure({
       apiKey: "appl_qxPtMlTGjvHkhlNlnKlOenNikGN",
-      appUserID: user?.uid,
     });
-
-    // Set email if available (for customer support and communication)
-    if (user?.email) Purchases.setEmail(user.email);
-
-    if (posthog) {
-      if (user?.uid) posthog.identify(user.uid);
-      const distinctId = posthog.getDistinctId?.();
-      if (distinctId) Purchases.setAttributes({ $posthogUserId: distinctId });
-    }
 
     const customerInfoUpdated = (info: CustomerInfo) => {
       setIsPro(!!info.entitlements.active.pro);
@@ -37,5 +28,34 @@ export function useRevenueCat() {
       // Clean up the listener when the component unmounts
       Purchases.removeCustomerInfoUpdateListener(customerInfoUpdated);
     };
-  }, [user, setIsPro, posthog]);
+  }, [setIsPro]);
+
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    Purchases.logIn(user.uid).catch((error) => {
+      console.error("RevenueCat logIn failed:", error);
+    });
+  }, [user?.uid]);
+
+  useEffect(() => {
+    if (!user?.email) return;
+
+    Purchases.setEmail(user.email).catch((error) => {
+      console.error("RevenueCat setEmail failed:", error);
+    });
+  }, [user?.email]);
+
+  useEffect(() => {
+    if (!posthog) return;
+
+    if (user?.uid) posthog.identify(user.uid);
+
+    const distinctId = posthog.getDistinctId?.();
+    if (!distinctId) return;
+
+    Purchases.setAttributes({ $posthogUserId: distinctId }).catch((error) => {
+      console.error("RevenueCat setAttributes failed:", error);
+    });
+  }, [posthog, user?.uid]);
 }

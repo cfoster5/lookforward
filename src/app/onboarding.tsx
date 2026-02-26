@@ -1,5 +1,6 @@
 import { router } from "expo-router";
 import { usePostHog } from "posthog-react-native";
+import { useEffect } from "react";
 import { Linking, Pressable, View } from "react-native";
 import Purchases from "react-native-purchases";
 import RevenueCatUI from "react-native-purchases-ui";
@@ -9,11 +10,19 @@ import { useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { Row } from "@/components/Row";
+import { useAppConfigStore } from "@/stores/appConfig";
 
 export default function OnboardingLayout() {
   const { top } = useSafeAreaInsets();
   const { data: pro } = useProOfferings();
   const posthog = usePostHog();
+  const setHasSeenOnboardingModal = useAppConfigStore(
+    (state) => state.setHasSeenOnboardingModal,
+  );
+
+  useEffect(() => {
+    setHasSeenOnboardingModal();
+  }, [setHasSeenOnboardingModal]);
 
   async function handlePresentProPaywall() {
     if (!pro) {
@@ -58,24 +67,24 @@ export default function OnboardingLayout() {
     <View style={{ marginTop: top, marginHorizontal: 16 }}>
       <ContextMenuLink href="/" isOnboarding>
         <Row
-              icon="sf:magnifyingglass"
+          icon="sf:magnifyingglass"
           title="Find"
           body="Discover movie and game releases by searching for title, cast, or crew. Holding down on an item will give you more options. Give it a try!"
         />
       </ContextMenuLink>
       <Row
-          icon="sf:timer"
+        icon="sf:timer"
         title="Countdown"
         body="Add titles to your list so you can see release dates on the Countdown tab."
       />
       <Row
-          icon="sf:info.circle"
+        icon="sf:info.circle"
         title="Details"
         body="Tap on a title to see genres, credits, trailers, and so much more."
       />
       <Pressable onPress={() => Linking.openSettings()}>
         <Row
-            icon="sf:bell"
+          icon="sf:bell"
           title="Notifications"
           body="Allow push notifications to be reminded about releases in your list that are a week or day away."
           showDrillIn

@@ -15,6 +15,7 @@ import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useInterfaceStore } from "@/stores";
 import { Game, ReleaseDate } from "@/types";
 import { formatGameReleaseDate } from "@/utils/dates";
+import { promptForNotificationsAfterCountdownAdd } from "@/utils/notifications";
 import { tryRequestReview } from "@/utils/requestReview";
 
 import { reusableStyles } from "../helpers/styles";
@@ -78,6 +79,7 @@ export function GamePlatformPicker() {
         { merge: true },
       );
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+      await promptForNotificationsAfterCountdownAdd(user.uid);
       await tryRequestReview();
       bottomSheetModalRef.current?.dismiss();
     } catch (error) {

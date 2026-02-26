@@ -15,6 +15,7 @@ import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 import { ReleaseDate, Games } from "@/types/igdb";
 import { timestampToUTC } from "@/utils/dates";
+import { promptForNotificationsAfterCountdownAdd } from "@/utils/notifications";
 import { tryRequestReview } from "@/utils/requestReview";
 
 import { FirestoreMovie, FirestorePerson } from "../interfaces/firebase";
@@ -94,6 +95,7 @@ export async function subToMovie(
     await setDoc(docRef, { subscribers: arrayUnion(user) }, { merge: true });
     useSubscriptionHistoryStore.getState().addToHistory(movieId);
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    await promptForNotificationsAfterCountdownAdd(user);
     await tryRequestReview();
   } catch (error) {
     console.error("Error writing document: ", error);
@@ -190,6 +192,7 @@ export async function subToPerson(
       { merge: true },
     );
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    await promptForNotificationsAfterCountdownAdd(userId);
     await tryRequestReview();
   } catch (error) {
     console.error("Error writing document: ", error);

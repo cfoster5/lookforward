@@ -10,6 +10,7 @@ import {
 import * as Haptics from "expo-haptics";
 
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
+import { promptForNotificationsAfterCountdownAdd } from "@/utils/notifications";
 import { tryRequestReview } from "@/utils/requestReview";
 
 type CountdownToggleProps = {
@@ -52,6 +53,7 @@ export async function addCountdownItem(
       useSubscriptionHistoryStore.getState().addToHistory(id.toString());
     }
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    await promptForNotificationsAfterCountdownAdd(user.uid);
     await tryRequestReview();
   } catch (error) {
     console.error("Error writing document: ", error);

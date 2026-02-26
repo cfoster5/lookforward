@@ -1,16 +1,3 @@
-import {
-  doc,
-  getFirestore,
-  updateDoc,
-  getDoc,
-} from "@react-native-firebase/firestore";
-import {
-  AuthorizationStatus,
-  getMessaging,
-  getToken,
-  onTokenRefresh,
-  requestPermission,
-} from "@react-native-firebase/messaging";
 import { isLiquidGlassAvailable } from "expo-glass-effect";
 import * as Linking from "expo-linking";
 import { Stack } from "expo-router";
@@ -18,7 +5,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { Platform } from "react-native";
-import Purchases from "react-native-purchases";
 
 import { AppProvider } from "@/providers/app";
 import { useAuthStore, useInterfaceStore } from "@/stores";
@@ -47,63 +33,7 @@ function RootLayoutContent() {
 
   useEffect(() => {
     if (!user) return;
-
-    const uid = user.uid;
-
-    let unsubscribe: (() => void) | undefined;
-
-    async function requestUserPermission() {
-      const messaging = getMessaging();
-      const authStatus = await requestPermission(messaging);
-      const enabled =
-        authStatus === AuthorizationStatus.AUTHORIZED ||
-        authStatus === AuthorizationStatus.PROVISIONAL;
-
-      if (enabled) {
-        const db = getFirestore();
-        const userRef = doc(db, "users", uid);
-        const docSnapshot = await getDoc(userRef);
-
-        if (!docSnapshot.data()?.notifications) {
-          await updateDoc(userRef, {
-            notifications: { day: true, week: true },
-          });
-        }
-
-        const token = await getToken(messaging);
-        await saveTokenToDatabase(token);
-        unsubscribe = onTokenRefresh(messaging, async (token) => {
-          await saveTokenToDatabase(token);
-        });
-      }
-    }
-
-    requestUserPermission()
-      .catch((error) => {
-        console.error("Error in messaging useEffect:", error);
-      })
-      .finally(() => {
-        setInitializing(false);
-      });
-
-    async function saveTokenToDatabase(token: string) {
-      try {
-        const db = getFirestore();
-        const userRef = doc(db, "users", uid);
-        await updateDoc(userRef, { deviceToken: token });
-        await Purchases.setPushToken(token);
-      } catch (error) {
-        console.error("Error saving token to database:", error);
-      }
-    }
-
-    requestUserPermission();
-
-    return () => {
-      if (unsubscribe) {
-        unsubscribe();
-      }
-    };
+    setInitializing(false);
   }, [user]);
 
   useEffect(() => {

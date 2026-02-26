@@ -12,155 +12,29 @@ import {
 } from "@expo/ui/swift-ui";
 import {
   foregroundStyle,
-  headerProminence,
   lineLimit,
   listStyle,
 } from "@expo/ui/swift-ui/modifiers";
-import { Ionicons } from "@expo/vector-icons";
-import { useHeaderHeight } from "@react-navigation/elements";
 import { useQueries } from "@tanstack/react-query";
 import { Image } from "expo-image";
 import { Color, Link, Stack, useLocalSearchParams } from "expo-router";
-import { SFSymbol } from "expo-symbols";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useRef } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { StyleSheet, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 import { AppendToResponse, MovieDetails, PosterSize } from "tmdb-ts";
 
 import { useCollection } from "@/api/collections";
-import { IconSymbol } from "@/components/IconSymbol";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useCollectionProgress } from "@/hooks/useCollectionProgress";
 import { tmdb } from "@/providers/app";
-import { formatReleaseDate } from "@/screens/Countdown/utils/countdownItemHelpers";
 import { useAppConfigStore } from "@/stores";
 import { dateToFullLocale } from "@/utils/dates";
 
 type MovieWithCredits = AppendToResponse<MovieDetails, ["credits"], "movie">;
 
-interface NomineeItemProps {
-  movie: MovieWithCredits;
-  isTracked: boolean;
-}
-
-function NomineeItem({ movie, isTracked }: NomineeItemProps) {
-  return (
-    <Link
-      href={{
-        pathname: "/(tabs)/(countdown)/movie/[id]",
-        params: { id: movie.id, name: movie.title },
-      }}
-      asChild
-    >
-      <Pressable
-        style={({ pressed }) => ({
-          backgroundColor: pressed
-            ? Color.ios.tertiarySystemBackground
-            : Color.ios.secondarySystemGroupedBackground,
-        })}
-      >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View
-            style={{
-              shadowOffset: { width: 0, height: 1 },
-              shadowRadius: 4,
-              shadowColor: "rgba(0, 0, 0, 0.15)",
-              shadowOpacity: 1,
-              justifyContent: "center",
-            }}
-          >
-            {movie.poster_path ? (
-              <Image
-                source={{
-                  uri: `https://image.tmdb.org/t/p/w300${movie.poster_path}`,
-                }}
-                style={{
-                  aspectRatio: 2 / 3,
-                  width: 60,
-                  borderRadius: 6,
-                  marginLeft: 16,
-                  marginTop: 8,
-                  marginBottom: 8,
-                  borderWidth: 1,
-                  borderColor: Color.ios.separator,
-                }}
-              />
-            ) : (
-              <View
-                style={{
-                  backgroundColor: Color.ios.systemGray,
-                  aspectRatio: 2 / 3,
-                  width: 60,
-                  borderRadius: 6,
-                  marginLeft: 16,
-                  marginTop: 8,
-                  marginBottom: 8,
-                  borderWidth: 1,
-                  borderColor: Color.ios.separator,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Text style={[iOSUIKit.caption2White, { textAlign: "center" }]}>
-                  {movie.title}
-                </Text>
-              </View>
-            )}
-          </View>
-
-          <View style={{ flex: 1, marginHorizontal: 12 }}>
-            <Text
-              style={[iOSUIKit.body, { color: Color.ios.label }]}
-              numberOfLines={2}
-            >
-              {movie.title}
-            </Text>
-            <Text
-              style={[iOSUIKit.subhead, { color: Color.ios.secondaryLabel }]}
-              numberOfLines={1}
-            >
-              {dateToFullLocale(movie.release_date)}
-            </Text>
-          </View>
-
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-            {isTracked && (
-              <IconSymbol
-                name="checkmark.circle.fill"
-                size={20}
-                color="#34C759"
-              />
-            )}
-            <Ionicons
-              name="chevron-forward"
-              size={20}
-              color={Color.ios.tertiaryLabel}
-            />
-          </View>
-        </View>
-      </Pressable>
-    </Link>
-  );
-}
-
-function ItemSeparator() {
-  return (
-    <View
-      style={{
-        height: 1,
-        backgroundColor: Color.ios.separator,
-        marginLeft: 16 + 60 + 16, // marginLeft + posterWidth + gap
-      }}
-    />
-  );
-}
-
 export default function CollectionScreen() {
   const posthog = usePostHog();
-  const headerHeight = useHeaderHeight();
-  const { bottom } = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
   const collectionId = id ?? "oscars-2026-best-picture";
 
@@ -227,24 +101,6 @@ export default function CollectionScreen() {
   }
 
   if (movieQueries.some((q) => q.isPending)) return <LoadingScreen />;
-
-  const getCategoryIcon = (
-    category: "oscars" | "franchise" | "seasonal" | "custom",
-  ): SFSymbol => {
-    switch (category) {
-      case "oscars":
-        return "trophy.fill";
-      case "franchise":
-        return "film.stack.fill";
-      case "seasonal":
-        return "calendar";
-      default:
-        return "star.fill";
-    }
-  };
-
-  const iconName =
-    (collection.badgeIcon as SFSymbol) ?? getCategoryIcon(collection.category);
 
   return (
     <>

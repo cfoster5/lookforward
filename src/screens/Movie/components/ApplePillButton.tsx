@@ -1,19 +1,14 @@
+import { Image } from "expo-image";
 import { Color } from "expo-router";
-import { SymbolView } from "expo-symbols";
 import { Pressable, Text, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 type ApplePillButtonProps = {
-  text?: string;
-  iconName?: string;
+  text: string;
   style?: ViewStyle;
 };
 
-export const ApplePillButton = ({
-  text,
-  iconName,
-  style,
-}: ApplePillButtonProps) => (
+export const ApplePillButton = ({ text, style }: ApplePillButtonProps) => (
   <Pressable
     // Style extracted from Figma
     style={[
@@ -31,30 +26,24 @@ export const ApplePillButton = ({
         // Otherwise, it will take the full width of the screen
         // gap: 4,
         marginTop: 16,
+        gap: 4,
       },
       style,
     ]}
   >
-    {text && (
-      <Text style={[iOSUIKit.bodyEmphasized, { color: Color.ios.systemBlue }]}>
-        {text}
-      </Text>
-    )}
-    {iconName && (
-      // <Ionicons name={iconName} size={36} color={Color.ios.systemBlue} />
-      <SymbolView
-        name={iconName}
-        tintColor={Color.ios.systemBlue}
-        resizeMode="scaleAspectFill"
-        style={{ marginRight: 4 }}
-      />
-    )}
-    <SymbolView
-      name="chevron.down"
-      weight={"semibold"}
-      // size={iOSUIKit.bodyObject.lineHeight}
-      resizeMode="center"
-      tintColor={Color.ios.systemBlue}
+    <Text style={[iOSUIKit.bodyEmphasized, { color: Color.ios.systemBlue }]}>
+      {text}
+    </Text>
+    <Image
+      source="sf:chevron.down"
+      style={{
+        aspectRatio: 1,
+        height: iOSUIKit.bodyEmphasizedObject.fontSize,
+        fontWeight: "semibold",
+        fontSize: iOSUIKit.bodyEmphasizedObject.fontSize,
+      }}
+      contentPosition="center"
+      tintColor={Color.ios.systemBlue as string}
     />
   </Pressable>
 );

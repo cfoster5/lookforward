@@ -1,7 +1,6 @@
-import { Color } from "expo-router";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
-import { SymbolView } from "expo-symbols";
+import { Color } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { Pressable, Text, View } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
@@ -107,16 +106,10 @@ export function RecentPerson({ item }: { item: Recent }) {
                 gap: 8,
               }}
             >
-              <SymbolView
-                name="lock"
-                size={36}
-                tintColor={Color.ios.label}
-                resizeMode="scaleAspectFit"
-                style={{
-                  height: 36,
-                  width: 36,
-                  // position: "absolute",
-                }}
+              <Image
+                source="sf:lock"
+                style={{ aspectRatio: 1, height: 36 }}
+                tintColor={"white"}
               />
               <Text style={[iOSUIKit.bodyWhite, { textAlign: "center" }]}>
                 Get Pro

@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.26.2](https://github.com/cfoster5/lookforward/compare/v7.26.1...v7.26.2) (2026-02-26)
+
+
+### Bug Fixes
+
+* stabilize first-launch commitment to onboarding flow ([a6ca3ab](https://github.com/cfoster5/lookforward/commit/a6ca3ab7d574dd5f170e2e8e82eab3ca0e4e660f))
+
 ## [7.26.1](https://github.com/cfoster5/lookforward/compare/v7.26.0...v7.26.1) (2026-02-26)
 
 

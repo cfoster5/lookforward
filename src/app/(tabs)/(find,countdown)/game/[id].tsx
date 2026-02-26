@@ -9,10 +9,10 @@ import {
 import { usePostHog } from "posthog-react-native";
 import { useState, Fragment } from "react";
 import { ScrollView, View, FlatList, Pressable, Text } from "react-native";
-import RevenueCatUI from "react-native-purchases-ui";
+import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
-import { useProOfferings } from "@/api/getProOfferings";
+import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { CategoryControl } from "@/components/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
@@ -64,7 +64,7 @@ export default function Game() {
   const game = gameString ? JSON.parse(gameString) : undefined;
   const user = useAuthenticatedUser();
   const { isPro } = useAuthStore();
-  const { gameSubs } = useSubscriptionStore();
+  const { gameSubs, hasReachedLimit } = useSubscriptionStore();
   const { bottomSheetModalRef } = useInterfaceStore();
   const countdownId = gameSubs.find((s) => s.game.id === game.id)?.documentID;
   const [detailIndex, setDetailIndex] = useState(0);
@@ -83,6 +83,7 @@ export default function Game() {
   useAddRecent("recentGames", recentGame);
 
   const { data: pro } = useProOfferings();
+  const { data: limitHit } = useLimitHitOffering();
 
   return (
     <>
@@ -93,8 +94,25 @@ export default function Game() {
       <Stack.Toolbar placement="right">
         <Stack.Toolbar.View>
           <Pressable
-            onPress={() => {
+            onPress={async () => {
               if (!countdownId) {
+                if (hasReachedLimit(isPro)) {
+                  if (limitHit) {
+                    posthog.capture("limit:paywall_view");
+                  } else {
+                    posthog.capture("game:paywall_view", { type: "pro" });
+                  }
+
+                  const result = await RevenueCatUI.presentPaywall({
+                    offering: limitHit ?? pro,
+                  });
+
+                  if (limitHit && result === PAYWALL_RESULT.CANCELLED) {
+                    posthog.capture("limit:paywall_dismiss");
+                  }
+                  return;
+                }
+
                 bottomSheetModalRef.current?.present({
                   ...game,
                   release_dates: data?.release_dates,

@@ -43,7 +43,7 @@ type AppConfigActions = {
 
 export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       hasRequestedReview: false,
       lastRequestedReviewTimestamp: 0,
       hasCompletedCommitment: false,
@@ -80,7 +80,14 @@ export const useAppConfigStore = create<AppConfigState & AppConfigActions>()(
           hasSeenOnboardingModal: true,
         })),
       resetOnboardingFlow: () => {
-        useOnboardingDraft.getState().reset();
+        const current = get();
+        useOnboardingDraft.setState({
+          interests: [...current.selectedInterests],
+          watchProviders: current.selectedWatchProviders.map((id) =>
+            id === 119 ? 9 : id,
+          ),
+          gamePlatforms: [...current.selectedGamePlatforms],
+        });
         set(() => ({
           hasCompletedCommitment: false,
           hasSeenOnboardingModal: false,

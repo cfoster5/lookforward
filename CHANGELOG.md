@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.27.0](https://github.com/cfoster5/lookforward/compare/v7.26.2...v7.27.0) (2026-03-01)
+
+
+### Features
+
+* **onboarding:** redesign onboarding flow ([7f1586b](https://github.com/cfoster5/lookforward/commit/7f1586bffd5141e0c2429e33c941ed9b69b2a013))
+
 ## [7.26.2](https://github.com/cfoster5/lookforward/compare/v7.26.1...v7.26.2) (2026-02-26)
 
 

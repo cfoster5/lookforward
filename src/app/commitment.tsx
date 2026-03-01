@@ -117,9 +117,17 @@ export default function CommitmentScreen() {
               source: "commitment",
               converted,
             });
+            posthog.capture("onboarding:paywall_dismiss", { converted });
             posthog.capture("onboarding:complete", { converted });
           } catch {
-            // Paywall dismissed or errored — continue to home
+            posthog.capture("paywall:dismiss", {
+              source: "commitment",
+              converted: false,
+            });
+            posthog.capture("onboarding:paywall_dismiss", {
+              converted: false,
+            });
+            posthog.capture("onboarding:complete", { converted: false });
           }
         }
         router.replace("/");

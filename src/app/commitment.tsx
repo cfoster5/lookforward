@@ -4,6 +4,8 @@ import { useRouter } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import Purchases from "react-native-purchases";
+import RevenueCatUI from "react-native-purchases-ui";
 import Animated, {
   FadeIn,
   interpolate,
@@ -16,15 +18,16 @@ import Animated, {
 } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useProOfferings } from "@/api/getProOfferings";
 import { useAppConfigStore } from "@/stores/appConfig";
 
 const HOLD_DURATION = 1500;
 const NAVIGATION_DELAY_MS = 1000;
 
 const commitments = [
-  "Never miss a movie or game release",
-  "Stay ahead of what's coming next",
-  "Know exactly what's coming and when",
+  "Never miss a movie or game\u00A0release",
+  "Stay ahead of what\u2019s coming\u00A0next",
+  "Know exactly what\u2019s coming and\u00A0when",
 ];
 
 const STAGGER_BASE = 300;
@@ -43,13 +46,14 @@ export default function CommitmentScreen() {
   const router = useRouter();
   const [committed, setCommitted] = useState(false);
   const { completeCommitment } = useAppConfigStore();
+  const { data: pro } = useProOfferings();
   const posthog = usePostHog();
 
   useEffect(() => {
     posthog.capture("commitment:viewed");
     const timers = commitments.map((_, i) =>
       setTimeout(
-        () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light),
+        () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft),
         STAGGER_BASE + i * STAGGER_STEP,
       ),
     );
@@ -101,7 +105,21 @@ export default function CommitmentScreen() {
 
       completeCommitment();
       posthog.capture("commitment:completed");
-      setTimeout(() => {
+      setTimeout(async () => {
+        if (pro) {
+          try {
+            posthog.capture("paywall:viewed", { source: "commitment" });
+            await RevenueCatUI.presentPaywall({ offering: pro });
+            const customerInfo = await Purchases.getCustomerInfo();
+            const converted = !!customerInfo.entitlements.active.pro;
+            posthog.capture("paywall:dismiss", {
+              source: "commitment",
+              converted,
+            });
+          } catch {
+            // Paywall dismissed or errored — continue to home
+          }
+        }
         router.replace("/");
       }, NAVIGATION_DELAY_MS);
     }, HOLD_DURATION);
@@ -122,7 +140,7 @@ export default function CommitmentScreen() {
         <View style={styles.textArea}>
           <Image source={require("@/../assets/icon.png")} style={styles.logo} />
           <Text style={[styles.title, { color: colors.title }]}>
-            I will use Lookforward to
+            {"I will use Lookforward\u00A0to"}
           </Text>
           <View style={{ gap: 7 }}>
             {commitments.map((line, i) => (
@@ -169,7 +187,7 @@ export default function CommitmentScreen() {
             </Pressable>
           </View>
           <Text style={[styles.instruction, { color: colors.accent }]}>
-            Tap and hold to get started.
+            {"Tap and hold to get\u00A0started."}
           </Text>
         </View>
       </View>

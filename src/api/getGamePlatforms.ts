@@ -20,7 +20,7 @@ async function getUpcomingPlatforms() {
     platforms.push({ id: p.id, name: p.name });
   }
 
-  return platforms;
+  return platforms.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export function useGamePlatforms() {

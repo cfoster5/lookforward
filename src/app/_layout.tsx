@@ -47,6 +47,18 @@ function RootLayoutContent() {
     <Stack>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen
+        name="interest-selection"
+        options={{ headerShown: false, animation: "none" }}
+      />
+      <Stack.Screen
+        name="watch-providers"
+        options={{ headerShown: false, animation: "none" }}
+      />
+      <Stack.Screen
+        name="game-platforms"
+        options={{ headerShown: false, animation: "none" }}
+      />
+      <Stack.Screen
         name="commitment"
         options={{
           title: "Commitment",
@@ -55,28 +67,7 @@ function RootLayoutContent() {
       />
       <Stack.Screen
         name="onboarding"
-        options={{
-          headerShown: true,
-          headerTransparent: Platform.OS === "ios",
-          headerLargeTitle: false,
-          title: "Getting Started",
-          presentation: "formSheet",
-          // sheetGrabberVisible: true,
-          sheetAllowedDetents: "fitToContents",
-          contentStyle: {
-            backgroundColor:
-              Platform.OS === "ios" && isLiquidGlassAvailable()
-                ? "transparent"
-                : "#F2F2F7",
-          },
-          headerStyle: {
-            backgroundColor: Platform.OS === "ios" ? "transparent" : "#F2F2F7",
-          },
-          headerBlurEffect:
-            Platform.OS === "ios" && isLiquidGlassAvailable()
-              ? undefined
-              : "light",
-        }}
+        options={{ headerShown: false, animation: "none" }}
       />
     </Stack>
   );

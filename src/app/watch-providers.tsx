@@ -27,7 +27,14 @@ export default function WatchProvidersScreen() {
   const { data: providers, isLoading } = useMovieWatchProviders();
 
   const [showAll, setShowAll] = useState(false);
-  const allProviders = providers ?? [];
+  const allProviders = (providers ?? []).filter((p) => {
+    const name = p.provider_name.trim().toLowerCase();
+    return (
+      !name.endsWith("amazon channel") &&
+      !name.endsWith("apple tv channel") &&
+      !name.endsWith("roku premium channel")
+    );
+  });
   const visible = showAll ? allProviders : allProviders.slice(0, INITIAL_COUNT);
 
   useEffect(() => {

@@ -79,6 +79,7 @@ export default function OnboardingLayout() {
       totalSteps={totalSteps}
       continueEnabled
       continueColor="#3b82f6"
+      scrollable={false}
       onContinue={handleContinue}
       onBack={() => router.back()}
     >

@@ -16,6 +16,7 @@ type OnboardingScreenLayoutProps = {
   continueEnabled: boolean;
   continueLabel?: string;
   continueColor?: string;
+  scrollable?: boolean;
   onContinue: () => void;
   onBack?: () => void;
   children: ReactNode;
@@ -25,6 +26,7 @@ export function OnboardingScreenLayout({
   title,
   continueLabel = "Continue",
   continueColor,
+  scrollable = true,
   subtitle,
   currentStep,
   totalSteps,
@@ -62,13 +64,19 @@ export function OnboardingScreenLayout({
       <Text style={[iOSUIKit.largeTitleEmphasized, styles.title]}>{title}</Text>
       <Text style={[iOSUIKit.body, styles.subtitle]}>{subtitle}</Text>
 
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {children}
-      </ScrollView>
+      {scrollable ? (
+        <ScrollView
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {children}
+        </ScrollView>
+      ) : (
+        <View style={[styles.scrollView, styles.scrollContent]}>
+          {children}
+        </View>
+      )}
 
       <View style={[styles.bottomArea, { paddingBottom: bottom + 16 }]}>
         <Pressable

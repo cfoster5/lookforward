@@ -10,9 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
 import { router, VectorIcon } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
-import { usePostHog } from "posthog-react-native";
-import { useEffect, useRef, useState } from "react";
-import { InteractionManager } from "react-native";
+import { useEffect, useState } from "react";
 
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useWidgetSync } from "@/hooks/useWidgetSync";
@@ -27,7 +25,6 @@ import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 export default function TabStack() {
   const [hasResolvedInitialUrl, setHasResolvedInitialUrl] = useState(false);
   const [hasLaunchDeepLink, setHasLaunchDeepLink] = useState(false);
-  const hasQueuedOnboarding = useRef(false);
   const user = useAuthenticatedUser();
   const {
     setMovieSubs,
@@ -38,9 +35,11 @@ export default function TabStack() {
     personSubs,
   } = useSubscriptionStore();
   const { backfillFromCurrentSubs } = useSubscriptionHistoryStore();
-  const { hasCompletedCommitment, hasSeenOnboardingModal } =
-    useAppConfigStore();
-  const posthog = usePostHog();
+  const {
+    hasCompletedCommitment,
+    hasSeenOnboardingModal,
+    hasCompletedInterestSelection,
+  } = useAppConfigStore();
   // Sync subscription data to the widget
   useWidgetSync();
 
@@ -122,41 +121,21 @@ export default function TabStack() {
 
   useEffect(() => {
     if (!hasResolvedInitialUrl || hasLaunchDeepLink) return;
-    if (!hasCompletedCommitment) {
+    if (!hasCompletedInterestSelection) {
+      router.replace("/interest-selection");
+    } else if (!hasSeenOnboardingModal) {
+      router.replace("/onboarding");
+    } else if (!hasCompletedCommitment) {
       router.replace("/commitment");
-    }
-  }, [hasCompletedCommitment, hasLaunchDeepLink, hasResolvedInitialUrl]);
-
-  useEffect(() => {
-    if (!hasResolvedInitialUrl || hasLaunchDeepLink) return;
-    if (hasCompletedCommitment && !hasSeenOnboardingModal) {
-      if (hasQueuedOnboarding.current) return;
-      hasQueuedOnboarding.current = true;
-
-      posthog.capture("first_open");
-      const timeout = setTimeout(() => {
-        const task = InteractionManager.runAfterInteractions(() => {
-          router.push("/onboarding");
-        });
-
-        // Cleanup path if effect is re-run/unmounted before task executes.
-        cleanupTask = () => task.cancel();
-      }, 250);
-
-      let cleanupTask = () => {};
-
-      return () => {
-        clearTimeout(timeout);
-        cleanupTask();
-      };
     }
   }, [
     hasCompletedCommitment,
+    hasCompletedInterestSelection,
     hasLaunchDeepLink,
     hasResolvedInitialUrl,
     hasSeenOnboardingModal,
-    posthog,
   ]);
+
 
   const queryClient = useQueryClient();
 

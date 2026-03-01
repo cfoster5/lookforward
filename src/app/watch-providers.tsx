@@ -1,5 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { Redirect, useRouter, Color } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -22,6 +23,7 @@ const INITIAL_COUNT = 10;
 
 export default function WatchProvidersScreen() {
   const router = useRouter();
+  const posthog = usePostHog();
   const { interests, watchProviders, toggleWatchProvider } =
     useOnboardingDraft();
   const { data: providers, isLoading } = useMovieWatchProviders();
@@ -38,6 +40,7 @@ export default function WatchProvidersScreen() {
   const visible = showAll ? allProviders : allProviders.slice(0, INITIAL_COUNT);
 
   useEffect(() => {
+    posthog.capture("onboarding:watch_providers_viewed");
     if (allProviders.length === 0) return;
     const initial = allProviders.slice(0, INITIAL_COUNT);
     const timers = initial.map((_, i) =>
@@ -47,7 +50,7 @@ export default function WatchProvidersScreen() {
       ),
     );
     return () => timers.forEach(clearTimeout);
-  }, [allProviders.length]);
+  }, [allProviders.length, posthog]);
 
   if (!interests.includes("movies")) {
     return <Redirect href="/interest-selection" />;
@@ -57,6 +60,9 @@ export default function WatchProvidersScreen() {
   const totalSteps = 2 + 1 + (hasGames ? 1 : 0);
 
   function handleContinue() {
+    posthog.capture("onboarding:watch_providers_selected", {
+      count: watchProviders.length,
+    });
     if (hasGames) {
       router.push("/game-platforms");
     } else {

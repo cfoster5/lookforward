@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.27.1](https://github.com/cfoster5/lookforward/compare/v7.27.0...v7.27.1) (2026-03-02)
+
+
+### Bug Fixes
+
+* capture PostHog events on paywall dismiss/error in onboarding ([#226](https://github.com/cfoster5/lookforward/issues/226)) ([d4aa4cd](https://github.com/cfoster5/lookforward/commit/d4aa4cda30cea3ec80fb0400dd4c60e09bdb5f70))
+
 ## [7.27.0](https://github.com/cfoster5/lookforward/compare/v7.26.2...v7.27.0) (2026-03-01)
 
 

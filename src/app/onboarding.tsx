@@ -1,6 +1,7 @@
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { Color, Redirect, router } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { useEffect } from "react";
 import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -39,6 +40,7 @@ const features = [
 
 export default function OnboardingLayout() {
   const draft = useOnboardingDraft();
+  const posthog = usePostHog();
   const { completeInterestSelection, setHasSeenOnboardingModal } =
     useAppConfigStore();
 
@@ -47,6 +49,7 @@ export default function OnboardingLayout() {
   const totalSteps = 2 + (hasMovies ? 1 : 0) + (hasGames ? 1 : 0);
 
   useEffect(() => {
+    posthog.capture("onboarding:overview_viewed");
     const timers = features.map((_, i) =>
       setTimeout(
         () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft),
@@ -54,13 +57,14 @@ export default function OnboardingLayout() {
       ),
     );
     return () => timers.forEach(clearTimeout);
-  }, []);
+  }, [posthog]);
 
   if (draft.interests.length === 0) {
     return <Redirect href="/interest-selection" />;
   }
 
   function handleContinue() {
+    posthog.capture("onboarding:overview_continued");
     completeInterestSelection({
       interests: [...draft.interests],
       watchProviders: [...draft.watchProviders],

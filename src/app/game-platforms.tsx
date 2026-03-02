@@ -1,5 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { Redirect, useRouter } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -14,12 +15,14 @@ const STAGGER_STEP = 80;
 
 export default function GamePlatformsScreen() {
   const router = useRouter();
+  const posthog = usePostHog();
   const { interests, gamePlatforms, toggleGamePlatform } = useOnboardingDraft();
   const { data: platforms, isLoading } = useGamePlatforms();
 
   const visible = platforms ?? [];
 
   useEffect(() => {
+    posthog.capture("onboarding:game_platforms_viewed");
     if (visible.length === 0) return;
     const timers = visible.map((_, i) =>
       setTimeout(
@@ -28,7 +31,7 @@ export default function GamePlatformsScreen() {
       ),
     );
     return () => timers.forEach(clearTimeout);
-  }, [visible.length]);
+  }, [visible.length, posthog]);
 
   if (!interests.includes("games")) {
     return <Redirect href="/interest-selection" />;
@@ -39,6 +42,9 @@ export default function GamePlatformsScreen() {
   const currentStep = totalSteps - 1;
 
   function handleContinue() {
+    posthog.capture("onboarding:game_platforms_selected", {
+      count: gamePlatforms.length,
+    });
     router.push("/onboarding");
   }
 

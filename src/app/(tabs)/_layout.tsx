@@ -10,6 +10,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
 import { router, VectorIcon } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
+import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
 
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
@@ -26,6 +27,7 @@ export default function TabStack() {
   const [hasResolvedInitialUrl, setHasResolvedInitialUrl] = useState(false);
   const [hasLaunchDeepLink, setHasLaunchDeepLink] = useState(false);
   const user = useAuthenticatedUser();
+  const posthog = usePostHog();
   const {
     setMovieSubs,
     setGameSubs,
@@ -122,6 +124,7 @@ export default function TabStack() {
   useEffect(() => {
     if (!hasResolvedInitialUrl || hasLaunchDeepLink) return;
     if (!hasCompletedInterestSelection) {
+      posthog.capture("first_open");
       router.replace("/interest-selection");
     } else if (!hasSeenOnboardingModal) {
       router.replace("/onboarding");
@@ -134,8 +137,8 @@ export default function TabStack() {
     hasLaunchDeepLink,
     hasResolvedInitialUrl,
     hasSeenOnboardingModal,
+    posthog,
   ]);
-
 
   const queryClient = useQueryClient();
 

@@ -1,5 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { useRouter } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
@@ -14,6 +15,7 @@ const OPTIONS = ["movies", "games"] as const;
 
 export default function InterestSelectionScreen() {
   const router = useRouter();
+  const posthog = usePostHog();
   const { interests, toggleInterest } = useOnboardingDraft();
 
   const hasMovies = interests.includes("movies");
@@ -21,6 +23,7 @@ export default function InterestSelectionScreen() {
   const totalSteps = 2 + (hasMovies ? 1 : 0) + (hasGames ? 1 : 0);
 
   useEffect(() => {
+    posthog.capture("onboarding:interest_selection_viewed");
     const timers = OPTIONS.map((_, i) =>
       setTimeout(
         () => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft),
@@ -28,9 +31,10 @@ export default function InterestSelectionScreen() {
       ),
     );
     return () => timers.forEach(clearTimeout);
-  }, []);
+  }, [posthog]);
 
   function handleContinue() {
+    posthog.capture("onboarding:interests_selected", { interests });
     if (hasMovies) {
       router.push("/watch-providers");
     } else {
@@ -48,9 +52,7 @@ export default function InterestSelectionScreen() {
       onContinue={handleContinue}
     >
       <View style={styles.options}>
-        <Animated.View
-          entering={FadeIn.delay(STAGGER_BASE).duration(100)}
-        >
+        <Animated.View entering={FadeIn.delay(STAGGER_BASE).duration(100)}>
           <InterestOption
             label="Movies"
             selected={hasMovies}

@@ -80,7 +80,10 @@ export default function Settings() {
   });
 
   return (
-    <ScrollView style={{ paddingHorizontal: 16 }}>
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 20 }}
+    >
       <Text
         style={{
           ...iOSUIKit.bodyEmphasizedObject,
@@ -101,7 +104,11 @@ export default function Settings() {
           await getNotificationPermissions();
         }}
         value={notifications?.day}
-        style={{ borderTopLeftRadius: 26, borderTopRightRadius: 26 }}
+        style={{
+          borderTopLeftRadius: 26,
+          borderTopRightRadius: 26,
+          borderCurve: "continuous",
+        }}
       />
       <ViewSeparator />
       <NotificationSetting
@@ -114,7 +121,11 @@ export default function Settings() {
           await getNotificationPermissions();
         }}
         value={notifications?.week}
-        style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
+        style={{
+          borderBottomLeftRadius: 26,
+          borderBottomRightRadius: 26,
+          borderCurve: "continuous",
+        }}
       />
       {!notificationPermissions && (
         <Pressable onPress={() => Linking.openSettings()}>
@@ -135,6 +146,7 @@ export default function Settings() {
           backgroundColor: Color.ios.secondarySystemGroupedBackground,
           borderTopLeftRadius: 26,
           borderTopRightRadius: 26,
+          borderCurve: "continuous",
           paddingHorizontal: 16,
           marginTop: 32,
           minHeight: 44,
@@ -185,6 +197,7 @@ export default function Settings() {
           backgroundColor: Color.ios.secondarySystemGroupedBackground,
           borderBottomLeftRadius: 26,
           borderBottomRightRadius: 26,
+          borderCurve: "continuous",
           paddingHorizontal: 16,
           minHeight: 44,
           flexDirection: "row",
@@ -231,13 +244,21 @@ export default function Settings() {
         }}
         text="Explore Pro Features"
         isFirstInGroup
-        style={{ borderTopLeftRadius: 26, borderTopRightRadius: 26 }}
+        style={{
+          borderTopLeftRadius: 26,
+          borderTopRightRadius: 26,
+          borderCurve: "continuous",
+        }}
       />
       <ViewSeparator />
       <Link href="/(tabs)/(settings)/app-icon" asChild>
         <SettingNavButton
           text="App Icon"
-          style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
+          style={{
+            borderBottomLeftRadius: 26,
+            borderBottomRightRadius: 26,
+            borderCurve: "continuous",
+          }}
         />
       </Link>
       {/* {isPro && Platform.OS === "ios" && (
@@ -261,7 +282,11 @@ export default function Settings() {
         }}
         text="Tip Jar"
         isFirstInGroup
-        style={{ borderTopLeftRadius: 26, borderTopRightRadius: 26 }}
+        style={{
+          borderTopLeftRadius: 26,
+          borderTopRightRadius: 26,
+          borderCurve: "continuous",
+        }}
       />
       <ViewSeparator />
       <Link
@@ -270,7 +295,11 @@ export default function Settings() {
       >
         <SettingNavButton
           text="Write a Review"
-          style={{ borderBottomLeftRadius: 26, borderBottomRightRadius: 26 }}
+          style={{
+            borderBottomLeftRadius: 26,
+            borderBottomRightRadius: 26,
+            borderCurve: "continuous",
+          }}
         />
       </Link>
       <SettingNavButton
@@ -279,13 +308,13 @@ export default function Settings() {
         }}
         text="Restart Onboarding"
         isFirstInGroup
-        style={{ borderRadius: 26 }}
+        style={{ borderRadius: 26, borderCurve: "continuous" }}
       />
       <Link href="/(tabs)/(settings)/account" asChild>
         <SettingNavButton
           text="Account"
           isFirstInGroup
-          style={{ borderRadius: 26 }}
+          style={{ borderRadius: 26, borderCurve: "continuous" }}
         />
       </Link>
     </ScrollView>

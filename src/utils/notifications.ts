@@ -28,7 +28,7 @@ export async function promptForNotificationsAfterCountdownAdd(uid: string) {
 
     if (!docSnapshot.data()?.notifications) {
       await updateDoc(userRef, {
-        notifications: { day: true, week: true },
+        notifications: { day: true, week: true, people: true },
       });
     }
 

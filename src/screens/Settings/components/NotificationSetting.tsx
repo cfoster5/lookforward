@@ -1,5 +1,6 @@
+import { Image } from "expo-image";
 import { Color } from "expo-router";
-import { Switch, Text, View, ViewStyle } from "react-native";
+import { Pressable, Switch, Text, View, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 type Props = {
@@ -7,6 +8,8 @@ type Props = {
   onValueChange: (value: boolean) => void;
   value: boolean;
   style?: ViewStyle;
+  showLock?: boolean;
+  onLockPress?: () => void;
 };
 
 export const NotificationSetting = ({
@@ -14,8 +17,11 @@ export const NotificationSetting = ({
   onValueChange,
   value,
   style,
+  showLock,
+  onLockPress,
 }: Props) => (
-  <View
+  <Pressable
+    onPress={showLock ? onLockPress : undefined}
     style={[
       {
         flex: 1,
@@ -29,12 +35,23 @@ export const NotificationSetting = ({
       style,
     ]}
   >
-    <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.label }}>{title}</Text>
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+      {showLock && (
+        <Image
+          source="sf:lock.fill"
+          tintColor={Color.ios.secondaryLabel as string}
+          style={{ aspectRatio: 1, height: iOSUIKit.bodyObject.fontSize }}
+        />
+      )}
+      <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.label }}>
+        {title}
+      </Text>
+    </View>
     <Switch
       style={{ alignSelf: "center" }}
       // trackColor={{ false: "red", true: Color.ios.systemBlue }}
-      onValueChange={onValueChange}
+      onValueChange={showLock ? onLockPress : onValueChange}
       value={value}
     />
-  </View>
+  </Pressable>
 );

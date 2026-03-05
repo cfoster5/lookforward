@@ -22,6 +22,7 @@ import { tmdb } from "@/providers/app";
 import { NotificationSetting } from "@/screens/Settings/components/NotificationSetting";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { useAuthStore } from "@/stores/auth";
 
 export default function Settings() {
   const user = useAuthenticatedUser();
@@ -32,10 +33,12 @@ export default function Settings() {
     setMovieRegion,
     setMovieLanguage,
   } = useAppConfigStore();
+  const { isPro } = useAuthStore();
   const [notificationPermissions, setNotificationPermissions] = useState(true);
   const [notifications, setNotifications] = useState({
     day: false,
     week: false,
+    people: false,
   });
   const posthog = usePostHog();
 
@@ -62,6 +65,11 @@ export default function Settings() {
   }, [user]);
 
   const { data: pro } = useProOfferings();
+
+  async function presentProPaywall() {
+    posthog.capture("settings:paywall_view", { type: "pro" });
+    await RevenueCatUI.presentPaywall({ offering: pro });
+  }
 
   const { data: tips } = useQuery({
     queryKey: ["tipsPackages"],
@@ -96,6 +104,8 @@ export default function Settings() {
       </Text>
       <NotificationSetting
         title="Day Before"
+        showLock={!isPro}
+        onLockPress={presentProPaywall}
         onValueChange={async (value) => {
           // setNotifications({ ...notifications, day: value })
           const db = getFirestore();
@@ -113,6 +123,8 @@ export default function Settings() {
       <ViewSeparator />
       <NotificationSetting
         title="Week Before"
+        showLock={!isPro}
+        onLockPress={presentProPaywall}
         onValueChange={async (value) => {
           // setNotifications({ ...notifications, week: value })
           const db = getFirestore();
@@ -121,6 +133,19 @@ export default function Settings() {
           await getNotificationPermissions();
         }}
         value={notifications?.week}
+      />
+      <ViewSeparator />
+      <NotificationSetting
+        title="New Projects"
+        showLock={!isPro}
+        onLockPress={presentProPaywall}
+        onValueChange={async (value) => {
+          const db = getFirestore();
+          const userRef = doc(db, "users", user.uid);
+          await updateDoc(userRef, { "notifications.people": value });
+          await getNotificationPermissions();
+        }}
+        value={notifications?.people}
         style={{
           borderBottomLeftRadius: 26,
           borderBottomRightRadius: 26,
@@ -238,10 +263,7 @@ export default function Settings() {
         </DropdownMenu>
       </View>
       <SettingNavButton
-        onPress={async () => {
-          posthog.capture("settings:paywall_view", { type: "pro" });
-          await RevenueCatUI.presentPaywall({ offering: pro });
-        }}
+        onPress={presentProPaywall}
         text="Explore Pro Features"
         isFirstInGroup
         style={{

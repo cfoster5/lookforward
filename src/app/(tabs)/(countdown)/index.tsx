@@ -4,12 +4,14 @@ import {
   getFirestore,
   writeBatch,
 } from "@react-native-firebase/firestore";
+import { MenuView } from "@react-native-menu/menu";
 import { useScrollToTop } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { useRef, useState } from "react";
-import { Platform, SectionList } from "react-native";
+import { Platform, Pressable, SectionList, View } from "react-native";
 
 import { CollectionProgressCard } from "@/components/Collections/CollectionProgressCard";
+import { IconSymbol } from "@/components/IconSymbol";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useCollectionsProgress } from "@/hooks/useCollectionProgress";
@@ -22,6 +24,7 @@ import { FilteredEmptyState } from "@/screens/Countdown/components/FilteredEmpty
 import { SectionHeader } from "@/screens/Countdown/components/SectionHeader";
 import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
 import { useCountdownStore, useSubscriptionStore } from "@/stores";
+import { colors } from "@/theme/colors";
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 
 export default function Countdown() {
@@ -42,9 +45,9 @@ export default function Countdown() {
     usePersonCountdowns();
   const { movieSubs, gameSubs, personSubs } = useSubscriptionStore();
   const { collectionsWithProgress } = useCollectionsProgress();
-  const [filter, setFilter] = useState<
-    "all" | "movies" | "games" | "people"
-  >("all");
+  const [filter, setFilter] = useState<"all" | "movies" | "games" | "people">(
+    "all",
+  );
   const [statusFilter, setStatusFilter] = useState<
     "all" | "released" | "unreleased"
   >("all");
@@ -140,7 +143,8 @@ export default function Countdown() {
       return a.date - b.date; // Numeric comparison for valid dates
     });
 
-  const totalCountdowns = movieSubs.length + gameSubs.length + personSubs.length;
+  const totalCountdowns =
+    movieSubs.length + gameSubs.length + personSubs.length;
 
   // Show empty state when user has no countdowns
   if (totalCountdowns === 0) return <EmptyState />;
@@ -167,6 +171,85 @@ export default function Countdown() {
 
   return (
     <>
+      {Platform.OS === "android" && (
+        <Stack.Screen
+          options={{
+            headerLeft: () =>
+              isEditing ? (
+                <Pressable onPress={deleteItems} hitSlop={8}>
+                  <IconSymbol
+                    name="trash"
+                    size={24}
+                    color={colors.systemRed as string}
+                  />
+                </Pressable>
+              ) : null,
+            headerRight: () => (
+              <View style={{ flexDirection: "row", gap: 16 }}>
+                <MenuView
+                  onPressAction={({ nativeEvent: { event } }) => {
+                    const mediaIds = mediaFilterActions.map((a) => a.id);
+                    if (mediaIds.includes(event as typeof filter)) {
+                      setFilter(event as typeof filter);
+                    } else {
+                      setStatusFilter(event as typeof statusFilter);
+                    }
+                  }}
+                  actions={[
+                    ...mediaFilterActions.map((action) => ({
+                      id: action.id,
+                      title: action.label,
+                      state: (filter === action.id
+                        ? "on"
+                        : "off") as "on" | "off",
+                    })),
+                    ...(filter !== "people"
+                      ? [
+                          {
+                            id: "status-group",
+                            title: "Status",
+                            subactions: statusFilterActions.map((action) => ({
+                              id: action.id,
+                              title: action.label,
+                              state: (statusFilter === action.id
+                                ? "on"
+                                : "off") as "on" | "off",
+                            })),
+                          },
+                        ]
+                      : []),
+                  ]}
+                >
+                  <Pressable hitSlop={8}>
+                    <IconSymbol
+                      name="line.3.horizontal"
+                      size={24}
+                      color={colors.label as string}
+                    />
+                  </Pressable>
+                </MenuView>
+                <Pressable
+                  onPress={() => {
+                    toggleIsEditing();
+                    if (isEditing) clearSelections();
+                  }}
+                  hitSlop={8}
+                >
+                  <IconSymbol
+                    name="pencil"
+                    size={24}
+                    color={
+                      isEditing
+                        ? (colors.systemBlue as string)
+                        : (colors.label as string)
+                    }
+                  />
+                </Pressable>
+              </View>
+            ),
+          }}
+        />
+      )}
       <Stack.Toolbar placement="left">
         {isEditing && (
           <Stack.Toolbar.Button onPress={deleteItems}>
@@ -239,13 +322,14 @@ export default function Countdown() {
         ListHeaderComponent={
           <>
             <CountdownLimitBanner />
-            {collectionsWithProgress.map(({ collection, progress }) => (
-              <CollectionProgressCard
-                key={collection.id}
-                collection={collection}
-                progress={progress}
-              />
-            ))}
+            {Platform.OS === "ios" &&
+              collectionsWithProgress.map(({ collection, progress }) => (
+                <CollectionProgressCard
+                  key={collection.id}
+                  collection={collection}
+                  progress={progress}
+                />
+              ))}
           </>
         }
         ref={scrollRef}

@@ -1,6 +1,7 @@
-import { Color } from "expo-router";
 import { Dimensions, StyleSheet } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { colors } from "@/theme/colors";
 
 export const reusableStyles = StyleSheet.create({
   gamePoster: {
@@ -10,16 +11,16 @@ export const reusableStyles = StyleSheet.create({
     borderRadius: 12,
     resizeMode: "cover",
     borderWidth: 1,
-    borderColor: Color.ios.separator,
+    borderColor: colors.separator,
   },
   date: {
     ...iOSUIKit.footnoteEmphasizedObject,
-    color: Color.ios.systemGray,
+    color: colors.systemGray,
   },
   textInput: {
     ...iOSUIKit.bodyObject,
-    backgroundColor: Color.ios.systemGray6,
-    color: Color.ios.label,
+    backgroundColor: colors.systemGray6,
+    color: colors.label,
     padding: 16,
     borderRadius: 12,
     marginVertical: 8,

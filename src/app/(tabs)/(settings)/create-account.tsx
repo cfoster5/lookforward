@@ -4,7 +4,7 @@ import {
   getAuth,
   linkWithCredential,
 } from "@react-native-firebase/auth";
-import { Color, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Alert, Text, TextInput, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -13,6 +13,7 @@ import { iOSUIKit } from "react-native-typography";
 import { AppleSignInButton } from "@/components/AppleSignInButton";
 import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { reusableStyles } from "@/helpers/styles";
+import { colors } from "@/theme/colors";
 
 export default function CreateAccount() {
   const [email, setEmail] = useState("");
@@ -63,7 +64,7 @@ export default function CreateAccount() {
         <Text
           style={[
             iOSUIKit.body,
-            { color: Color.ios.secondaryLabel, marginBottom: 8 },
+            { color: colors.secondaryLabel, marginBottom: 8 },
           ]}
         >
           {`Create an account with an email to get your countdown items across devices.`}
@@ -71,7 +72,7 @@ export default function CreateAccount() {
         <TextInput
           style={reusableStyles.textInput}
           placeholder="Email"
-          placeholderTextColor={Color.ios.secondaryLabel}
+          placeholderTextColor={colors.secondaryLabel}
           autoCapitalize="none"
           keyboardType="email-address"
           textContentType="username"
@@ -81,7 +82,7 @@ export default function CreateAccount() {
         <TextInput
           style={reusableStyles.textInput}
           placeholder="Password"
-          placeholderTextColor={Color.ios.secondaryLabel}
+          placeholderTextColor={colors.secondaryLabel}
           secureTextEntry
           textContentType="password"
           value={password}
@@ -97,7 +98,7 @@ export default function CreateAccount() {
           style={[
             iOSUIKit.footnote,
             {
-              color: Color.ios.secondaryLabel,
+              color: colors.secondaryLabel,
               textAlign: "center",
               marginVertical: 16,
             },

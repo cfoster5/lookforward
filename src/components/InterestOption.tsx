@@ -1,7 +1,8 @@
 import * as Haptics from "expo-haptics";
-import { Color } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { colors } from "@/theme/colors";
 
 type InterestOptionProps = {
   label: string;
@@ -40,22 +41,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: Color.ios.systemGray4,
+    borderColor: colors.systemGray4,
     paddingHorizontal: 16,
     paddingVertical: 16,
     gap: 12,
     minHeight: 56,
   },
   rowSelected: {
-    backgroundColor: Color.ios.systemGray6,
-    borderColor: Color.ios.label,
+    backgroundColor: colors.systemGray6,
+    borderColor: colors.label,
   },
   checkbox: {
     width: 24,
     height: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: Color.ios.systemGray3,
+    borderColor: colors.systemGray3,
     justifyContent: "center",
     alignItems: "center",
   },

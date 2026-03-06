@@ -1,14 +1,20 @@
 import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
 import { Image } from "expo-image";
-import { Color } from "expo-router";
 import { usePostHog } from "posthog-react-native";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle, removeSub } from "@/helpers/helpers";
-import { useAuthStore, useInterfaceStore, useSubscriptionStore } from "@/stores";
+import {
+  useAuthStore,
+  useInterfaceStore,
+  useSubscriptionStore,
+} from "@/stores";
+import { colors } from "@/theme/colors";
 import { Game, ReleaseDate } from "@/types";
+
+import { IconSymbol } from "./IconSymbol";
 
 interface Props {
   movieId?: string;
@@ -74,14 +80,21 @@ function PosterButton({ movieId, game }: Props) {
 
   const isSubscribed = isMovieSub() || isGameSub();
 
-  const icon = (
-    <Image
-      transition={{ effect: "sf:replace" }}
-      source={isSubscribed ? "sf:checkmark" : "sf:plus"}
-      style={{ fontSize: 24 }}
-      tintColor={Color.ios.label as string}
-    />
-  );
+  const icon =
+    Platform.OS === "ios" ? (
+      <Image
+        transition={{ effect: "sf:replace" }}
+        source={isSubscribed ? "sf:checkmark" : "sf:plus"}
+        style={{ fontSize: 24 }}
+        tintColor={colors.label as string}
+      />
+    ) : (
+      <IconSymbol
+        name={isSubscribed ? "checkmark" : "plus"}
+        size={24}
+        color={colors.label as string}
+      />
+    );
 
   const Container = isLiquidGlassAvailable() ? GlassView : View;
   const containerStyle = isLiquidGlassAvailable()
@@ -123,8 +136,8 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Color.ios.systemGray5,
-    borderColor: Color.ios.separator,
+    backgroundColor: colors.systemGray5,
+    borderColor: colors.separator,
     borderWidth: StyleSheet.hairlineWidth,
   },
 });

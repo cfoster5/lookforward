@@ -2,6 +2,8 @@ import { isLiquidGlassAvailable } from "expo-glass-effect";
 import { Stack } from "expo-router";
 import { Platform } from "react-native";
 
+import { colors } from "@/theme/colors";
+
 import { AppleStackPreset } from "../(search)/_layout";
 
 export default function SettingsStack() {
@@ -37,10 +39,13 @@ export default function SettingsStack() {
             backgroundColor:
               Platform.OS === "ios" && isLiquidGlassAvailable()
                 ? "transparent"
-                : "#F2F2F7",
+                : (colors.secondarySystemGroupedBackground as string),
           },
           headerStyle: {
-            backgroundColor: Platform.OS === "ios" ? "transparent" : "#F2F2F7",
+            backgroundColor:
+              Platform.OS === "ios" && isLiquidGlassAvailable()
+                ? "transparent"
+                : (colors.secondarySystemGroupedBackground as string),
           },
           headerBlurEffect:
             Platform.OS === "ios" && isLiquidGlassAvailable()

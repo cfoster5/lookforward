@@ -1,6 +1,7 @@
-import { Color } from "expo-router";
 import { Galeria } from "@nandorojo/galeria";
 import { Image } from "expo-image";
+
+import { colors } from "@/theme/colors";
 
 type GalleryImageProps = {
   index: number;
@@ -20,7 +21,7 @@ export const GalleryImage = ({
       style={{
         borderRadius: 12,
         borderWidth: 1,
-        borderColor: Color.ios.separator,
+        borderColor: colors.separator,
         width,
         aspectRatio,
         // aspectRatio:

@@ -1,9 +1,9 @@
-import { Color } from "expo-router";
 import { Image } from "expo-image";
 import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { useAuthStore } from "@/stores";
+import { colors } from "@/theme/colors";
 
 import { OMDBMovie } from "../../../screens/Movie/types/omdb";
 
@@ -50,13 +50,13 @@ export const Rating = ({
         <View
           style={{
             width: 44,
-            backgroundColor: Color.ios.placeholderText,
+            backgroundColor: colors.placeholderText,
             opacity: 0.5,
             borderRadius: 4,
           }}
         />
       ) : (
-        <Text style={[iOSUIKit.body, { color: Color.ios.label }]}>{rating}</Text>
+        <Text style={[iOSUIKit.body, { color: colors.label }]}>{rating}</Text>
       )}
     </>
   );

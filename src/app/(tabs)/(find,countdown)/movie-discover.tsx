@@ -1,8 +1,8 @@
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
-import { Color, Stack, useLocalSearchParams, useNavigation } from "expo-router";
+import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
 import { useRef, useState } from "react";
-import { FlatList, Text } from "react-native";
+import { FlatList, Platform, Pressable, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -10,10 +10,12 @@ import { iOSUIKit } from "react-native-typography";
 import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
+import { IconSymbol } from "@/components/IconSymbol";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { calculateWidth, targetedProviders } from "@/helpers/helpers";
 import { useDiscoverMovies } from "@/screens/MovieDiscover/api/getDiscoverMovies";
+import { colors } from "@/theme/colors";
 
 const spacing = 16;
 
@@ -127,15 +129,25 @@ export default function MovieDiscover() {
                   test={item.actual}
                 >
                   {" "}
-                  <Image
-                    source={
-                      item.direction === "Up" ? "sf:arrow.up" : "sf:arrow.down"
-                    }
-                    style={{
-                      fontSize: iOSUIKit.footnoteEmphasizedObject.fontSize,
-                    }}
-                    tintColor={Color.ios.label}
-                  />
+                  {Platform.OS === "ios" ? (
+                    <Image
+                      source={
+                        item.direction === "Up"
+                          ? "sf:arrow.up"
+                          : "sf:arrow.down"
+                      }
+                      style={{
+                        fontSize: iOSUIKit.footnoteEmphasizedObject.fontSize,
+                      }}
+                      tintColor={colors.label}
+                    />
+                  ) : (
+                    <IconSymbol
+                      name={item.direction === "Up" ? "arrow.up" : "arrow.down"}
+                      size={iOSUIKit.footnoteEmphasizedObject.fontSize ?? 13}
+                      color={colors.label as string}
+                    />
+                  )}
                 </ButtonMultiState>
               )}
               keyExtractor={(item, index) => index.toString()}
@@ -200,6 +212,24 @@ export default function MovieDiscover() {
     <>
       {/* Set title for back navigation but set to transparent to hide title */}
       <Stack.Screen.Title large>{screenTitle}</Stack.Screen.Title>
+      {Platform.OS === "android" && (
+        <Stack.Screen
+          options={{
+            headerRight: () => (
+              <Pressable
+                onPress={() => modalRef.current?.present()}
+                hitSlop={8}
+              >
+                <IconSymbol
+                  name="line.3.horizontal"
+                  size={24}
+                  color={colors.label as string}
+                />
+              </Pressable>
+            ),
+          }}
+        />
+      )}
       <Stack.Toolbar placement="right">
         <Stack.Toolbar.Button onPress={() => modalRef.current?.present()}>
           <Stack.Toolbar.Icon sf="line.3.horizontal.decrease" />

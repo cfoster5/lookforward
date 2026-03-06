@@ -1,12 +1,12 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Haptics from "expo-haptics";
-import { Color } from "expo-router";
 import { ReactNode } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { CircularProgress } from "@/components/CircularProgress";
+import { colors } from "@/theme/colors";
 
 type OnboardingScreenLayoutProps = {
   title: string;
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   subtitle: {
-    color: Color.ios.secondaryLabel,
+    color: colors.secondaryLabel,
     textAlign: "center",
     paddingHorizontal: 16,
     marginTop: 8,
@@ -157,12 +157,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   continueButtonDisabled: {
-    backgroundColor: Color.ios.systemGray4,
+    backgroundColor: colors.systemGray4,
   },
   continueText: {
     color: "black",
   },
   continueTextDisabled: {
-    color: Color.ios.systemGray,
+    color: colors.systemGray,
   },
 });

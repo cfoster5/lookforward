@@ -1,5 +1,5 @@
 import * as Haptics from "expo-haptics";
-import { Redirect, useRouter, Color } from "expo-router";
+import { Redirect, useRouter } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
 import {
@@ -16,6 +16,7 @@ import { useMovieWatchProviders } from "@/api/getMovieWatchProviders";
 import { OnboardingScreenLayout } from "@/components/OnboardingScreenLayout";
 import { SelectionChip } from "@/components/SelectionChip";
 import { useOnboardingDraft } from "@/stores/onboardingDraft";
+import { colors } from "@/theme/colors";
 
 const STAGGER_BASE = 300;
 const STAGGER_STEP = 80;
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   showMoreText: {
-    color: Color.ios.secondaryLabel,
+    color: colors.secondaryLabel,
   },
   loader: {
     marginTop: 32,

@@ -17,7 +17,7 @@ import {
 } from "@expo/ui/swift-ui/modifiers";
 import { useQueries } from "@tanstack/react-query";
 import { Image } from "expo-image";
-import { Color, Link, Stack, useLocalSearchParams } from "expo-router";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useRef } from "react";
 import { StyleSheet, Text, View } from "react-native";
@@ -29,6 +29,7 @@ import { LoadingScreen } from "@/components/LoadingScreen";
 import { useCollectionProgress } from "@/hooks/useCollectionProgress";
 import { tmdb } from "@/providers/app";
 import { useAppConfigStore } from "@/stores";
+import { colors } from "@/theme/colors";
 import { dateToFullLocale } from "@/utils/dates";
 
 type MovieWithCredits = AppendToResponse<MovieDetails, ["credits"], "movie">;
@@ -93,7 +94,7 @@ export default function CollectionScreen() {
   if (!collection) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text style={[iOSUIKit.body, { color: Color.ios.secondaryLabel }]}>
+        <Text style={[iOSUIKit.body, { color: colors.secondaryLabel }]}>
           Collection not found
         </Text>
       </View>
@@ -141,7 +142,7 @@ export default function CollectionScreen() {
                           aspectRatio: 2 / 3,
                           borderRadius: 13,
                           borderWidth: StyleSheet.hairlineWidth,
-                          borderColor: Color.ios.separator,
+                          borderColor: colors.separator,
                         }}
                         contentFit="cover"
                       />
@@ -162,7 +163,7 @@ export default function CollectionScreen() {
                     )}
                     <AppleImage
                       systemName="chevron.right"
-                      color={Color.ios.secondaryLabel}
+                      color={colors.secondaryLabel}
                     />
                   </HStack>
                 </Button>
@@ -209,16 +210,16 @@ export default function CollectionScreen() {
   //             >
   //               <IconSymbol name={iconName} size={24} color="#FFD60A" />
   //               <Text
-  //                 style={[iOSUIKit.title3Emphasized, { color: Color.ios.label }]}
+  //                 style={[iOSUIKit.title3Emphasized, { color: colors.label }]}
   //               >
   //                 {collection.name}
   //               </Text>
   //             </View> */}
-  //             <Text style={[iOSUIKit.body, { color: Color.ios.secondaryLabel }]}>
+  //             <Text style={[iOSUIKit.body, { color: colors.secondaryLabel }]}>
   //               {collection.description}
   //             </Text>
   //             <Text
-  //               style={[iOSUIKit.footnote, { color: Color.ios.tertiaryLabel }]}
+  //               style={[iOSUIKit.footnote, { color: colors.tertiaryLabel }]}
   //             >
   //               {trackedCount} of {movies.length} tracked
   //             </Text>
@@ -227,7 +228,7 @@ export default function CollectionScreen() {
   //         </>
   //       }
   //       contentContainerStyle={{
-  //         // backgroundColor: Color.ios.secondarySystemGroupedBackground,
+  //         // backgroundColor: colors.secondarySystemGroupedBackground,
   //         // borderRadius: 12,
   //         // marginTop: headerHeight,
   //         // margin: 16,

@@ -1,6 +1,8 @@
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { isLiquidGlassAvailable } from "expo-glass-effect";
-import { Color, Stack } from "expo-router";
+import { Stack } from "expo-router";
+
+import { colors } from "@/theme/colors";
 
 export { ErrorBoundary } from "expo-router";
 
@@ -17,7 +19,7 @@ export const AppleStackPreset: NativeStackNavigationOptions =
             backgroundColor: "transparent",
           },
           headerTitleStyle: {
-            color: Color.ios.label as any,
+            color: colors.label as any,
           },
           headerLargeTitle: true,
           headerBlurEffect: "none",

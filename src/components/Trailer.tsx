@@ -1,4 +1,3 @@
-import { Color } from "expo-router";
 import { Image } from "expo-image";
 import { useState } from "react";
 import {
@@ -15,6 +14,7 @@ import YoutubePlayer from "react-native-youtube-iframe";
 import { Video as MovieVideo } from "tmdb-ts";
 
 import { calculateWidth } from "@/helpers/helpers";
+import { colors } from "@/theme/colors";
 import { GameVideo } from "@/types/igdb";
 
 type TrailerProps = {
@@ -56,7 +56,7 @@ function Trailer({ video }: TrailerProps) {
             aspectRatio: 16 / 9,
             borderRadius: 12,
             borderWidth: 1,
-            borderColor: Color.ios.separator,
+            borderColor: colors.separator,
           }}
           source={{
             uri: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
@@ -65,7 +65,7 @@ function Trailer({ video }: TrailerProps) {
         />
         <Text
           numberOfLines={2}
-          style={[iOSUIKit.subhead, { color: Color.ios.label, marginTop: 8 }]}
+          style={[iOSUIKit.subhead, { color: colors.label, marginTop: 8 }]}
         >
           {video.name}
         </Text>
@@ -90,7 +90,7 @@ function Trailer({ video }: TrailerProps) {
             accessibilityLabel="Close video"
             onPress={() => setModalVisible(false)}
           >
-            <Text style={[iOSUIKit.body, { color: Color.ios.label }]}>Close</Text>
+            <Text style={[iOSUIKit.body, { color: colors.label }]}>Close</Text>
           </Pressable>
         </View>
       </Modal>

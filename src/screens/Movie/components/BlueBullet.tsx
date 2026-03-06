@@ -1,5 +1,6 @@
-import { Color } from "expo-router";
 import { View } from "react-native";
+
+import { colors } from "@/theme/colors";
 
 export function BlueBullet() {
   return (
@@ -9,7 +10,7 @@ export function BlueBullet() {
         height: 5,
         borderRadius: 5,
         marginHorizontal: 5,
-        backgroundColor: Color.ios.systemBlue,
+        backgroundColor: colors.systemBlue,
         alignSelf: "center",
       }}
     />

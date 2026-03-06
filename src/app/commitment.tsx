@@ -1,9 +1,10 @@
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useRef, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import Purchases from "react-native-purchases";
 import RevenueCatUI from "react-native-purchases-ui";
 import Animated, {
@@ -186,11 +187,17 @@ export default function CommitmentScreen() {
               >
                 {committed ? (
                   <Text style={styles.checkmark}>{"\u2713"}</Text>
-                ) : (
+                ) : Platform.OS === "ios" ? (
                   <Image
                     source="sf:touchid"
                     style={{ width: 130 / 1.5, height: 130 / 1.5 }}
                     tintColor="white"
+                  />
+                ) : (
+                  <MaterialCommunityIcons
+                    name="fingerprint"
+                    size={130 / 1.5}
+                    color="white"
                   />
                 )}
               </Animated.View>

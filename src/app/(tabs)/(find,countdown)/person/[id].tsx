@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { Color, Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { useRef, useState } from "react";
 import {
   Dimensions,
@@ -16,6 +16,7 @@ import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
 import { useProOfferings } from "@/api/getProOfferings";
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { ExpandableText } from "@/components/ExpandableText";
+import { IconSymbol } from "@/components/IconSymbol";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
@@ -26,6 +27,7 @@ import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { usePerson } from "@/screens/Actor/api/getPerson";
 import { CarouselItem } from "@/screens/Actor/components/CarouselItem";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
+import { colors } from "@/theme/colors";
 import { dateToFullLocale, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 
@@ -97,6 +99,50 @@ export default function Actor() {
       <Stack.Screen.Title style={{ color: "transparent" }}>
         {person?.name}
       </Stack.Screen.Title>
+      {Platform.OS === "android" && (
+        <Stack.Screen
+          options={{
+            headerRight: () => (
+              <View style={{ flexDirection: "row", gap: 16 }}>
+                {__DEV__ && (
+                  <Pressable
+                    onPress={() =>
+                      handlePersonToggle({
+                        personId: id.toString(),
+                        personName: person?.name ?? "",
+                        profilePath: person?.profile_path ?? null,
+                        userId: user.uid,
+                        isCurrentlySubbed: isFollowed,
+                        isPro,
+                        proOffering: pro,
+                      })
+                    }
+                    hitSlop={8}
+                  >
+                    <IconSymbol
+                      name={
+                        isFollowed ? "checkmark" : "person.fill.badge.plus"
+                      }
+                      size={24}
+                      color={colors.label as string}
+                    />
+                  </Pressable>
+                )}
+                <Pressable
+                  onPress={() => onShare(`person/${id}`, "headerButton")}
+                  hitSlop={8}
+                >
+                  <IconSymbol
+                    name="square.and.arrow.up"
+                    size={24}
+                    color={colors.label as string}
+                  />
+                </Pressable>
+              </View>
+            ),
+          }}
+        />
+      )}
       <Stack.Toolbar placement="right">
         {__DEV__ && (
           <Stack.Toolbar.View>
@@ -118,7 +164,7 @@ export default function Actor() {
                 source={isFollowed ? "sf:checkmark" : "sf:person.badge.plus"}
                 style={{ fontSize: 28 }}
                 transition={{ effect: "sf:replace" }}
-                tintColor={Color.ios.label as string}
+                tintColor={colors.label as string}
               />
             </Pressable>
           </Stack.Toolbar.View>

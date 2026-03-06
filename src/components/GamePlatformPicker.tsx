@@ -6,13 +6,13 @@ import {
   setDoc,
 } from "@react-native-firebase/firestore";
 import * as Haptics from "expo-haptics";
-import { Color } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useInterfaceStore } from "@/stores";
+import { colors } from "@/theme/colors";
 import { Game, ReleaseDate } from "@/types";
 import { formatGameReleaseDate } from "@/utils/dates";
 import { promptForNotificationsAfterCountdownAdd } from "@/utils/notifications";
@@ -50,7 +50,7 @@ const ItemSeparator = () => (
     style={{
       marginVertical: 4,
       borderBottomWidth: StyleSheet.hairlineWidth,
-      borderColor: Color.ios.separator,
+      borderColor: colors.separator,
     }}
   />
 );

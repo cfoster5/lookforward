@@ -1,4 +1,3 @@
-import { Color } from "expo-router";
 import React from "react";
 import {
   Pressable,
@@ -10,6 +9,7 @@ import {
 import { iOSUIKit } from "react-native-typography";
 
 import { IconSymbol } from "@/components/IconSymbol";
+import { colors } from "@/theme/colors";
 
 type ButtonProps = PressableProps & {
   text: string;
@@ -32,9 +32,9 @@ export const SettingNavButton = React.forwardRef<
       ]}
     >
       <View style={[styles.button, { justifyContent: "space-between" }]}>
-        <Text style={[iOSUIKit.body, { color: Color.ios.label }]}>{text}</Text>
+        <Text style={[iOSUIKit.body, { color: colors.label }]}>{text}</Text>
         <IconSymbol
-          color={Color.ios.tertiaryLabel as string}
+          color={colors.tertiaryLabel as string}
           name="chevron.forward"
           size={iOSUIKit.bodyObject.fontSize}
           weight="semibold"
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    backgroundColor: Color.ios.secondarySystemGroupedBackground,
+    backgroundColor: colors.secondarySystemGroupedBackground,
     alignItems: "center",
   },
   button: {
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   firstInGroup: { marginTop: 32 },
-  pressed: { backgroundColor: Color.ios.tertiarySystemGroupedBackground },
+  pressed: { backgroundColor: colors.tertiarySystemGroupedBackground },
 });
 
 SettingNavButton.displayName = "SettingNavButton";

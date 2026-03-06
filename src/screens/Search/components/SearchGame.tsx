@@ -1,11 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { Color, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Pressable, View, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { calculateWidth, getGameReleaseDate } from "@/helpers/helpers";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { colors } from "@/theme/colors";
 import { Games, ReleaseDate } from "@/types/igdb";
 import { tryRequestReview } from "@/utils/requestReview";
 
@@ -38,7 +39,7 @@ export function SearchGame({
           paddingLeft: 12,
         },
         pressed && {
-          backgroundColor: Color.ios.tertiarySystemBackground,
+          backgroundColor: colors.tertiarySystemBackground,
         },
       ]}
     >
@@ -64,18 +65,18 @@ export function SearchGame({
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: Color.ios.separator,
+              borderColor: colors.separator,
             }}
           />
         ) : (
           <View
             style={{
-              backgroundColor: Color.ios.systemGray,
+              backgroundColor: colors.systemGray,
               aspectRatio: 3 / 4,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: 12,
               borderWidth: 1,
-              borderColor: Color.ios.separator,
+              borderColor: colors.separator,
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -88,13 +89,13 @@ export function SearchGame({
       </View>
       <View style={{ flex: 1, marginHorizontal: 12 }}>
         <Text
-          style={[iOSUIKit.body, { color: Color.ios.label }]}
+          style={[iOSUIKit.body, { color: colors.label }]}
           numberOfLines={2}
         >
           {item.name}
         </Text>
         <Text
-          style={[iOSUIKit.subhead, { color: Color.ios.secondaryLabel }]}
+          style={[iOSUIKit.subhead, { color: colors.secondaryLabel }]}
           numberOfLines={2}
         >
           {getGameReleaseDate(item)}
@@ -104,7 +105,7 @@ export function SearchGame({
         name="chevron-forward"
         size={28}
         style={{ marginRight: 12 }}
-        color={Color.ios.tertiaryLabel}
+        color={colors.tertiaryLabel}
       />
     </Pressable>
   );

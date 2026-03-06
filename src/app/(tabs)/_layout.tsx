@@ -1,4 +1,3 @@
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {
   collection,
   getFirestore,
@@ -8,7 +7,7 @@ import {
 } from "@react-native-firebase/firestore";
 import { useQueryClient } from "@tanstack/react-query";
 import * as Linking from "expo-linking";
-import { router, VectorIcon } from "expo-router";
+import { router } from "expo-router";
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
@@ -188,34 +187,22 @@ export default function TabStack() {
   return (
     <NativeTabs>
       <NativeTabs.Trigger name="(find)">
-        <NativeTabs.Trigger.Icon
-          sf="house.fill"
-          src={<VectorIcon family={MaterialIcons} name="home" />}
-        />
+        <NativeTabs.Trigger.Icon sf="house.fill" md="home" />
         <NativeTabs.Trigger.Label>Home</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="(countdown)">
-        <NativeTabs.Trigger.Icon
-          sf="timer"
-          src={<VectorIcon family={MaterialIcons} name="timer" />}
-        />
+        <NativeTabs.Trigger.Icon sf="timer" md="timer" />
         <NativeTabs.Trigger.Label>Countdown</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="(settings)">
-        <NativeTabs.Trigger.Icon
-          sf="gear"
-          src={<VectorIcon family={MaterialIcons} name="settings" />}
-        />
+        <NativeTabs.Trigger.Icon sf="gear" md="settings" />
         <NativeTabs.Trigger.Label>Settings</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
 
       <NativeTabs.Trigger name="(search)" role="search">
-        <NativeTabs.Trigger.Icon
-          sf="magnifyingglass"
-          src={<VectorIcon family={MaterialIcons} name="search" />}
-        />
+        <NativeTabs.Trigger.Icon sf="magnifyingglass" md="search" />
         <NativeTabs.Trigger.Label>Search</NativeTabs.Trigger.Label>
       </NativeTabs.Trigger>
     </NativeTabs>

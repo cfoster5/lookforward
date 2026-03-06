@@ -1,4 +1,3 @@
-import { Color } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { ComponentRef, forwardRef } from "react";
@@ -9,6 +8,7 @@ import { PersonWithMediaType } from "tmdb-ts";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth } from "@/helpers/helpers";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { colors } from "@/theme/colors";
 import { tryRequestReview } from "@/utils/requestReview";
 import { onShare } from "@/utils/share";
 
@@ -32,7 +32,7 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
           paddingLeft: 12,
         },
         pressed && {
-          backgroundColor: Color.ios.tertiarySystemBackground,
+          backgroundColor: colors.tertiarySystemBackground,
         },
       ]}
     >
@@ -58,18 +58,18 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
               width: calculateWidth(12, 12, 3.5),
               borderRadius: calculateWidth(12, 12, 3.5),
               borderWidth: 1,
-              borderColor: Color.ios.separator,
+              borderColor: colors.separator,
             }}
           />
         ) : (
           <View
             style={{
-              backgroundColor: Color.ios.systemGray,
+              backgroundColor: colors.systemGray,
               aspectRatio: 1,
               width: calculateWidth(12, 12, 3.5),
               borderRadius: calculateWidth(12, 12, 3.5),
               borderWidth: 1,
-              borderColor: Color.ios.separator,
+              borderColor: colors.separator,
               justifyContent: "center",
               alignItems: "center",
             }}
@@ -87,13 +87,13 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
       </View>
       <View style={{ flex: 1, marginHorizontal: 12 }}>
         <Text
-          style={[iOSUIKit.body, { color: Color.ios.label }]}
+          style={[iOSUIKit.body, { color: colors.label }]}
           numberOfLines={2}
         >
           {item.name}
         </Text>
         <Text
-          style={[iOSUIKit.subhead, { color: Color.ios.secondaryLabel }]}
+          style={[iOSUIKit.subhead, { color: colors.secondaryLabel }]}
           numberOfLines={2}
         >
           {item.known_for_department}
@@ -103,7 +103,7 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
         name="chevron-forward"
         size={28}
         style={{ marginRight: 12 }}
-        color={Color.ios.tertiaryLabel}
+        color={colors.tertiaryLabel}
       />
     </Pressable>
   ),

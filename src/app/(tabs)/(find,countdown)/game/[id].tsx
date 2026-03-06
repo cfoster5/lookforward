@@ -1,6 +1,5 @@
 import { Image } from "expo-image";
 import {
-  Color,
   Stack,
   useLocalSearchParams,
   useRouter,
@@ -8,7 +7,7 @@ import {
 } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useState, Fragment } from "react";
-import { ScrollView, View, FlatList, Pressable, Text } from "react-native";
+import { Platform, ScrollView, View, FlatList, Pressable, Text } from "react-native";
 import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
@@ -16,6 +15,7 @@ import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { CategoryControl } from "@/components/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
+import { IconSymbol } from "@/components/IconSymbol";
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { Text as ThemedText } from "@/components/Themed";
@@ -30,6 +30,7 @@ import {
   useSubscriptionStore,
   useInterfaceStore,
 } from "@/stores";
+import { colors } from "@/theme/colors";
 import { Recent } from "@/types";
 import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
@@ -85,49 +86,63 @@ export default function Game() {
   const { data: pro } = useProOfferings();
   const { data: limitHit } = useLimitHitOffering();
 
+  const handleGameToggle = async () => {
+    if (!countdownId) {
+      if (hasReachedLimit(isPro)) {
+        if (limitHit) {
+          posthog.capture("limit:paywall_view");
+        } else {
+          posthog.capture("game:paywall_view", { type: "pro" });
+        }
+
+        const result = await RevenueCatUI.presentPaywall({
+          offering: limitHit ?? pro,
+        });
+
+        if (limitHit && result === PAYWALL_RESULT.CANCELLED) {
+          posthog.capture("limit:paywall_dismiss");
+        }
+        return;
+      }
+
+      bottomSheetModalRef.current?.present({
+        ...game,
+        release_dates: data?.release_dates,
+      });
+    } else {
+      removeSub("gameReleases", countdownId, user.uid);
+    }
+  };
+
   return (
     <>
       {/* Set title for back navigation but set to transparent to hide title */}
       <Stack.Screen.Title style={{ color: "transparent" }}>
         {game.name}
       </Stack.Screen.Title>
+      {Platform.OS === "android" && (
+        <Stack.Screen
+          options={{
+            headerRight: () => (
+              <Pressable onPress={handleGameToggle} hitSlop={8}>
+                <IconSymbol
+                  name={countdownId ? "checkmark" : "plus"}
+                  size={24}
+                  color={colors.label as string}
+                />
+              </Pressable>
+            ),
+          }}
+        />
+      )}
       <Stack.Toolbar placement="right">
         <Stack.Toolbar.View>
-          <Pressable
-            onPress={async () => {
-              if (!countdownId) {
-                if (hasReachedLimit(isPro)) {
-                  if (limitHit) {
-                    posthog.capture("limit:paywall_view");
-                  } else {
-                    posthog.capture("game:paywall_view", { type: "pro" });
-                  }
-
-                  const result = await RevenueCatUI.presentPaywall({
-                    offering: limitHit ?? pro,
-                  });
-
-                  if (limitHit && result === PAYWALL_RESULT.CANCELLED) {
-                    posthog.capture("limit:paywall_dismiss");
-                  }
-                  return;
-                }
-
-                bottomSheetModalRef.current?.present({
-                  ...game,
-                  release_dates: data?.release_dates,
-                });
-              } else {
-                removeSub("gameReleases", countdownId, user.uid);
-              }
-            }}
-            hitSlop={8}
-          >
+          <Pressable onPress={handleGameToggle} hitSlop={8}>
             <Image
               source={countdownId ? "sf:checkmark" : "sf:plus"}
               style={{ fontSize: 28 }}
               transition={{ effect: "sf:replace" }}
-              tintColor={Color.ios.label as string}
+              tintColor={colors.label as string}
             />
           </Pressable>
         </Stack.Toolbar.View>
@@ -153,7 +168,7 @@ export default function Game() {
           <Text
             style={[
               iOSUIKit.subheadEmphasized,
-              { color: Color.ios.secondaryLabel },
+              { color: colors.secondaryLabel },
             ]}
           >
             {getGameReleaseDate(data)}
@@ -193,8 +208,8 @@ export default function Game() {
                   })
                 }
                 buttonStyle={{
-                  backgroundColor: Color.ios.secondarySystemGroupedBackground,
-                  borderColor: Color.ios.secondarySystemGroupedBackground,
+                  backgroundColor: colors.secondarySystemGroupedBackground,
+                  borderColor: colors.secondarySystemGroupedBackground,
                 }}
               />
             ))}

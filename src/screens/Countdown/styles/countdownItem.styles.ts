@@ -1,5 +1,6 @@
-import { Color } from "expo-router";
 import { StyleSheet } from "react-native";
+
+import { colors } from "@/theme/colors";
 
 export function createCountdownItemStyles(
   isFirstInSection: boolean,
@@ -14,7 +15,7 @@ export function createCountdownItemStyles(
       borderBottomLeftRadius: isLastInSection ? 10 : 0,
       borderBottomRightRadius: isLastInSection ? 10 : 0,
       overflow: "hidden",
-      backgroundColor: isSelected ? Color.ios.systemGray4 : Color.ios.systemGray6,
+      backgroundColor: isSelected ? colors.systemGray4 : colors.systemGray6,
     },
     slide: {
       flex: 1,
@@ -29,10 +30,10 @@ export function createCountdownItemStyles(
       marginTop: 8,
       marginBottom: 8,
       borderWidth: StyleSheet.hairlineWidth,
-      borderColor: Color.ios.separator,
+      borderColor: colors.separator,
     },
     middle: {
-      borderColor: Color.ios.separator,
+      borderColor: colors.separator,
       borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
       flex: 1,
       justifyContent: "center",
@@ -41,7 +42,7 @@ export function createCountdownItemStyles(
       paddingBottom: 8,
     },
     countdown: {
-      borderColor: Color.ios.separator,
+      borderColor: colors.separator,
       borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
       flex: 1,
       alignItems: "center",

@@ -1,16 +1,17 @@
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
-import { Color } from "expo-router";
 import { usePostHog } from "posthog-react-native";
-import { Pressable, Text, View } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
+import { IconSymbol } from "@/components/IconSymbol";
 import { calculateWidth, handleMovieToggle } from "@/helpers/helpers";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
 import { useRecentItemsStore } from "@/stores/recents";
+import { colors } from "@/theme/colors";
 import { Recent } from "@/types";
 import { onShare } from "@/utils/share";
 
@@ -59,19 +60,19 @@ export function RecentTitle({ item }: { item: Recent }) {
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: Color.ios.separator,
+                borderColor: colors.separator,
                 marginBottom: 8,
               }}
             />
           ) : (
             <View
               style={{
-                backgroundColor: Color.ios.systemGray,
+                backgroundColor: colors.systemGray,
                 aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: Color.ios.separator,
+                borderColor: colors.separator,
                 marginBottom: 8,
                 justifyContent: "center",
                 alignItems: "center",
@@ -107,11 +108,15 @@ export function RecentTitle({ item }: { item: Recent }) {
                 gap: 8,
               }}
             >
-              <Image
-                source="sf:lock"
-                style={{ aspectRatio: 1, height: 36 }}
-                tintColor={"white"}
-              />
+              {Platform.OS === "ios" ? (
+                <Image
+                  source="sf:lock"
+                  style={{ aspectRatio: 1, height: 36 }}
+                  tintColor={"white"}
+                />
+              ) : (
+                <IconSymbol name="lock" size={36} color="white" />
+              )}
               <Text style={[iOSUIKit.bodyWhite, { textAlign: "center" }]}>
                 Get Pro
               </Text>
@@ -123,7 +128,7 @@ export function RecentTitle({ item }: { item: Recent }) {
             style={[
               iOSUIKit.subhead,
               {
-                color: Color.ios.label,
+                color: colors.label,
                 maxWidth: 96,
                 textAlign: "center",
               },
@@ -242,19 +247,19 @@ export function RecentTitle({ item }: { item: Recent }) {
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: Color.ios.separator,
+                borderColor: colors.separator,
                 marginBottom: 8,
               }}
             />
           ) : (
             <View
               style={{
-                backgroundColor: Color.ios.systemGray,
+                backgroundColor: colors.systemGray,
                 aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
                 width: calculateWidth(12, 12, 3.5),
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: Color.ios.separator,
+                borderColor: colors.separator,
                 marginBottom: 8,
                 justifyContent: "center",
                 alignItems: "center",
@@ -270,7 +275,7 @@ export function RecentTitle({ item }: { item: Recent }) {
           style={[
             iOSUIKit.subhead,
             {
-              color: Color.ios.label,
+              color: colors.label,
               maxWidth: 96,
               textAlign: "center",
               alignSelf: "center",

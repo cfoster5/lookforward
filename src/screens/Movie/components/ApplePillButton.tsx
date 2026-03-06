@@ -1,7 +1,9 @@
 import { Image } from "expo-image";
-import { Color } from "expo-router";
-import { Pressable, Text, ViewStyle } from "react-native";
+import { Platform, Pressable, Text, ViewStyle } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { IconSymbol } from "@/components/IconSymbol";
+import { colors } from "@/theme/colors";
 
 type ApplePillButtonProps = {
   text: string;
@@ -14,7 +16,7 @@ export const ApplePillButton = ({ text, style }: ApplePillButtonProps) => (
     style={[
       {
         flexDirection: "row",
-        backgroundColor: Color.ios.secondarySystemGroupedBackground,
+        backgroundColor: colors.secondarySystemGroupedBackground,
         minWidth: 44,
         minHeight: 44,
         borderRadius: 12,
@@ -31,19 +33,27 @@ export const ApplePillButton = ({ text, style }: ApplePillButtonProps) => (
       style,
     ]}
   >
-    <Text style={[iOSUIKit.bodyEmphasized, { color: Color.ios.systemBlue }]}>
+    <Text style={[iOSUIKit.bodyEmphasized, { color: colors.systemBlue }]}>
       {text}
     </Text>
-    <Image
-      source="sf:chevron.down"
-      style={{
-        aspectRatio: 1,
-        height: iOSUIKit.bodyEmphasizedObject.fontSize,
-        fontWeight: "semibold",
-        fontSize: iOSUIKit.bodyEmphasizedObject.fontSize,
-      }}
-      contentPosition="center"
-      tintColor={Color.ios.systemBlue as string}
-    />
+    {Platform.OS === "ios" ? (
+      <Image
+        source="sf:chevron.down"
+        style={{
+          aspectRatio: 1,
+          height: iOSUIKit.bodyEmphasizedObject.fontSize,
+          fontWeight: "semibold",
+          fontSize: iOSUIKit.bodyEmphasizedObject.fontSize,
+        }}
+        contentPosition="center"
+        tintColor={colors.systemBlue as string}
+      />
+    ) : (
+      <IconSymbol
+        name="chevron.down"
+        size={iOSUIKit.bodyEmphasizedObject.fontSize}
+        color={colors.systemBlue as string}
+      />
+    )}
   </Pressable>
 );

@@ -1,8 +1,8 @@
-import { Color } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { useRecentItemsStore } from "@/stores/recents";
+import { colors } from "@/theme/colors";
 
 type SectionHeaderProps = {
   text: string;
@@ -31,12 +31,12 @@ export const SectionHeader = ({ text, categoryIndex }: SectionHeaderProps) => {
       }}
     >
       <Text
-        style={[iOSUIKit.subheadEmphasized, { color: Color.ios.secondaryLabel }]}
+        style={[iOSUIKit.subheadEmphasized, { color: colors.secondaryLabel }]}
       >
         {text}
       </Text>
       <Pressable onPress={() => handleClearPress(text)}>
-        <Text style={[iOSUIKit.subhead, { color: Color.ios.systemBlue }]}>
+        <Text style={[iOSUIKit.subhead, { color: colors.systemBlue }]}>
           Clear
         </Text>
       </Pressable>

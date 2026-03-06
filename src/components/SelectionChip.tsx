@@ -1,7 +1,8 @@
 import * as Haptics from "expo-haptics";
-import { Color } from "expo-router";
 import { Pressable, StyleSheet, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { colors } from "@/theme/colors";
 
 type SelectionChipProps = {
   label: string;
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
   chip: {
     borderRadius: 22,
     borderWidth: 1,
-    borderColor: Color.ios.systemGray4,
+    borderColor: colors.systemGray4,
     paddingHorizontal: 16,
     paddingVertical: 12,
     minHeight: 44,
@@ -43,10 +44,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   chipSelected: {
-    borderColor: Color.ios.label,
-    backgroundColor: Color.ios.systemGray6,
+    borderColor: colors.label,
+    backgroundColor: colors.systemGray6,
   },
-  label: {
-    color: "white",
-  },
+  label: { color: "white" },
 });

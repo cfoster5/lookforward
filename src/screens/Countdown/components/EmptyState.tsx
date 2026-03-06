@@ -1,15 +1,14 @@
-import { Color, router, Stack } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Text, View, Pressable } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { IconSymbol } from "@/components/IconSymbol";
 import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
 import { useAuthStore } from "@/stores";
 import { useInterfaceStore } from "@/stores/interface";
+import { colors } from "@/theme/colors";
 
 export const EmptyState = () => {
-  const { top: safeTopArea } = useSafeAreaInsets();
   const { isPro } = useAuthStore();
   const { setCategoryIndex } = useInterfaceStore();
 
@@ -22,21 +21,20 @@ export const EmptyState = () => {
           justifyContent: "center",
           alignItems: "center",
           // paddingHorizontal: 32,
-          // paddingTop: safeTopArea + 60,
           marginHorizontal: 16,
         }}
       >
         <IconSymbol
           name="calendar.badge.clock"
           size={64}
-          color={Color.ios.secondaryLabel as string}
+          color={colors.secondaryLabel as string}
           style={{ marginBottom: 16 }}
         />
         <Text
           style={[
             iOSUIKit.title3Emphasized,
             {
-              color: Color.ios.label,
+              color: colors.label,
               textAlign: "center",
               marginBottom: 8,
             },
@@ -49,7 +47,7 @@ export const EmptyState = () => {
             style={[
               iOSUIKit.body,
               {
-                color: Color.ios.secondaryLabel,
+                color: colors.secondaryLabel,
                 textAlign: "center",
                 // marginBottom: 24,
                 // marginBottom: 8,
@@ -70,7 +68,7 @@ export const EmptyState = () => {
             style={{
               flex: 1,
               alignItems: "center",
-              backgroundColor: Color.ios.secondarySystemBackground,
+              backgroundColor: colors.secondarySystemBackground,
               paddingHorizontal: 20,
               paddingVertical: 12,
               borderRadius: 10,
@@ -90,7 +88,7 @@ export const EmptyState = () => {
             style={{
               flex: 1,
               alignItems: "center",
-              backgroundColor: Color.ios.secondarySystemBackground,
+              backgroundColor: colors.secondarySystemBackground,
               paddingHorizontal: 20,
               paddingVertical: 12,
               borderRadius: 10,
@@ -98,7 +96,7 @@ export const EmptyState = () => {
               justifyContent: "center",
             }}
           >
-            <Text style={[iOSUIKit.bodyEmphasized, { color: Color.ios.label }]}>
+            <Text style={[iOSUIKit.bodyEmphasized, { color: colors.label }]}>
               Browse Games
             </Text>
           </Pressable>

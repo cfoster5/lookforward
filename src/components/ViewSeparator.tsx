@@ -1,11 +1,12 @@
-import { Color } from "expo-router";
 import { View } from "react-native";
 
+import { colors } from "@/theme/colors";
+
 export const ViewSeparator = () => (
-  <View style={{ backgroundColor: Color.ios.secondarySystemGroupedBackground }}>
+  <View style={{ backgroundColor: colors.secondarySystemGroupedBackground }}>
     <View
       style={{
-        backgroundColor: Color.ios.separator,
+        backgroundColor: colors.separator,
         height: 1,
         marginHorizontal: 16,
       }}

@@ -1,4 +1,4 @@
-import { Color, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -6,6 +6,7 @@ import { iOSUIKit } from "react-native-typography";
 import { CategoryControl } from "@/components/CategoryControl";
 import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
 import { useInterfaceStore } from "@/stores";
+import { colors } from "@/theme/colors";
 
 import { AppleStackPreset } from "../(search)/_layout";
 
@@ -45,7 +46,7 @@ const FindHeader = () => {
           alignItems: "center",
         }}
       >
-        <Text style={[iOSUIKit.title3Emphasized, { color: Color.ios.label }]}>
+        <Text style={[iOSUIKit.title3Emphasized, { color: colors.label }]}>
           {movieSearchOption}
         </Text>
         <Pressable
@@ -60,7 +61,7 @@ const FindHeader = () => {
           }}
         >
           {categoryIndex === 0 && (
-            <Text style={[iOSUIKit.body, { color: Color.ios.systemBlue }]}>
+            <Text style={[iOSUIKit.body, { color: colors.systemBlue }]}>
               More
             </Text>
           )}

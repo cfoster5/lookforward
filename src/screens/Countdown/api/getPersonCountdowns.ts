@@ -90,11 +90,7 @@ export async function getPersonCountdown(
   // Fetch the region-specific release date for the soonest movie
   // This reuses getMovie which applies country filtering and premiere exclusion,
   // ensuring the person row shows the same date as the movie row
-  const movieDetails = await getMovie(
-    soonest.id.toString(),
-    language,
-    region,
-  );
+  const movieDetails = await getMovie(soonest.id.toString(), language, region);
 
   return {
     personId: personId.toString(),

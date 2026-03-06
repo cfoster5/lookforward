@@ -1,6 +1,7 @@
-import { Color } from "expo-router";
 import { Image } from "expo-image";
 import { PosterSize } from "tmdb-ts";
+
+import { colors } from "@/theme/colors";
 
 import { MyPerson } from "../types";
 
@@ -17,7 +18,7 @@ export const CarouselItem = ({ item, width, horizontalMargin }: Props) => (
     }}
     style={{
       borderRadius: 12,
-      borderColor: Color.ios.separator,
+      borderColor: colors.separator,
       borderWidth: 1,
       width,
       height: width * 1.5,

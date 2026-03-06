@@ -1,4 +1,3 @@
-import { Color } from "expo-router";
 import * as AlternateAppIcons from "expo-alternate-app-icons";
 import { Image, ImageSource } from "expo-image";
 import { usePostHog } from "posthog-react-native";
@@ -19,6 +18,7 @@ import { iOSUIKit } from "react-native-typography";
 import { useProOfferings } from "@/api/getProOfferings";
 import { IconSymbol } from "@/components/IconSymbol";
 import { useAuthStore } from "@/stores/auth";
+import { colors } from "@/theme/colors";
 
 const originalIcon = require("@/../assets/adaptive-icon.png");
 const defaultIcon = require("@/../assets/icon.png");
@@ -101,14 +101,14 @@ export default function AppIconScreen() {
           <IconSymbol
             name="checkmark"
             size={iOSUIKit.bodyObject.fontSize}
-            color={Color.ios.systemBlue as string}
+            color={colors.systemBlue as string}
           />
         )}
         {isLocked && (
           <IconSymbol
             name="lock.fill"
             size={iOSUIKit.bodyObject.fontSize}
-            color={Color.ios.secondaryLabel as string}
+            color={colors.secondaryLabel as string}
           />
         )}
       </Pressable>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   section: {
-    backgroundColor: Color.ios.secondarySystemGroupedBackground,
+    backgroundColor: colors.secondarySystemGroupedBackground,
     borderRadius: 10,
     overflow: "hidden",
   },
@@ -169,27 +169,27 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 13,
     borderWidth: StyleSheet.hairlineWidth,
-    borderColor: Color.ios.separator,
+    borderColor: colors.separator,
   },
   iconInfo: {
     flex: 1,
   },
   iconTitle: {
     ...iOSUIKit.bodyObject,
-    color: Color.ios.label,
+    color: colors.label,
   },
   iconSubtitle: {
     ...iOSUIKit.footnoteObject,
-    color: Color.ios.secondaryLabel,
+    color: colors.secondaryLabel,
   },
   separator: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: Color.ios.separator,
+    backgroundColor: colors.separator,
     marginLeft: 84,
   },
   footer: {
     ...iOSUIKit.footnoteObject,
-    color: Color.ios.secondaryLabel,
+    color: colors.secondaryLabel,
     marginTop: 8,
     marginHorizontal: 16,
   },

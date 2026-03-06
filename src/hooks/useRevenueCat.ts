@@ -1,5 +1,6 @@
 import { usePostHog } from "posthog-react-native";
 import { useEffect } from "react";
+import { Platform } from "react-native";
 import Purchases, { CustomerInfo } from "react-native-purchases";
 
 import { useAuthStore } from "@/stores";
@@ -15,7 +16,10 @@ export function useRevenueCat() {
 
     // Initialize the RevenueCat Purchases SDK.
     Purchases.configure({
-      apiKey: "appl_qxPtMlTGjvHkhlNlnKlOenNikGN",
+      apiKey: Platform.select({
+        default: "appl_qxPtMlTGjvHkhlNlnKlOenNikGN",
+        android: "goog_nxPkuSWhLpffngTZDurFvWSFtMl",
+      }),
     });
 
     const customerInfoUpdated = (info: CustomerInfo) => {

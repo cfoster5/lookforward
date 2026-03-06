@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { Color, useSegments } from "expo-router";
+import { useSegments } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { ImageStyle, Pressable, StyleProp, ViewStyle } from "react-native";
 import { Movie, PosterSize, Recommendation } from "tmdb-ts";
@@ -8,6 +8,7 @@ import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle } from "@/helpers/helpers";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
+import { colors } from "@/theme/colors";
 import { onShare } from "@/utils/share";
 
 import { ContextMenuLink } from "../ContextMenuLink";
@@ -79,7 +80,7 @@ export function MoviePoster({
               {
                 borderRadius: 12,
                 borderWidth: 1,
-                borderColor: Color.ios.separator,
+                borderColor: colors.separator,
               },
               style,
             ]}

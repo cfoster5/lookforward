@@ -1,11 +1,12 @@
 import { getAuth, sendPasswordResetEmail } from "@react-native-firebase/auth";
-import { Color, router } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import { Alert, ScrollView, Text, TextInput, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { LargeFilledButton } from "@/components/LargeFilledButton";
 import { reusableStyles } from "@/helpers/styles";
+import { colors } from "@/theme/colors";
 
 export default function PasswordReset() {
   const [email, setEmail] = useState("");
@@ -34,7 +35,7 @@ export default function PasswordReset() {
       <Text
         style={[
           iOSUIKit.body,
-          { color: Color.ios.secondaryLabel, marginBottom: 8 },
+          { color: colors.secondaryLabel, marginBottom: 8 },
         ]}
       >
         {`Enter your email. We'll send a link to reset your password.`}
@@ -42,7 +43,7 @@ export default function PasswordReset() {
       <TextInput
         style={reusableStyles.textInput}
         placeholder="Email"
-        placeholderTextColor={Color.ios.systemGray}
+        placeholderTextColor={colors.systemGray}
         autoCapitalize="none"
         keyboardType="email-address"
         textContentType="username"

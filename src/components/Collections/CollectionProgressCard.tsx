@@ -1,8 +1,8 @@
 import { Image } from "expo-image";
-import { Color, Link } from "expo-router";
+import { Link } from "expo-router";
 import { SFSymbol } from "expo-symbols";
 import { usePostHog } from "posthog-react-native";
-import { View, Text, StyleSheet } from "react-native";
+import { Platform, View, Text, StyleSheet } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { IconSymbol } from "@/components/IconSymbol";
@@ -10,6 +10,7 @@ import {
   CollectionProgress,
   CuratedCollection,
 } from "@/interfaces/collections";
+import { colors } from "@/theme/colors";
 
 interface CollectionProgressCardProps {
   collection: CuratedCollection;
@@ -77,11 +78,19 @@ export function CollectionProgressCard({
           )}
         </View>
 
-        <Image
-          source="sf:chevron.right"
-          style={{ width: 17, height: 17 }}
-          tintColor={Color.ios.secondaryLabel as string}
-        />
+        {Platform.OS === "ios" ? (
+          <Image
+            source="sf:chevron.right"
+            style={{ width: 17, height: 17 }}
+            tintColor={colors.secondaryLabel as string}
+          />
+        ) : (
+          <IconSymbol
+            name="chevron.right"
+            size={17}
+            color={colors.secondaryLabel as string}
+          />
+        )}
       </View>
     </Link>
   );
@@ -89,7 +98,7 @@ export function CollectionProgressCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Color.ios.secondarySystemGroupedBackground,
+    backgroundColor: colors.secondarySystemGroupedBackground,
     borderRadius: 12,
     padding: 16,
     marginVertical: 8,
@@ -108,7 +117,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...iOSUIKit.bodyEmphasizedObject,
-    color: Color.ios.label,
+    color: colors.label,
     flex: 1,
   },
   earlyTrackerRow: {
@@ -119,6 +128,6 @@ const styles = StyleSheet.create({
   },
   earlyTrackerText: {
     ...iOSUIKit.footnoteEmphasizedObject,
-    color: Color.ios.systemOrange,
+    color: colors.systemOrange,
   },
 });

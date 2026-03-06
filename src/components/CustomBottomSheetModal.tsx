@@ -1,4 +1,3 @@
-import { Color } from "expo-router";
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -6,6 +5,8 @@ import {
   BottomSheetModalProps,
 } from "@gorhom/bottom-sheet";
 import { RefObject } from "react";
+
+import { colors } from "@/theme/colors";
 
 const RenderBackdrop = (props: BottomSheetBackdropProps) => (
   <BottomSheetBackdrop {...props} appearsOnIndex={0} disappearsOnIndex={-1} />
@@ -23,10 +24,10 @@ export function CustomBottomSheetModal({
       ref={modalRef}
       backdropComponent={RenderBackdrop}
       backgroundStyle={{
-        backgroundColor: Color.ios.secondarySystemBackground,
+        backgroundColor: colors.secondarySystemBackground,
       }}
       handleIndicatorStyle={{
-        backgroundColor: Color.ios.systemGray,
+        backgroundColor: colors.systemGray,
       }}
     >
       {children}

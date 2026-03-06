@@ -1,6 +1,5 @@
 import { BottomSheetView } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
-import { Color } from "expo-router";
 import { FlatList, Linking, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -10,6 +9,7 @@ import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { calculateWidth } from "@/helpers/helpers";
 import { useInterfaceStore } from "@/stores";
+import { colors } from "@/theme/colors";
 
 export function WatchProvidersModal({
   modalRef,
@@ -51,7 +51,7 @@ export function WatchProvidersModal({
             <Text
               style={{
                 ...iOSUIKit.bodyEmphasizedObject,
-                color: Color.ios.systemBlue,
+                color: colors.systemBlue,
               }}
             >
               More Info
@@ -88,7 +88,7 @@ export function WatchProvidersModal({
                           width: calculateWidth(16, 8, 4.5),
                           borderWidth: 1,
                           borderColor:
-                            theme === "dark" ? Color.ios.separator : "#e0e0e0",
+                            theme === "dark" ? colors.separator : "#e0e0e0",
                           borderRadius: 12,
                         }}
                       />
@@ -96,7 +96,7 @@ export function WatchProvidersModal({
                         style={[
                           iOSUIKit.caption2,
                           {
-                            color: Color.ios.label,
+                            color: colors.label,
                             marginTop: 8,
                             textAlign: "center",
                           },
@@ -125,7 +125,7 @@ export function WatchProvidersModal({
           <Text
             style={{
               ...iOSUIKit.footnoteObject,
-              color: Color.ios.systemGray,
+              color: colors.systemGray,
               marginRight: 8,
             }}
           >

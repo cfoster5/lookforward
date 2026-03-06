@@ -430,6 +430,7 @@ const MAPPING = {
   "building.2.fill": "city-variant",
   lock: "lock-outline",
   "lock.fill": "lock",
+  "chevron.forward": "chevron-right",
   "lock.shield": "shield-lock-outline",
   "lock.shield.fill": "shield-lock",
   "lock.slash": "lock-off-outline",

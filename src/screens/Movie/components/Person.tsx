@@ -1,5 +1,5 @@
 import { Image } from "expo-image";
-import { Color, useSegments } from "expo-router";
+import { useSegments } from "expo-router";
 import {
   Pressable,
   StyleSheet,
@@ -12,6 +12,7 @@ import { Cast, Crew } from "tmdb-ts";
 
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { useInterfaceStore } from "@/stores";
+import { colors } from "@/theme/colors";
 import { onShare } from "@/utils/share";
 
 type Props = {
@@ -30,7 +31,7 @@ export function Person({ person }: Props) {
       aspectRatio: 2 / 3,
       borderRadius: 12,
       borderWidth: 1,
-      borderColor: theme === "dark" ? Color.ios.separator : "#e0e0e0",
+      borderColor: theme === "dark" ? colors.separator : "#e0e0e0",
     },
   });
 
@@ -79,7 +80,7 @@ export function Person({ person }: Props) {
                     }
                   : {
                       ...iOSUIKit.title3EmphasizedObject,
-                      color: Color.ios.systemGray,
+                      color: colors.systemGray,
                       textAlign: "center",
                     }
               }
@@ -95,7 +96,7 @@ export function Person({ person }: Props) {
           <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>
             {person.name}
           </Text>
-          <Text style={[iOSUIKit.callout, { color: Color.ios.systemGray }]}>
+          <Text style={[iOSUIKit.callout, { color: colors.systemGray }]}>
             {"character" in person ? person.character : person.job?.join(", ")}
           </Text>
         </View>

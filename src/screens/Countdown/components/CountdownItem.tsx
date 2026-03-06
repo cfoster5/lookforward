@@ -1,10 +1,10 @@
 import { Image } from "expo-image";
-import { Color } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
 
 import { useCountdownStore } from "@/stores";
+import { colors } from "@/theme/colors";
 
 import { useGameCountdowns } from "../api/getGameCountdowns";
 import { useMovieCountdowns } from "../api/getMovieCountdowns";
@@ -103,14 +103,14 @@ export function CountdownItem({
                 {
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: Color.ios.tertiarySystemFill as string,
+                  backgroundColor: colors.tertiarySystemFill as string,
                 },
               ]}
             >
               <Text
                 style={[
                   iOSUIKit.bodyEmphasized,
-                  { color: Color.ios.secondaryLabel, textAlign: "center" },
+                  { color: colors.secondaryLabel, textAlign: "center" },
                 ]}
               >
                 {title
@@ -123,13 +123,13 @@ export function CountdownItem({
         </View>
         <View style={styles.middle}>
           <Text
-            style={[iOSUIKit.body, { color: Color.ios.label }]}
+            style={[iOSUIKit.body, { color: colors.label }]}
             numberOfLines={2}
           >
             {title}
           </Text>
           <Text
-            style={[iOSUIKit.subhead, { color: Color.ios.secondaryLabel }]}
+            style={[iOSUIKit.subhead, { color: colors.secondaryLabel }]}
             numberOfLines={2}
           >
             {formattedDate}
@@ -137,20 +137,17 @@ export function CountdownItem({
         </View>
         <View style={styles.countdown}>
           {daysUntil !== null && daysUntil <= 0 ? (
-            <Text style={[iOSUIKit.body, { color: Color.ios.secondaryLabel }]}>
+            <Text style={[iOSUIKit.body, { color: colors.secondaryLabel }]}>
               Released
             </Text>
           ) : (
             <>
               <Text
-                style={[
-                  iOSUIKit.bodyEmphasized,
-                  { color: Color.ios.systemBlue },
-                ]}
+                style={[iOSUIKit.bodyEmphasized, { color: colors.systemBlue }]}
               >
                 {daysUntil ?? "TBD"}
               </Text>
-              <Text style={[iOSUIKit.body, { color: Color.ios.systemBlue }]}>
+              <Text style={[iOSUIKit.body, { color: colors.systemBlue }]}>
                 days
               </Text>
             </>

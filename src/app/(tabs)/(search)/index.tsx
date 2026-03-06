@@ -1,4 +1,3 @@
-import { Color } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import {
   ActivityIndicator,
@@ -29,12 +28,13 @@ import {
 import useDebounce from "@/screens/Search/hooks/useDebounce";
 import { useAuthStore, useInterfaceStore } from "@/stores";
 import { useRecentItemsStore } from "@/stores/recents";
+import { colors } from "@/theme/colors";
 
 const ItemSeparator = () => (
   <View
     style={{
       height: StyleSheet.hairlineWidth,
-      backgroundColor: Color.ios.separator,
+      backgroundColor: colors.separator,
       marginLeft: calculateWidth(12, 12, 3.5) + 12,
       marginRight: 12,
     }}

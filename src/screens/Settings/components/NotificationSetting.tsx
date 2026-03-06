@@ -1,7 +1,16 @@
 import { Image } from "expo-image";
-import { Color } from "expo-router";
-import { Pressable, Switch, Text, View, ViewStyle } from "react-native";
+import {
+  Platform,
+  Pressable,
+  Switch,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import { iOSUIKit } from "react-native-typography";
+
+import { IconSymbol } from "@/components/IconSymbol";
+import { colors } from "@/theme/colors";
 
 type Props = {
   title: string;
@@ -29,27 +38,34 @@ export const NotificationSetting = ({
         justifyContent: "space-between",
         alignItems: "center",
         paddingHorizontal: 16,
-        backgroundColor: Color.ios.secondarySystemGroupedBackground,
+        backgroundColor: colors.secondarySystemGroupedBackground,
         minHeight: 44,
       },
       style,
     ]}
   >
     <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-      {showLock && (
-        <Image
-          source="sf:lock.fill"
-          tintColor={Color.ios.secondaryLabel as string}
-          style={{ aspectRatio: 1, height: iOSUIKit.bodyObject.fontSize }}
-        />
-      )}
-      <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.label }}>
+      {showLock &&
+        (Platform.OS === "ios" ? (
+          <Image
+            source="sf:lock.fill"
+            tintColor={colors.secondaryLabel as string}
+            style={{ aspectRatio: 1, height: iOSUIKit.bodyObject.fontSize }}
+          />
+        ) : (
+          <IconSymbol
+            name="lock.fill"
+            size={iOSUIKit.bodyObject.fontSize}
+            color={colors.secondaryLabel as string}
+          />
+        ))}
+      <Text style={{ ...iOSUIKit.bodyObject, color: colors.label }}>
         {title}
       </Text>
     </View>
     <Switch
       style={{ alignSelf: "center" }}
-      // trackColor={{ false: "red", true: Color.ios.systemBlue }}
+      // trackColor={{ false: "red", true: colors.systemBlue }}
       onValueChange={showLock ? onLockPress : onValueChange}
       value={value}
     />

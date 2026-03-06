@@ -2,7 +2,6 @@ import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import {
-  Color,
   Stack,
   useLocalSearchParams,
   useRouter,
@@ -40,6 +39,7 @@ import ButtonSingleState from "@/components/ButtonSingleState";
 import { CategoryControl } from "@/components/CategoryControl";
 import { DropdownMenu } from "@/components/DropdownMenu";
 import { ExpandableText } from "@/components/ExpandableText";
+import { IconSymbol } from "@/components/IconSymbol";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { ListLabel } from "@/components/ListLabel";
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -74,6 +74,7 @@ import {
 import { composeGroupedJobCredits } from "@/screens/Movie/utils/composeGroupedJobCredits";
 import { composeRuntime } from "@/screens/Movie/utils/composeRuntime";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
+import { colors } from "@/theme/colors";
 import { Recent } from "@/types";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
@@ -121,8 +122,8 @@ function ScrollViewWithFlatList({
               })
             }
             buttonStyle={{
-              backgroundColor: Color.ios.secondarySystemGroupedBackground,
-              borderColor: Color.ios.secondarySystemGroupedBackground,
+              backgroundColor: colors.secondarySystemGroupedBackground,
+              borderColor: colors.secondarySystemGroupedBackground,
             }}
           />
         )}
@@ -231,6 +232,53 @@ export default function MovieScreen() {
       <Stack.Screen.Title style={{ color: "transparent" }}>
         {movieDetails.title}
       </Stack.Screen.Title>
+      {Platform.OS === "android" && (
+        <Stack.Screen
+          options={{
+            headerRight: () => (
+              <View style={{ flexDirection: "row", gap: 16 }}>
+                <Pressable
+                  onPress={() =>
+                    handleMovieToggle({
+                      movieId: id.toString(),
+                      userId: user.uid,
+                      isCurrentlySubbed: !!isSubbed,
+                      isPro,
+                      hasReachedLimit,
+                      proOffering: limitHit ?? pro,
+                      onLimitPaywallView: limitHit
+                        ? () => posthog.capture("limit:paywall_view")
+                        : undefined,
+                      onLimitPaywallDismiss: limitHit
+                        ? () => posthog.capture("limit:paywall_dismiss")
+                        : undefined,
+                    })
+                  }
+                  hitSlop={8}
+                >
+                  <IconSymbol
+                    name={isSubbed ? "checkmark" : "plus"}
+                    size={24}
+                    color={colors.label as string}
+                  />
+                </Pressable>
+                <Pressable
+                  onPress={() =>
+                    onShare(`movie/${id}`, "headerButton", posthog)
+                  }
+                  hitSlop={8}
+                >
+                  <IconSymbol
+                    name="square.and.arrow.up"
+                    size={24}
+                    color={colors.label as string}
+                  />
+                </Pressable>
+              </View>
+            ),
+          }}
+        />
+      )}
       <Stack.Toolbar placement="right">
         <Stack.Toolbar.View>
           <Pressable
@@ -256,7 +304,7 @@ export default function MovieScreen() {
               source={isSubbed ? "sf:checkmark" : "sf:plus"}
               style={{ fontSize: 28 }}
               transition={{ effect: "sf:replace" }}
-              tintColor={Color.ios.label as string}
+              tintColor={colors.label as string}
             />
           </Pressable>
         </Stack.Toolbar.View>
@@ -320,7 +368,7 @@ export default function MovieScreen() {
                       <View
                         style={{
                           width: 44 * 2,
-                          backgroundColor: Color.ios.placeholderText,
+                          backgroundColor: colors.placeholderText,
                           opacity: 0.5,
                           borderRadius: 4,
                         }}
@@ -373,7 +421,7 @@ export default function MovieScreen() {
                 {
                   paddingTop: 16,
                   fontStyle: "italic",
-                  color: Color.ios.systemGray,
+                  color: colors.systemGray,
                 },
               ]}
             >
@@ -400,8 +448,8 @@ export default function MovieScreen() {
                 buttonStyle={{
                   paddingHorizontal: 16,
                   flexDirection: "row",
-                  backgroundColor: Color.ios.secondarySystemGroupedBackground,
-                  borderColor: Color.ios.secondarySystemGroupedBackground,
+                  backgroundColor: colors.secondarySystemGroupedBackground,
+                  borderColor: colors.secondarySystemGroupedBackground,
                 }}
                 icon={tmdbMovieGenres.find((obj) => obj.id === genre.id)?.icon}
                 textStyle={{ alignSelf: "center" }}
@@ -422,9 +470,7 @@ export default function MovieScreen() {
               >
                 <ListLabel text="Watch on" style={{ marginBottom: 0 }} />
                 <Pressable onPress={() => modalRef.current?.present()}>
-                  <Text
-                    style={[iOSUIKit.body, { color: Color.ios.systemBlue }]}
-                  >
+                  <Text style={[iOSUIKit.body, { color: colors.systemBlue }]}>
                     More
                   </Text>
                 </Pressable>
@@ -456,7 +502,7 @@ export default function MovieScreen() {
                       height: calculateWidth(16, 8, 6),
                       aspectRatio: 1 / 1,
                       borderWidth: 1,
-                      borderColor: Color.ios.separator,
+                      borderColor: colors.separator,
                       borderRadius: 12,
                     }}
                   />
@@ -637,7 +683,7 @@ export default function MovieScreen() {
                         width: Dimensions.get("screen").width - 32,
                         aspectRatio: 16 / 9,
                         borderWidth: 1,
-                        borderColor: Color.ios.separator,
+                        borderColor: colors.separator,
                         borderRadius: 12,
                       }}
                       source={{
@@ -707,6 +753,6 @@ export default function MovieScreen() {
 const styles = StyleSheet.create({
   secondarySubhedEmphasized: {
     ...iOSUIKit.subheadEmphasizedObject,
-    color: Color.ios.secondaryLabel,
+    color: colors.secondaryLabel,
   },
 });

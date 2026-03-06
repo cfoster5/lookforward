@@ -1,37 +1,39 @@
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
-import { Color, Redirect, router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect } from "react";
-import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import { Linking, Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
 
+import { IconSymbol } from "@/components/IconSymbol";
 import { OnboardingScreenLayout } from "@/components/OnboardingScreenLayout";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useOnboardingDraft } from "@/stores/onboardingDraft";
+import { colors } from "@/theme/colors";
 
 const STAGGER_BASE = 300;
 const STAGGER_STEP = 80;
 
 const features = [
   {
-    icon: "sf:magnifyingglass",
+    icon: "magnifyingglass" as const,
     title: "Search",
     body: "Find movies, games, cast, and\u00A0crew",
   },
   {
-    icon: "sf:timer",
+    icon: "timer" as const,
     title: "Countdown",
     body: "Track releases and never miss a\u00A0date",
   },
   {
-    icon: "sf:info.circle",
+    icon: "info.circle" as const,
     title: "Details",
     body: "Genres, trailers, credits, and\u00A0more",
   },
   {
-    icon: "sf:bell",
+    icon: "bell" as const,
     title: "Notifications",
     body: "Get reminded before releases\u00A0drop",
     onPress: () => Linking.openSettings(),
@@ -92,11 +94,19 @@ export default function OnboardingLayout() {
           const card = (
             <View style={styles.card}>
               <View style={styles.iconContainer}>
-                <Image
-                  source={feature.icon}
-                  style={styles.icon}
-                  tintColor={Color.ios.secondaryLabel as string}
-                />
+                {Platform.OS === "ios" ? (
+                  <Image
+                    source={`sf:${feature.icon}`}
+                    style={styles.icon}
+                    tintColor={colors.secondaryLabel as string}
+                  />
+                ) : (
+                  <IconSymbol
+                    name={feature.icon}
+                    size={22}
+                    color={colors.secondaryLabel as string}
+                  />
+                )}
               </View>
               <View style={styles.cardText}>
                 <Text style={[iOSUIKit.bodyEmphasized, styles.cardTitle]}>
@@ -150,7 +160,7 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Color.ios.systemGray6,
+    backgroundColor: colors.systemGray6,
     borderRadius: 16,
     padding: 16,
     gap: 16,
@@ -159,7 +169,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 12,
-    backgroundColor: Color.ios.systemGray5,
+    backgroundColor: colors.systemGray5,
     justifyContent: "center",
     alignItems: "center",
   },
@@ -175,10 +185,10 @@ const styles = StyleSheet.create({
     color: "white",
   },
   cardBody: {
-    color: Color.ios.secondaryLabel,
+    color: colors.secondaryLabel,
   },
   tagline: {
-    color: Color.ios.label,
+    color: colors.label,
     textAlign: "center",
     marginTop: 24,
   },

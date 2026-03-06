@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useRef } from "react";
-import { View } from "react-native";
+import { Platform, Pressable, View } from "react-native";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
@@ -10,6 +10,8 @@ import { iOSUIKit } from "react-native-typography";
 
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { ExpandableText } from "@/components/ExpandableText";
+import { IconSymbol } from "@/components/IconSymbol";
+import { colors } from "@/theme/colors";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
@@ -56,6 +58,26 @@ export default function Collection() {
       <Stack.Screen.Title style={{ color: "transparent" }}>
         {collection?.name}
       </Stack.Screen.Title>
+      {Platform.OS === "android" && (
+        <Stack.Screen
+          options={{
+            headerRight: () => (
+              <Pressable
+                onPress={() =>
+                  onShare(`movie-collection/${id}`, "headerButton", posthog)
+                }
+                hitSlop={8}
+              >
+                <IconSymbol
+                  name="square.and.arrow.up"
+                  size={24}
+                  color={colors.label as string}
+                />
+              </Pressable>
+            ),
+          }}
+        />
+      )}
       <Stack.Toolbar placement="right">
         <Stack.Toolbar.Button
           onPress={() =>

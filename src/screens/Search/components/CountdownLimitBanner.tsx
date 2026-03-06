@@ -1,13 +1,5 @@
-import { Color } from "expo-router";
 import { usePostHog } from "posthog-react-native";
-import {
-  Pressable,
-  StyleProp,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from "react-native";
+import { Pressable, StyleProp, Text, View, ViewStyle } from "react-native";
 import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
@@ -18,6 +10,7 @@ import {
   FREE_TIER_COUNTDOWN_LIMIT,
   useSubscriptionStore,
 } from "@/stores/subscription";
+import { colors } from "@/theme/colors";
 
 type CountdownLimitBannerProps = {
   showOnEmpty?: boolean;
@@ -68,19 +61,15 @@ export const CountdownLimitBanner = ({
           posthog.capture("countdown:paywall_view", { type: "pro" });
         }
         const result = await RevenueCatUI.presentPaywall({
-          offering: isAtLimit ? limitHit ?? pro : pro,
+          offering: isAtLimit ? (limitHit ?? pro) : pro,
         });
-        if (
-          isAtLimit &&
-          limitHit &&
-          result === PAYWALL_RESULT.CANCELLED
-        ) {
+        if (isAtLimit && limitHit && result === PAYWALL_RESULT.CANCELLED) {
           posthog.capture("limit:paywall_dismiss");
         }
       }}
       style={[
         {
-          backgroundColor: Color.ios.secondarySystemBackground,
+          backgroundColor: colors.secondarySystemBackground,
           paddingVertical: 10,
           paddingHorizontal: 16,
           marginBottom: 16,
@@ -94,11 +83,11 @@ export const CountdownLimitBanner = ({
       {/* Invisible spacer to balance right chevron and center content */}
       <View style={{ width: iconSize }} />
       <View style={{ paddingLeft: 16, flex: 1, alignItems: "center" }}>
-        <Text style={[iOSUIKit.footnoteEmphasized, { color: Color.ios.label }]}>
+        <Text style={[iOSUIKit.footnoteEmphasized, { color: colors.label }]}>
           {/* {mainMessage} */}
           Get more countdowns with Pro
         </Text>
-        <Text style={[iOSUIKit.footnote, { color: Color.ios.secondaryLabel }]}>
+        <Text style={[iOSUIKit.footnote, { color: colors.secondaryLabel }]}>
           {/* Get more with LookForward Pro */}
           {mainMessage}
         </Text>
@@ -106,7 +95,7 @@ export const CountdownLimitBanner = ({
       <IconSymbol
         name="chevron.forward"
         size={iconSize}
-        color={Color.ios.tertiaryLabel as string}
+        color={colors.tertiaryLabel as string}
       />
     </Pressable>
   );

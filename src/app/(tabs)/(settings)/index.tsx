@@ -6,7 +6,7 @@ import {
 } from "@react-native-firebase/firestore";
 import { getMessaging, hasPermission } from "@react-native-firebase/messaging";
 import { useQuery } from "@tanstack/react-query";
-import { Color, Link } from "expo-router";
+import { Link } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
 import { Linking, Pressable, ScrollView, Text, View } from "react-native";
@@ -23,6 +23,7 @@ import { NotificationSetting } from "@/screens/Settings/components/NotificationS
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useAuthStore } from "@/stores/auth";
+import { colors } from "@/theme/colors";
 
 export default function Settings() {
   const user = useAuthenticatedUser();
@@ -95,7 +96,7 @@ export default function Settings() {
       <Text
         style={{
           ...iOSUIKit.bodyEmphasizedObject,
-          color: Color.ios.secondaryLabel,
+          color: colors.secondaryLabel,
           marginHorizontal: 16,
           paddingBottom: 9,
         }}
@@ -157,7 +158,7 @@ export default function Settings() {
           <Text
             style={{
               ...iOSUIKit.footnoteObject,
-              color: Color.ios.systemBlue,
+              color: colors.systemBlue,
               paddingTop: 8,
               paddingHorizontal: 16,
             }}
@@ -168,7 +169,7 @@ export default function Settings() {
       )}
       <View
         style={{
-          backgroundColor: Color.ios.secondarySystemGroupedBackground,
+          backgroundColor: colors.secondarySystemGroupedBackground,
           borderTopLeftRadius: 26,
           borderTopRightRadius: 26,
           borderCurve: "continuous",
@@ -180,7 +181,7 @@ export default function Settings() {
           alignItems: "center",
         }}
       >
-        <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.label }}>
+        <Text style={{ ...iOSUIKit.bodyObject, color: colors.label }}>
           Movie Region
         </Text>
         <DropdownMenu
@@ -207,9 +208,7 @@ export default function Settings() {
               paddingHorizontal: 12,
             }}
           >
-            <Text
-              style={{ ...iOSUIKit.bodyObject, color: Color.ios.systemBlue }}
-            >
+            <Text style={{ ...iOSUIKit.bodyObject, color: colors.systemBlue }}>
               {countries?.find((c) => c.iso_3166_1 === movieRegion)
                 ?.english_name ?? movieRegion}
             </Text>
@@ -219,7 +218,7 @@ export default function Settings() {
       <ViewSeparator />
       <View
         style={{
-          backgroundColor: Color.ios.secondarySystemGroupedBackground,
+          backgroundColor: colors.secondarySystemGroupedBackground,
           borderBottomLeftRadius: 26,
           borderBottomRightRadius: 26,
           borderCurve: "continuous",
@@ -230,7 +229,7 @@ export default function Settings() {
           alignItems: "center",
         }}
       >
-        <Text style={{ ...iOSUIKit.bodyObject, color: Color.ios.label }}>
+        <Text style={{ ...iOSUIKit.bodyObject, color: colors.label }}>
           Movie Language
         </Text>
         <DropdownMenu
@@ -253,9 +252,7 @@ export default function Settings() {
               paddingHorizontal: 12,
             }}
           >
-            <Text
-              style={{ ...iOSUIKit.bodyObject, color: Color.ios.systemBlue }}
-            >
+            <Text style={{ ...iOSUIKit.bodyObject, color: colors.systemBlue }}>
               {languages?.find((l) => l.iso_639_1 === movieLanguage)
                 ?.english_name ?? movieLanguage}
             </Text>

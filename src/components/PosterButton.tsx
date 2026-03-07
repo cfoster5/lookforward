@@ -2,7 +2,10 @@ import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
 import { Image } from "expo-image";
 import { usePostHog } from "posthog-react-native";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
-import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
+import RevenueCatUI, {
+  CustomVariableValue,
+  PAYWALL_RESULT,
+} from "react-native-purchases-ui";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle, removeSub } from "@/helpers/helpers";
@@ -18,10 +21,11 @@ import { IconSymbol } from "./IconSymbol";
 
 interface Props {
   movieId?: string;
+  movieName?: string;
   game?: Game & { release_dates: ReleaseDate[] };
 }
 
-function PosterButton({ movieId, game }: Props) {
+function PosterButton({ movieId, movieName, game }: Props) {
   const { user, isPro } = useAuthStore();
   const { movieSubs, gameSubs, hasReachedLimit } = useSubscriptionStore();
   const { bottomSheetModalRef } = useInterfaceStore();
@@ -38,6 +42,7 @@ function PosterButton({ movieId, game }: Props) {
   async function toggleMovieSub() {
     return handleMovieToggle({
       movieId: movieId!,
+      movieName: movieName ?? "",
       userId: user!.uid,
       isCurrentlySubbed: isMovieSub(),
       isPro,
@@ -66,6 +71,9 @@ function PosterButton({ movieId, game }: Props) {
       }
       const result = await RevenueCatUI.presentPaywall({
         offering: limitHit ?? pro,
+        customVariables: {
+          item_name: CustomVariableValue.string(game!.name),
+        },
       });
       if (limitHit && result === PAYWALL_RESULT.CANCELLED) {
         posthog.capture("limit:paywall_dismiss");

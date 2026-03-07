@@ -200,6 +200,7 @@ export function RecentTitle({ item }: { item: Recent }) {
               action: () =>
                 handleMovieToggle({
                   movieId: item.id.toString(),
+                  movieName: item.name ?? "",
                   userId: user!.uid,
                   isCurrentlySubbed: isMovieSub(),
                   isPro,

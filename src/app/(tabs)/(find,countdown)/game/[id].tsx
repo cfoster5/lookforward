@@ -8,7 +8,10 @@ import {
 import { usePostHog } from "posthog-react-native";
 import { useState, Fragment } from "react";
 import { Platform, ScrollView, View, FlatList, Pressable, Text } from "react-native";
-import RevenueCatUI, { PAYWALL_RESULT } from "react-native-purchases-ui";
+import RevenueCatUI, {
+  CustomVariableValue,
+  PAYWALL_RESULT,
+} from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
@@ -97,6 +100,9 @@ export default function Game() {
 
         const result = await RevenueCatUI.presentPaywall({
           offering: limitHit ?? pro,
+          customVariables: {
+            item_name: CustomVariableValue.string(game.name),
+          },
         });
 
         if (limitHit && result === PAYWALL_RESULT.CANCELLED) {

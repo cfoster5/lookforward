@@ -239,6 +239,7 @@ export default function MovieScreen() {
                   onPress={() =>
                     handleMovieToggle({
                       movieId: id.toString(),
+                      movieName: movieDetails.title,
                       userId: user.uid,
                       isCurrentlySubbed: !!isSubbed,
                       isPro,
@@ -283,6 +284,7 @@ export default function MovieScreen() {
             onPress={() =>
               handleMovieToggle({
                 movieId: id.toString(),
+                movieName: movieDetails.title,
                 userId: user.uid,
                 isCurrentlySubbed: !!isSubbed,
                 isPro,

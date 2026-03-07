@@ -50,6 +50,7 @@ export function MoviePoster({
         action: () =>
           handleMovieToggle({
             movieId: movie.id.toString(),
+            movieName: movie.title,
             userId: user.uid,
             isCurrentlySubbed: isMovieSub,
             isPro,
@@ -73,7 +74,7 @@ export function MoviePoster({
         delayLongPress={100} // Leave room for a user to be able to click
         onLongPress={() => {}} // A callback that does nothing
       >
-        {movie && <PosterButton movieId={movie.id.toString()} />}
+        {movie && <PosterButton movieId={movie.id.toString()} movieName={movie.title} />}
         {posterPath ? (
           <Image
             style={[

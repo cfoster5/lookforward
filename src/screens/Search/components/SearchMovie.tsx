@@ -145,6 +145,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
         action: () =>
           handleMovieToggle({
             movieId: item.id.toString(),
+            movieName: item.title,
             userId: user!.uid,
             isCurrentlySubbed: isMovieSub(),
             isPro,

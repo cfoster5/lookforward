@@ -18,7 +18,7 @@ import {
 import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useWindowDimensions } from "react-native";
-import RevenueCatUI from "react-native-purchases-ui";
+import RevenueCatUI, { CustomVariableValue } from "react-native-purchases-ui";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
@@ -52,7 +52,12 @@ export default function GamePlatformPicker() {
     const { id, name } = game;
     try {
       if (hasReachedLimit(isPro)) {
-        await RevenueCatUI.presentPaywall({ offering: limitHit ?? pro });
+        await RevenueCatUI.presentPaywall({
+          offering: limitHit ?? pro,
+          customVariables: {
+            item_name: CustomVariableValue.string(name),
+          },
+        });
         return;
       }
 

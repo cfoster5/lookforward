@@ -11,6 +11,7 @@ import { useRef, useState } from "react";
 import { Platform, Pressable, SectionList, View } from "react-native";
 
 import { CollectionProgressCard } from "@/components/Collections/CollectionProgressCard";
+import { CountdownLimitBanner } from "@/components/CountdownLimitBanner";
 import { IconSymbol } from "@/components/IconSymbol";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
@@ -22,10 +23,9 @@ import { CountdownItem } from "@/screens/Countdown/components/CountdownItem";
 import { EmptyState } from "@/screens/Countdown/components/EmptyState";
 import { FilteredEmptyState } from "@/screens/Countdown/components/FilteredEmptyState";
 import { SectionHeader } from "@/screens/Countdown/components/SectionHeader";
-import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
 import { useCountdownStore, useSubscriptionStore } from "@/stores";
-import { colors } from "@/theme/colors";
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
+import { colors } from "@/theme/colors";
 
 export default function Countdown() {
   const {

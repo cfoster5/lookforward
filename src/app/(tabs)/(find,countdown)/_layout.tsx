@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { CategoryControl } from "@/components/CategoryControl";
-import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
+import { CountdownLimitBanner } from "@/components/CountdownLimitBanner";
 import { useInterfaceStore } from "@/stores";
 import { colors } from "@/theme/colors";
 

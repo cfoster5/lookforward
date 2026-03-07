@@ -24,8 +24,9 @@ export const CountdownLimitBanner = ({
   showOnEmpty = false,
   style,
 }: CountdownLimitBannerProps) => {
-  const { isPro } = useAuthStore();
-  const { movieSubs, gameSubs } = useSubscriptionStore();
+  const isPro = useAuthStore((s) => s.isPro);
+  const movieSubs = useSubscriptionStore((s) => s.movieSubs);
+  const gameSubs = useSubscriptionStore((s) => s.gameSubs);
   const { data: pro } = useProOfferings();
   const { data: limitHit } = useLimitHitOffering();
   const posthog = usePostHog();

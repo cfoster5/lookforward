@@ -2,8 +2,8 @@ import { router, Stack } from "expo-router";
 import { Text, View, Pressable } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
+import { CountdownLimitBanner } from "@/components/CountdownLimitBanner";
 import { IconSymbol } from "@/components/IconSymbol";
-import { CountdownLimitBanner } from "@/screens/Search/components/CountdownLimitBanner";
 import { useAuthStore } from "@/stores";
 import { useInterfaceStore } from "@/stores/interface";
 import { colors } from "@/theme/colors";

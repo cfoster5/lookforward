@@ -4,7 +4,7 @@ import {
   CreditSelectionProps,
   ImageSelectionProps,
   VideoSelectionProps,
-} from "@/screens/Movie/types";
+} from "@/types/dropdown";
 
 type SearchSelectionProps = {
   value: "Movies" | "Games";

@@ -3,7 +3,7 @@ import { createRef } from "react";
 import { ColorSchemeName } from "react-native";
 import { create } from "zustand";
 
-import { MovieOption } from "@/screens/Search/types";
+import { MovieOption } from "@/types/movieOption";
 
 const bottomSheetModalRef = createRef<BottomSheetModal>();
 const movieSearchModalRef = createRef<BottomSheetModal>();

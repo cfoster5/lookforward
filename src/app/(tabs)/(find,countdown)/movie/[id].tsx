@@ -1,5 +1,5 @@
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import { BlurView } from "expo-blur";
+import { BlurTargetView, BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import {
   Stack,
@@ -182,6 +182,7 @@ export default function MovieScreen() {
   });
 
   const modalRef = useRef<BottomSheetModal>();
+  const collectionBlurRef = useRef<View | null>(null);
 
   const usReleaseDates = getReleaseDatesByCountry(movieDetails?.release_dates);
   // Narrow belongs_to_collection to a local variable so TS can refine its type
@@ -678,19 +679,23 @@ export default function MovieScreen() {
                       overflow: "hidden",
                     }}
                   >
-                    <Image
-                      style={{
-                        width: Dimensions.get("screen").width - 32,
-                        aspectRatio: 16 / 9,
-                        borderWidth: 1,
-                        borderColor: colors.separator,
-                        borderRadius: 12,
-                      }}
-                      source={{
-                        uri: `https://image.tmdb.org/t/p/${BackdropSize.W780}${collection.backdrop_path}`,
-                      }}
-                    />
+                    <BlurTargetView ref={collectionBlurRef}>
+                      <Image
+                        style={{
+                          width: Dimensions.get("screen").width - 32,
+                          aspectRatio: 16 / 9,
+                          borderWidth: 1,
+                          borderColor: colors.separator,
+                          borderRadius: 12,
+                        }}
+                        source={{
+                          uri: `https://image.tmdb.org/t/p/${BackdropSize.W780}${collection.backdrop_path}`,
+                        }}
+                      />
+                    </BlurTargetView>
                     <BlurView
+                      blurTarget={collectionBlurRef}
+                      blurMethod="dimezisBlurView"
                       tint="dark"
                       intensity={100}
                       style={[

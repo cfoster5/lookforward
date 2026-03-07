@@ -1,6 +1,7 @@
-import { BlurView } from "expo-blur";
+import { BlurTargetView, BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { usePostHog } from "posthog-react-native";
+import { useRef } from "react";
 import { Platform, Pressable, Text, View } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
@@ -20,6 +21,21 @@ export function RecentPerson({ item }: { item: Recent }) {
   const { data: pro } = useProOfferings();
   const { removeRecent } = useRecentItemsStore();
   const posthog = usePostHog();
+  const blurTargetRef = useRef<View | null>(null);
+  const textBlurTargetRef = useRef<View | null>(null);
+
+  const size = calculateWidth(12, 12, 3.5);
+
+  const lockIcon =
+    Platform.OS === "ios" ? (
+      <Image
+        source="sf:lock"
+        style={{ aspectRatio: 1, height: 36 }}
+        tintColor={"white"}
+      />
+    ) : (
+      <IconSymbol name="lock" size={36} color="white" />
+    );
 
   if (!isPro)
     return (
@@ -42,47 +58,51 @@ export function RecentPerson({ item }: { item: Recent }) {
             shadowOpacity: 1,
           }}
         >
-          {item.img_path ? (
-            <Image
-              source={{
-                uri: `https://image.tmdb.org/t/p/w300${item.img_path}`,
-              }}
-              style={{
-                aspectRatio: 1,
-                width: calculateWidth(12, 12, 3.5),
-                borderRadius: calculateWidth(12, 12, 3.5),
-                borderWidth: 1,
-                borderColor: colors.separator,
-                marginBottom: 8,
-              }}
-            />
-          ) : (
-            <View
-              style={{
-                backgroundColor: colors.systemGray,
-                aspectRatio: 1,
-                width: calculateWidth(12, 12, 3.5),
-                borderRadius: calculateWidth(12, 12, 3.5),
-                borderWidth: 1,
-                borderColor: colors.separator,
-                marginBottom: 8,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text
+          <BlurTargetView ref={blurTargetRef}>
+            {item.img_path ? (
+              <Image
+                source={{
+                  uri: `https://image.tmdb.org/t/p/w300${item.img_path}`,
+                }}
                 style={{
-                  fontSize: calculateWidth(12, 12, 3.5) / 2,
-                  color: "white",
+                  aspectRatio: 1,
+                  width: size,
+                  borderRadius: size,
+                  borderWidth: 1,
+                  borderColor: colors.separator,
+                  marginBottom: 8,
+                }}
+              />
+            ) : (
+              <View
+                style={{
+                  backgroundColor: colors.systemGray,
+                  aspectRatio: 1,
+                  width: size,
+                  borderRadius: size,
+                  borderWidth: 1,
+                  borderColor: colors.separator,
+                  marginBottom: 8,
+                  justifyContent: "center",
+                  alignItems: "center",
                 }}
               >
-                RP
-              </Text>
-            </View>
-          )}
+                <Text
+                  style={{
+                    fontSize: size / 2,
+                    color: "white",
+                  }}
+                >
+                  RP
+                </Text>
+              </View>
+            )}
+          </BlurTargetView>
           <BlurView
-            intensity={50}
-            tint="systemChromeMaterial"
+            blurTarget={blurTargetRef}
+            blurMethod="dimezisBlurView"
+            intensity={Platform.OS === "ios" ? 50 : 30}
+            tint={Platform.OS === "ios" ? "systemChromeMaterial" : "dark"}
             style={{
               position: "absolute",
               top: 0,
@@ -94,8 +114,8 @@ export function RecentPerson({ item }: { item: Recent }) {
               justifyContent: "center",
               alignItems: "center",
               aspectRatio: 1,
-              width: calculateWidth(12, 12, 3.5),
-              borderRadius: calculateWidth(12, 12, 3.5),
+              width: size,
+              borderRadius: size,
             }}
           >
             <View
@@ -107,15 +127,7 @@ export function RecentPerson({ item }: { item: Recent }) {
                 gap: 8,
               }}
             >
-              {Platform.OS === "ios" ? (
-                <Image
-                  source="sf:lock"
-                  style={{ aspectRatio: 1, height: 36 }}
-                  tintColor={"white"}
-                />
-              ) : (
-                <IconSymbol name="lock" size={36} color="white" />
-              )}
+              {lockIcon}
               <Text style={[iOSUIKit.bodyWhite, { textAlign: "center" }]}>
                 Get Pro
               </Text>
@@ -123,34 +135,35 @@ export function RecentPerson({ item }: { item: Recent }) {
           </BlurView>
         </View>
         <View style={{ alignItems: "center" }}>
-          <Text
-            style={[
-              iOSUIKit.subhead,
-              {
-                color: colors.label,
-                maxWidth: 96,
-                textAlign: "center",
-              },
-            ]}
-            numberOfLines={2}
-          >
-            {item.name}
-          </Text>
+          <BlurTargetView ref={textBlurTargetRef}>
+            <Text
+              style={[
+                iOSUIKit.subhead,
+                {
+                  color: colors.label,
+                  maxWidth: 96,
+                  textAlign: "center",
+                },
+              ]}
+              numberOfLines={2}
+            >
+              {item.name}
+            </Text>
+          </BlurTargetView>
           <BlurView
-            intensity={50}
-            tint="systemChromeMaterial"
-            style={[
-              {
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                borderRadius: 12,
-                overflow: "hidden",
-                // maxWidth: 96,
-              },
-            ]}
+            blurTarget={textBlurTargetRef}
+            blurMethod="dimezisBlurView"
+            intensity={Platform.OS === "ios" ? 50 : 30}
+            tint={Platform.OS === "ios" ? "systemChromeMaterial" : "dark"}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
           />
         </View>
       </Pressable>
@@ -193,8 +206,8 @@ export function RecentPerson({ item }: { item: Recent }) {
               }}
               style={{
                 aspectRatio: 1,
-                width: calculateWidth(12, 12, 3.5),
-                borderRadius: calculateWidth(12, 12, 3.5),
+                width: size,
+                borderRadius: size,
                 borderWidth: 1,
                 borderColor: colors.separator,
                 marginBottom: 8,
@@ -205,8 +218,8 @@ export function RecentPerson({ item }: { item: Recent }) {
               style={{
                 backgroundColor: colors.systemGray,
                 aspectRatio: 1,
-                width: calculateWidth(12, 12, 3.5),
-                borderRadius: calculateWidth(12, 12, 3.5),
+                width: size,
+                borderRadius: size,
                 borderWidth: 1,
                 borderColor: colors.separator,
                 marginBottom: 8,
@@ -216,7 +229,7 @@ export function RecentPerson({ item }: { item: Recent }) {
             >
               <Text
                 style={{
-                  fontSize: calculateWidth(12, 12, 3.5) / 2,
+                  fontSize: size / 2,
                   color: "white",
                 }}
               >

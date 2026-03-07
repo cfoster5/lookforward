@@ -1,6 +1,7 @@
-import { BlurView } from "expo-blur";
+import { BlurTargetView, BlurView } from "expo-blur";
 import { Image } from "expo-image";
 import { usePostHog } from "posthog-react-native";
+import { useRef } from "react";
 import { Platform, Pressable, Text, View } from "react-native";
 import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
@@ -22,9 +23,52 @@ export function RecentTitle({ item }: { item: Recent }) {
   const { data: limitHit } = useLimitHitOffering();
   const { removeRecent } = useRecentItemsStore();
   const posthog = usePostHog();
+  const blurTargetRef = useRef<View | null>(null);
+  const textBlurTargetRef = useRef<View | null>(null);
 
   const isMovieSub = () =>
     item.id && movieSubs.some((sub) => sub.documentID === item.id.toString());
+
+  const imageSource = item.img_path
+    ? {
+        uri:
+          item.media_type === "movie"
+            ? `https://image.tmdb.org/t/p/w300${item.img_path}`
+            : `https:${item.img_path.replace("thumb", "cover_big_2x")}`,
+      }
+    : undefined;
+
+  const imageStyle = {
+    aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
+    width: calculateWidth(12, 12, 3.5),
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.separator,
+    marginBottom: 8,
+  };
+
+  const placeholderStyle = {
+    backgroundColor: colors.systemGray,
+    aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
+    width: calculateWidth(12, 12, 3.5),
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.separator,
+    marginBottom: 8,
+    justifyContent: "center" as const,
+    alignItems: "center" as const,
+  };
+
+  const lockIcon =
+    Platform.OS === "ios" ? (
+      <Image
+        source="sf:lock"
+        style={{ aspectRatio: 1, height: 36 }}
+        tintColor={"white"}
+      />
+    ) : (
+      <IconSymbol name="lock" size={36} color="white" />
+    );
 
   if (!isPro)
     return (
@@ -47,45 +91,22 @@ export function RecentTitle({ item }: { item: Recent }) {
             shadowOpacity: 1,
           }}
         >
-          {item.img_path ? (
-            <Image
-              source={{
-                uri:
-                  item.media_type === "movie"
-                    ? `https://image.tmdb.org/t/p/w300${item.img_path}`
-                    : `https:${item.img_path.replace("thumb", "cover_big_2x")}`,
-              }}
-              style={{
-                aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
-                width: calculateWidth(12, 12, 3.5),
-                borderRadius: 12,
-                borderWidth: 1,
-                borderColor: colors.separator,
-                marginBottom: 8,
-              }}
-            />
-          ) : (
-            <View
-              style={{
-                backgroundColor: colors.systemGray,
-                aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
-                width: calculateWidth(12, 12, 3.5),
-                borderRadius: 12,
-                borderWidth: 1,
-                borderColor: colors.separator,
-                marginBottom: 8,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Text style={[iOSUIKit.bodyWhite, { textAlign: "center" }]}>
-                {item.name}
-              </Text>
-            </View>
-          )}
+          <BlurTargetView ref={blurTargetRef}>
+            {imageSource ? (
+              <Image source={imageSource} style={imageStyle} />
+            ) : (
+              <View style={placeholderStyle}>
+                <Text style={[iOSUIKit.bodyWhite, { textAlign: "center" }]}>
+                  {item.name}
+                </Text>
+              </View>
+            )}
+          </BlurTargetView>
           <BlurView
-            intensity={50}
-            tint="systemChromeMaterial"
+            blurTarget={blurTargetRef}
+            blurMethod="dimezisBlurView"
+            intensity={Platform.OS === "ios" ? 50 : 30}
+            tint={Platform.OS === "ios" ? "systemChromeMaterial" : "dark"}
             style={{
               position: "absolute",
               top: 0,
@@ -108,15 +129,7 @@ export function RecentTitle({ item }: { item: Recent }) {
                 gap: 8,
               }}
             >
-              {Platform.OS === "ios" ? (
-                <Image
-                  source="sf:lock"
-                  style={{ aspectRatio: 1, height: 36 }}
-                  tintColor={"white"}
-                />
-              ) : (
-                <IconSymbol name="lock" size={36} color="white" />
-              )}
+              {lockIcon}
               <Text style={[iOSUIKit.bodyWhite, { textAlign: "center" }]}>
                 Get Pro
               </Text>
@@ -124,34 +137,35 @@ export function RecentTitle({ item }: { item: Recent }) {
           </BlurView>
         </View>
         <View style={{ alignItems: "center" }}>
-          <Text
-            style={[
-              iOSUIKit.subhead,
-              {
-                color: colors.label,
-                maxWidth: 96,
-                textAlign: "center",
-              },
-            ]}
-            numberOfLines={2}
-          >
-            {item.name}
-          </Text>
+          <BlurTargetView ref={textBlurTargetRef}>
+            <Text
+              style={[
+                iOSUIKit.subhead,
+                {
+                  color: colors.label,
+                  maxWidth: 96,
+                  textAlign: "center",
+                },
+              ]}
+              numberOfLines={2}
+            >
+              {item.name}
+            </Text>
+          </BlurTargetView>
           <BlurView
-            intensity={50}
-            tint="systemChromeMaterial"
-            style={[
-              {
-                position: "absolute",
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                borderRadius: 12,
-                overflow: "hidden",
-                // maxWidth: 96,
-              },
-            ]}
+            blurTarget={textBlurTargetRef}
+            blurMethod="dimezisBlurView"
+            intensity={Platform.OS === "ios" ? 50 : 30}
+            tint={Platform.OS === "ios" ? "systemChromeMaterial" : "dark"}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              borderRadius: 12,
+              overflow: "hidden",
+            }}
           />
         </View>
       </Pressable>
@@ -234,37 +248,10 @@ export function RecentTitle({ item }: { item: Recent }) {
             shadowOpacity: 1,
           }}
         >
-          {item.img_path ? (
-            <Image
-              source={{
-                uri:
-                  item.media_type === "movie"
-                    ? `https://image.tmdb.org/t/p/w300${item.img_path}`
-                    : `https:${item.img_path.replace("thumb", "cover_big_2x")}`,
-              }}
-              style={{
-                aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
-                width: calculateWidth(12, 12, 3.5),
-                borderRadius: 12,
-                borderWidth: 1,
-                borderColor: colors.separator,
-                marginBottom: 8,
-              }}
-            />
+          {imageSource ? (
+            <Image source={imageSource} style={imageStyle} />
           ) : (
-            <View
-              style={{
-                backgroundColor: colors.systemGray,
-                aspectRatio: item.media_type === "movie" ? 2 / 3 : 3 / 4,
-                width: calculateWidth(12, 12, 3.5),
-                borderRadius: 12,
-                borderWidth: 1,
-                borderColor: colors.separator,
-                marginBottom: 8,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+            <View style={placeholderStyle}>
               <Text style={[iOSUIKit.bodyWhite, { textAlign: "center" }]}>
                 {item.name}
               </Text>

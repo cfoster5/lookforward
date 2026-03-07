@@ -16,3 +16,8 @@ export function useLimitHitOffering() {
   const query = useOfferings();
   return { ...query, data: query.data?.all["limit_hit"] };
 }
+
+export function useFollowPersonOffering() {
+  const query = useOfferings();
+  return { ...query, data: query.data?.all["pro_follow_person"] };
+}

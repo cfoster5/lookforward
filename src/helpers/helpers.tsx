@@ -217,6 +217,7 @@ export async function handlePersonToggle(params: {
   isCurrentlySubbed: boolean;
   isPro: boolean;
   proOffering: unknown;
+  followPersonOffering?: unknown;
 }): Promise<void> {
   const {
     personId,
@@ -226,11 +227,17 @@ export async function handlePersonToggle(params: {
     isCurrentlySubbed,
     isPro,
     proOffering,
+    followPersonOffering,
   } = params;
 
   // Non-Pro trying to follow: show paywall
   if (!isCurrentlySubbed && !isPro) {
-    await RevenueCatUI.presentPaywall({ offering: proOffering });
+    await RevenueCatUI.presentPaywall({
+      offering: followPersonOffering ?? proOffering,
+      customVariables: {
+        person: CustomVariableValue.string(personName),
+      },
+    });
     return;
   }
 

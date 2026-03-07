@@ -13,7 +13,10 @@ import Carousel from "react-native-snap-carousel";
 import { iOSUIKit } from "react-native-typography";
 import { PersonMovieCast, PersonMovieCrew } from "tmdb-ts";
 
-import { useProOfferings } from "@/api/getProOfferings";
+import {
+  useFollowPersonOffering,
+  useProOfferings,
+} from "@/api/getProOfferings";
 import ButtonMultiState from "@/components/ButtonMultiState";
 import { ExpandableText } from "@/components/ExpandableText";
 import { IconSymbol } from "@/components/IconSymbol";
@@ -76,6 +79,7 @@ export default function Actor() {
   const { personSubs } = useSubscriptionStore();
   const isFollowed = personSubs.some((sub) => sub.documentID === id.toString());
   const { data: pro } = useProOfferings();
+  const { data: followPerson } = useFollowPersonOffering();
 
   const recentPerson: Recent = {
     id: id,
@@ -114,6 +118,7 @@ export default function Actor() {
                       isCurrentlySubbed: isFollowed,
                       isPro,
                       proOffering: pro,
+                      followPersonOffering: followPerson,
                     })
                   }
                   hitSlop={8}
@@ -151,6 +156,7 @@ export default function Actor() {
                 isCurrentlySubbed: isFollowed,
                 isPro,
                 proOffering: pro,
+                followPersonOffering: followPerson,
               })
             }
             hitSlop={8}

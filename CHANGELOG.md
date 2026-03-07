@@ -1,5 +1,21 @@
 # Changelog
 
+## [7.28.0](https://github.com/cfoster5/lookforward/compare/v7.27.1...v7.28.0) (2026-03-07)
+
+
+### Features
+
+* add people notification toggle with pro paywall gate ([d81ae90](https://github.com/cfoster5/lookforward/commit/d81ae9032d44ff8a073c1f9caef731c9316e7812))
+* android design parity with iOS ([c0ea9b5](https://github.com/cfoster5/lookforward/commit/c0ea9b57cf738ed3765ce50ef642de41356f94ab))
+* enable following people for production builds ([0978f17](https://github.com/cfoster5/lookforward/commit/0978f17c52143654995ab14b359758fd4e161ea8))
+* pass item_name custom variable to limit_hit paywall ([791a85e](https://github.com/cfoster5/lookforward/commit/791a85e1087e5c5453b7db550c1f29ad53a3e826))
+
+
+### Bug Fixes
+
+* correct safe area handling for Settings screen ([a4ab483](https://github.com/cfoster5/lookforward/commit/a4ab483454917c0e16ec0d5f1930b2c6cc9b823b))
+* use BlurTargetView for proper Android blur rendering ([856d65e](https://github.com/cfoster5/lookforward/commit/856d65ee730dd57a3fe5453ff80a9f24cf8f3449))
+
 ## [7.27.1](https://github.com/cfoster5/lookforward/compare/v7.27.0...v7.27.1) (2026-03-02)
 
 

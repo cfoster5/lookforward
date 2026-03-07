@@ -160,9 +160,6 @@ export default function MovieScreen() {
   const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(
     movieDetails?.imdb_id,
   );
-  // const { data: traktDetails, isLoading: isLoadingTrakt } = useTraktMovie(
-  //   movieDetails?.imdb_id
-  // );
   const [detailIndex, setDetailIndex] = useState(0);
   const scrollOffset = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(

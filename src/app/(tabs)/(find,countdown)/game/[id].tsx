@@ -251,7 +251,7 @@ export default function Game() {
             (data?.videos ? (
               <FlatList
                 keyExtractor={(item) => item.id}
-                data={data!.videos}
+                data={data.videos}
                 renderItem={({ item }) => <Trailer video={item} />}
                 {...horizontalListProps}
               />

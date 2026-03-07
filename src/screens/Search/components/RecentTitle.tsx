@@ -10,6 +10,7 @@ import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { IconSymbol } from "@/components/IconSymbol";
 import { calculateWidth, handleMovieToggle } from "@/helpers/helpers";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useAuthStore, useSubscriptionStore } from "@/stores";
 import { useRecentItemsStore } from "@/stores/recents";
 import { colors } from "@/theme/colors";
@@ -17,7 +18,8 @@ import { Recent } from "@/types";
 import { onShare } from "@/utils/share";
 
 export function RecentTitle({ item }: { item: Recent }) {
-  const { user, isPro } = useAuthStore();
+  const user = useAuthenticatedUser();
+  const isPro = useAuthStore((s) => s.isPro);
   const { movieSubs, hasReachedLimit } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
   const { data: limitHit } = useLimitHitOffering();
@@ -201,7 +203,7 @@ export function RecentTitle({ item }: { item: Recent }) {
                 handleMovieToggle({
                   movieId: item.id.toString(),
                   movieName: item.name ?? "",
-                  userId: user!.uid,
+                  userId: user.uid,
                   isCurrentlySubbed: isMovieSub(),
                   isPro,
                   hasReachedLimit,

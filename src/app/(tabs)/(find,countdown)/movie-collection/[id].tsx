@@ -11,12 +11,12 @@ import { iOSUIKit } from "react-native-typography";
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
 import { ExpandableText } from "@/components/ExpandableText";
 import { IconSymbol } from "@/components/IconSymbol";
-import { colors } from "@/theme/colors";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import { calculateWidth } from "@/helpers/helpers";
 import { useCollection } from "@/screens/Collection/api/getCollection";
+import { colors } from "@/theme/colors";
 import { onShare } from "@/utils/share";
 
 // import { useGetCollection } from "./api/useGetCollection";
@@ -51,6 +51,7 @@ export default function Collection() {
   }, [isLoading, resolvedCollectionId, collection, posthog]);
 
   if (isLoading) return <LoadingScreen />;
+  if (!collection) return null;
 
   return (
     <>
@@ -90,26 +91,26 @@ export default function Collection() {
       <Animated.FlatList
         ListHeaderComponent={
           <>
-            {collection!.backdrop_path && (
+            {collection.backdrop_path && (
               <View style={{ marginHorizontal: -16 }}>
                 <AnimatedHeaderImage
                   scrollOffset={scrollOffset}
-                  path={collection!.backdrop_path}
+                  path={collection.backdrop_path}
                 />
               </View>
             )}
             <ThemedText
               style={[iOSUIKit.largeTitleEmphasized, { paddingTop: 16 }]}
             >
-              {collection!.name}
+              {collection.name}
             </ThemedText>
-            <ExpandableText text={collection!.overview} />
+            <ExpandableText text={collection.overview} />
             <View style={{ height: 16 }} />
           </>
         }
         onScroll={scrollHandler}
         scrollEventThrottle={16}
-        data={collection!.parts}
+        data={collection.parts}
         renderItem={({ item, index }) => (
           <MoviePoster
             movie={item}

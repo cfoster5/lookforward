@@ -9,6 +9,7 @@ import RevenueCatUI, {
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle, removeSub } from "@/helpers/helpers";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import {
   useAuthStore,
   useInterfaceStore,
@@ -26,7 +27,8 @@ interface Props {
 }
 
 function PosterButton({ movieId, movieName, game }: Props) {
-  const { user, isPro } = useAuthStore();
+  const user = useAuthenticatedUser();
+  const isPro = useAuthStore((s) => s.isPro);
   const { movieSubs, gameSubs, hasReachedLimit } = useSubscriptionStore();
   const { bottomSheetModalRef } = useInterfaceStore();
   const { data: pro } = useProOfferings();
@@ -40,10 +42,12 @@ function PosterButton({ movieId, movieName, game }: Props) {
     game && gameSubs.some((releaseDate) => releaseDate.game.id === game.id);
 
   async function toggleMovieSub() {
+    if (!movieId) return;
+
     return handleMovieToggle({
-      movieId: movieId!,
+      movieId,
       movieName: movieName ?? "",
-      userId: user!.uid,
+      userId: user.uid,
       isCurrentlySubbed: isMovieSub(),
       isPro,
       hasReachedLimit,
@@ -58,8 +62,10 @@ function PosterButton({ movieId, movieName, game }: Props) {
   }
 
   async function toggleGameSub() {
+    if (!game) return;
+
     const gameId = gameSubs.find(
-      (releaseDate) => releaseDate.game.id === game!.id,
+      (releaseDate) => releaseDate.game.id === game.id,
     )?.documentID;
 
     // If trying to add and limit reached, show Pro modal
@@ -72,7 +78,7 @@ function PosterButton({ movieId, movieName, game }: Props) {
       const result = await RevenueCatUI.presentPaywall({
         offering: limitHit ?? pro,
         customVariables: {
-          item_name: CustomVariableValue.string(game!.name),
+          item_name: CustomVariableValue.string(game.name),
         },
       });
       if (limitHit && result === PAYWALL_RESULT.CANCELLED) {
@@ -82,7 +88,7 @@ function PosterButton({ movieId, movieName, game }: Props) {
     }
 
     return isGameSub()
-      ? removeSub("gameReleases", gameId, user!.uid)
+      ? removeSub("gameReleases", gameId, user.uid)
       : bottomSheetModalRef.current?.present(game);
   }
 

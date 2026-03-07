@@ -241,7 +241,7 @@ export default function Actor() {
                 {dateToFullLocale(person?.birthday).toUpperCase()}
               </Text>
             )}
-            <ExpandableText text={person!.biography} />
+            <ExpandableText text={person?.biography ?? ""} />
             <View
               style={{
                 flexDirection: "row",

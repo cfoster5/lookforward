@@ -21,7 +21,10 @@ async function getOmdbMovie(id: MovieDetails["imdb_id"]) {
 export function useMovieRatings(id?: MovieDetails["imdb_id"]) {
   return useQuery({
     queryKey: ["omdbMovie", id],
-    queryFn: () => getOmdbMovie(id!),
+    queryFn: () => {
+      if (!id) throw new Error("imdb_id is required");
+      return getOmdbMovie(id);
+    },
     enabled: !!id,
     select: (data) => data.Ratings ?? [],
   });

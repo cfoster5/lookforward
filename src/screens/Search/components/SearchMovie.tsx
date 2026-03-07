@@ -9,6 +9,7 @@ import { MovieWithMediaType } from "tmdb-ts";
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth, handleMovieToggle } from "@/helpers/helpers";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import {
   useAppConfigStore,
   useAuthStore,
@@ -114,7 +115,8 @@ const Result = forwardRef<ComponentRef<typeof Pressable>, ResultProps>(
 Result.displayName = "Result";
 
 export function SearchMovie({ item }: { item: MovieWithMediaType }) {
-  const { user, isPro } = useAuthStore();
+  const user = useAuthenticatedUser();
+  const isPro = useAuthStore((s) => s.isPro);
   const { movieSubs, hasReachedLimit } = useSubscriptionStore();
   const { data: pro } = useProOfferings();
   const { data: limitHit } = useLimitHitOffering();
@@ -146,7 +148,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
           handleMovieToggle({
             movieId: item.id.toString(),
             movieName: item.title,
-            userId: user!.uid,
+            userId: user.uid,
             isCurrentlySubbed: isMovieSub(),
             isPro,
             hasReachedLimit,

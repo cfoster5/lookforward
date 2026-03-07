@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 
-import { useCountdownStore } from "@/stores";
+import { useCountdownStore } from "@/stores/countdown";
 
 import { useGameCountdowns } from "../api/getGameCountdowns";
 import { useMovieCountdowns } from "../api/getMovieCountdowns";

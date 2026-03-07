@@ -3,7 +3,7 @@ import { Pressable, Text, View } from "react-native";
 import Animated from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
 
-import { useCountdownStore } from "@/stores";
+import { useCountdownStore } from "@/stores/countdown";
 import { colors } from "@/theme/colors";
 
 import { useGameCountdowns } from "../api/getGameCountdowns";

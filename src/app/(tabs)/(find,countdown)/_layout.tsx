@@ -5,7 +5,7 @@ import { iOSUIKit } from "react-native-typography";
 
 import { CategoryControl } from "@/components/CategoryControl";
 import { CountdownLimitBanner } from "@/components/CountdownLimitBanner";
-import { useInterfaceStore } from "@/stores";
+import { useInterfaceStore } from "@/stores/interface";
 import { colors } from "@/theme/colors";
 
 import { AppleStackPreset } from "../(search)/_layout";

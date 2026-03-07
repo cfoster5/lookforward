@@ -17,16 +17,15 @@ import { calculateWidth } from "@/helpers/helpers";
 import { useSearch } from "@/hooks/useSearch";
 import { useGamesSearch } from "@/screens/Search/api/getGamesSearch";
 import { useMultiSearch } from "@/screens/Search/api/getMultiSearch";
-import {
-  RecentPerson,
-  RecentTitle,
-  SearchGame,
-  SearchMovie,
-  SearchPerson,
-  SectionHeader,
-} from "@/screens/Search/components";
+import { RecentPerson } from "@/screens/Search/components/RecentPerson";
+import { RecentTitle } from "@/screens/Search/components/RecentTitle";
+import { SearchGame } from "@/screens/Search/components/SearchGame";
+import { SearchMovie } from "@/screens/Search/components/SearchMovie";
+import { SearchPerson } from "@/screens/Search/components/SearchPerson";
+import { SectionHeader } from "@/screens/Search/components/SectionHeader";
 import useDebounce from "@/screens/Search/hooks/useDebounce";
-import { useAuthStore, useInterfaceStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { useInterfaceStore } from "@/stores/interface";
 import { useRecentItemsStore } from "@/stores/recents";
 import { colors } from "@/theme/colors";
 

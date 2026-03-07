@@ -28,7 +28,7 @@ import { useCollection } from "@/api/collections";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { useCollectionProgress } from "@/hooks/useCollectionProgress";
 import { tmdb } from "@/providers/app";
-import { useAppConfigStore } from "@/stores";
+import { useAppConfigStore } from "@/stores/appConfig";
 import { colors } from "@/theme/colors";
 import { dateToFullLocale } from "@/utils/dates";
 

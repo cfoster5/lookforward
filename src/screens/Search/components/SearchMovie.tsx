@@ -10,11 +10,9 @@ import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { calculateWidth, handleMovieToggle } from "@/helpers/helpers";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
-import {
-  useAppConfigStore,
-  useAuthStore,
-  useSubscriptionStore,
-} from "@/stores";
+import { useAppConfigStore } from "@/stores/appConfig";
+import { useAuthStore } from "@/stores/auth";
+import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
 import { dateToFullLocale } from "@/utils/dates";
 import { tryRequestReview } from "@/utils/requestReview";

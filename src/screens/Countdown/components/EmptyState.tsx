@@ -4,7 +4,7 @@ import { iOSUIKit } from "react-native-typography";
 
 import { CountdownLimitBanner } from "@/components/CountdownLimitBanner";
 import { IconSymbol } from "@/components/IconSymbol";
-import { useAuthStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
 import { useInterfaceStore } from "@/stores/interface";
 import { colors } from "@/theme/colors";
 

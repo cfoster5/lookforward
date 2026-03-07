@@ -4,8 +4,8 @@ import { ReleaseDateType } from "tmdb-ts";
 import { getReleaseDatesByCountry } from "@/helpers/getReleaseDatesByCountry";
 import { FirestoreMovie } from "@/interfaces/firebase";
 import { tmdb } from "@/providers/app";
-import { useSubscriptionStore } from "@/stores";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { useSubscriptionStore } from "@/stores/subscription";
 import { compareDates, isoToUTC } from "@/utils/dates";
 
 export async function getMovie(

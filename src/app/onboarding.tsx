@@ -3,7 +3,14 @@ import { Image } from "expo-image";
 import { Redirect, router } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect } from "react";
-import { Linking, Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
 

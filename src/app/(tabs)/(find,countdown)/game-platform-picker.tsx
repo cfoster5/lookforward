@@ -22,13 +22,14 @@ import RevenueCatUI, { CustomVariableValue } from "react-native-purchases-ui";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
-import { useAuthStore, useSubscriptionStore } from "@/stores";
-import { Game, ReleaseDate } from "@/types";
+import { useAuthStore } from "@/stores/auth";
+import { useSubscriptionStore } from "@/stores/subscription";
+import type { Games, ReleaseDate } from "@/types/igdb";
 import { formatGameReleaseDate } from "@/utils/dates";
 import { promptForNotificationsAfterCountdownAdd } from "@/utils/notifications";
 import { tryRequestReview } from "@/utils/requestReview";
 
-type GameWithReleaseDates = Game & {
+type GameWithReleaseDates = Games & {
   release_dates: ReleaseDate[];
 };
 

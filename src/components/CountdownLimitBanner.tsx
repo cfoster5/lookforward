@@ -8,7 +8,7 @@ import { iOSUIKit } from "react-native-typography";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { IconSymbol } from "@/components/IconSymbol";
-import { useAuthStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
 import {
   FREE_TIER_COUNTDOWN_LIMIT,
   useSubscriptionStore,

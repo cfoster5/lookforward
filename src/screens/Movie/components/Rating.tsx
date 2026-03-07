@@ -2,7 +2,7 @@ import { Image } from "expo-image";
 import { Pressable, Text, View } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
-import { useAuthStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
 import { colors } from "@/theme/colors";
 
 import { OMDBMovie } from "../../../screens/Movie/types/omdb";

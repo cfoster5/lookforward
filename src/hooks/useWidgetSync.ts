@@ -5,7 +5,8 @@ import { PosterSize } from "tmdb-ts";
 
 import { useGameCountdowns } from "@/screens/Countdown/api/getGameCountdowns";
 import { useMovieCountdowns } from "@/screens/Countdown/api/getMovieCountdowns";
-import { useAuthStore, useSubscriptionStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { useSubscriptionStore } from "@/stores/subscription";
 
 const APP_GROUP = "group.com.lookforward.app";
 

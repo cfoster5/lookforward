@@ -3,9 +3,8 @@ import { DateTime } from "luxon";
 
 import { tmdb } from "@/providers/app";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { MovieOption } from "@/types/movieOption";
 import { now } from "@/utils/dates";
-
-import { MovieOption } from "../types";
 
 type GetMoviesParams = {
   pageParam: number;

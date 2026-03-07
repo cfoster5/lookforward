@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { tmdb } from "@/providers/app";
-import { useInterfaceStore } from "@/stores";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { useInterfaceStore } from "@/stores/interface";
 
 const getMultiSearch = async (searchValue: string, language: string) =>
   await tmdb.search.multi({

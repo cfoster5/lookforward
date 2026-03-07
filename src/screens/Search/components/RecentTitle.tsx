@@ -11,10 +11,11 @@ import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { IconSymbol } from "@/components/IconSymbol";
 import { calculateWidth, handleMovieToggle } from "@/helpers/helpers";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
-import { useAuthStore, useSubscriptionStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
 import { useRecentItemsStore } from "@/stores/recents";
+import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
-import { Recent } from "@/types";
+import type { Recent } from "@/types/persistedStorage";
 import { onShare } from "@/utils/share";
 
 export function RecentTitle({ item }: { item: Recent }) {

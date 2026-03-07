@@ -4,8 +4,7 @@ import { PosterSize, Images } from "tmdb-ts";
 
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { calculateWidth } from "@/helpers/helpers";
-
-import type { ImageSelectionProps } from "../../../screens/Movie/types";
+import type { ImageSelectionProps } from "@/types/dropdown";
 
 import { GalleryImage } from "./GalleryImage";
 

@@ -5,7 +5,7 @@
 
 import { Text as DefaultText, View as DefaultView } from "react-native";
 
-import { useInterfaceStore } from "@/stores";
+import { useInterfaceStore } from "@/stores/interface";
 
 import Colors from "../constants/Colors";
 

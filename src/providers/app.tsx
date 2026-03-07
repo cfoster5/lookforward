@@ -21,7 +21,8 @@ import { TMDB } from "tmdb-ts";
 
 import { IGDB_AWS_KEY, TMDB_TOKEN } from "@/constants/ApiKeys";
 import { useRevenueCat } from "@/hooks/useRevenueCat";
-import { useAuthStore, useInterfaceStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { useInterfaceStore } from "@/stores/interface";
 import { IGDB_API } from "@/types/igdb";
 
 const queryClient = new QueryClient();

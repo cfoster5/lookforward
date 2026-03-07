@@ -1,5 +1,5 @@
 import { groupReleasesByGame } from "@/helpers/helpers";
-import { ReleaseDate } from "@/types";
+import type { ReleaseDate } from "@/types/igdb";
 
 const releaseDates: ReleaseDate[] = [
   {

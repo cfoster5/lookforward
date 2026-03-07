@@ -10,10 +10,10 @@ import { useProOfferings } from "@/api/getProOfferings";
 import { ContextMenuLink } from "@/components/ContextMenuLink";
 import { IconSymbol } from "@/components/IconSymbol";
 import { calculateWidth } from "@/helpers/helpers";
-import { useAuthStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
 import { useRecentItemsStore } from "@/stores/recents";
 import { colors } from "@/theme/colors";
-import { Recent } from "@/types";
+import type { Recent } from "@/types/persistedStorage";
 import { onShare } from "@/utils/share";
 
 export function RecentPerson({ item }: { item: Recent }) {

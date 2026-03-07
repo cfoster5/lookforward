@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { Platform } from "react-native";
 import Purchases, { CustomerInfo } from "react-native-purchases";
 
-import { useAuthStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
 
 export function useRevenueCat() {
   const { user, setIsPro } = useAuthStore();

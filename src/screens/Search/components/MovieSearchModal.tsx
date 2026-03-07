@@ -10,8 +10,7 @@ import ButtonMultiState from "@/components/ButtonMultiState";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { targetedProviders } from "@/helpers/helpers";
-
-import { MovieOption } from "../types";
+import { MovieOption } from "@/types/movieOption";
 
 export function MovieSearchModal({
   modalRef,

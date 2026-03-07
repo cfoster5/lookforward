@@ -18,8 +18,8 @@ import { FirestoreMovie, FirestorePerson } from "@/interfaces/firebase";
 import { getGameRelease } from "@/screens/Countdown/api/getGameCountdowns";
 import { getMovie } from "@/screens/Countdown/api/getMovieCountdowns";
 import { getPersonCountdown } from "@/screens/Countdown/api/getPersonCountdowns";
-import { useSubscriptionStore } from "@/stores";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { useSubscriptionStore } from "@/stores/subscription";
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 
 export default function TabStack() {

@@ -7,7 +7,8 @@ import { useEffect, useState } from "react";
 import { Platform } from "react-native";
 
 import { AppProvider } from "@/providers/app";
-import { useAuthStore, useInterfaceStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { useInterfaceStore } from "@/stores/interface";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

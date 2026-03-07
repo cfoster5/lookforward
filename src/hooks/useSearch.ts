@@ -2,7 +2,7 @@ import { useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { SearchBarProps } from "react-native-screens";
 
-import { useInterfaceStore } from "@/stores";
+import { useInterfaceStore } from "@/stores/interface";
 
 export function useSearch(options: Omit<SearchBarProps, "ref"> = {}) {
   const [search, setSearch] = useState("");

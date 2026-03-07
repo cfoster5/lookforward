@@ -11,9 +11,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
-import { useInterfaceStore } from "@/stores";
+import { useInterfaceStore } from "@/stores/interface";
 import { colors } from "@/theme/colors";
-import { Game, ReleaseDate } from "@/types";
+import type { Games, ReleaseDate } from "@/types/igdb";
 import { formatGameReleaseDate } from "@/utils/dates";
 import { promptForNotificationsAfterCountdownAdd } from "@/utils/notifications";
 import { tryRequestReview } from "@/utils/requestReview";
@@ -61,7 +61,7 @@ export function GamePlatformPicker() {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
   async function addGameRelease(
-    game: Game & {
+    game: Games & {
       release_dates: ReleaseDate[];
     },
     releaseDate: ReleaseDate,

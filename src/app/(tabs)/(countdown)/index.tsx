@@ -23,7 +23,8 @@ import { CountdownItem } from "@/screens/Countdown/components/CountdownItem";
 import { EmptyState } from "@/screens/Countdown/components/EmptyState";
 import { FilteredEmptyState } from "@/screens/Countdown/components/FilteredEmptyState";
 import { SectionHeader } from "@/screens/Countdown/components/SectionHeader";
-import { useCountdownStore, useSubscriptionStore } from "@/stores";
+import { useCountdownStore } from "@/stores/countdown";
+import { useSubscriptionStore } from "@/stores/subscription";
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 import { colors } from "@/theme/colors";
 
@@ -199,9 +200,9 @@ export default function Countdown() {
                     ...mediaFilterActions.map((action) => ({
                       id: action.id,
                       title: action.label,
-                      state: (filter === action.id
-                        ? "on"
-                        : "off") as "on" | "off",
+                      state: (filter === action.id ? "on" : "off") as
+                        | "on"
+                        | "off",
                     })),
                     ...(filter !== "people"
                       ? [

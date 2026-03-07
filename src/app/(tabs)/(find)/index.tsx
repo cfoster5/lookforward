@@ -1,6 +1,6 @@
 import { GameLayout } from "@/screens/Search/GameLayout";
 import { MovieLayout } from "@/screens/Search/MovieLayout";
-import { useInterfaceStore } from "@/stores";
+import { useInterfaceStore } from "@/stores/interface";
 
 export default function Search() {
   const { categoryIndex } = useInterfaceStore();

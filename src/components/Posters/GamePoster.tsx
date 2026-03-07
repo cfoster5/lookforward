@@ -1,7 +1,7 @@
 import { Image } from "expo-image";
 
-import { useSubscriptionStore } from "@/stores";
-import { Game, ReleaseDate } from "@/types";
+import { useSubscriptionStore } from "@/stores/subscription";
+import type { Games, ReleaseDate } from "@/types/igdb";
 import { timestamp } from "@/utils/dates";
 
 import { reusableStyles } from "../../helpers/styles";
@@ -12,7 +12,7 @@ import { PosterFallback } from "./PosterFallback";
 export function GamePoster({
   game,
 }: {
-  game: Game & { release_dates: ReleaseDate[] };
+  game: Games & { release_dates: ReleaseDate[] };
 }) {
   const { gameSubs } = useSubscriptionStore();
   const inCountdown = gameSubs.find(

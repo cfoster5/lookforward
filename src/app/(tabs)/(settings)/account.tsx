@@ -5,7 +5,7 @@ import { Alert, Platform, ScrollView, View } from "react-native";
 import { AppleSignInButton } from "@/components/AppleSignInButton";
 import { ViewSeparator } from "@/components/ViewSeparator";
 import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton";
-import { useAuthStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
 
 function handleSignOut() {
   const auth = getAuth();

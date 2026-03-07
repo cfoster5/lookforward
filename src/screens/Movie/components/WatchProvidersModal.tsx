@@ -8,7 +8,7 @@ import { LogoSize, WatchLocale } from "tmdb-ts";
 import { CustomBottomSheetModal } from "@/components/CustomBottomSheetModal";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
 import { calculateWidth } from "@/helpers/helpers";
-import { useInterfaceStore } from "@/stores";
+import { useInterfaceStore } from "@/stores/interface";
 import { colors } from "@/theme/colors";
 
 export function WatchProvidersModal({

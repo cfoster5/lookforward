@@ -7,7 +7,8 @@ import { Movie, PosterSize, Recommendation } from "tmdb-ts";
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle } from "@/helpers/helpers";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
-import { useAuthStore, useSubscriptionStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
 import { onShare } from "@/utils/share";
 
@@ -74,7 +75,9 @@ export function MoviePoster({
         delayLongPress={100} // Leave room for a user to be able to click
         onLongPress={() => {}} // A callback that does nothing
       >
-        {movie && <PosterButton movieId={movie.id.toString()} movieName={movie.title} />}
+        {movie && (
+          <PosterButton movieId={movie.id.toString()} movieName={movie.title} />
+        )}
         {posterPath ? (
           <Image
             style={[

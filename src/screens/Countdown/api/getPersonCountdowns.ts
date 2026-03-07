@@ -1,8 +1,8 @@
 import { useQueries } from "@tanstack/react-query";
 
 import { tmdb } from "@/providers/app";
-import { useSubscriptionStore } from "@/stores";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { useSubscriptionStore } from "@/stores/subscription";
 
 import { getMovie } from "./getMovieCountdowns";
 

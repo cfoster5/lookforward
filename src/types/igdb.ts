@@ -3055,7 +3055,7 @@ export interface ReleaseDate {
    * The release date
    * @format timestamp
    */
-  date?: string;
+  date?: number;
   game?: any;
   /** A human readable version of the release date */
   human?: string;
@@ -3090,6 +3090,11 @@ export interface ReleaseDate {
    * @format int32
    */
   y?: number;
+  /**
+   * The status of the release
+   * @format int32
+   */
+  status?: number;
   /**
    * Hash of the object
    * @format uuid

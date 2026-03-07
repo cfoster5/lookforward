@@ -29,8 +29,10 @@ import useAddRecent from "@/hooks/useAddRecent";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { usePerson } from "@/screens/Actor/api/getPerson";
 import { CarouselItem } from "@/screens/Actor/components/CarouselItem";
-import { useAuthStore, useSubscriptionStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
+import type { Recent } from "@/types/persistedStorage";
 import { dateToFullLocale, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 

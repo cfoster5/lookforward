@@ -57,25 +57,24 @@ import useAddRecent from "@/hooks/useAddRecent";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useMovie } from "@/screens/Movie/api/getMovie";
 import { useMovieRatings } from "@/screens/Movie/api/getMovieRatings";
-import {
-  ApplePillButton,
-  BlueBullet,
-  DiscoverListLabel,
-  ImageGallery,
-  Person,
-  Rating,
-  WatchProvidersModal,
-} from "@/screens/Movie/components";
-import {
-  VideoSelectionProps,
-  ImageSelectionProps,
-  CreditSelectionProps,
-} from "@/screens/Movie/types";
+import { ApplePillButton } from "@/screens/Movie/components/ApplePillButton";
+import { BlueBullet } from "@/screens/Movie/components/BlueBullet";
+import { DiscoverListLabel } from "@/screens/Movie/components/DiscoverListLabel";
+import { ImageGallery } from "@/screens/Movie/components/ImageGallery";
+import { Person } from "@/screens/Movie/components/Person";
+import { Rating } from "@/screens/Movie/components/Rating";
+import { WatchProvidersModal } from "@/screens/Movie/components/WatchProvidersModal";
 import { composeGroupedJobCredits } from "@/screens/Movie/utils/composeGroupedJobCredits";
 import { composeRuntime } from "@/screens/Movie/utils/composeRuntime";
-import { useAuthStore, useSubscriptionStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
-import { Recent } from "@/types";
+import type {
+  CreditSelectionProps,
+  ImageSelectionProps,
+  VideoSelectionProps,
+} from "@/types/dropdown";
+import type { Recent } from "@/types/persistedStorage";
 import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 

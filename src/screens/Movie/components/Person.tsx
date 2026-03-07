@@ -11,7 +11,7 @@ import { iOSUIKit } from "react-native-typography";
 import { Cast, Crew } from "tmdb-ts";
 
 import { ContextMenuLink } from "@/components/ContextMenuLink";
-import { useInterfaceStore } from "@/stores";
+import { useInterfaceStore } from "@/stores/interface";
 import { colors } from "@/theme/colors";
 import { onShare } from "@/utils/share";
 

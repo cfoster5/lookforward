@@ -10,20 +10,18 @@ import RevenueCatUI, {
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle, removeSub } from "@/helpers/helpers";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
-import {
-  useAuthStore,
-  useInterfaceStore,
-  useSubscriptionStore,
-} from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { useInterfaceStore } from "@/stores/interface";
+import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
-import { Game, ReleaseDate } from "@/types";
+import type { Games, ReleaseDate } from "@/types/igdb";
 
 import { IconSymbol } from "./IconSymbol";
 
 interface Props {
   movieId?: string;
   movieName?: string;
-  game?: Game & { release_dates: ReleaseDate[] };
+  game?: Games & { release_dates: ReleaseDate[] };
 }
 
 function PosterButton({ movieId, movieName, game }: Props) {

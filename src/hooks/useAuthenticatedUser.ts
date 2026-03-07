@@ -1,6 +1,6 @@
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
-import { useAuthStore } from "@/stores";
+import { useAuthStore } from "@/stores/auth";
 
 /**
  * Hook for authenticated contexts where user must be non-null.

@@ -7,7 +7,14 @@ import {
 } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useState, Fragment } from "react";
-import { Platform, ScrollView, View, FlatList, Pressable, Text } from "react-native";
+import {
+  Platform,
+  ScrollView,
+  View,
+  FlatList,
+  Pressable,
+  Text,
+} from "react-native";
 import RevenueCatUI, {
   CustomVariableValue,
   PAYWALL_RESULT,
@@ -18,8 +25,8 @@ import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { CategoryControl } from "@/components/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
-import { IconSymbol } from "@/components/IconSymbol";
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
+import { IconSymbol } from "@/components/IconSymbol";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
@@ -28,13 +35,11 @@ import { removeSub, getGameReleaseDate } from "@/helpers/helpers";
 import useAddRecent from "@/hooks/useAddRecent";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useGame } from "@/screens/Game/api/getGame";
-import {
-  useAuthStore,
-  useSubscriptionStore,
-  useInterfaceStore,
-} from "@/stores";
+import { useAuthStore } from "@/stores/auth";
+import { useInterfaceStore } from "@/stores/interface";
+import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
-import { Recent } from "@/types";
+import type { Recent } from "@/types/persistedStorage";
 import { timestamp } from "@/utils/dates";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { igdb } from "@/providers/app";
-import { useInterfaceStore } from "@/stores";
+import { useInterfaceStore } from "@/stores/interface";
 
 async function getGamesSearch(searchValue: string) {
   const query = `fields name, cover.*, release_dates.*, release_dates.platform.abbreviation, release_dates.platform.name;

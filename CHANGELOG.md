@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.29.0](https://github.com/cfoster5/lookforward/compare/v7.28.0...v7.29.0) (2026-03-07)
+
+
+### Features
+
+* add pro_follow_person paywall with person custom variable ([0ca7f1f](https://github.com/cfoster5/lookforward/commit/0ca7f1f9bd450dfab934b871098e50f92e5ab49d))
+
 ## [7.28.0](https://github.com/cfoster5/lookforward/compare/v7.27.1...v7.28.0) (2026-03-07)
 
 

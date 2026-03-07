@@ -104,30 +104,26 @@ export default function Actor() {
           options={{
             headerRight: () => (
               <View style={{ flexDirection: "row", gap: 16 }}>
-                {__DEV__ && (
-                  <Pressable
-                    onPress={() =>
-                      handlePersonToggle({
-                        personId: id.toString(),
-                        personName: person?.name ?? "",
-                        profilePath: person?.profile_path ?? null,
-                        userId: user.uid,
-                        isCurrentlySubbed: isFollowed,
-                        isPro,
-                        proOffering: pro,
-                      })
-                    }
-                    hitSlop={8}
-                  >
-                    <IconSymbol
-                      name={
-                        isFollowed ? "checkmark" : "person.fill.badge.plus"
-                      }
-                      size={24}
-                      color={colors.label as string}
-                    />
-                  </Pressable>
-                )}
+                <Pressable
+                  onPress={() =>
+                    handlePersonToggle({
+                      personId: id.toString(),
+                      personName: person?.name ?? "",
+                      profilePath: person?.profile_path ?? null,
+                      userId: user.uid,
+                      isCurrentlySubbed: isFollowed,
+                      isPro,
+                      proOffering: pro,
+                    })
+                  }
+                  hitSlop={8}
+                >
+                  <IconSymbol
+                    name={isFollowed ? "checkmark" : "person.fill.badge.plus"}
+                    size={24}
+                    color={colors.label as string}
+                  />
+                </Pressable>
                 <Pressable
                   onPress={() => onShare(`person/${id}`, "headerButton")}
                   hitSlop={8}
@@ -144,31 +140,29 @@ export default function Actor() {
         />
       )}
       <Stack.Toolbar placement="right">
-        {__DEV__ && (
-          <Stack.Toolbar.View>
-            <Pressable
-              onPress={() =>
-                handlePersonToggle({
-                  personId: id.toString(),
-                  personName: person?.name ?? "",
-                  profilePath: person?.profile_path ?? null,
-                  userId: user.uid,
-                  isCurrentlySubbed: isFollowed,
-                  isPro,
-                  proOffering: pro,
-                })
-              }
-              hitSlop={8}
-            >
-              <Image
-                source={isFollowed ? "sf:checkmark" : "sf:person.badge.plus"}
-                style={{ fontSize: 28 }}
-                transition={{ effect: "sf:replace" }}
-                tintColor={colors.label as string}
-              />
-            </Pressable>
-          </Stack.Toolbar.View>
-        )}
+        <Stack.Toolbar.View>
+          <Pressable
+            onPress={() =>
+              handlePersonToggle({
+                personId: id.toString(),
+                personName: person?.name ?? "",
+                profilePath: person?.profile_path ?? null,
+                userId: user.uid,
+                isCurrentlySubbed: isFollowed,
+                isPro,
+                proOffering: pro,
+              })
+            }
+            hitSlop={8}
+          >
+            <Image
+              source={isFollowed ? "sf:checkmark" : "sf:person.badge.plus"}
+              style={{ fontSize: 28 }}
+              transition={{ effect: "sf:replace" }}
+              tintColor={colors.label as string}
+            />
+          </Pressable>
+        </Stack.Toolbar.View>
         <Stack.Toolbar.Button
           onPress={() => onShare(`person/${id}`, "headerButton")}
         >

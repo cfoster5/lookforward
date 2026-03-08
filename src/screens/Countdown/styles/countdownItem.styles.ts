@@ -10,10 +10,11 @@ export function createCountdownItemStyles(
 ) {
   return StyleSheet.create({
     rowFront: {
-      borderTopLeftRadius: isFirstInSection ? 10 : 0,
-      borderTopRightRadius: isFirstInSection ? 10 : 0,
-      borderBottomLeftRadius: isLastInSection ? 10 : 0,
-      borderBottomRightRadius: isLastInSection ? 10 : 0,
+      borderCurve: "continuous",
+      borderTopLeftRadius: isFirstInSection ? 26 : 0,
+      borderTopRightRadius: isFirstInSection ? 26 : 0,
+      borderBottomLeftRadius: isLastInSection ? 26 : 0,
+      borderBottomRightRadius: isLastInSection ? 26 : 0,
       overflow: "hidden",
       backgroundColor: isSelected ? colors.systemGray4 : colors.systemGray6,
     },
@@ -25,30 +26,32 @@ export function createCountdownItemStyles(
     image: {
       width: 60,
       aspectRatio,
-      borderRadius: 6,
+      borderRadius: 13,
       marginLeft: 16,
-      marginTop: 8,
-      marginBottom: 8,
+      marginVertical: 16,
+      borderCurve: "continuous",
+      marginRight: 8,
       borderWidth: StyleSheet.hairlineWidth,
       borderColor: colors.separator,
     },
     middle: {
-      borderColor: colors.separator,
-      borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
       flex: 1,
       justifyContent: "center",
-      marginLeft: 16,
-      paddingTop: 8,
-      paddingBottom: 8,
+      paddingVertical: 8,
     },
     countdown: {
-      borderColor: colors.separator,
-      borderBottomWidth: isLastInSection ? 0 : StyleSheet.hairlineWidth,
-      flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      paddingTop: 8,
-      paddingBottom: 8,
+      paddingVertical: 8,
+      paddingRight: 16,
+    },
+    separator: {
+      position: "absolute",
+      right: 0,
+      bottom: 0,
+      height: isLastInSection ? 0 : StyleSheet.hairlineWidth,
+      backgroundColor: colors.separator,
+      zIndex: 1,
     },
     radioButtonContainer: {
       justifyContent: "center",
@@ -57,6 +60,11 @@ export function createCountdownItemStyles(
 }
 
 export const staticCountdownItemStyles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    flex: 1,
+    position: "relative",
+  },
   posterShadow: {
     justifyContent: "center",
     shadowOffset: { width: 0, height: 1 },

@@ -82,14 +82,14 @@ export function CollectionProgressCard({
         {Platform.OS === "ios" ? (
           <Image
             source="sf:chevron.right"
-            style={{ width: 17, height: 17 }}
-            tintColor={colors.secondaryLabel as string}
+            style={{ aspectRatio: 1, height: 17 }}
+            tintColor={colors.tertiaryLabel as string}
           />
         ) : (
           <IconSymbol
             name="chevron.right"
             size={17}
-            color={colors.secondaryLabel as string}
+            color={colors.tertiaryLabel as string}
           />
         )}
       </View>
@@ -100,7 +100,7 @@ export function CollectionProgressCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.secondarySystemGroupedBackground,
-    borderRadius: 12,
+    borderRadius: 26,
     padding: 16,
     marginVertical: 8,
   },

@@ -80,7 +80,7 @@ export const CountdownLimitBanner = ({
           paddingVertical: 10,
           paddingHorizontal: 16,
           marginBottom: 16,
-          borderRadius: 10,
+          borderRadius: 26,
           flexDirection: "row",
           alignItems: "center",
         },

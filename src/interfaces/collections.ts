@@ -1,6 +1,6 @@
 import { Timestamp } from "@react-native-firebase/firestore";
 
-export type CollectionCategory = "oscars" | "franchise" | "seasonal" | "custom";
+type CollectionCategory = "oscars" | "franchise" | "seasonal" | "custom";
 
 export interface CuratedCollection {
   id: string; // e.g., "oscars-2026-best-picture"

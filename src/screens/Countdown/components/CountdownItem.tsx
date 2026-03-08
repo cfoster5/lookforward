@@ -58,7 +58,8 @@ export function CountdownItem({
 
   const { handlePress } = useCountdownItemNavigation(item, sectionName);
 
-  const { slideStyle, radioButtonStyle } = useCountdownItemAnimation(isEditing);
+  const { slideStyle, radioButtonStyle, separatorStyle } =
+    useCountdownItemAnimation(isEditing);
 
   const documentId = getDocumentId(item, sectionName);
   const selectedItems =
@@ -81,60 +82,64 @@ export function CountdownItem({
 
   return (
     <Pressable onPress={handlePress} style={styles.rowFront}>
-      <Animated.View style={[styles.slide, slideStyle]}>
-        <Animated.View style={[styles.radioButtonContainer, radioButtonStyle]}>
-          <RadioButton isSelected={isSelected} />
-        </Animated.View>
-        <View style={staticCountdownItemStyles.posterShadow}>
-          {imageSource ? (
-            <Image
-              style={[
-                styles.image,
-                isCircular && { borderRadius: imageHeight / 2 },
-              ]}
-              source={{ uri: imageSource }}
-              contentFit="cover"
-            />
-          ) : (
-            <View
-              style={[
-                styles.image,
-                isCircular && { borderRadius: imageHeight / 2 },
-                {
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: colors.tertiarySystemFill as string,
-                },
-              ]}
-            >
-              <Text
+      <View style={staticCountdownItemStyles.row}>
+        <Animated.View style={[styles.slide, slideStyle]}>
+          <Animated.View
+            style={[styles.radioButtonContainer, radioButtonStyle]}
+          >
+            <RadioButton isSelected={isSelected} />
+          </Animated.View>
+          <View style={staticCountdownItemStyles.posterShadow}>
+            {imageSource ? (
+              <Image
                 style={[
-                  iOSUIKit.bodyEmphasized,
-                  { color: colors.secondaryLabel, textAlign: "center" },
+                  styles.image,
+                  isCircular && { borderRadius: imageHeight / 2 },
+                ]}
+                source={{ uri: imageSource }}
+                contentFit="cover"
+              />
+            ) : (
+              <View
+                style={[
+                  styles.image,
+                  isCircular && { borderRadius: imageHeight / 2 },
+                  {
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: colors.tertiarySystemFill as string,
+                  },
                 ]}
               >
-                {title
-                  .split(" ")
-                  .map((word: string) => word.charAt(0))
-                  .join("")}
-              </Text>
-            </View>
-          )}
-        </View>
-        <View style={styles.middle}>
-          <Text
-            style={[iOSUIKit.body, { color: colors.label }]}
-            numberOfLines={2}
-          >
-            {title}
-          </Text>
-          <Text
-            style={[iOSUIKit.subhead, { color: colors.secondaryLabel }]}
-            numberOfLines={2}
-          >
-            {formattedDate}
-          </Text>
-        </View>
+                <Text
+                  style={[
+                    iOSUIKit.bodyEmphasized,
+                    { color: colors.secondaryLabel, textAlign: "center" },
+                  ]}
+                >
+                  {title
+                    .split(" ")
+                    .map((word: string) => word.charAt(0))
+                    .join("")}
+                </Text>
+              </View>
+            )}
+          </View>
+          <View style={styles.middle}>
+            <Text
+              style={[iOSUIKit.body, { color: colors.label }]}
+              numberOfLines={2}
+            >
+              {title}
+            </Text>
+            <Text
+              style={[iOSUIKit.subhead, { color: colors.secondaryLabel }]}
+              numberOfLines={2}
+            >
+              {formattedDate}
+            </Text>
+          </View>
+        </Animated.View>
         <View style={styles.countdown}>
           {daysUntil !== null && daysUntil <= 0 ? (
             <Text style={[iOSUIKit.body, { color: colors.secondaryLabel }]}>
@@ -153,7 +158,11 @@ export function CountdownItem({
             </>
           )}
         </View>
-      </Animated.View>
+        <Animated.View
+          // pointerEvents="none"
+          style={[styles.separator, separatorStyle]}
+        />
+      </View>
     </Pressable>
   );
 }

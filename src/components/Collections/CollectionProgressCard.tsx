@@ -60,6 +60,7 @@ export function CollectionProgressCard({
           has_early_tracked: hasEarlyTracked,
         });
       }}
+      asChild
     >
       <View style={styles.row}>
         <View style={styles.content}>

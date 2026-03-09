@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.29.2](https://github.com/cfoster5/lookforward/compare/v7.29.1...v7.29.2) (2026-03-09)
+
+
+### Bug Fixes
+
+* replace toSorted with spread+sort for Hermes compatibility ([0d7a56a](https://github.com/cfoster5/lookforward/commit/0d7a56a79ea89e875bdf271ca40ba1eb9b9bace2))
+
 ## [7.29.1](https://github.com/cfoster5/lookforward/compare/v7.29.0...v7.29.1) (2026-03-09)
 
 

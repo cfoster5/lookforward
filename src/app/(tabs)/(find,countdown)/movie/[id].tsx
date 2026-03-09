@@ -30,7 +30,7 @@ import {
   BackdropSize,
   PosterSize,
   ReleaseDate,
-  ReleaseDateType,
+
 } from "tmdb-ts";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
@@ -47,6 +47,7 @@ import { MoviePoster } from "@/components/Posters/MoviePoster";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
+import { getPreferredReleaseDate } from "@/helpers/getPreferredReleaseDate";
 import { getReleaseDatesByCountry } from "@/helpers/getReleaseDatesByCountry";
 import {
   calculateWidth,
@@ -75,7 +76,7 @@ import type {
   VideoSelectionProps,
 } from "@/types/dropdown";
 import type { Recent } from "@/types/persistedStorage";
-import { isoToUTC, compareDates, timestamp } from "@/utils/dates";
+import { isoToUTC, timestamp } from "@/utils/dates";
 import { onShare } from "@/utils/share";
 
 function ScrollViewWithFlatList({
@@ -133,17 +134,9 @@ function ScrollViewWithFlatList({
 }
 
 export function getReleaseDate(releaseDates: ReleaseDate[]) {
-  const nonPremiereDates = releaseDates.filter(
-    (release) => release.type !== ReleaseDateType.Premiere,
-  );
-  // TODO: handle empty array case
-  const sortedNonPremiereDates = nonPremiereDates.sort(
-    ({ release_date: a }, { release_date: b }) =>
-      compareDates(isoToUTC(a), isoToUTC(b)),
-  );
-  return isoToUTC(sortedNonPremiereDates[0].release_date).toLocaleString(
-    DateTime.DATE_FULL,
-  );
+  const preferred = getPreferredReleaseDate(releaseDates);
+  if (!preferred) return "No release date yet";
+  return isoToUTC(preferred.release_date).toLocaleString(DateTime.DATE_FULL);
 }
 
 export default function MovieScreen() {
@@ -225,10 +218,20 @@ export default function MovieScreen() {
 
   return (
     <>
-      {/* Set title for back navigation but set to transparent to hide title */}
-      <Stack.Screen.Title style={{ color: "transparent" }}>
-        {movieDetails.title}
-      </Stack.Screen.Title>
+      {movieDetails.backdrop_path ? (
+        <Stack.Screen.Title style={{ color: "transparent" }}>
+          {movieDetails.title}
+        </Stack.Screen.Title>
+      ) : (
+        <Stack.Screen
+          options={{
+            title: movieDetails.title,
+            headerLargeTitle: true,
+            headerTitleStyle: { color: colors.label as string },
+            headerLargeTitleStyle: { color: colors.label as string },
+          }}
+        />
+      )}
       {Platform.OS === "android" && (
         <Stack.Screen
           options={{
@@ -327,9 +330,11 @@ export default function MovieScreen() {
           />
         )}
         <View style={{ margin: 16 }}>
-          <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-            {movieDetails.title}
-          </ThemedText>
+          {movieDetails.backdrop_path && (
+            <ThemedText style={iOSUIKit.largeTitleEmphasized}>
+              {movieDetails.title}
+            </ThemedText>
+          )}
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.secondarySubhedEmphasized}>
               {usReleaseDates

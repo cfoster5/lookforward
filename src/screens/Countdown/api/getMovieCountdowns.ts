@@ -1,12 +1,11 @@
 import { useQueries } from "@tanstack/react-query";
-import { ReleaseDateType } from "tmdb-ts";
 
+import { getPreferredReleaseDate } from "@/helpers/getPreferredReleaseDate";
 import { getReleaseDatesByCountry } from "@/helpers/getReleaseDatesByCountry";
 import { FirestoreMovie } from "@/interfaces/firebase";
 import { tmdb } from "@/providers/app";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useSubscriptionStore } from "@/stores/subscription";
-import { compareDates, isoToUTC } from "@/utils/dates";
 
 export async function getMovie(
   movieId: FirestoreMovie["documentID"],
@@ -21,13 +20,11 @@ export async function getMovie(
 
   const releaseDates = getReleaseDatesByCountry(json.release_dates);
 
-  const sortedNonPremiereDates = releaseDates
-    ?.filter((release) => release.type !== ReleaseDateType.Premiere)
-    .sort(({ release_date: a }, { release_date: b }) =>
-      compareDates(isoToUTC(a), isoToUTC(b)),
-    );
+  const preferred = releaseDates
+    ? getPreferredReleaseDate(releaseDates)
+    : undefined;
 
-  const date = sortedNonPremiereDates?.[0]?.release_date;
+  const date = preferred?.release_date;
 
   return {
     ...json,

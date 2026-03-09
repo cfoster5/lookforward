@@ -1,5 +1,15 @@
 # Changelog
 
+## [7.29.1](https://github.com/cfoster5/lookforward/compare/v7.29.0...v7.29.1) (2026-03-09)
+
+
+### Bug Fixes
+
+* add asChild Link attribute to CollectionProgressCard to vertically center ([84c282a](https://github.com/cfoster5/lookforward/commit/84c282a8c9ac39774365c762c66e7fd844d104d3))
+* add missing PostHog analytics to person follow flow ([bd07ba4](https://github.com/cfoster5/lookforward/commit/bd07ba484ee5cb02484b554d42defa4016fbdbe6))
+* prefer theatrical release date over limited/early access ([366f69f](https://github.com/cfoster5/lookforward/commit/366f69f17139e4c5fc5b1fab28edac73e8dd162f))
+* update various Countdown styles ([475ef63](https://github.com/cfoster5/lookforward/commit/475ef634039c32355041e72753e819a0d985e73b))
+
 ## [7.29.0](https://github.com/cfoster5/lookforward/compare/v7.28.0...v7.29.0) (2026-03-07)
 
 

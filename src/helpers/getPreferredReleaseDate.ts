@@ -3,7 +3,7 @@ import { ReleaseDate, ReleaseDateType } from "tmdb-ts";
 import { compareDates, isoToUTC } from "@/utils/dates";
 
 function earliest(dates: ReleaseDate[]): ReleaseDate {
-  return dates.toSorted(({ release_date: a }, { release_date: b }) =>
+  return [...dates].sort(({ release_date: a }, { release_date: b }) =>
     compareDates(isoToUTC(a), isoToUTC(b)),
   )[0];
 }

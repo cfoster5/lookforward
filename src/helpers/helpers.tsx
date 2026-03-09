@@ -192,6 +192,7 @@ export async function subToPerson(
   name: string,
   profilePath: string | null,
   userId: string,
+  onFollowed?: () => void,
 ) {
   try {
     const db = getFirestore();
@@ -201,6 +202,7 @@ export async function subToPerson(
       { subscribers: arrayUnion(userId), name, profilePath },
       { merge: true },
     );
+    onFollowed?.();
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     await promptForNotificationsAfterCountdownAdd(userId);
     await tryRequestReview();
@@ -218,6 +220,9 @@ export async function handlePersonToggle(params: {
   isPro: boolean;
   proOffering: unknown;
   followPersonOffering?: unknown;
+  onPaywallView?: () => void;
+  onPaywallDismiss?: () => void;
+  onFollowed?: () => void;
 }): Promise<void> {
   const {
     personId,
@@ -228,23 +233,30 @@ export async function handlePersonToggle(params: {
     isPro,
     proOffering,
     followPersonOffering,
+    onPaywallView,
+    onPaywallDismiss,
+    onFollowed,
   } = params;
 
   // Non-Pro trying to follow: show paywall
   if (!isCurrentlySubbed && !isPro) {
-    await RevenueCatUI.presentPaywall({
+    onPaywallView?.();
+    const result = await RevenueCatUI.presentPaywall({
       offering: followPersonOffering ?? proOffering,
       customVariables: {
         person: CustomVariableValue.string(personName),
       },
     });
+    if (result === PAYWALL_RESULT.CANCELLED) {
+      onPaywallDismiss?.();
+    }
     return;
   }
 
   // Otherwise toggle
   return isCurrentlySubbed
     ? removeSub("people", personId, userId)
-    : subToPerson(personId, personName, profilePath, userId);
+    : subToPerson(personId, personName, profilePath, userId, onFollowed);
 }
 
 export function getGameReleaseDate(

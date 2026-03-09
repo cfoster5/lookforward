@@ -1,5 +1,6 @@
 import { Image } from "expo-image";
 import { Stack, useLocalSearchParams } from "expo-router";
+import { usePostHog } from "posthog-react-native";
 import { useRef, useState } from "react";
 import {
   Dimensions,
@@ -80,6 +81,7 @@ export default function Actor() {
   const { isPro } = useAuthStore();
   const { personSubs } = useSubscriptionStore();
   const isFollowed = personSubs.some((sub) => sub.documentID === id.toString());
+  const posthog = usePostHog();
   const { data: pro } = useProOfferings();
   const { data: followPerson } = useFollowPersonOffering();
 
@@ -121,6 +123,15 @@ export default function Actor() {
                       isPro,
                       proOffering: pro,
                       followPersonOffering: followPerson,
+                      onPaywallView: () =>
+                        posthog.capture("follow:paywall_view"),
+                      onPaywallDismiss: () =>
+                        posthog.capture("follow:paywall_dismiss"),
+                      onFollowed: () =>
+                        posthog.capture("person:followed", {
+                          person_id: id.toString(),
+                          person_name: person?.name,
+                        }),
                     })
                   }
                   hitSlop={8}
@@ -159,6 +170,14 @@ export default function Actor() {
                 isPro,
                 proOffering: pro,
                 followPersonOffering: followPerson,
+                onPaywallView: () => posthog.capture("follow:paywall_view"),
+                onPaywallDismiss: () =>
+                  posthog.capture("follow:paywall_dismiss"),
+                onFollowed: () =>
+                  posthog.capture("person:followed", {
+                    person_id: id.toString(),
+                    person_name: person?.name,
+                  }),
               })
             }
             hitSlop={8}

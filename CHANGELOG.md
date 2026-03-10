@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.29.4](https://github.com/cfoster5/lookforward/compare/v7.29.3...v7.29.4) (2026-03-10)
+
+
+### Bug Fixes
+
+* keep countdown item right boundary stable during edit mode animation ([7cf27a1](https://github.com/cfoster5/lookforward/commit/7cf27a118fb3edeea0537dfabc2174664c63b6fe))
+
 ## [7.29.3](https://github.com/cfoster5/lookforward/compare/v7.29.2...v7.29.3) (2026-03-10)
 
 

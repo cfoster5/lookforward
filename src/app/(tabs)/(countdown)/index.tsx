@@ -287,6 +287,7 @@ export default function Countdown() {
           )}
         </Stack.Toolbar.Menu>
         <Stack.Toolbar.Button
+          accessibilityLabel="Toggle edit mode"
           onPress={() => {
             toggleIsEditing();
             if (isEditing) clearSelections();

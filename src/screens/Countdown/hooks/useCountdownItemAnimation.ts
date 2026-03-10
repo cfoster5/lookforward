@@ -7,30 +7,36 @@ import {
 } from "react-native-reanimated";
 
 const RADIO_BUTTON_WIDTH = 24;
+const RADIO_BUTTON_MARGIN = 16;
+const RADIO_TOTAL = RADIO_BUTTON_WIDTH + RADIO_BUTTON_MARGIN;
 const IMAGE_LEFT_MARGIN = 16;
 const IMAGE_WIDTH = 60;
 const IMAGE_RIGHT_MARGIN = 8;
 const TITLE_START_X_WITH_RADIO =
-  RADIO_BUTTON_WIDTH + IMAGE_LEFT_MARGIN + IMAGE_WIDTH + IMAGE_RIGHT_MARGIN;
+  RADIO_TOTAL + IMAGE_LEFT_MARGIN + IMAGE_WIDTH + IMAGE_RIGHT_MARGIN;
 
 export function useCountdownItemAnimation(isEditing: boolean) {
-  const transformAmount = useSharedValue(-24);
+  const progress = useSharedValue(isEditing ? 1 : 0);
 
   useEffect(() => {
-    transformAmount.value = withTiming(isEditing ? 16 : -24);
-  }, [isEditing, transformAmount]);
-
-  const slideStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: transformAmount.value }],
-  }));
+    progress.value = withTiming(isEditing ? 1 : 0);
+  }, [isEditing, progress]);
 
   const radioButtonStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(transformAmount.value, [-24, 16], [0, 1]),
+    width: interpolate(progress.value, [0, 1], [0, RADIO_TOTAL]),
+    opacity: progress.value,
   }));
 
   const separatorStyle = useAnimatedStyle(() => ({
-    left: TITLE_START_X_WITH_RADIO + transformAmount.value,
+    left: interpolate(
+      progress.value,
+      [0, 1],
+      [
+        IMAGE_LEFT_MARGIN + IMAGE_WIDTH + IMAGE_RIGHT_MARGIN,
+        TITLE_START_X_WITH_RADIO,
+      ],
+    ),
   }));
 
-  return { slideStyle, radioButtonStyle, separatorStyle };
+  return { radioButtonStyle, separatorStyle };
 }

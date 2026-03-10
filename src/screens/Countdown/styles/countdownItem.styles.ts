@@ -18,11 +18,6 @@ export function createCountdownItemStyles(
       overflow: "hidden",
       backgroundColor: isSelected ? colors.systemGray4 : colors.systemGray6,
     },
-    slide: {
-      flex: 1,
-      flexDirection: "row",
-      flexWrap: "wrap",
-    },
     image: {
       width: 60,
       aspectRatio,
@@ -38,6 +33,7 @@ export function createCountdownItemStyles(
       flex: 1,
       justifyContent: "center",
       paddingVertical: 8,
+      paddingRight: 8,
     },
     countdown: {
       alignItems: "center",
@@ -55,6 +51,8 @@ export function createCountdownItemStyles(
     },
     radioButtonContainer: {
       justifyContent: "center",
+      alignItems: "flex-end",
+      overflow: "hidden",
     },
   });
 }

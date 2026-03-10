@@ -2,7 +2,7 @@ import { Image } from "expo-image";
 import { Link } from "expo-router";
 import { SFSymbol } from "expo-symbols";
 import { usePostHog } from "posthog-react-native";
-import { Platform, View, Text, StyleSheet } from "react-native";
+import { Platform, View, Text, StyleSheet, Pressable } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 
 import { IconSymbol } from "@/components/IconSymbol";
@@ -62,7 +62,7 @@ export function CollectionProgressCard({
       }}
       asChild
     >
-      <View style={styles.row}>
+      <Pressable style={styles.row}>
         <View style={styles.content}>
           <View style={styles.header}>
             <IconSymbol name={iconName} size={20} color="#FFD60A" />
@@ -92,7 +92,7 @@ export function CollectionProgressCard({
             color={colors.tertiaryLabel as string}
           />
         )}
-      </View>
+      </Pressable>
     </Link>
   );
 }

@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.29.3](https://github.com/cfoster5/lookforward/compare/v7.29.2...v7.29.3) (2026-03-10)
+
+
+### Bug Fixes
+
+* use Pressable as Link asChild target for proper press handling ([f8ff0df](https://github.com/cfoster5/lookforward/commit/f8ff0dfa26364fc56b3481e674e88181b56d8d1e))
+
 ## [7.29.2](https://github.com/cfoster5/lookforward/compare/v7.29.1...v7.29.2) (2026-03-09)
 
 

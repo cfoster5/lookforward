@@ -2,7 +2,13 @@ function normalizePath(path: string) {
   try {
     // Handle both universal links and custom scheme links.
     const url = new URL(path, "lookforward://app");
-    return url.pathname.replace(/^\/+/, "");
+    const pathname = url.pathname.replace(/^\/+/, "");
+
+    if (url.protocol === "lookforward:" && url.host && url.host !== "app") {
+      return pathname ? `${url.host}/${pathname}` : url.host;
+    }
+
+    return pathname;
   } catch {
     return path.replace(/^\/+/, "");
   }
@@ -10,6 +16,33 @@ function normalizePath(path: string) {
 
 function remapSharedItemPath(path: string) {
   const normalizedPath = normalizePath(path);
+
+  if (normalizedPath === "countdown") {
+    return "/(tabs)/(countdown)";
+  }
+
+  const countdownMovieMatch = normalizedPath.match(/^countdown\/movie\/([^/?#]+)/);
+  if (countdownMovieMatch) {
+    return `/(tabs)/(countdown)?openType=movie&openId=${encodeURIComponent(
+      countdownMovieMatch[1],
+    )}`;
+  }
+
+  const countdownPersonMatch = normalizedPath.match(
+    /^countdown\/person\/([^/?#]+)/,
+  );
+  if (countdownPersonMatch) {
+    return `/(tabs)/(countdown)?openType=person&openId=${encodeURIComponent(
+      countdownPersonMatch[1],
+    )}`;
+  }
+
+  const countdownGameMatch = normalizedPath.match(/^countdown\/game\/([^/?#]+)/);
+  if (countdownGameMatch) {
+    return `/(tabs)/(countdown)?openType=game&openId=${encodeURIComponent(
+      countdownGameMatch[1],
+    )}`;
+  }
 
   const movieMatch = normalizedPath.match(/^movie\/([^/?#]+)/);
   if (movieMatch) {

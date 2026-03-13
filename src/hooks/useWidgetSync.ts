@@ -124,7 +124,7 @@ export function useWidgetSync() {
               : "";
 
             return {
-              id: game.id?.toString() || "",
+              id: game.game?.id?.toString() || "",
               title: game.game?.name || "Unknown Game",
               releaseDate: releaseDate
                 ? formatDateAsUTCDateOnly(releaseDate)

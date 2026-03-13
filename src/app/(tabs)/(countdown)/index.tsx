@@ -6,8 +6,8 @@ import {
 } from "@react-native-firebase/firestore";
 import { MenuView } from "@react-native-menu/menu";
 import { useScrollToTop } from "@react-navigation/native";
-import { Stack } from "expo-router";
-import { useRef, useState } from "react";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import { Platform, Pressable, SectionList, View } from "react-native";
 
 import { CollectionProgressCard } from "@/components/Collections/CollectionProgressCard";
@@ -29,6 +29,11 @@ import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 import { colors } from "@/theme/colors";
 
 export default function Countdown() {
+  const { openType, openId } = useLocalSearchParams<{
+    openType?: string;
+    openId?: string;
+  }>();
+  const handledWidgetRouteRef = useRef<string | null>(null);
   const {
     isEditing,
     toggleIsEditing,
@@ -52,6 +57,44 @@ export default function Countdown() {
   const [statusFilter, setStatusFilter] = useState<
     "all" | "released" | "unreleased"
   >("all");
+
+  useEffect(() => {
+    if (typeof openType !== "string" || typeof openId !== "string") {
+      handledWidgetRouteRef.current = null;
+      return;
+    }
+
+    const routeKey = `${openType}:${openId}`;
+    if (handledWidgetRouteRef.current === routeKey) return;
+    handledWidgetRouteRef.current = routeKey;
+
+    router.replace("/(tabs)/(countdown)");
+
+    requestAnimationFrame(() => {
+      if (openType === "movie") {
+        router.push({
+          pathname: "/(tabs)/(countdown)/movie/[id]",
+          params: { id: openId },
+        });
+        return;
+      }
+
+      if (openType === "person") {
+        router.push({
+          pathname: "/(tabs)/(countdown)/person/[id]",
+          params: { id: openId },
+        });
+        return;
+      }
+
+      if (openType === "game") {
+        router.push({
+          pathname: "/(tabs)/(countdown)/game/[id]",
+          params: { id: openId },
+        });
+      }
+    });
+  }, [openId, openType]);
 
   const mediaFilterActions = [
     {

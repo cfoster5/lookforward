@@ -71,7 +71,11 @@ const FindHeader = () => {
   );
 };
 
-function SharedLayout({ children }: { children: React.ReactNode }) {
+function SharedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <Stack>
       {children}

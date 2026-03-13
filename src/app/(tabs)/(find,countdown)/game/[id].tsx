@@ -28,6 +28,7 @@ import { ExpandableText } from "@/components/ExpandableText";
 import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { IconSymbol } from "@/components/IconSymbol";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
+import { LoadingScreen } from "@/components/LoadingScreen";
 import { Text as ThemedText } from "@/components/Themed";
 import Trailer from "@/components/Trailer";
 import { horizontalListProps } from "@/constants/HorizontalListProps";
@@ -69,22 +70,34 @@ export default function Game() {
   const segments = useSegments();
   const stack = segments[1] as "(find)" | "(countdown)";
   const router = useRouter();
-  const { game: gameString } = useLocalSearchParams();
-  const game = gameString ? JSON.parse(gameString) : undefined;
+  const { id, game: gameString } = useLocalSearchParams<{
+    id?: string | string[];
+    game?: string | string[];
+  }>();
+  const serializedGame =
+    typeof gameString === "string" ? JSON.parse(gameString) : undefined;
+  const gameId = Number(
+    serializedGame?.id ?? (typeof id === "string" ? id : undefined),
+  );
   const user = useAuthenticatedUser();
   const { isPro } = useAuthStore();
   const { gameSubs, hasReachedLimit } = useSubscriptionStore();
   const { bottomSheetModalRef } = useInterfaceStore();
-  const countdownId = gameSubs.find((s) => s.game.id === game.id)?.documentID;
+  const countdownId = gameSubs.find((s) => s.game.id === gameId)?.documentID;
   const [detailIndex, setDetailIndex] = useState(0);
-  const { data, isLoading } = useGame(game.id);
+  const { data, isLoading } = useGame(
+    Number.isFinite(gameId) ? gameId : undefined,
+  );
   const paddingBottom = useBottomTabOverflow();
   const posthog = usePostHog();
+  const gameName = serializedGame?.name ?? data?.name ?? "";
+  const gameCoverUrl = serializedGame?.cover?.url ?? data?.cover?.url ?? "";
+  const gameReleaseDate = data ? getGameReleaseDate(data) : "TBD";
 
   const recentGame: Recent = {
-    id: game.id,
-    name: game.name,
-    img_path: game.cover?.url ?? "",
+    id: gameId,
+    name: gameName,
+    img_path: gameCoverUrl,
     last_viewed: timestamp,
     media_type: "game",
   };
@@ -106,7 +119,7 @@ export default function Game() {
         const result = await RevenueCatUI.presentPaywall({
           offering: limitHit ?? pro,
           customVariables: {
-            item_name: CustomVariableValue.string(game.name),
+            item_name: CustomVariableValue.string(gameName),
           },
         });
 
@@ -117,7 +130,11 @@ export default function Game() {
       }
 
       bottomSheetModalRef.current?.present({
-        ...game,
+        ...(serializedGame ?? {
+          id: gameId,
+          name: gameName,
+          cover: data?.cover,
+        }),
         release_dates: data?.release_dates,
       });
     } else {
@@ -125,11 +142,13 @@ export default function Game() {
     }
   };
 
+  if (!Number.isFinite(gameId)) return <LoadingScreen />;
+
   return (
     <>
       {/* Set title for back navigation but set to transparent to hide title */}
       <Stack.Screen.Title style={{ color: "transparent" }}>
-        {game.name}
+        {gameName}
       </Stack.Screen.Title>
       {Platform.OS === "android" && (
         <Stack.Screen
@@ -164,17 +183,17 @@ export default function Game() {
         contentInset={{ bottom: paddingBottom }}
         scrollIndicatorInsets={{ bottom: paddingBottom }}
       >
-        {game?.cover?.url && (
+        {gameCoverUrl && (
           <Image
             style={{ aspectRatio: 16 / 9 }}
             source={{
-              uri: `https:${game.cover.url.replace("thumb", "screenshot_big")}`,
+              uri: `https:${gameCoverUrl.replace("thumb", "screenshot_big")}`,
             }}
           />
         )}
         <View style={{ margin: 16, marginBottom: 0 }}>
           <ThemedText style={iOSUIKit.largeTitleEmphasized}>
-            {game.name}
+            {gameName}
           </ThemedText>
           <Text
             style={[
@@ -182,7 +201,7 @@ export default function Game() {
               { color: colors.secondaryLabel },
             ]}
           >
-            {getGameReleaseDate(data)}
+            {gameReleaseDate}
           </Text>
 
           {!isPro && (
@@ -196,7 +215,7 @@ export default function Game() {
             />
           )}
 
-          <ExpandableText text={data?.summary} />
+          <ExpandableText text={data?.summary ?? ""} />
 
           <View
             style={{

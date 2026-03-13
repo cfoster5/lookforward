@@ -1,14 +1,18 @@
-import { isLiquidGlassAvailable } from "expo-glass-effect";
+import {
+  getInitialNotification,
+  getMessaging,
+  onNotificationOpenedApp,
+} from "@react-native-firebase/messaging";
 import * as Linking from "expo-linking";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
-import { Platform } from "react-native";
+import { useEffect, useRef, useState } from "react";
 
 import { AppProvider } from "@/providers/app";
 import { useAuthStore } from "@/stores/auth";
 import { useInterfaceStore } from "@/stores/interface";
+import { navigateFromNotification } from "@/utils/notificationNavigation";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -27,6 +31,7 @@ export default function RootLayout() {
 function RootLayoutContent() {
   const [initializing, setInitializing] = useState(true);
   const { user } = useAuthStore();
+  const handledMessageIds = useRef(new Set<string>());
 
   useEffect(() => {
     Linking.getInitialURL().then((url) => console.log("Initial URL:", url));
@@ -36,6 +41,30 @@ function RootLayoutContent() {
     if (!user) return;
     setInitializing(false);
   }, [user]);
+
+  useEffect(() => {
+    if (initializing) return;
+
+    const messaging = getMessaging();
+
+    const handleNotificationOpen = (
+      remoteMessage: Awaited<ReturnType<typeof getInitialNotification>>,
+    ) => {
+      const messageId = remoteMessage?.messageId;
+      if (messageId && handledMessageIds.current.has(messageId)) return;
+
+      const navigated = navigateFromNotification(remoteMessage);
+      if (navigated && messageId) {
+        handledMessageIds.current.add(messageId);
+      }
+    };
+
+    getInitialNotification(messaging)
+      .then(handleNotificationOpen)
+      .catch(console.warn);
+
+    return onNotificationOpenedApp(messaging, handleNotificationOpen);
+  }, [initializing]);
 
   useEffect(() => {
     if (!initializing) SplashScreen.hideAsync().catch(console.warn);

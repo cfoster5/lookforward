@@ -94,6 +94,14 @@ struct SimpleEntry: TimelineEntry {
   let subscriptions: [Subscription]
 }
 
+func countdownDeepLink(for subscription: Subscription) -> URL? {
+  URL(string: "lookforward://countdown/\(subscription.type.rawValue)/\(subscription.id)")
+}
+
+func countdownRootDeepLink() -> URL {
+  URL(string: "lookforward://countdown")!
+}
+
 // MARK: - Widget Views
 struct widgetEntryView: View {
   var entry: Provider.Entry
@@ -134,18 +142,23 @@ struct SmallWidgetView: View {
         let items = Array(entry.subscriptions.prefix(2))
         VStack(alignment: .leading, spacing: 10) {
           ForEach(Array(items.enumerated()), id: \.offset) { index, subscription in
-            VStack(alignment: .leading, spacing: 4) {
-              Text(subscription.title)
-                .font(.subheadline)
-                .foregroundColor(.primary)
-                .lineLimit(2)
+            Link(destination: countdownDeepLink(for: subscription) ?? countdownRootDeepLink()) {
+              VStack(alignment: .leading, spacing: 4) {
+                Text(subscription.title)
+                  .font(.subheadline)
+                  .foregroundColor(.primary)
+                  .lineLimit(2)
 
-              if !subscription.releaseDate.isEmpty {
-                Text(formatDate(subscription.releaseDate).uppercased())
-                  .font(.footnote).fontWeight(.semibold)
-                  .foregroundColor(.secondary)
+                if !subscription.releaseDate.isEmpty {
+                  Text(formatDate(subscription.releaseDate).uppercased())
+                    .font(.footnote).fontWeight(.semibold)
+                    .foregroundColor(.secondary)
+                }
               }
+              .frame(maxWidth: .infinity, alignment: .leading)
+              .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
 
             if index < items.count - 1 {
               Divider()
@@ -159,6 +172,7 @@ struct SmallWidgetView: View {
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     .padding(0)
     .containerBackground(.background, for: .widget)
+    .widgetURL(entry.subscriptions.first.flatMap(countdownDeepLink))
   }
 }
 
@@ -183,42 +197,46 @@ struct MediumWidgetView: View {
         let items = Array(entry.subscriptions.prefix(2))
         VStack(alignment: .leading, spacing: 10) {
           ForEach(Array(items.enumerated()), id: \.offset) { index, subscription in
-            HStack(spacing: 8) {
-              PosterImage(posterBase64: subscription.posterBase64)
-                .frame(
-                  width: 40,
-                  height: subscription.type == .game ? (40 * 4 / 3) : (40 * 3 / 2)
-                )
-                .clipShape(ContainerRelativeShape())
+            Link(destination: countdownDeepLink(for: subscription) ?? countdownRootDeepLink()) {
+              HStack(spacing: 8) {
+                PosterImage(posterBase64: subscription.posterBase64)
+                  .frame(
+                    width: 40,
+                    height: subscription.type == .game ? (40 * 4 / 3) : (40 * 3 / 2)
+                  )
+                  .clipShape(ContainerRelativeShape())
 
-              VStack(alignment: .leading, spacing: 3) {
-                Text(subscription.title)
-                  .font(.body)
-                  .foregroundColor(.primary)
-                  .lineLimit(1)
-
-                if !subscription.releaseDate.isEmpty {
-                  Text(formatDate(subscription.releaseDate).uppercased())
-                    .font(.subheadline).fontWeight(.semibold)
-                    .foregroundColor(.secondary)
-                }
-              }
-
-              Spacer(minLength: 4)
-
-              if !subscription.releaseDate.isEmpty,
-                let days = daysUntilRelease(subscription.releaseDate)
-              {
-                VStack(spacing: 0) {
-                  Text("\(days)")
+                VStack(alignment: .leading, spacing: 3) {
+                  Text(subscription.title)
                     .font(.body)
-                    .foregroundColor(.blue)
-                  Text("days")
-                    .font(.subheadline)
-                    .foregroundColor(.blue)
+                    .foregroundColor(.primary)
+                    .lineLimit(1)
+
+                  if !subscription.releaseDate.isEmpty {
+                    Text(formatDate(subscription.releaseDate).uppercased())
+                      .font(.subheadline).fontWeight(.semibold)
+                      .foregroundColor(.secondary)
+                  }
+                }
+
+                Spacer(minLength: 4)
+
+                if !subscription.releaseDate.isEmpty,
+                  let days = daysUntilRelease(subscription.releaseDate)
+                {
+                  VStack(spacing: 0) {
+                    Text("\(days)")
+                      .font(.body)
+                      .foregroundColor(.blue)
+                    Text("days")
+                      .font(.subheadline)
+                      .foregroundColor(.blue)
+                  }
                 }
               }
+              .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
 
             if index < items.count - 1 {
               Divider()
@@ -232,6 +250,7 @@ struct MediumWidgetView: View {
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     .padding(0)
     .containerBackground(.background, for: .widget)
+    .widgetURL(countdownRootDeepLink())
   }
 }
 
@@ -256,42 +275,46 @@ struct LargeWidgetView: View {
         let items = Array(entry.subscriptions.prefix(3))
         VStack(alignment: .leading, spacing: 12) {
           ForEach(Array(items.enumerated()), id: \.offset) { index, subscription in
-            HStack(spacing: 10) {
-              PosterImage(posterBase64: subscription.posterBase64)
-                .frame(
-                  width: 60,
-                  height: subscription.type == .game ? (60 * 4 / 3) : (60 * 3 / 2)
-                )
-                .clipShape(ContainerRelativeShape())
+            Link(destination: countdownDeepLink(for: subscription) ?? countdownRootDeepLink()) {
+              HStack(spacing: 10) {
+                PosterImage(posterBase64: subscription.posterBase64)
+                  .frame(
+                    width: 60,
+                    height: subscription.type == .game ? (60 * 4 / 3) : (60 * 3 / 2)
+                  )
+                  .clipShape(ContainerRelativeShape())
 
-              VStack(alignment: .leading, spacing: 4) {
-                Text(subscription.title)
-                  .font(.body)
-                  .foregroundColor(.primary)
-                  .lineLimit(2)
-
-                if !subscription.releaseDate.isEmpty {
-                  Text(formatDate(subscription.releaseDate).uppercased())
-                    .font(.subheadline).fontWeight(.semibold)
-                    .foregroundColor(.secondary)
-                }
-              }
-
-              Spacer()
-
-              if !subscription.releaseDate.isEmpty,
-                let days = daysUntilRelease(subscription.releaseDate)
-              {
-                VStack(spacing: 0) {
-                  Text("\(days)")
+                VStack(alignment: .leading, spacing: 4) {
+                  Text(subscription.title)
                     .font(.body)
-                    .foregroundColor(.blue)
-                  Text("days")
-                    .font(.subheadline)
-                    .foregroundColor(.blue)
+                    .foregroundColor(.primary)
+                    .lineLimit(2)
+
+                  if !subscription.releaseDate.isEmpty {
+                    Text(formatDate(subscription.releaseDate).uppercased())
+                      .font(.subheadline).fontWeight(.semibold)
+                      .foregroundColor(.secondary)
+                  }
+                }
+
+                Spacer()
+
+                if !subscription.releaseDate.isEmpty,
+                  let days = daysUntilRelease(subscription.releaseDate)
+                {
+                  VStack(spacing: 0) {
+                    Text("\(days)")
+                      .font(.body)
+                      .foregroundColor(.blue)
+                    Text("days")
+                      .font(.subheadline)
+                      .foregroundColor(.blue)
+                  }
                 }
               }
+              .contentShape(Rectangle())
             }
+            .buttonStyle(.plain)
 
             if index < items.count - 1 {
               Divider()
@@ -305,6 +328,7 @@ struct LargeWidgetView: View {
     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     .padding(0)
     .containerBackground(.background, for: .widget)
+    .widgetURL(countdownRootDeepLink())
   }
 }
 
@@ -346,15 +370,29 @@ struct PosterImage: View {
 }
 
 // MARK: - Helper Functions
-func formatDate(_ dateString: String) -> String {
-  let formatter = ISO8601DateFormatter()
-  formatter.formatOptions = [.withFullDate]
+func parseReleaseDate(_ dateString: String) -> Date? {
+  let trimmed = dateString.trimmingCharacters(in: .whitespacesAndNewlines)
+  guard !trimmed.isEmpty else {
+    return nil
+  }
 
-  guard let date = formatter.date(from: dateString) else {
+  let dateOnlyString = String(trimmed.prefix(10))
+  let formatter = DateFormatter()
+  formatter.calendar = Calendar(identifier: .gregorian)
+  formatter.locale = Locale(identifier: "en_US_POSIX")
+  formatter.dateFormat = "yyyy-MM-dd"
+
+  return formatter.date(from: dateOnlyString)
+}
+
+func formatDate(_ dateString: String) -> String {
+  guard let date = parseReleaseDate(dateString) else {
     return dateString
   }
 
   let displayFormatter = DateFormatter()
+  displayFormatter.calendar = Calendar(identifier: .gregorian)
+  displayFormatter.locale = Locale.current
   displayFormatter.dateStyle = .medium
   displayFormatter.timeStyle = .none
 
@@ -362,10 +400,7 @@ func formatDate(_ dateString: String) -> String {
 }
 
 func daysUntilRelease(_ dateString: String) -> Int? {
-  let formatter = ISO8601DateFormatter()
-  formatter.formatOptions = [.withFullDate]
-
-  guard let releaseDate = formatter.date(from: dateString) else {
+  guard let releaseDate = parseReleaseDate(dateString) else {
     return nil
   }
 

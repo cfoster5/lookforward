@@ -10,6 +10,19 @@ import { useSubscriptionStore } from "@/stores/subscription";
 
 const APP_GROUP = "group.com.lookforward.app";
 
+function parseDateOnlyToLocalDate(dateString: string): Date | null {
+  const normalizedDate = dateString.trim().slice(0, 10);
+  const parts = normalizedDate.split("-").map(Number);
+  if (parts.length !== 3 || parts.some(Number.isNaN)) return null;
+
+  const [year, month, day] = parts;
+  return new Date(year, month - 1, day);
+}
+
+function formatDateAsUTCDateOnly(date: Date): string {
+  return date.toISOString().split("T")[0] ?? "";
+}
+
 export function useWidgetSync() {
   const movieCountdowns = useMovieCountdowns();
   const gameCountdowns = useGameCountdowns();
@@ -82,11 +95,13 @@ export function useWidgetSync() {
             return {
               id: movie.documentID,
               title: movie.title || "Unknown Title",
-              releaseDate: movie.releaseDate || "",
+              releaseDate: movie.releaseDate
+                ? movie.releaseDate.trim().slice(0, 10)
+                : "",
               posterBase64,
               type: "movie" as const,
               releaseDateObj: movie.releaseDate
-                ? new Date(movie.releaseDate)
+                ? parseDateOnlyToLocalDate(movie.releaseDate)
                 : null,
             };
           });
@@ -111,7 +126,9 @@ export function useWidgetSync() {
             return {
               id: game.id?.toString() || "",
               title: game.game?.name || "Unknown Game",
-              releaseDate: releaseDate ? releaseDate.toISOString() : "",
+              releaseDate: releaseDate
+                ? formatDateAsUTCDateOnly(releaseDate)
+                : "",
               posterBase64: coverBase64,
               type: "game" as const,
               releaseDateObj: releaseDate,

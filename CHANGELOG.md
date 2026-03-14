@@ -1,5 +1,21 @@
 # Changelog
 
+## [7.30.0](https://github.com/cfoster5/lookforward/compare/v7.29.4...v7.30.0) (2026-03-14)
+
+
+### Features
+
+* add restore success alert to paywalls ([dee5019](https://github.com/cfoster5/lookforward/commit/dee50193b30126b3ae256812264b0dc8360a6d90))
+* request review when app opens from push notification ([3a2dc7d](https://github.com/cfoster5/lookforward/commit/3a2dc7d33ddfe80000b96b5ce588c8cb7ea96ae9))
+* update borderRadius for Browse buttons on Countdown screen ([06f120e](https://github.com/cfoster5/lookforward/commit/06f120ee2de0b5d4ee4e5474b66751e1b7ebb560))
+
+
+### Bug Fixes
+
+* correct widget date offsets ([3411c90](https://github.com/cfoster5/lookforward/commit/3411c9043b05cbe409d471292dace22708ff27f4))
+* handle push and shared item navigation ([6060ee9](https://github.com/cfoster5/lookforward/commit/6060ee958415cfe033b23341069b7cdc0dc89dc8))
+* route widget taps through countdown ([4bf8b88](https://github.com/cfoster5/lookforward/commit/4bf8b883acb31ecb2531cc538e1d149423319cd6))
+
 ## [7.29.4](https://github.com/cfoster5/lookforward/compare/v7.29.3...v7.29.4) (2026-03-10)
 
 

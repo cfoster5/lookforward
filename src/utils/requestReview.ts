@@ -6,11 +6,8 @@ import { useSubscriptionStore } from "@/stores/subscription";
 const REVIEW_COOLDOWN_DAYS = 60;
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
-export async function tryRequestReview() {
-  const { lastRequestedReviewTimestamp, searchCount, setHasRequestedReview } =
-    useAppConfigStore.getState();
-  const { movieSubs, gameSubs } = useSubscriptionStore.getState();
-  const totalSubs = movieSubs.length + gameSubs.length;
+function isWithinCooldown() {
+  const { lastRequestedReviewTimestamp } = useAppConfigStore.getState();
   const normalizedLastRequest =
     lastRequestedReviewTimestamp > 0 &&
     lastRequestedReviewTimestamp < 1_000_000_000_000
@@ -21,14 +18,35 @@ export async function tryRequestReview() {
     ? (Date.now() - normalizedLastRequest) / MS_PER_DAY
     : Infinity;
 
-  if (daysSinceLastRequest < REVIEW_COOLDOWN_DAYS) return;
+  return daysSinceLastRequest < REVIEW_COOLDOWN_DAYS;
+}
 
-  const hasRealEngagement = totalSubs >= 2 && searchCount >= 3;
-  if (!hasRealEngagement) return;
+function getTotalSubs() {
+  const { movieSubs, gameSubs } = useSubscriptionStore.getState();
+  return movieSubs.length + gameSubs.length;
+}
 
+async function requestAndRecord() {
   const isAvailable = await StoreReview.isAvailableAsync();
   if (!isAvailable) return;
 
   await StoreReview.requestReview();
-  setHasRequestedReview();
+  useAppConfigStore.getState().setHasRequestedReview();
+}
+
+export async function tryRequestReview() {
+  if (isWithinCooldown()) return;
+
+  const { searchCount } = useAppConfigStore.getState();
+  const hasRealEngagement = getTotalSubs() >= 2 && searchCount >= 3;
+  if (!hasRealEngagement) return;
+
+  await requestAndRecord();
+}
+
+export async function tryRequestReviewFromNotification() {
+  if (isWithinCooldown()) return;
+  if (getTotalSubs() < 2) return;
+
+  await requestAndRecord();
 }

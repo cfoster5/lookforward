@@ -13,6 +13,7 @@ import { AppProvider } from "@/providers/app";
 import { useAuthStore } from "@/stores/auth";
 import { useInterfaceStore } from "@/stores/interface";
 import { navigateFromNotification } from "@/utils/notificationNavigation";
+import { tryRequestReviewFromNotification } from "@/utils/requestReview";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -56,6 +57,7 @@ function RootLayoutContent() {
       const navigated = navigateFromNotification(remoteMessage);
       if (navigated && messageId) {
         handledMessageIds.current.add(messageId);
+        tryRequestReviewFromNotification();
       }
     };
 

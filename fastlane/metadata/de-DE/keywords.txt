@@ -1,1 +1,1 @@
-Countdown,Merkliste,Release,kommend,Premiere,Streaming,erinnern,igdb,Film,Kino,Besetzung,Trailer
+Countdown,Merkliste,Kinostart,Bewertung,Erinnerung,Tagebuch,Neustart,Anime,Serie,Kino,Trailer,Neu

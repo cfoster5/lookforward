@@ -1,1 +1,1 @@
-décompte,suivi,sortie,prochain,première,streaming,rappel,igdb,film,cinéma,casting,bande-annonce,note
+décompte,suivi,prochain,rappel,cinéma,notation,journal,casting,suite,reboot,anime,série,widget

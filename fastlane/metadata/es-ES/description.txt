@@ -1,12 +1,10 @@
-LookForward – Tu rastreador definitivo de estrenos de cine y videojuegos!
+No te pierdas ningún estreno de cine o videojuego. LookForward es la watchlist con cuenta regresiva que sigue cada película y videojuego que te interesa — todo en una sola lista. Descubre nuevos estrenos, recibe recordatorios y encuentra dónde ver en streaming, sin necesidad de cuenta.
 
-¿Cansado de buscar fechas de estreno en Google? LookForward reúne todas las próximas películas y videojuegos que te interesan en una sola lista con cuenta regresiva — para que nunca te pierdas un estreno. Sigue lanzamientos, recibe recordatorios y descubre qué ver a continuación, todo sin crear una cuenta. Diseñado con Liquid Glass para una experiencia iOS nativa y elegante.
-
-• Lista con cuenta regresiva - Añade películas y juegos a tu watchlist con cuentas regresivas. Elige plataformas específicas para juegos y sigue colecciones de los Oscars durante la temporada de premios.
-• Widget de pantalla de inicio - Ve tus próximos estrenos de un vistazo sin abrir la app. Disponible en tamaño pequeño, mediano y grande.
-• Dónde ver - Descubre qué hay en streaming en Netflix, Disney+, Apple TV+ y más. Filtra por proveedor para encontrar algo que ver esta noche.
-• Calificaciones y reparto - Puntuaciones de IMDb, Rotten Tomatoes y Metacritic en un solo lugar. Explora filmografías, mira tráilers y consulta los créditos del equipo.
-• Recordatorios de estrenos - Recibe notificaciones un día o una semana antes de tus cuentas regresivas para estar listo el día del lanzamiento. No te pierdas ningún estreno.
+• Cuenta Regresiva — Añade películas y juegos con cuentas regresivas hasta la fecha de estreno. Elige plataformas específicas para juegos y sigue colecciones de los Oscars durante la temporada de premios.
+• Widget de Pantalla de Inicio — Ve tus próximos estrenos de un vistazo. Tamaños pequeño, mediano y grande para tener tus cuentas regresivas más esperadas siempre a la vista.
+• Dónde Ver — Descubre qué hay en streaming en Netflix, Disney+, Apple TV+ y más. Filtra por proveedor para encontrar tu próxima noche de cine.
+• Calificaciones y Reseñas — Puntuaciones de IMDb, Rotten Tomatoes y Metacritic en un solo lugar. Explora filmografías del reparto, mira tráilers y consulta los créditos del equipo.
+• Recordatorios de Estrenos — Recibe notificaciones un día o una semana antes de tus cuentas regresivas para estar listo el día del lanzamiento.
 
 Calificada con 4.6 estrellas en la App Store. Esto es lo que dicen nuestros usuarios:
 
@@ -14,6 +12,6 @@ Calificada con 4.6 estrellas en la App Store. Esto es lo que dicen nuestros usua
 
 "This is a super convenient way to keep track of movies and games coming out soon. I can just keep everything I want to follow in one list."
 
-Descarga LookForward gratis y empieza a seguir tus películas y juegos más esperados hoy. Sin registro — solo busca, añade y empieza la cuenta regresiva hacia tu próximo estreno favorito.
+Descarga LookForward gratis y empieza tu diario de cine y seguimiento de juegos hoy. Sin registro — solo busca, añade y empieza la cuenta regresiva.
 
 Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula

@@ -1,1 +1,1 @@
-contagem,watchlist,lançamento,próximo,estreia,streaming,lembrar,igdb,filme,cinema,elenco,trailer
+contagem,acompanhar,próximo,lembrete,filme,avaliação,diário,elenco,sequência,reboot,anime,série

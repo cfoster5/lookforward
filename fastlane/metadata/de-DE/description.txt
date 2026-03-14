@@ -1,12 +1,10 @@
-LookForward – Dein ultimativer Tracker für Film- und Spiele-Releases!
+Verpasse nie wieder einen Film- oder Spiele-Release. LookForward ist die Countdown-Watchlist, die jeden kommenden Film und jedes Videospiel verfolgt, das dich interessiert — alles in einer schönen Liste. Entdecke Neuerscheinungen, erhalte Erinnerungen und finde heraus, wo du streamen kannst, ganz ohne Konto.
 
-Keine Lust mehr, Erscheinungstermine zu googeln? LookForward sammelt alle kommenden Filme und Videospiele, die dich interessieren, in einer Countdown-Watchlist – damit du keine Premiere mehr verpasst. Verfolge Releases, erhalte Erinnerungen und entdecke, was du als Nächstes schauen kannst, ganz ohne Konto. Mit Liquid Glass für ein wunderschönes, natives iOS-Erlebnis.
-
-• Countdown-Watchlist - Füge Filme und Spiele zu deiner Watchlist mit Release-Countdowns hinzu. Wähle bestimmte Plattformen für Spiele-Releases und verfolge Oscar-Sammlungen zur Award-Saison.
-• Home-Screen-Widget - Sieh deine kommenden Releases auf einen Blick, ohne die App zu öffnen. Klein, mittel und groß verfügbar.
-• Wo schauen - Stöbere, was auf Netflix, Disney+, Apple TV+ und mehr gestreamt wird. Filtere nach Anbieter, um heute Abend etwas zum Schauen zu finden.
-• Bewertungen & Besetzung - IMDb-, Rotten-Tomatoes- und Metacritic-Bewertungen an einem Ort. Entdecke Filmografien, schau Trailer und durchstöbere Team-Credits.
-• Release-Erinnerungen - Erhalte Benachrichtigungen einen Tag oder eine Woche vor deinen Countdowns, damit du am Release-Tag bereit bist. Verpasse nie wieder einen Release.
+• Countdown-Watchlist — Füge Filme und Spiele mit Release-Countdowns hinzu. Wähle bestimmte Plattformen für Spiele-Releases und verfolge Oscar-Sammlungen zur Award-Saison.
+• Home-Screen-Widget — Sieh deine kommenden Releases auf einen Blick. Klein, mittel und groß — deine meisterwarteten Countdowns immer im Blick.
+• Wo schauen — Stöbere, was auf Netflix, Disney+, Apple TV+ und mehr gestreamt wird. Filtere nach Anbieter, um deinen nächsten Filmabend zu planen.
+• Bewertungen & Kritiken — IMDb-, Rotten-Tomatoes- und Metacritic-Bewertungen an einem Ort. Entdecke Filmografien, schau Trailer und durchstöbere Team-Credits.
+• Release-Erinnerungen — Erhalte Benachrichtigungen einen Tag oder eine Woche vor deinen Countdowns, damit du am Release-Tag bereit bist.
 
 Mit 4,6 Sternen im App Store bewertet. Das sagen unsere Nutzer:
 
@@ -14,6 +12,6 @@ Mit 4,6 Sternen im App Store bewertet. Das sagen unsere Nutzer:
 
 „This is a super convenient way to keep track of movies and games coming out soon. I can just keep everything I want to follow in one list."
 
-Lade LookForward kostenlos herunter und beginne noch heute, deine meisterwarteten Filme und Spiele zu verfolgen. Keine Anmeldung nötig – einfach suchen, hinzufügen und den Countdown starten.
+Lade LookForward kostenlos herunter und starte dein Film-Tagebuch und deinen Spiele-Tracker noch heute. Keine Anmeldung nötig — einfach suchen, hinzufügen und den Countdown starten.
 
 Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula

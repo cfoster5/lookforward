@@ -1,1 +1,1 @@
-countdown,watchlist,release,upcoming,premiere,streaming,remind,igdb,film,cinema,cast,trailer,rating
+countdown,upcoming,streaming,remind,film,rating,diary,cast,premiere,watchlist,sequel,reboot,anime

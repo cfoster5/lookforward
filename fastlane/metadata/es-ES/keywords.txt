@@ -1,1 +1,1 @@
-countdown,seguimiento,estreno,próximo,premiere,streaming,recordar,igdb,película,cine,reparto,tráiler
+seguimiento,lanzamiento,próximo,recordar,película,calificación,diario,reparto,secuela,anime,serie

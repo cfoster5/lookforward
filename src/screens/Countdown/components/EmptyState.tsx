@@ -71,7 +71,8 @@ export const EmptyState = () => {
               backgroundColor: colors.secondarySystemBackground,
               paddingHorizontal: 20,
               paddingVertical: 12,
-              borderRadius: 10,
+              borderRadius: 26,
+              borderCurve: "continuous",
               minHeight: 44,
               justifyContent: "center",
             }}
@@ -91,7 +92,8 @@ export const EmptyState = () => {
               backgroundColor: colors.secondarySystemBackground,
               paddingHorizontal: 20,
               paddingVertical: 12,
-              borderRadius: 10,
+              borderRadius: 26,
+              borderCurve: "continuous",
               minHeight: 44,
               justifyContent: "center",
             }}

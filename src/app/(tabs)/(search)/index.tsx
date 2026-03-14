@@ -7,7 +7,6 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import RevenueCatUI from "react-native-purchases-ui";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useProOfferings } from "@/api/getProOfferings";
@@ -28,6 +27,7 @@ import { useAuthStore } from "@/stores/auth";
 import { useInterfaceStore } from "@/stores/interface";
 import { useRecentItemsStore } from "@/stores/recents";
 import { colors } from "@/theme/colors";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 
 const ItemSeparator = () => (
   <View
@@ -63,7 +63,7 @@ const ListHeader = () => {
           handlePress={async () => {
             Keyboard.dismiss();
             posthog.capture("search:paywall_view", { type: "pro" });
-            await RevenueCatUI.presentPaywall({ offering: pro });
+            await presentPaywallWithRestoreAlert({ offering: pro });
           }}
           text="Explore Pro Features"
         />

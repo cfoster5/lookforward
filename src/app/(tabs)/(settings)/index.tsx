@@ -11,7 +11,6 @@ import { usePostHog } from "posthog-react-native";
 import { useEffect, useState } from "react";
 import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 import Purchases from "react-native-purchases";
-import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
 import { useProOfferings } from "@/api/getProOfferings";
@@ -24,6 +23,7 @@ import { SettingNavButton } from "@/screens/Settings/components/SettingNavButton
 import { useAppConfigStore } from "@/stores/appConfig";
 import { useAuthStore } from "@/stores/auth";
 import { colors } from "@/theme/colors";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 
 export default function Settings() {
   const user = useAuthenticatedUser();
@@ -69,7 +69,7 @@ export default function Settings() {
 
   async function presentProPaywall() {
     posthog.capture("settings:paywall_view", { type: "pro" });
-    await RevenueCatUI.presentPaywall({ offering: pro });
+    await presentPaywallWithRestoreAlert({ offering: pro });
   }
 
   const { data: tips } = useQuery({
@@ -297,7 +297,7 @@ export default function Settings() {
       <SettingNavButton
         onPress={async () => {
           posthog.capture("settings:paywall_view", { type: "tips" });
-          await RevenueCatUI.presentPaywall({ offering: tips });
+          await presentPaywallWithRestoreAlert({ offering: tips });
         }}
         text="Tip Jar"
         isFirstInGroup

@@ -15,10 +15,7 @@ import {
   Pressable,
   Text,
 } from "react-native";
-import RevenueCatUI, {
-  CustomVariableValue,
-  PAYWALL_RESULT,
-} from "react-native-purchases-ui";
+import { CustomVariableValue, PAYWALL_RESULT } from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
@@ -42,6 +39,7 @@ import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
 import type { Recent } from "@/types/persistedStorage";
 import { timestamp } from "@/utils/dates";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
 type GameData = NonNullable<ReturnType<typeof useGame>["data"]>;
@@ -116,7 +114,7 @@ export default function Game() {
           posthog.capture("game:paywall_view", { type: "pro" });
         }
 
-        const result = await RevenueCatUI.presentPaywall({
+        const result = await presentPaywallWithRestoreAlert({
           offering: limitHit ?? pro,
           customVariables: {
             item_name: CustomVariableValue.string(gameName),
@@ -208,7 +206,7 @@ export default function Game() {
             <LargeBorderlessButton
               handlePress={async () => {
                 posthog.capture("game:paywall_view", { type: "pro" });
-                await RevenueCatUI.presentPaywall({ offering: pro });
+                await presentPaywallWithRestoreAlert({ offering: pro });
               }}
               text="Explore Pro Features"
               style={{ paddingBottom: 0 }}

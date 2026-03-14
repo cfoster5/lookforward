@@ -3,7 +3,6 @@ import { Image } from "expo-image";
 import { usePostHog } from "posthog-react-native";
 import { useRef } from "react";
 import { Platform, Pressable, Text, View } from "react-native";
-import RevenueCatUI from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
@@ -16,6 +15,7 @@ import { useRecentItemsStore } from "@/stores/recents";
 import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
 import type { Recent } from "@/types/persistedStorage";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 import { onShare } from "@/utils/share";
 
 export function RecentTitle({ item }: { item: Recent }) {
@@ -78,7 +78,7 @@ export function RecentTitle({ item }: { item: Recent }) {
       <Pressable
         onPress={async () => {
           posthog.capture("recent_title:paywall_view", { type: "pro" });
-          await RevenueCatUI.presentPaywall({ offering: pro });
+          await presentPaywallWithRestoreAlert({ offering: pro });
         }}
         style={{ paddingVertical: 8 }}
       >

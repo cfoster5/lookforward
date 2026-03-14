@@ -10,15 +10,13 @@ import * as Haptics from "expo-haptics";
 import { DateTime } from "luxon";
 import { Dimensions } from "react-native";
 import type { PurchasesOffering } from "react-native-purchases";
-import RevenueCatUI, {
-  CustomVariableValue,
-  PAYWALL_RESULT,
-} from "react-native-purchases-ui";
+import { CustomVariableValue, PAYWALL_RESULT } from "react-native-purchases-ui";
 
 import { useSubscriptionHistoryStore } from "@/stores/subscriptionHistory";
 import { ReleaseDate, Games } from "@/types/igdb";
 import { timestampToUTC } from "@/utils/dates";
 import { promptForNotificationsAfterCountdownAdd } from "@/utils/notifications";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 import { tryRequestReview } from "@/utils/requestReview";
 
 import { FirestoreMovie, FirestorePerson } from "../interfaces/firebase";
@@ -155,7 +153,7 @@ export async function handleMovieToggle(params: {
   // If trying to add and limit reached, show Pro modal
   if (!isCurrentlySubbed && hasReachedLimit(isPro)) {
     onLimitPaywallView?.();
-    const result = await RevenueCatUI.presentPaywall({
+    const result = await presentPaywallWithRestoreAlert({
       offering: proOffering,
       customVariables: {
         item_name: CustomVariableValue.string(movieName),
@@ -241,7 +239,7 @@ export async function handlePersonToggle(params: {
   // Non-Pro trying to follow: show paywall
   if (!isCurrentlySubbed && !isPro) {
     onPaywallView?.();
-    const result = await RevenueCatUI.presentPaywall({
+    const result = await presentPaywallWithRestoreAlert({
       offering: followPersonOffering ?? proOffering,
       customVariables: {
         person: CustomVariableValue.string(personName),

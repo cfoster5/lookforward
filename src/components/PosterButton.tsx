@@ -2,10 +2,7 @@ import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
 import { Image } from "expo-image";
 import { usePostHog } from "posthog-react-native";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
-import RevenueCatUI, {
-  CustomVariableValue,
-  PAYWALL_RESULT,
-} from "react-native-purchases-ui";
+import { CustomVariableValue, PAYWALL_RESULT } from "react-native-purchases-ui";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle, removeSub } from "@/helpers/helpers";
@@ -15,6 +12,7 @@ import { useInterfaceStore } from "@/stores/interface";
 import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
 import type { Games, ReleaseDate } from "@/types/igdb";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 
 import { IconSymbol } from "./IconSymbol";
 
@@ -73,7 +71,7 @@ function PosterButton({ movieId, movieName, game }: Props) {
       } else {
         posthog.capture("poster_button:paywall_view", { type: "pro" });
       }
-      const result = await RevenueCatUI.presentPaywall({
+      const result = await presentPaywallWithRestoreAlert({
         offering: limitHit ?? pro,
         customVariables: {
           item_name: CustomVariableValue.string(game.name),

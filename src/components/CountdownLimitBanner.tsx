@@ -1,9 +1,6 @@
 import { usePostHog } from "posthog-react-native";
 import { Pressable, StyleProp, Text, View, ViewStyle } from "react-native";
-import RevenueCatUI, {
-  CustomVariableValue,
-  PAYWALL_RESULT,
-} from "react-native-purchases-ui";
+import { CustomVariableValue, PAYWALL_RESULT } from "react-native-purchases-ui";
 import { iOSUIKit } from "react-native-typography";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
@@ -14,6 +11,7 @@ import {
   useSubscriptionStore,
 } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 
 type CountdownLimitBannerProps = {
   showOnEmpty?: boolean;
@@ -64,7 +62,7 @@ export const CountdownLimitBanner = ({
         } else {
           posthog.capture("countdown:paywall_view", { type: "pro" });
         }
-        const result = await RevenueCatUI.presentPaywall({
+        const result = await presentPaywallWithRestoreAlert({
           offering: isAtLimit ? (limitHit ?? pro) : pro,
           customVariables: {
             item_name: CustomVariableValue.string("more countdowns"),

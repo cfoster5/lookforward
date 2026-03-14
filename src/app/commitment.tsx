@@ -6,7 +6,6 @@ import { usePostHog } from "posthog-react-native";
 import { useEffect, useRef, useState } from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 import Purchases from "react-native-purchases";
-import RevenueCatUI from "react-native-purchases-ui";
 import Animated, {
   FadeIn,
   interpolate,
@@ -21,6 +20,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useProOfferings } from "@/api/getProOfferings";
 import { useAppConfigStore } from "@/stores/appConfig";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 
 const HOLD_DURATION = 1500;
 const NAVIGATION_DELAY_MS = 1000;
@@ -111,7 +111,7 @@ export default function CommitmentScreen() {
           try {
             posthog.capture("paywall:viewed", { source: "commitment" });
             posthog.capture("onboarding:paywall_view", { type: "pro" });
-            await RevenueCatUI.presentPaywall({ offering: pro });
+            await presentPaywallWithRestoreAlert({ offering: pro });
             const customerInfo = await Purchases.getCustomerInfo();
             const converted = !!customerInfo.entitlements.active.pro;
             posthog.capture("paywall:dismiss", {

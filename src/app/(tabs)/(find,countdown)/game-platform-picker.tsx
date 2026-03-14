@@ -18,7 +18,7 @@ import {
 import * as Haptics from "expo-haptics";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useWindowDimensions } from "react-native";
-import RevenueCatUI, { CustomVariableValue } from "react-native-purchases-ui";
+import { CustomVariableValue } from "react-native-purchases-ui";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
@@ -27,6 +27,7 @@ import { useSubscriptionStore } from "@/stores/subscription";
 import type { Games, ReleaseDate } from "@/types/igdb";
 import { formatGameReleaseDate } from "@/utils/dates";
 import { promptForNotificationsAfterCountdownAdd } from "@/utils/notifications";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 import { tryRequestReview } from "@/utils/requestReview";
 
 type GameWithReleaseDates = Games & {
@@ -53,7 +54,7 @@ export default function GamePlatformPicker() {
     const { id, name } = game;
     try {
       if (hasReachedLimit(isPro)) {
-        await RevenueCatUI.presentPaywall({
+        await presentPaywallWithRestoreAlert({
           offering: limitHit ?? pro,
           customVariables: {
             item_name: CustomVariableValue.string(name),

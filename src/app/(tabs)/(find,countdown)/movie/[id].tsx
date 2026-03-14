@@ -20,18 +20,12 @@ import {
   Text,
   View,
 } from "react-native";
-import RevenueCatUI from "react-native-purchases-ui";
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from "react-native-reanimated";
 import { iOSUIKit } from "react-native-typography";
-import {
-  BackdropSize,
-  PosterSize,
-  ReleaseDate,
-
-} from "tmdb-ts";
+import { BackdropSize, PosterSize, ReleaseDate } from "tmdb-ts";
 
 import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { AnimatedHeaderImage } from "@/components/AnimatedHeaderImage";
@@ -77,6 +71,7 @@ import type {
 } from "@/types/dropdown";
 import type { Recent } from "@/types/persistedStorage";
 import { isoToUTC, timestamp } from "@/utils/dates";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 import { onShare } from "@/utils/share";
 
 function ScrollViewWithFlatList({
@@ -364,7 +359,7 @@ export default function MovieScreen() {
                           type: "pro",
                           source: "box_office",
                         });
-                        await RevenueCatUI.presentPaywall({ offering: pro });
+                        await presentPaywallWithRestoreAlert({ offering: pro });
                       }}
                       style={{ flexDirection: "row" }}
                     >
@@ -400,7 +395,7 @@ export default function MovieScreen() {
                       type: "pro",
                       source: "rating",
                     });
-                    await RevenueCatUI.presentPaywall({ offering: pro });
+                    await presentPaywallWithRestoreAlert({ offering: pro });
                   }}
                 />
               ))}
@@ -411,7 +406,7 @@ export default function MovieScreen() {
             <LargeBorderlessButton
               handlePress={async () => {
                 posthog.capture("movie:paywall_view", { type: "pro" });
-                await RevenueCatUI.presentPaywall({ offering: pro });
+                await presentPaywallWithRestoreAlert({ offering: pro });
               }}
               text="Explore Pro Features"
               style={{ paddingBottom: 0 }}

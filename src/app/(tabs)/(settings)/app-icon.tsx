@@ -11,7 +11,6 @@ import {
   Text,
   View,
 } from "react-native";
-import RevenueCatUI from "react-native-purchases-ui";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
@@ -19,6 +18,7 @@ import { useProOfferings } from "@/api/getProOfferings";
 import { IconSymbol } from "@/components/IconSymbol";
 import { useAuthStore } from "@/stores/auth";
 import { colors } from "@/theme/colors";
+import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 
 const originalIcon = require("@/../assets/adaptive-icon.png");
 const defaultIcon = require("@/../assets/icon.png");
@@ -65,7 +65,7 @@ export default function AppIconScreen() {
 
     if (!isPro && !isDefaultIcon) {
       posthog.capture("app_icon:paywall_view", { type: "pro" });
-      await RevenueCatUI.presentPaywall({ offering: pro });
+      await presentPaywallWithRestoreAlert({ offering: pro });
       return;
     }
 

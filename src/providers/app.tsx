@@ -77,6 +77,7 @@ export function AppProvider({ children }: AppProviderProps) {
       apiKey="phc_diTHFV13CPZdclusrkGwC0v8beszFxK3k1cLTUcg2PH"
       options={{
         host: "https://us.i.posthog.com",
+        disabled: __DEV__,
       }}
       autocapture={{
         captureScreens: false, // Screen events are handled differently for v7 and higher

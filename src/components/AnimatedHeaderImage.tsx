@@ -1,4 +1,5 @@
-import { ImageBackground, StyleSheet, useWindowDimensions } from "react-native";
+import { Image } from "expo-image";
+import { StyleSheet, useWindowDimensions } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import Animated, {
   interpolate,
@@ -6,9 +7,6 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { BackdropSize } from "tmdb-ts";
-
-const AnimatedImageBackground =
-  Animated.createAnimatedComponent(ImageBackground);
 
 export function AnimatedHeaderImage({
   scrollOffset,
@@ -18,28 +16,15 @@ export function AnimatedHeaderImage({
   path: string;
 }) {
   const { width: windowWidth } = useWindowDimensions();
-
-  const styles = StyleSheet.create({
-    backdrop: {
-      width: windowWidth,
-      height: windowWidth / (16 / 9),
-    },
-  });
+  const backdropHeight = windowWidth / (16 / 9);
 
   const headerStyle = useAnimatedStyle(() => {
     return {
-      // opacity:
-      //   scrollOffset.value < 0
-      //     ? 2 -
-      //       (styles.backdrop.height + Math.abs(scrollOffset.value)) /
-      //         styles.backdrop.height
-      //     : 1,
       transform: [
         {
           scale:
             scrollOffset.value < 0
-              ? (styles.backdrop.height + Math.abs(scrollOffset.value)) /
-                styles.backdrop.height
+              ? (backdropHeight + Math.abs(scrollOffset.value)) / backdropHeight
               : 1,
         },
         {
@@ -50,8 +35,8 @@ export function AnimatedHeaderImage({
               // No idea why this math is working but after dividing the scale by 2, this looks perfect
               // Could 2 be the key because I'm spreading the height on two sides?
               scrollOffset.value /
-                ((styles.backdrop.height + Math.abs(scrollOffset.value)) /
-                  styles.backdrop.height) /
+                ((backdropHeight + Math.abs(scrollOffset.value)) /
+                  backdropHeight) /
                 2,
               0,
             ],
@@ -62,18 +47,20 @@ export function AnimatedHeaderImage({
   });
 
   return (
-    <AnimatedImageBackground
-      style={[styles.backdrop, headerStyle]}
-      source={{
-        uri: `https://image.tmdb.org/t/p/${BackdropSize.W780}${path}`,
-      }}
+    <Animated.View
+      style={[{ width: windowWidth, height: backdropHeight }, headerStyle]}
     >
+      <Image
+        source={`https://image.tmdb.org/t/p/${BackdropSize.W780}${path}`}
+        style={StyleSheet.absoluteFill}
+        contentFit="cover"
+      />
       <LinearGradient
         colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
         start={{ x: 0, y: 0.8 }}
         end={{ x: 0, y: 1.0 }}
         style={StyleSheet.absoluteFill}
       />
-    </AnimatedImageBackground>
+    </Animated.View>
   );
 }

@@ -5,8 +5,8 @@ import {
   Text,
   View,
   StyleSheet,
-  Dimensions,
   Modal,
+  useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -23,27 +23,11 @@ type TrailerProps = {
 
 function Trailer({ video }: TrailerProps) {
   const [modalVisible, setModalVisible] = useState(false);
-  // calculate player dimensions
-  const screenWidth = Dimensions.get("window").width;
+  const { width: screenWidth } = useWindowDimensions();
   const playerHeight = (screenWidth / 16) * 9;
   const playing = modalVisible;
   const videoId = (video as MovieVideo).key || (video as GameVideo).video_id;
   const { top: topInset, left: leftInset } = useSafeAreaInsets();
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: "black",
-      justifyContent: "center",
-      alignItems: "center",
-    },
-    closeButton: {
-      position: "absolute",
-      top: topInset,
-      left: leftInset,
-      paddingLeft: 16,
-    },
-  });
 
   return (
     <>
@@ -52,12 +36,7 @@ function Trailer({ video }: TrailerProps) {
         style={{ width: calculateWidth(16, 8, 1.5) }}
       >
         <Image
-          style={{
-            aspectRatio: 16 / 9,
-            borderRadius: 12,
-            borderWidth: 1,
-            borderColor: colors.separator,
-          }}
+          style={styles.thumbnail}
           source={{
             uri: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`,
           }}
@@ -86,7 +65,7 @@ function Trailer({ video }: TrailerProps) {
             }}
           />
           <Pressable
-            style={styles.closeButton}
+            style={[styles.closeButton, { top: topInset, left: leftInset }]}
             accessibilityLabel="Close video"
             onPress={() => setModalVisible(false)}
           >
@@ -97,5 +76,24 @@ function Trailer({ video }: TrailerProps) {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  thumbnail: {
+    aspectRatio: 16 / 9,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.separator,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "black",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  closeButton: {
+    position: "absolute",
+    paddingLeft: 16,
+  },
+});
 
 export default Trailer;

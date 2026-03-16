@@ -12,6 +12,14 @@ import { MovieSearchModal } from "./components/MovieSearchModal";
 
 const spacing = 16;
 
+const posterStyle = {
+  width: calculateWidth(spacing, spacing, 2),
+  aspectRatio: 2 / 3,
+};
+
+const leftColumnStyle = { marginRight: spacing / 2 };
+const rightColumnStyle = { marginLeft: spacing / 2 };
+
 export function MovieLayout() {
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
@@ -29,15 +37,8 @@ export function MovieLayout() {
             <MoviePoster
               movie={item}
               posterPath={item.poster_path}
-              style={{
-                width: calculateWidth(spacing, spacing, 2),
-                aspectRatio: 2 / 3,
-                // flex: 1,
-              }}
-              buttonStyle={{
-                marginRight: index % 2 === 0 ? spacing / 2 : 0,
-                marginLeft: index % 2 === 1 ? spacing / 2 : 0,
-              }}
+              style={posterStyle}
+              buttonStyle={index % 2 === 0 ? leftColumnStyle : rightColumnStyle}
             />
           )}
           numColumns={2}

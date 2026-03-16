@@ -29,16 +29,14 @@ import { useRecentItemsStore } from "@/stores/recents";
 import { colors } from "@/theme/colors";
 import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 
-const ItemSeparator = () => (
-  <View
-    style={{
-      height: StyleSheet.hairlineWidth,
-      backgroundColor: colors.separator,
-      marginLeft: calculateWidth(12, 12, 3.5) + 12,
-      marginRight: 12,
-    }}
-  />
-);
+const itemSeparatorStyle = {
+  height: StyleSheet.hairlineWidth,
+  backgroundColor: colors.separator,
+  marginLeft: calculateWidth(12, 12, 3.5) + 12,
+  marginRight: 12,
+};
+
+const ItemSeparator = () => <View style={itemSeparatorStyle} />;
 
 const ListHeader = () => {
   const { isPro } = useAuthStore();
@@ -72,7 +70,8 @@ const ListHeader = () => {
   );
 };
 
-const HorizontalSpacer = () => <View style={{ width: 12 }} />;
+const horizontalSpacerStyle = { width: 12 };
+const HorizontalSpacer = () => <View style={horizontalSpacerStyle} />;
 
 export default function SearchPage() {
   const searchQuery = useSearch();

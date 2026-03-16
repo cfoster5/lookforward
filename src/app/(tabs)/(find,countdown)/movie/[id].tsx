@@ -74,6 +74,24 @@ import { isoToUTC, timestamp } from "@/utils/dates";
 import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 import { onShare } from "@/utils/share";
 
+const discoverButtonStyle = {
+  backgroundColor: colors.secondarySystemGroupedBackground,
+  borderColor: colors.secondarySystemGroupedBackground,
+};
+
+const watchProviderLogoStyle = {
+  height: calculateWidth(16, 8, 6),
+  aspectRatio: 1,
+  borderWidth: 1,
+  borderColor: colors.separator,
+  borderRadius: 12,
+};
+
+const recommendationPosterStyle = {
+  width: calculateWidth(16, 8, 2.5),
+  aspectRatio: 2 / 3,
+};
+
 function ScrollViewWithFlatList({
   data,
   numColumns,
@@ -116,10 +134,7 @@ function ScrollViewWithFlatList({
                 },
               })
             }
-            buttonStyle={{
-              backgroundColor: colors.secondarySystemGroupedBackground,
-              borderColor: colors.secondarySystemGroupedBackground,
-            }}
+            buttonStyle={discoverButtonStyle}
           />
         )}
         keyExtractor={(item) => item.id.toString()}
@@ -497,13 +512,7 @@ export default function MovieScreen() {
                     source={{
                       uri: `https://image.tmdb.org/t/p/${PosterSize.W154}${item.logo_path}`,
                     }}
-                    style={{
-                      height: calculateWidth(16, 8, 6),
-                      aspectRatio: 1 / 1,
-                      borderWidth: 1,
-                      borderColor: colors.separator,
-                      borderRadius: 12,
-                    }}
+                    style={watchProviderLogoStyle}
                   />
                 )}
                 {...horizontalListProps}
@@ -729,10 +738,7 @@ export default function MovieScreen() {
                       <MoviePoster
                         movie={item}
                         posterPath={item.poster_path}
-                        style={{
-                          width: calculateWidth(16, 8, 2.5),
-                          aspectRatio: 2 / 3,
-                        }}
+                        style={recommendationPosterStyle}
                       />
                     )}
                     {...horizontalListProps}

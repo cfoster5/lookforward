@@ -23,6 +23,14 @@ import { onShare } from "@/utils/share";
 
 const spacing = 16;
 
+const posterStyle = {
+  width: calculateWidth(spacing, spacing, 2),
+  aspectRatio: 2 / 3,
+};
+
+const leftColumnStyle = { marginRight: spacing / 2 };
+const rightColumnStyle = { marginLeft: spacing / 2 };
+
 export default function Collection() {
   const posthog = usePostHog();
   const { id } = useLocalSearchParams();
@@ -115,14 +123,8 @@ export default function Collection() {
           <MoviePoster
             movie={item}
             posterPath={item.poster_path}
-            style={{
-              width: calculateWidth(spacing, spacing, 2),
-              aspectRatio: 2 / 3,
-            }}
-            buttonStyle={{
-              marginRight: index % 2 === 0 ? spacing / 2 : 0,
-              marginLeft: index % 2 === 1 ? spacing / 2 : 0,
-            }}
+            style={posterStyle}
+            buttonStyle={index % 2 === 0 ? leftColumnStyle : rightColumnStyle}
           />
         )}
         numColumns={2}

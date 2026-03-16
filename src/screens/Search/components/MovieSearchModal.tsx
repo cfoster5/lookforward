@@ -63,7 +63,7 @@ export function MovieSearchModal({
               onPress={() => setSelectedOption(item)}
             />
           )}
-          keyExtractor={(item, index) => index.toString()}
+          keyExtractor={(item) => item}
         />
 
         <Text

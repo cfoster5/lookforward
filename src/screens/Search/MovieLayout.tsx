@@ -45,7 +45,7 @@ export function MovieLayout() {
           contentContainerStyle={styles.flatlistContentContainer}
           columnWrapperStyle={styles.flatlistColumnWrapper}
           ref={scrollRef}
-          keyExtractor={(item, index) => item.id.toString() + index.toString()}
+          keyExtractor={(item) => item.id.toString()}
           initialNumToRender={6}
           showsVerticalScrollIndicator={false}
           onEndReached={() => (hasNextPage ? fetchNextPage() : null)}

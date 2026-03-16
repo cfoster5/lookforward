@@ -349,7 +349,9 @@ export default function Countdown() {
         contentInsetAdjustmentBehavior="automatic"
         sections={sections}
         stickySectionHeadersEnabled={false}
-        keyExtractor={(item, index) => item + index}
+        keyExtractor={(item, index) =>
+          item?.documentID ?? item?.personId ?? item?.id?.toString() ?? String(index)
+        }
         renderItem={({ item, section, index }) => (
           <CountdownItem
             item={item}

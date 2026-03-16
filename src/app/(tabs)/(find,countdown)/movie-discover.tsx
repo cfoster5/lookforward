@@ -158,7 +158,7 @@ export default function MovieDiscover() {
                   )}
                 </ButtonMultiState>
               )}
-              keyExtractor={(item, index) => index.toString()}
+              keyExtractor={(item) => item.actual}
             />
           </ModalListWrapper>
           <ModalListWrapper text="Provider">

@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-
 import { useActiveCollections } from "@/api/collections";
 import {
   CollectionProgress,
@@ -60,20 +58,18 @@ export function useCollectionsProgress() {
     (state) => state.getValidHistory,
   );
 
-  const progress = useMemo(() => {
-    if (!collections) return [];
-    return collections.map((collection) =>
-      calculateProgress(collection, getValidHistory),
-    );
-  }, [collections, getValidHistory]);
+  const progress = collections
+    ? collections.map((collection) =>
+        calculateProgress(collection, getValidHistory),
+      )
+    : [];
 
-  const collectionsWithProgress = useMemo(() => {
-    if (!collections) return [];
-    return collections.map((collection, index) => ({
-      collection,
-      progress: progress[index],
-    }));
-  }, [collections, progress]);
+  const collectionsWithProgress = collections
+    ? collections.map((collection, index) => ({
+        collection,
+        progress: progress[index],
+      }))
+    : [];
 
   return {
     collectionsWithProgress,
@@ -90,8 +86,6 @@ export function useCollectionProgress(collection: CuratedCollection | null) {
     (state) => state.getValidHistory,
   );
 
-  return useMemo(() => {
-    if (!collection) return null;
-    return calculateProgress(collection, getValidHistory);
-  }, [collection, getValidHistory]);
+  if (!collection) return null;
+  return calculateProgress(collection, getValidHistory);
 }

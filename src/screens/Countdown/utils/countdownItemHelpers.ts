@@ -1,12 +1,7 @@
 import { DateTime } from "luxon";
 import { PosterSize } from "tmdb-ts";
 
-import {
-  formatGameReleaseDate,
-  isoToUTC,
-  now,
-  timestampToUTC,
-} from "@/utils/dates";
+import { formatGameReleaseDate, isoToUTC, timestampToUTC } from "@/utils/dates";
 
 import { useGameCountdowns } from "../api/getGameCountdowns";
 import { useMovieCountdowns } from "../api/getMovieCountdowns";
@@ -80,23 +75,39 @@ export function calculateDaysUntil(
   item: CountdownItem,
   sectionName: SectionName,
 ): number | null {
+  const calculateCalendarDaysUntil = (targetDate: DateTime) => {
+    const today = DateTime.now().startOf("day");
+    const releaseDay = targetDate.startOf("day");
+
+    return Math.floor(releaseDay.diff(today, "days").days);
+  };
+
+  const parseDateOnlyAsLocalDay = (dateString: string) => {
+    const normalizedDate = dateString.trim().slice(0, 10);
+    return DateTime.fromFormat(normalizedDate, "yyyy-MM-dd");
+  };
+
   if (sectionName === "Movies") {
     const movieItem = item as MovieCountdown;
     if (!movieItem.releaseDate) return null;
-    return Math.ceil(isoToUTC(movieItem.releaseDate).diff(now).as("days"));
+    return calculateCalendarDaysUntil(
+      parseDateOnlyAsLocalDay(movieItem.releaseDate),
+    );
   }
 
   if (sectionName === "People") {
     const personItem = item as PersonCountdownData;
     if (!personItem.nextMovie) return null;
-    return Math.ceil(
-      isoToUTC(personItem.nextMovie.releaseDate).diff(now).as("days"),
+    return calculateCalendarDaysUntil(
+      parseDateOnlyAsLocalDay(personItem.nextMovie.releaseDate),
     );
   }
 
   const gameItem = item as GameCountdown;
   if (!gameItem.date) return null;
-  return Math.ceil(timestampToUTC(gameItem.date).diff(now).as("days"));
+  return calculateCalendarDaysUntil(
+    parseDateOnlyAsLocalDay(timestampToUTC(gameItem.date).toISODate() ?? ""),
+  );
 }
 
 export function getDocumentId(

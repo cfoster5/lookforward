@@ -13,6 +13,11 @@ import { useDiscoverGames } from "@/screens/GameDiscover/api/getDiscoverGames";
 import { Games, ReleaseDate } from "@/types/igdb";
 import { useBottomTabOverflow } from "@/utils/useBottomTabOverflow";
 
+const columnWrapperStyle = {
+  justifyContent: "space-between" as const,
+  marginBottom: 16,
+};
+
 export default function GameDiscover() {
   const segments = useSegments();
   const stack = segments[1] as "(find)" | "(countdown)";
@@ -53,10 +58,7 @@ export default function GameDiscover() {
           </Pressable>
         )}
         numColumns={2}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-          marginBottom: 16,
-        }}
+        columnWrapperStyle={columnWrapperStyle}
         ref={scrollRef}
         keyExtractor={(item) => item.id.toString()}
         initialNumToRender={6}

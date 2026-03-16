@@ -31,6 +31,11 @@ const posterStyle = {
 const leftColumnStyle = { marginRight: spacing / 2 };
 const rightColumnStyle = { marginLeft: spacing / 2 };
 
+const columnWrapperStyle = {
+  justifyContent: "space-between" as const,
+  marginBottom: spacing,
+};
+
 export default function Collection() {
   const posthog = usePostHog();
   const { id } = useLocalSearchParams();
@@ -135,10 +140,7 @@ export default function Collection() {
         contentInsetAdjustmentBehavior="automatic"
         // contentInset={{ bottom: paddingBottom }}
         // scrollIndicatorInsets={{ bottom: paddingBottom }}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-          marginBottom: spacing,
-        }}
+        columnWrapperStyle={columnWrapperStyle}
         keyExtractor={(movie) => movie.id.toString()}
       />
     </>

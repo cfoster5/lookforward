@@ -1,4 +1,4 @@
-import { FontAwesome6 } from "@expo/vector-icons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Pressable, Text } from "react-native";
 import { iOSUIKit } from "react-native-typography";
 

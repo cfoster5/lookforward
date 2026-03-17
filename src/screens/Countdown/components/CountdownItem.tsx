@@ -12,10 +12,7 @@ import { PersonCountdownData } from "../api/getPersonCountdowns";
 import { useCountdownItemAnimation } from "../hooks/useCountdownItemAnimation";
 import { useCountdownItemData } from "../hooks/useCountdownItemData";
 import { useCountdownItemNavigation } from "../hooks/useCountdownItemNavigation";
-import {
-  createCountdownItemStyles,
-  staticCountdownItemStyles,
-} from "../styles/countdownItem.styles";
+import { countdownItemStyles } from "../styles/countdownItem.styles";
 import { getDocumentId } from "../utils/countdownItemHelpers";
 
 import { RadioButton } from "./RadioButton";
@@ -70,30 +67,33 @@ export function CountdownItem({
         : selectedPeople;
   const isSelected = selectedItems.includes(documentId);
 
-  const styles = createCountdownItemStyles(
-    isFirstInSection,
-    isLastInSection,
-    isSelected,
-    aspectRatio,
-  );
-
   const isCircular = sectionName === "People";
   const imageHeight = 60 / aspectRatio;
+  const circularRadius = isCircular ? imageHeight / 2 : undefined;
 
   return (
-    <Pressable onPress={handlePress} style={styles.rowFront}>
-      <View style={staticCountdownItemStyles.row}>
+    <Pressable
+      onPress={handlePress}
+      style={[
+        countdownItemStyles.rowFront,
+        isFirstInSection && countdownItemStyles.rowFrontFirst,
+        isLastInSection && countdownItemStyles.rowFrontLast,
+        isSelected && countdownItemStyles.rowFrontSelected,
+      ]}
+    >
+      <View style={countdownItemStyles.row}>
         <Animated.View
-          style={[styles.radioButtonContainer, radioButtonStyle]}
+          style={[countdownItemStyles.radioButtonContainer, radioButtonStyle]}
         >
           <RadioButton isSelected={isSelected} />
         </Animated.View>
-        <View style={staticCountdownItemStyles.posterShadow}>
+        <View style={countdownItemStyles.posterShadow}>
           {imageSource ? (
             <Image
               style={[
-                styles.image,
-                isCircular && { borderRadius: imageHeight / 2 },
+                countdownItemStyles.image,
+                { aspectRatio },
+                isCircular && { borderRadius: circularRadius },
               ]}
               source={{ uri: imageSource }}
               contentFit="cover"
@@ -101,13 +101,10 @@ export function CountdownItem({
           ) : (
             <View
               style={[
-                styles.image,
-                isCircular && { borderRadius: imageHeight / 2 },
-                {
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: colors.tertiarySystemFill as string,
-                },
+                countdownItemStyles.image,
+                countdownItemStyles.imageFallback,
+                { aspectRatio },
+                isCircular && { borderRadius: circularRadius },
               ]}
             >
               <Text
@@ -124,7 +121,7 @@ export function CountdownItem({
             </View>
           )}
         </View>
-        <View style={styles.middle}>
+        <View style={countdownItemStyles.middle}>
           <Text
             style={[iOSUIKit.body, { color: colors.label }]}
             numberOfLines={2}
@@ -138,7 +135,7 @@ export function CountdownItem({
             {formattedDate}
           </Text>
         </View>
-        <View style={styles.countdown}>
+        <View style={countdownItemStyles.countdown}>
           {daysUntil !== null && daysUntil <= 0 ? (
             <Text style={[iOSUIKit.body, { color: colors.secondaryLabel }]}>
               Released
@@ -157,8 +154,11 @@ export function CountdownItem({
           )}
         </View>
         <Animated.View
-          // pointerEvents="none"
-          style={[styles.separator, separatorStyle]}
+          style={[
+            countdownItemStyles.separator,
+            isLastInSection && countdownItemStyles.separatorHidden,
+            separatorStyle,
+          ]}
         />
       </View>
     </Pressable>

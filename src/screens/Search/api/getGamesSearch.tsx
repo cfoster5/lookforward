@@ -14,7 +14,7 @@ async function getGamesSearch(searchValue: string) {
 }
 
 export function useGamesSearch(searchValue: string) {
-  const { categoryIndex } = useInterfaceStore();
+  const categoryIndex = useInterfaceStore((s) => s.categoryIndex);
 
   return useQuery({
     queryKey: ["games", { searchValue }],

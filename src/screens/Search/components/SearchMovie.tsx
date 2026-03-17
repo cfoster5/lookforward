@@ -115,7 +115,8 @@ Result.displayName = "Result";
 export function SearchMovie({ item }: { item: MovieWithMediaType }) {
   const user = useAuthenticatedUser();
   const isPro = useAuthStore((s) => s.isPro);
-  const { movieSubs, hasReachedLimit } = useSubscriptionStore();
+  const movieSubs = useSubscriptionStore((s) => s.movieSubs);
+  const hasReachedLimit = useSubscriptionStore((s) => s.hasReachedLimit);
   const { data: pro } = useProOfferings();
   const { data: limitHit } = useLimitHitOffering();
   const { incrementSearchCount } = useAppConfigStore();

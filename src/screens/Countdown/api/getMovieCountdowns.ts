@@ -35,7 +35,7 @@ export async function getMovie(
 
 // Rename this function and this file
 export function useMovieCountdowns() {
-  const { movieSubs } = useSubscriptionStore();
+  const movieSubs = useSubscriptionStore((s) => s.movieSubs);
   const movieLanguage = useAppConfigStore((state) => state.movieLanguage);
   const movieRegion = useAppConfigStore((state) => state.movieRegion);
 

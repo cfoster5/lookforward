@@ -8,7 +8,7 @@ import { useAuthStore } from "@/stores/auth";
  */
 
 export const useAuthenticatedUser = (): FirebaseAuthTypes.User => {
-  const { user } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
   if (!user) throw new Error("User not authenticated");
   return user;
 };

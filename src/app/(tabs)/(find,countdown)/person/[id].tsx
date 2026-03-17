@@ -93,8 +93,8 @@ export default function Actor() {
   const ref = useRef<Carousel<any>>(null);
   const [selectedJob, setSelectedJob] = useState("Actor");
   const user = useAuthenticatedUser();
-  const { isPro } = useAuthStore();
-  const { personSubs } = useSubscriptionStore();
+  const isPro = useAuthStore((s) => s.isPro);
+  const personSubs = useSubscriptionStore((s) => s.personSubs);
   const isFollowed = personSubs.some((sub) => sub.documentID === id.toString());
   const posthog = usePostHog();
   const { data: pro } = useProOfferings();

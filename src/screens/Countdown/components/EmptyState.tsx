@@ -9,8 +9,8 @@ import { useInterfaceStore } from "@/stores/interface";
 import { colors } from "@/theme/colors";
 
 export const EmptyState = () => {
-  const { isPro } = useAuthStore();
-  const { setCategoryIndex } = useInterfaceStore();
+  const isPro = useAuthStore((s) => s.isPro);
+  const setCategoryIndex = useInterfaceStore((s) => s.setCategoryIndex);
 
   return (
     <>

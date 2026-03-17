@@ -55,7 +55,9 @@ export default function Countdown() {
   const { data: gameReleases, pending: isGamesPending } = useGameCountdowns();
   const { data: personCountdowns, pending: isPersonPending } =
     usePersonCountdowns();
-  const { movieSubs, gameSubs, personSubs } = useSubscriptionStore();
+  const movieSubs = useSubscriptionStore((s) => s.movieSubs);
+  const gameSubs = useSubscriptionStore((s) => s.gameSubs);
+  const personSubs = useSubscriptionStore((s) => s.personSubs);
   const { collectionsWithProgress } = useCollectionsProgress();
   const [filter, setFilter] = useState<"all" | "movies" | "games" | "people">(
     "all",

@@ -78,9 +78,10 @@ export default function Game() {
     serializedGame?.id ?? (typeof id === "string" ? id : undefined),
   );
   const user = useAuthenticatedUser();
-  const { isPro } = useAuthStore();
-  const { gameSubs, hasReachedLimit } = useSubscriptionStore();
-  const { bottomSheetModalRef } = useInterfaceStore();
+  const isPro = useAuthStore((s) => s.isPro);
+  const gameSubs = useSubscriptionStore((s) => s.gameSubs);
+  const hasReachedLimit = useSubscriptionStore((s) => s.hasReachedLimit);
+  const bottomSheetModalRef = useInterfaceStore((s) => s.bottomSheetModalRef);
   const countdownId = gameSubs.find((s) => s.game.id === gameId)?.documentID;
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(

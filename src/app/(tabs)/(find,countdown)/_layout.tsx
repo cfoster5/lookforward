@@ -18,12 +18,10 @@ export const unstable_settings = {
 };
 
 const FindHeader = () => {
-  const {
-    categoryIndex,
-    setCategoryIndex,
-    movieSearchModalRef,
-    movieSearchOption,
-  } = useInterfaceStore();
+  const categoryIndex = useInterfaceStore((s) => s.categoryIndex);
+  const setCategoryIndex = useInterfaceStore((s) => s.setCategoryIndex);
+  const movieSearchModalRef = useInterfaceStore((s) => s.movieSearchModalRef);
+  const movieSearchOption = useInterfaceStore((s) => s.movieSearchOption);
   const insets = useSafeAreaInsets();
 
   return (

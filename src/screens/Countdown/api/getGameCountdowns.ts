@@ -11,7 +11,7 @@ export async function getGameRelease(releaseId: ReleaseDate["id"]) {
 }
 
 export function useGameCountdowns() {
-  const { gameSubs } = useSubscriptionStore();
+  const gameSubs = useSubscriptionStore((s) => s.gameSubs);
   return useQueries({
     queries: gameSubs.map((sub) => ({
       queryKey: ["gameRelease", Number(sub.documentID)],

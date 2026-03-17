@@ -3,7 +3,7 @@ import { MovieLayout } from "@/screens/Search/MovieLayout";
 import { useInterfaceStore } from "@/stores/interface";
 
 export default function Search() {
-  const { categoryIndex } = useInterfaceStore();
+  const categoryIndex = useInterfaceStore((s) => s.categoryIndex);
 
   return categoryIndex === 0 ? <MovieLayout /> : <GameLayout />;
 }

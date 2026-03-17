@@ -46,7 +46,7 @@ const ICONS: IconOption[] = [
 ];
 
 export default function AppIconScreen() {
-  const { isPro } = useAuthStore();
+  const isPro = useAuthStore((s) => s.isPro);
   const { data: pro } = useProOfferings();
   const { bottom } = useSafeAreaInsets();
   const [selectedAppIcon, setSelectedAppIcon] = useState<string | null>(null);

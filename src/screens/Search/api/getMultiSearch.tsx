@@ -12,7 +12,7 @@ const getMultiSearch = async (searchValue: string, language: string) =>
   });
 
 export function useMultiSearch(searchValue: string) {
-  const { categoryIndex } = useInterfaceStore();
+  const categoryIndex = useInterfaceStore((s) => s.categoryIndex);
   const movieLanguage = useAppConfigStore((state) => state.movieLanguage);
   const movieRegion = useAppConfigStore((state) => state.movieRegion);
 

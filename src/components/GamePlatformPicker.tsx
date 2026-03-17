@@ -57,7 +57,7 @@ const ItemSeparator = () => (
 
 export function GamePlatformPicker() {
   const user = useAuthenticatedUser();
-  const { bottomSheetModalRef } = useInterfaceStore();
+  const bottomSheetModalRef = useInterfaceStore((s) => s.bottomSheetModalRef);
   const { bottom: safeBottomArea } = useSafeAreaInsets();
 
   async function addGameRelease(

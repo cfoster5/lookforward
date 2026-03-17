@@ -32,11 +32,12 @@ export function MoviePoster({
   // segment is undefined from MovieLayout, research why
   const stack = (segments[1] as "(find)" | "(countdown)") ?? "(find)";
 
-  const { isPro } = useAuthStore();
+  const isPro = useAuthStore((s) => s.isPro);
   const user = useAuthenticatedUser();
   const posthog = usePostHog();
 
-  const { movieSubs, hasReachedLimit } = useSubscriptionStore();
+  const movieSubs = useSubscriptionStore((s) => s.movieSubs);
+  const hasReachedLimit = useSubscriptionStore((s) => s.hasReachedLimit);
   const { data: pro } = useProOfferings();
   const { data: limitHit } = useLimitHitOffering();
 

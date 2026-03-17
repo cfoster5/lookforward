@@ -25,8 +25,10 @@ interface Props {
 function PosterButton({ movieId, movieName, game }: Props) {
   const user = useAuthenticatedUser();
   const isPro = useAuthStore((s) => s.isPro);
-  const { movieSubs, gameSubs, hasReachedLimit } = useSubscriptionStore();
-  const { bottomSheetModalRef } = useInterfaceStore();
+  const movieSubs = useSubscriptionStore((s) => s.movieSubs);
+  const gameSubs = useSubscriptionStore((s) => s.gameSubs);
+  const hasReachedLimit = useSubscriptionStore((s) => s.hasReachedLimit);
+  const bottomSheetModalRef = useInterfaceStore((s) => s.bottomSheetModalRef);
   const { data: pro } = useProOfferings();
   const { data: limitHit } = useLimitHitOffering();
   const posthog = usePostHog();

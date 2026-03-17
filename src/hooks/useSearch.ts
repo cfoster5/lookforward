@@ -6,7 +6,7 @@ import { useInterfaceStore } from "@/stores/interface";
 
 export function useSearch(options: Omit<SearchBarProps, "ref"> = {}) {
   const [search, setSearch] = useState("");
-  const { categoryIndex } = useInterfaceStore();
+  const categoryIndex = useInterfaceStore((s) => s.categoryIndex);
   const navigation = useNavigation();
 
   useEffect(() => {

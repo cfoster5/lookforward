@@ -34,7 +34,7 @@ export default function Settings() {
     setMovieRegion,
     setMovieLanguage,
   } = useAppConfigStore();
-  const { isPro } = useAuthStore();
+  const isPro = useAuthStore((s) => s.isPro);
   const [notificationPermissions, setNotificationPermissions] = useState(true);
   const [notifications, setNotifications] = useState({
     day: false,

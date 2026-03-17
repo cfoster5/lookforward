@@ -102,7 +102,7 @@ export async function getPersonCountdown(
 }
 
 export function usePersonCountdowns() {
-  const { personSubs } = useSubscriptionStore();
+  const personSubs = useSubscriptionStore((s) => s.personSubs);
   const movieLanguage = useAppConfigStore((state) => state.movieLanguage);
   const movieRegion = useAppConfigStore((state) => state.movieRegion);
 

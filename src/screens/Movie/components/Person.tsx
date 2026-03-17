@@ -22,7 +22,7 @@ type Props = {
 export function Person({ person }: Props) {
   const segments = useSegments();
   const stack = segments[1] as "(find)" | "(countdown)";
-  const { theme } = useInterfaceStore();
+  const theme = useInterfaceStore((s) => s.theme);
   const { width: windowWidth } = useWindowDimensions();
 
   const posterWidth = windowWidth / 3.5 - 16;

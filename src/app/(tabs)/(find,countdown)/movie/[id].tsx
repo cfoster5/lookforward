@@ -155,8 +155,9 @@ export default function MovieScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const user = useAuthenticatedUser();
-  const { isPro } = useAuthStore();
-  const { movieSubs, hasReachedLimit } = useSubscriptionStore();
+  const isPro = useAuthStore((s) => s.isPro);
+  const movieSubs = useSubscriptionStore((s) => s.movieSubs);
+  const hasReachedLimit = useSubscriptionStore((s) => s.hasReachedLimit);
   const isSubbed = movieSubs.find((sub) => sub.documentID === id);
   const { data: movieDetails, isLoading } = useMovie(id);
   const { data: ratings, isLoading: isLoadingRatings } = useMovieRatings(

@@ -16,7 +16,7 @@ export const Rating = ({
   rating: OMDBMovie["Ratings"][number]["Value"];
   onPress?: () => void;
 }) => {
-  const { isPro } = useAuthStore();
+  const isPro = useAuthStore((s) => s.isPro);
   const imageMap = {
     "Internet Movie Database": {
       path: require("../assets/IMDb_Logo_Rectangle_Gold.png"),

@@ -14,7 +14,7 @@ export function GamePoster({
 }: {
   game: Games & { release_dates: ReleaseDate[] };
 }) {
-  const { gameSubs } = useSubscriptionStore();
+  const gameSubs = useSubscriptionStore((s) => s.gameSubs);
   const inCountdown = gameSubs.find(
     (releaseDate) => releaseDate.game.id === game.id,
   )?.documentID;

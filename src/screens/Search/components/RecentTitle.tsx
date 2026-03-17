@@ -21,7 +21,8 @@ import { onShare } from "@/utils/share";
 export function RecentTitle({ item }: { item: Recent }) {
   const user = useAuthenticatedUser();
   const isPro = useAuthStore((s) => s.isPro);
-  const { movieSubs, hasReachedLimit } = useSubscriptionStore();
+  const movieSubs = useSubscriptionStore((s) => s.movieSubs);
+  const hasReachedLimit = useSubscriptionStore((s) => s.hasReachedLimit);
   const { data: pro } = useProOfferings();
   const { data: limitHit } = useLimitHitOffering();
   const { removeRecent } = useRecentItemsStore();

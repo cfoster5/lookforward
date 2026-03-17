@@ -17,7 +17,7 @@ export default function ButtonMultiState({
   test?: any;
   children?: any;
 }) {
-  const { theme } = useInterfaceStore();
+  const theme = useInterfaceStore((s) => s.theme);
   return (
     <Pressable
       onPress={onPress}

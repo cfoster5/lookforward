@@ -17,7 +17,7 @@ import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 import { onShare } from "@/utils/share";
 
 export function RecentPerson({ item }: { item: Recent }) {
-  const { isPro } = useAuthStore();
+  const isPro = useAuthStore((s) => s.isPro);
   const { data: pro } = useProOfferings();
   const { removeRecent } = useRecentItemsStore();
   const posthog = usePostHog();

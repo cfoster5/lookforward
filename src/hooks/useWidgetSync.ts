@@ -26,8 +26,9 @@ function formatDateAsUTCDateOnly(date: Date): string {
 export function useWidgetSync() {
   const movieCountdowns = useMovieCountdowns();
   const gameCountdowns = useGameCountdowns();
-  const { movieSubs, gameSubs } = useSubscriptionStore();
-  const { isPro } = useAuthStore();
+  const movieSubs = useSubscriptionStore((s) => s.movieSubs);
+  const gameSubs = useSubscriptionStore((s) => s.gameSubs);
+  const isPro = useAuthStore((s) => s.isPro);
 
   useEffect(() => {
     const syncData = async () => {

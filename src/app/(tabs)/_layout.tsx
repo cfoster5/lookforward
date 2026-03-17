@@ -27,14 +27,12 @@ export default function TabStack() {
   const [hasLaunchDeepLink, setHasLaunchDeepLink] = useState(false);
   const user = useAuthenticatedUser();
   const posthog = usePostHog();
-  const {
-    setMovieSubs,
-    setGameSubs,
-    setPersonSubs,
-    movieSubs,
-    gameSubs,
-    personSubs,
-  } = useSubscriptionStore();
+  const setMovieSubs = useSubscriptionStore((s) => s.setMovieSubs);
+  const setGameSubs = useSubscriptionStore((s) => s.setGameSubs);
+  const setPersonSubs = useSubscriptionStore((s) => s.setPersonSubs);
+  const movieSubs = useSubscriptionStore((s) => s.movieSubs);
+  const gameSubs = useSubscriptionStore((s) => s.gameSubs);
+  const personSubs = useSubscriptionStore((s) => s.personSubs);
   const { backfillFromCurrentSubs } = useSubscriptionHistoryStore();
   const {
     hasCompletedCommitment,

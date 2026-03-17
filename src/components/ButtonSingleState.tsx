@@ -18,7 +18,7 @@ export default function ButtonSingleState({
   icon?: string;
   textStyle?: any;
 }) {
-  const { theme } = useInterfaceStore();
+  const theme = useInterfaceStore((s) => s.theme);
   return (
     <Pressable
       onPress={onPress}

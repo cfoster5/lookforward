@@ -6,7 +6,8 @@ import Purchases, { CustomerInfo } from "react-native-purchases";
 import { useAuthStore } from "@/stores/auth";
 
 export function useRevenueCat() {
-  const { user, setIsPro } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
+  const setIsPro = useAuthStore((s) => s.setIsPro);
   const posthog = usePostHog();
 
   useEffect(() => {

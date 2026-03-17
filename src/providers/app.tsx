@@ -46,8 +46,8 @@ function RevenueCatBootstrap() {
 
 export function AppProvider({ children }: AppProviderProps) {
   // const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
-  const { setUser } = useAuthStore();
-  const { theme } = useInterfaceStore();
+  const setUser = useAuthStore((s) => s.setUser);
+  const theme = useInterfaceStore((s) => s.theme);
   const navigationRef = useNavigationContainerRef();
   useReactNavigationDevTools(navigationRef);
   useReactQueryDevTools(queryClient);

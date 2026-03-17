@@ -39,8 +39,8 @@ export default function GamePlatformPicker() {
   const router = useRouter();
   const { game: gameString } = useLocalSearchParams();
   const user = useAuthenticatedUser();
-  const { isPro } = useAuthStore();
-  const { hasReachedLimit } = useSubscriptionStore();
+  const isPro = useAuthStore((s) => s.isPro);
+  const hasReachedLimit = useSubscriptionStore((s) => s.hasReachedLimit);
   const { data: pro } = useProOfferings();
   const { data: limitHit } = useLimitHitOffering();
   const game = gameString

@@ -13,7 +13,7 @@ function handleSignOut() {
 }
 
 export default function AccountScreen() {
-  const { user } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
   const isAnonymous = user?.isAnonymous;
 
   return (

@@ -39,8 +39,9 @@ const itemSeparatorStyle = {
 const ItemSeparator = () => <View style={itemSeparatorStyle} />;
 
 const ListHeader = () => {
-  const { isPro } = useAuthStore();
-  const { categoryIndex, setCategoryIndex } = useInterfaceStore();
+  const isPro = useAuthStore((s) => s.isPro);
+  const categoryIndex = useInterfaceStore((s) => s.categoryIndex);
+  const setCategoryIndex = useInterfaceStore((s) => s.setCategoryIndex);
   const { data: pro } = useProOfferings();
   const posthog = usePostHog();
 
@@ -75,7 +76,8 @@ const HorizontalSpacer = () => <View style={horizontalSpacerStyle} />;
 
 export default function SearchPage() {
   const searchQuery = useSearch();
-  const { categoryIndex, setCategoryIndex } = useInterfaceStore();
+  const categoryIndex = useInterfaceStore((s) => s.categoryIndex);
+  const setCategoryIndex = useInterfaceStore((s) => s.setCategoryIndex);
   const { top: safeTopArea } = useSafeAreaInsets();
 
   const debouncedSearch = useDebounce(searchQuery, 400);

@@ -23,8 +23,9 @@ const rightColumnStyle = { marginLeft: spacing / 2 };
 export function MovieLayout() {
   const scrollRef = useRef<FlatList>(null);
   useScrollToTop(scrollRef);
-  const { movieSearchModalRef, movieSearchOption, setMovieSearchOption } =
-    useInterfaceStore();
+  const movieSearchModalRef = useInterfaceStore((s) => s.movieSearchModalRef);
+  const movieSearchOption = useInterfaceStore((s) => s.movieSearchOption);
+  const setMovieSearchOption = useInterfaceStore((s) => s.setMovieSearchOption);
   const { data, fetchNextPage, hasNextPage, isLoading } =
     useMovieData(movieSearchOption);
 

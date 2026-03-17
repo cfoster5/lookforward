@@ -19,7 +19,7 @@ import { tryRequestReviewFromNotification } from "@/utils/requestReview";
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const { theme } = useInterfaceStore();
+  const theme = useInterfaceStore((s) => s.theme);
 
   return (
     <AppProvider>
@@ -31,7 +31,7 @@ export default function RootLayout() {
 
 function RootLayoutContent() {
   const [initializing, setInitializing] = useState(true);
-  const { user } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
   const handledMessageIds = useRef(new Set<string>());
 
   useEffect(() => {

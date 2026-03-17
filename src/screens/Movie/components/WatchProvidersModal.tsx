@@ -19,7 +19,7 @@ export function WatchProvidersModal({
   providers: WatchLocale["US"];
 }) {
   const { bottom: safeBottomArea } = useSafeAreaInsets();
-  const { theme } = useInterfaceStore();
+  const theme = useInterfaceStore((s) => s.theme);
   const mod = {
     ...horizontalListProps,
     style: { ...horizontalListProps.style, marginTop: 8 },

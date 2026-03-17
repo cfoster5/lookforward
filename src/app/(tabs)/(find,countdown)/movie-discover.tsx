@@ -2,7 +2,7 @@ import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Image } from "expo-image";
 import { Stack, useLocalSearchParams, useNavigation } from "expo-router";
 import { useRef, useState } from "react";
-import { FlatList, Platform, Pressable, Text } from "react-native";
+import { FlatList, Platform, Pressable, StyleSheet, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
@@ -257,12 +257,9 @@ export default function MovieDiscover() {
         contentInsetAdjustmentBehavior="automatic"
         // contentInset={{ bottom: paddingBottom }}
         // scrollIndicatorInsets={{ bottom: paddingBottom }}
-        contentContainerStyle={{ marginHorizontal: 16 }}
+        contentContainerStyle={styles.listContent}
         numColumns={2}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-          marginBottom: spacing,
-        }}
+        columnWrapperStyle={styles.columnWrapper}
         ref={scrollRef}
         keyExtractor={(item) => item.id.toString()}
         initialNumToRender={6}
@@ -273,3 +270,13 @@ export default function MovieDiscover() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  listContent: {
+    marginHorizontal: 16,
+  },
+  columnWrapper: {
+    justifyContent: "space-between",
+    marginBottom: spacing,
+  },
+});

@@ -28,6 +28,8 @@ const posterStyle = {
   aspectRatio: 2 / 3,
 };
 
+const contentContainerStyle = { marginHorizontal: spacing };
+
 const leftColumnStyle = { marginRight: spacing / 2 };
 const rightColumnStyle = { marginLeft: spacing / 2 };
 
@@ -133,9 +135,7 @@ export default function Collection() {
           />
         )}
         numColumns={2}
-        contentContainerStyle={{
-          marginHorizontal: spacing,
-        }}
+        contentContainerStyle={contentContainerStyle}
         automaticallyAdjustsScrollIndicatorInsets
         contentInsetAdjustmentBehavior="automatic"
         // contentInset={{ bottom: paddingBottom }}

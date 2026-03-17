@@ -8,7 +8,13 @@ import { MenuView } from "@react-native-menu/menu";
 import { useScrollToTop } from "@react-navigation/native";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { Platform, Pressable, SectionList, View } from "react-native";
+import {
+  Platform,
+  Pressable,
+  SectionList,
+  StyleSheet,
+  View,
+} from "react-native";
 
 import { CollectionProgressCard } from "@/components/Collections/CollectionProgressCard";
 import { CountdownLimitBanner } from "@/components/CountdownLimitBanner";
@@ -341,10 +347,7 @@ export default function Countdown() {
         </Stack.Toolbar.Button>
       </Stack.Toolbar>
       <SectionList
-        contentContainerStyle={{
-          marginHorizontal: 16,
-          ...Platform.select({ ios: { paddingBottom: 16 } }),
-        }}
+        contentContainerStyle={styles.sectionListContent}
         automaticallyAdjustsScrollIndicatorInsets
         contentInsetAdjustmentBehavior="automatic"
         sections={sections}
@@ -384,3 +387,10 @@ export default function Countdown() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  sectionListContent: {
+    marginHorizontal: 16,
+    ...Platform.select({ ios: { paddingBottom: 16 } }),
+  },
+});

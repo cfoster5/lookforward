@@ -46,6 +46,13 @@ const posterStyle = {
   aspectRatio: 2 / 3,
 };
 
+const contentContainerStyle = { marginHorizontal: spacing };
+
+const columnWrapperStyle = {
+  justifyContent: "space-between" as const,
+  marginBottom: spacing,
+};
+
 const leftColumnStyle = { marginRight: spacing / 2 };
 const rightColumnStyle = { marginLeft: spacing / 2 };
 
@@ -221,13 +228,8 @@ export default function Actor() {
         contentInsetAdjustmentBehavior="automatic"
         // contentInset={{ bottom: paddingBottom }}
         // scrollIndicatorInsets={{ bottom: paddingBottom }}
-        contentContainerStyle={{
-          marginHorizontal: spacing,
-        }}
-        columnWrapperStyle={{
-          justifyContent: "space-between",
-          marginBottom: spacing,
-        }}
+        contentContainerStyle={contentContainerStyle}
+        columnWrapperStyle={columnWrapperStyle}
         // do not use arrow functions for header and footer components
         // fixed issue where carousel would re-render
         // https://stackoverflow.com/a/70232246/5648619

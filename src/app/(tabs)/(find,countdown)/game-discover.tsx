@@ -5,7 +5,7 @@ import {
   useSegments,
 } from "expo-router";
 import { useRef } from "react";
-import { FlatList, Platform, Pressable } from "react-native";
+import { FlatList, Platform, Pressable, StyleSheet } from "react-native";
 
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { GamePoster } from "@/components/Posters/GamePoster";
@@ -32,10 +32,7 @@ export default function GameDiscover() {
     <>
       <Stack.Screen.Title large>{genre.name}</Stack.Screen.Title>
       <FlatList
-        contentContainerStyle={{
-          marginHorizontal: 16,
-          ...Platform.select({ ios: { paddingTop: 16 } }),
-        }}
+        contentContainerStyle={styles.listContent}
         automaticallyAdjustsScrollIndicatorInsets
         contentInsetAdjustmentBehavior="automatic"
         contentInset={{ bottom: paddingBottom }}
@@ -68,3 +65,10 @@ export default function GameDiscover() {
     <LoadingScreen />
   );
 }
+
+const styles = StyleSheet.create({
+  listContent: {
+    marginHorizontal: 16,
+    ...Platform.select({ ios: { paddingTop: 16 } }),
+  },
+});

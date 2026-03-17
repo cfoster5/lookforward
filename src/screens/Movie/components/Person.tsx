@@ -25,15 +25,8 @@ export function Person({ person }: Props) {
   const { theme } = useInterfaceStore();
   const { width: windowWidth } = useWindowDimensions();
 
-  const styles = StyleSheet.create({
-    poster: {
-      width: windowWidth / 3.5 - 16,
-      aspectRatio: 2 / 3,
-      borderRadius: 12,
-      borderWidth: 1,
-      borderColor: theme === "dark" ? colors.separator : "#e0e0e0",
-    },
-  });
+  const posterWidth = windowWidth / 3.5 - 16;
+  const isDark = theme === "dark";
 
   return (
     <ContextMenuLink
@@ -47,19 +40,20 @@ export function Person({ person }: Props) {
       handleShareSelect={() => onShare(`person/${person.id}`, "movie")}
     >
       <Pressable
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          alignItems: "center",
-          marginTop: 16,
-        }}
+        style={styles.row}
         // https://github.com/dominicstop/react-native-ios-context-menu/issues/9#issuecomment-1047058781
         delayLongPress={100} // Leave room for a user to be able to click
         onLongPress={() => {}} // A callback that does nothing
       >
         {person.profile_path ? (
           <Image
-            style={styles.poster}
+            style={[
+              styles.poster,
+              {
+                width: posterWidth,
+                borderColor: isDark ? colors.separator : "#e0e0e0",
+              },
+            ]}
             source={{
               uri: `https://image.tmdb.org/t/p/w300${person.profile_path}`,
             }}
@@ -68,21 +62,16 @@ export function Person({ person }: Props) {
           <View
             style={[
               styles.poster,
-              { alignItems: "center", justifyContent: "center" },
+              styles.posterFallback,
+              {
+                width: posterWidth,
+                borderColor: isDark ? colors.separator : "#e0e0e0",
+              },
             ]}
           >
             <Text
               style={
-                theme === "dark"
-                  ? {
-                      ...iOSUIKit.title3EmphasizedWhiteObject,
-                      textAlign: "center",
-                    }
-                  : {
-                      ...iOSUIKit.title3EmphasizedObject,
-                      color: colors.systemGray,
-                      textAlign: "center",
-                    }
+                isDark ? styles.fallbackTextDark : styles.fallbackTextLight
               }
             >
               {person.name
@@ -92,11 +81,11 @@ export function Person({ person }: Props) {
             </Text>
           </View>
         )}
-        <View style={{ marginLeft: 16, flex: 1 }}>
-          <Text style={theme === "dark" ? iOSUIKit.bodyWhite : iOSUIKit.body}>
+        <View style={styles.details}>
+          <Text style={isDark ? iOSUIKit.bodyWhite : iOSUIKit.body}>
             {person.name}
           </Text>
-          <Text style={[iOSUIKit.callout, { color: colors.systemGray }]}>
+          <Text style={styles.role}>
             {"character" in person ? person.character : person.job?.join(", ")}
           </Text>
         </View>
@@ -104,3 +93,38 @@ export function Person({ person }: Props) {
     </ContextMenuLink>
   );
 }
+
+const styles = StyleSheet.create({
+  row: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 16,
+  },
+  poster: {
+    aspectRatio: 2 / 3,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  posterFallback: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  fallbackTextDark: {
+    ...iOSUIKit.title3EmphasizedWhiteObject,
+    textAlign: "center",
+  },
+  fallbackTextLight: {
+    ...iOSUIKit.title3EmphasizedObject,
+    color: colors.systemGray,
+    textAlign: "center",
+  },
+  details: {
+    marginLeft: 16,
+    flex: 1,
+  },
+  role: {
+    ...iOSUIKit.calloutObject,
+    color: colors.systemGray,
+  },
+});

@@ -131,7 +131,7 @@ export default function DynamicLayout({ segment }: { segment: string }) {
 
   return (
     <SharedLayout>
-      <Stack.Screen name="index" options={AppleStackPreset} />
+      <Stack.Screen name="index" options={{ ...AppleStackPreset, title: "Countdown" }} />
       <Stack.Screen
         name="collection"
         options={{ headerBackButtonDisplayMode: "minimal" }}

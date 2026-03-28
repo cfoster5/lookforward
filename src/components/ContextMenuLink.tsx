@@ -40,22 +40,20 @@ export const ContextMenuLink = ({
     <Link.Trigger>{children}</Link.Trigger>
     <Link.Menu>
       {handleCountdownToggle && (
-        <Link.MenuAction
-          onPress={handleCountdownToggle.action}
-          title={handleCountdownToggle.buttonText}
-        />
+        <Link.MenuAction onPress={handleCountdownToggle.action}>
+          {handleCountdownToggle.buttonText}
+        </Link.MenuAction>
       )}
       {handleShareSelect && (
-        <Link.MenuAction onPress={handleShareSelect} title="Share" />
+        <Link.MenuAction onPress={handleShareSelect}>Share</Link.MenuAction>
       )}
       {handleRemoveSelect && (
-        <Link.MenuAction
-          onPress={handleRemoveSelect}
-          title="Remove from History"
-        />
+        <Link.MenuAction onPress={handleRemoveSelect}>
+          Remove from History
+        </Link.MenuAction>
       )}
       {isOnboarding && (
-        <Link.MenuAction onPress={() => null} title="You did it!" />
+        <Link.MenuAction onPress={() => null}>You did it!</Link.MenuAction>
       )}
     </Link.Menu>
   </Link>

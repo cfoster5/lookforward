@@ -10,7 +10,7 @@
     "postinstall": "husky",
     "lint": "expo lint",
     "lint:file": "expo lint > lint.log 2>&1 || true",
-    "test": "jest --watchAll",
+    "test": "NODE_OPTIONS='--localstorage-file=/tmp/jest-localstorage' jest --watchAll",
     "clean-install": "rm -rf ios node_modules bun.lock build-*.tar.gz LookForward.app && bun install",
     "prewidget": "EXPO_NO_GIT_STATUS=1 npx expo prebuild --template ./node_modules/@bacons/apple-targets/prebuild-blank.tgz --clean"
   },

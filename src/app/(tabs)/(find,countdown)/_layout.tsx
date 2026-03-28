@@ -92,7 +92,13 @@ function SharedLayout({
           headerLargeTitle: false,
         }}
       />
-      <Stack.Screen name="movie-discover" options={{ ...AppleStackPreset }} />
+      <Stack.Screen
+        name="movie-discover"
+        options={({ route }) => ({
+          ...AppleStackPreset,
+          title: (route.params as { screenTitle?: string })?.screenTitle ?? "",
+        })}
+      />
       <Stack.Screen
         name="movie-collection/[id]"
         options={{

@@ -19,7 +19,7 @@ export function useRevenueCat() {
     Purchases.configure({
       apiKey: Platform.select({
         default: "appl_qxPtMlTGjvHkhlNlnKlOenNikGN",
-        android: "goog_nxPkuSWhLpffngTZDurFvWSFtMl",
+        android: "goog_EvdXAJsCSFaXKVuonnjqoBAMbNC",
       }),
     });
 

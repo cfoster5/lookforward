@@ -1,5 +1,35 @@
 # Changelog
 
+## [7.31.0](https://github.com/cfoster5/lookforward/compare/v7.30.0...v7.31.0) (2026-03-30)
+
+
+### Features
+
+* add expo-updates dependency and configuration for app updates ([ec33cb9](https://github.com/cfoster5/lookforward/commit/ec33cb941d6282ae9025447f977ab64acd946f9f))
+* add first-pick screen and update navigation flow for onboarding ([8a39e97](https://github.com/cfoster5/lookforward/commit/8a39e979f3a933b88de03ba78311b2c2aa03c9a6))
+
+
+### Bug Fixes
+
+* add search to shared route group to fix Android cross-tab navigation ([af49f36](https://github.com/cfoster5/lookforward/commit/af49f367f20ac1d6b233eae8cb38219136c7ed37))
+* align countdown day calculation with widget ([1a057f1](https://github.com/cfoster5/lookforward/commit/1a057f158517b177adf75b6d78977931bd99f111))
+* extract inline list component functions in HorizontalListProps ([88f67c2](https://github.com/cfoster5/lookforward/commit/88f67c230b112d1f35d481c21b447a82e020b383))
+* hoist CountdownItem styles to module-scope StyleSheet.create ([48093bd](https://github.com/cfoster5/lookforward/commit/48093bdcc94c43aaf2d7a04161fa95063aa4ce72))
+* hoist inline columnWrapperStyle objects in game-discover and movie-collection ([ca934b8](https://github.com/cfoster5/lookforward/commit/ca934b822b923b0608238a00f49ce1b3bc291209))
+* hoist inline contentContainerStyle and columnWrapperStyle in lists ([46b10a2](https://github.com/cfoster5/lookforward/commit/46b10a29d551a16b061c4ddf1619696cd30aa4ca))
+* hoist inline style objects out of list renderItem across 5 files ([4f3d5de](https://github.com/cfoster5/lookforward/commit/4f3d5de9c012fe9de2aa917008f1a4dbed24fb33))
+* hoist inline style objects out of MovieLayout renderItem ([48e5567](https://github.com/cfoster5/lookforward/commit/48e5567a3ddf48e82ade6608ada839dd5cc6fa9b))
+* hoist Person styles to module-scope StyleSheet.create ([95af3fd](https://github.com/cfoster5/lookforward/commit/95af3fd81766fb0cbd1f01cbc02363b8e762cc51))
+* hoist StyleSheet.create and use useWindowDimensions in Trailer ([8f97b6e](https://github.com/cfoster5/lookforward/commit/8f97b6e60b362a193b89084993ac7aac0487965f))
+* remove useMemo from useCollectionProgress (React Compiler) ([17d8004](https://github.com/cfoster5/lookforward/commit/17d8004bb4d8a0a6cbd21119c2d8d94d56be7bd8))
+* replace ImageBackground with expo-image in AnimatedHeaderImage ([cc9c018](https://github.com/cfoster5/lookforward/commit/cc9c018984ee59b106292037adaf6f585663fbff))
+* set movie-discover title from route params to prevent flash ([2683226](https://github.com/cfoster5/lookforward/commit/26832260a7d5d88b6b8fbf0ebab88d76e927a960))
+* set static Countdown title in layout to prevent index flash ([0cbfc8a](https://github.com/cfoster5/lookforward/commit/0cbfc8af096931a8e998e334ae4d813d195364f2))
+* update RevenueCat Android API key to correct value ([25a3d92](https://github.com/cfoster5/lookforward/commit/25a3d9258cffc3c30e7b573fac762b65a0f8c109))
+* use direct subpath imports for @expo/vector-icons ([3d834f8](https://github.com/cfoster5/lookforward/commit/3d834f8ed49d94f3079171cb8f2ee5e563c6c127))
+* use region-specific dates for person next movie filtering ([dc11cc9](https://github.com/cfoster5/lookforward/commit/dc11cc9365ec4a4b2eb79d98d5223613c40b537c))
+* use stable unique keys in list keyExtractors ([2c6c294](https://github.com/cfoster5/lookforward/commit/2c6c2948c5d2b4b8f9bad85c78084df4b473a8ee))
+
 ## [7.30.0](https://github.com/cfoster5/lookforward/compare/v7.29.4...v7.30.0) (2026-03-14)
 
 

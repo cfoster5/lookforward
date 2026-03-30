@@ -1,6 +1,5 @@
 import { Image } from "expo-image";
-import { StyleSheet, useWindowDimensions } from "react-native";
-import LinearGradient from "react-native-linear-gradient";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import Animated, {
   interpolate,
   SharedValue,
@@ -55,11 +54,14 @@ export function AnimatedHeaderImage({
         style={StyleSheet.absoluteFill}
         contentFit="cover"
       />
-      <LinearGradient
-        colors={["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 1)"]}
-        start={{ x: 0, y: 0.8 }}
-        end={{ x: 0, y: 1.0 }}
-        style={StyleSheet.absoluteFill}
+      <View
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            experimental_backgroundImage:
+              "linear-gradient(to bottom, transparent 80%, rgba(0, 0, 0, 1) 100%)",
+          },
+        ]}
       />
     </Animated.View>
   );

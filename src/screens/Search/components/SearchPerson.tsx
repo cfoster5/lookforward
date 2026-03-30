@@ -122,7 +122,7 @@ export const SearchPerson = ({ item }: { item: PersonWithMediaType }) => {
   return (
     <ContextMenuLink
       href={{
-        pathname: "/(tabs)/(find)/person/[id]",
+        pathname: "/(tabs)/(search)/person/[id]",
         params: {
           id: item.id,
           name: item.name,

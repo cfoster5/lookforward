@@ -21,7 +21,7 @@ type Props = {
 
 export function Person({ person }: Props) {
   const segments = useSegments();
-  const stack = segments[1] as "(find)" | "(countdown)";
+  const stack = segments[1] as "(find)" | "(countdown)" | "(search)";
   const theme = useInterfaceStore((s) => s.theme);
   const { width: windowWidth } = useWindowDimensions();
 

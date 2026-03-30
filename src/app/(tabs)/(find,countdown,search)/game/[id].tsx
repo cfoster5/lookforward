@@ -66,7 +66,7 @@ const GameCredits = ({ companies, type, title }: GameCreditsProp) =>
 
 export default function Game() {
   const segments = useSegments();
-  const stack = segments[1] as "(find)" | "(countdown)";
+  const stack = segments[1] as "(find)" | "(countdown)" | "(search)";
   const router = useRouter();
   const { id, game: gameString } = useLocalSearchParams<{
     id?: string | string[];

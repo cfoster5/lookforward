@@ -28,7 +28,7 @@ export function GameLayout() {
           <Pressable
             onPress={() =>
               router.push({
-                pathname: "/(tabs)/(find)/game/[id]",
+                pathname: "/(tabs)/(search)/game/[id]",
                 params: {
                   id: game.id,
                   game: JSON.stringify(game),

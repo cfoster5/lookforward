@@ -20,7 +20,7 @@ const columnWrapperStyle = {
 
 export default function GameDiscover() {
   const segments = useSegments();
-  const stack = segments[1] as "(find)" | "(countdown)";
+  const stack = segments[1] as "(find)" | "(countdown)" | "(search)";
   const router = useRouter();
   const { genre: genreString } = useLocalSearchParams();
   const genre = genreString ? JSON.parse(genreString) : undefined;

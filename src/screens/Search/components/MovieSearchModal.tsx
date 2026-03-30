@@ -96,7 +96,7 @@ export function MovieSearchModal({
                   onPress={() => {
                     modalRef.current?.dismiss();
                     router.push({
-                      pathname: "/(tabs)/(find)/movie-discover",
+                      pathname: "/(tabs)/(search)/movie-discover",
                       params: {
                         screenTitle: item.provider_name,
                         provider: JSON.stringify(item),

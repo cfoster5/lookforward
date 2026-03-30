@@ -1,10 +1,7 @@
 import { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 import { isLiquidGlassAvailable } from "expo-glass-effect";
-import { Stack } from "expo-router";
 
 import { colors } from "@/theme/colors";
-
-export { ErrorBoundary } from "expo-router";
 
 export const AppleStackPreset: NativeStackNavigationOptions =
   process.env.EXPO_OS !== "ios"
@@ -19,7 +16,7 @@ export const AppleStackPreset: NativeStackNavigationOptions =
             backgroundColor: "transparent",
           },
           headerTitleStyle: {
-            color: colors.label as any,
+            color: colors.label as string,
           },
           headerLargeTitle: true,
           headerBlurEffect: "none",
@@ -36,19 +33,3 @@ export const AppleStackPreset: NativeStackNavigationOptions =
           headerBlurEffect: "systemChromeMaterial",
           headerBackButtonDisplayMode: "default",
         };
-
-export default function Layout() {
-  return (
-    <Stack screenOptions={AppleStackPreset}>
-      <Stack.Screen
-        name="index"
-        options={{
-          title: "Recents",
-          headerSearchBarOptions: {
-            // Only used as a placeholder, overridden in useSearch
-          },
-        }}
-      />
-    </Stack>
-  );
-}

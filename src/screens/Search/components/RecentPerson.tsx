@@ -172,7 +172,7 @@ export function RecentPerson({ item }: { item: Recent }) {
   return (
     <ContextMenuLink
       href={{
-        pathname: "/(tabs)/(find)/person/[id]",
+        pathname: "/(tabs)/(search)/person/[id]",
         params: {
           id: item.id,
           name: item.name,

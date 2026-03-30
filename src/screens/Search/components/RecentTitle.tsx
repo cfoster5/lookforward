@@ -180,14 +180,14 @@ export function RecentTitle({ item }: { item: Recent }) {
       href={
         item.media_type === "movie"
           ? {
-              pathname: "/(tabs)/(find)/movie/[id]",
+              pathname: "/(tabs)/(search)/movie/[id]",
               params: {
                 id: item.id,
                 name: item.name,
               },
             }
           : {
-              pathname: "/(tabs)/(find)/game/[id]",
+              pathname: "/(tabs)/(search)/game/[id]",
               params: {
                 id: item.id,
                 game: JSON.stringify({

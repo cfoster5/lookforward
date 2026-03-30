@@ -4,7 +4,7 @@ import { Platform } from "react-native";
 
 import { colors } from "@/theme/colors";
 
-import { AppleStackPreset } from "../(search)/_layout";
+import { AppleStackPreset } from "@/constants/AppleStackPreset";
 
 export default function SettingsStack() {
   return (

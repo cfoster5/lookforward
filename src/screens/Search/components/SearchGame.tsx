@@ -22,7 +22,7 @@ export function SearchGame({
     incrementSearchCount();
     tryRequestReview();
     router.navigate({
-      pathname: "/(tabs)/(find)/game/[id]",
+      pathname: "/(tabs)/(search)/game/[id]",
       params: { id: item.id?.toString() ?? "", game: JSON.stringify(item) },
     });
   };

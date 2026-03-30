@@ -135,7 +135,7 @@ export function SearchMovie({ item }: { item: MovieWithMediaType }) {
   return (
     <ContextMenuLink
       href={{
-        pathname: "/(tabs)/(find)/movie/[id]",
+        pathname: "/(tabs)/(search)/movie/[id]",
         params: {
           id: item.id,
           name: item.title,

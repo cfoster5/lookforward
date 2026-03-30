@@ -151,7 +151,7 @@ export function getReleaseDate(releaseDates: ReleaseDate[]) {
 
 export default function MovieScreen() {
   const segments = useSegments();
-  const stack = segments[1] as "(find)" | "(countdown)";
+  const stack = segments[1] as "(find)" | "(countdown)" | "(search)";
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const user = useAuthenticatedUser();

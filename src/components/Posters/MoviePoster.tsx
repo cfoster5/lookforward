@@ -30,7 +30,7 @@ export function MoviePoster({
 }) {
   const segments = useSegments();
   // segment is undefined from MovieLayout, research why
-  const stack = (segments[1] as "(find)" | "(countdown)") ?? "(find)";
+  const stack = (segments[1] as "(find)" | "(countdown)" | "(search)") ?? "(find)";
 
   const isPro = useAuthStore((s) => s.isPro);
   const user = useAuthenticatedUser();

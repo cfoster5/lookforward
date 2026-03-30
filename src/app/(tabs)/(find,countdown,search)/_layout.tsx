@@ -8,12 +8,15 @@ import { CountdownLimitBanner } from "@/components/CountdownLimitBanner";
 import { useInterfaceStore } from "@/stores/interface";
 import { colors } from "@/theme/colors";
 
-import { AppleStackPreset } from "../(search)/_layout";
+import { AppleStackPreset } from "@/constants/AppleStackPreset";
 
 export const unstable_settings = {
   initialRouteName: "find",
   countdown: {
     initialRouteName: "countdown",
+  },
+  search: {
+    initialRouteName: "search",
   },
 };
 
@@ -129,6 +132,21 @@ export default function DynamicLayout({ segment }: { segment: string }) {
             title: "Find",
             headerShown: true,
             header: FindHeader,
+          }}
+        />
+      </SharedLayout>
+    );
+  }
+
+  if (segment === "(search)") {
+    return (
+      <SharedLayout>
+        <Stack.Screen
+          name="index"
+          options={{
+            ...AppleStackPreset,
+            title: "Recents",
+            headerSearchBarOptions: {},
           }}
         />
       </SharedLayout>

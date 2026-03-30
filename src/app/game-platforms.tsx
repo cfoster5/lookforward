@@ -38,14 +38,14 @@ export default function GamePlatformsScreen() {
   }
 
   const hasMovies = interests.includes("movies");
-  const totalSteps = 2 + (hasMovies ? 1 : 0) + 1;
-  const currentStep = totalSteps - 1;
+  const totalSteps = 3 + (hasMovies ? 1 : 0) + 1;
+  const currentStep = 2 + (hasMovies ? 1 : 0);
 
   function handleContinue() {
     posthog.capture("onboarding:game_platforms_selected", {
       count: gamePlatforms.length,
     });
-    router.push("/onboarding");
+    router.push("/first-pick");
   }
 
   return (

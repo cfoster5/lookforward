@@ -91,6 +91,10 @@ function RootLayoutContent() {
         options={{ headerShown: false, animation: "none" }}
       />
       <Stack.Screen
+        name="first-pick"
+        options={{ headerShown: false, animation: "none" }}
+      />
+      <Stack.Screen
         name="commitment"
         options={{
           title: "Commitment",

@@ -1,7 +1,7 @@
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect, useRef, useState } from "react";
 import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
@@ -19,6 +19,8 @@ import Animated, {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useProOfferings } from "@/api/getProOfferings";
+import { subToMovie } from "@/helpers/helpers";
+import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useAppConfigStore } from "@/stores/appConfig";
 import { presentPaywallWithRestoreAlert } from "@/utils/paywall";
 
@@ -49,6 +51,11 @@ export default function CommitmentScreen() {
   const { completeCommitment } = useAppConfigStore();
   const { data: pro } = useProOfferings();
   const posthog = usePostHog();
+  const user = useAuthenticatedUser();
+  const { pickType, pickId } = useLocalSearchParams<{
+    pickType?: string;
+    pickId?: string;
+  }>();
 
   useEffect(() => {
     posthog.capture("commitment:viewed");
@@ -109,6 +116,9 @@ export default function CommitmentScreen() {
       setTimeout(async () => {
         if (pro) {
           try {
+            if (pickType === "movie" && pickId) {
+              await subToMovie(pickId, user.uid);
+            }
             posthog.capture("paywall:viewed", { source: "commitment" });
             posthog.capture("onboarding:paywall_view", { type: "pro" });
             await presentPaywallWithRestoreAlert({ offering: pro });
@@ -185,17 +195,15 @@ export default function CommitmentScreen() {
                   circleStyle,
                 ]}
               >
-                {committed ? (
-                  <Text style={styles.checkmark}>{"\u2713"}</Text>
-                ) : Platform.OS === "ios" ? (
+                {Platform.OS === "ios" ? (
                   <Image
-                    source="sf:touchid"
+                    source={!committed ? "sf:touchid" : "sf:checkmark"}
                     style={{ width: 130 / 1.5, height: 130 / 1.5 }}
                     tintColor="white"
                   />
                 ) : (
                   <MaterialCommunityIcons
-                    name="fingerprint"
+                    name={!committed ? "fingerprint" : "check"}
                     size={130 / 1.5}
                     color="white"
                   />

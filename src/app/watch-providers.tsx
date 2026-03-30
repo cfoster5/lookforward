@@ -58,7 +58,7 @@ export default function WatchProvidersScreen() {
   }
 
   const hasGames = interests.includes("games");
-  const totalSteps = 2 + 1 + (hasGames ? 1 : 0);
+  const totalSteps = 3 + 1 + (hasGames ? 1 : 0);
 
   function handleContinue() {
     posthog.capture("onboarding:watch_providers_selected", {
@@ -67,7 +67,7 @@ export default function WatchProvidersScreen() {
     if (hasGames) {
       router.push("/game-platforms");
     } else {
-      router.push("/onboarding");
+      router.push("/first-pick");
     }
   }
 

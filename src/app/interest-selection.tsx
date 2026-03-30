@@ -20,7 +20,7 @@ export default function InterestSelectionScreen() {
 
   const hasMovies = interests.includes("movies");
   const hasGames = interests.includes("games");
-  const totalSteps = 2 + (hasMovies ? 1 : 0) + (hasGames ? 1 : 0);
+  const totalSteps = 3 + (hasMovies ? 1 : 0) + (hasGames ? 1 : 0);
 
   useEffect(() => {
     posthog.capture("onboarding:interest_selection_viewed");

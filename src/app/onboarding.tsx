@@ -1,6 +1,6 @@
 import * as Haptics from "expo-haptics";
 import { Image } from "expo-image";
-import { Redirect, router } from "expo-router";
+import { Redirect, router, useLocalSearchParams } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { useEffect } from "react";
 import {
@@ -52,10 +52,15 @@ export default function OnboardingLayout() {
   const posthog = usePostHog();
   const { completeInterestSelection, setHasSeenOnboardingModal } =
     useAppConfigStore();
+  const { pickType, pickId, pickTitle } = useLocalSearchParams<{
+    pickType?: string;
+    pickId?: string;
+    pickTitle?: string;
+  }>();
 
   const hasMovies = draft.interests.includes("movies");
   const hasGames = draft.interests.includes("games");
-  const totalSteps = 2 + (hasMovies ? 1 : 0) + (hasGames ? 1 : 0);
+  const totalSteps = 3 + (hasMovies ? 1 : 0) + (hasGames ? 1 : 0);
 
   useEffect(() => {
     posthog.capture("onboarding:overview_viewed");
@@ -81,7 +86,14 @@ export default function OnboardingLayout() {
     });
     setHasSeenOnboardingModal();
     draft.reset();
-    router.replace("/commitment");
+    router.replace(
+      pickId
+        ? {
+            pathname: "/commitment",
+            params: { pickType, pickId, pickTitle },
+          }
+        : "/commitment",
+    );
   }
 
   return (

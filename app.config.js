@@ -90,4 +90,10 @@ export default {
       OMDB_KEY: process.env.OMDB_KEY || null,
     },
   },
+  updates: {
+    url: "https://u.expo.dev/4ebe5d26-ee4a-4228-9d28-e757244e31b0",
+  },
+  runtimeVersion: {
+    policy: "appVersion",
+  },
 };

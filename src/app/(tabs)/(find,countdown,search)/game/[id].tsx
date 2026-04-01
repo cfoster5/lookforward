@@ -22,7 +22,6 @@ import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import ButtonSingleState from "@/components/ButtonSingleState";
 import { CategoryControl } from "@/components/CategoryControl";
 import { ExpandableText } from "@/components/ExpandableText";
-import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { IconSymbol } from "@/components/IconSymbol";
 import { LargeBorderlessButton } from "@/components/LargeBorderlessButton";
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -34,7 +33,6 @@ import useAddRecent from "@/hooks/useAddRecent";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useGame } from "@/screens/Game/api/getGame";
 import { useAuthStore } from "@/stores/auth";
-import { useInterfaceStore } from "@/stores/interface";
 import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
 import type { Recent } from "@/types/persistedStorage";
@@ -81,7 +79,6 @@ export default function Game() {
   const isPro = useAuthStore((s) => s.isPro);
   const gameSubs = useSubscriptionStore((s) => s.gameSubs);
   const hasReachedLimit = useSubscriptionStore((s) => s.hasReachedLimit);
-  const bottomSheetModalRef = useInterfaceStore((s) => s.bottomSheetModalRef);
   const countdownId = gameSubs.find((s) => s.game.id === gameId)?.documentID;
   const [detailIndex, setDetailIndex] = useState(0);
   const { data, isLoading } = useGame(
@@ -128,13 +125,18 @@ export default function Game() {
         return;
       }
 
-      bottomSheetModalRef.current?.present({
-        ...(serializedGame ?? {
-          id: gameId,
-          name: gameName,
-          cover: data?.cover,
-        }),
-        release_dates: data?.release_dates,
+      router.push({
+        pathname: `/(tabs)/${stack}/game-platform-picker`,
+        params: {
+          game: JSON.stringify({
+            ...(serializedGame ?? {
+              id: gameId,
+              name: gameName,
+              cover: data?.cover,
+            }),
+            release_dates: data?.release_dates,
+          }),
+        },
       });
     } else {
       removeSub("gameReleases", countdownId, user.uid);
@@ -285,7 +287,6 @@ export default function Game() {
             ))}
         </View>
       </ScrollView>
-      <GamePlatformPicker />
     </>
   );
 }

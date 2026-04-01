@@ -5,12 +5,10 @@ import { create } from "zustand";
 
 import { MovieOption } from "@/types/movieOption";
 
-const bottomSheetModalRef = createRef<BottomSheetModal>();
 const movieSearchModalRef = createRef<BottomSheetModal>();
 
 type InterfaceState = {
   theme: ColorSchemeName;
-  bottomSheetModalRef: typeof bottomSheetModalRef;
   movieSearchModalRef: typeof movieSearchModalRef;
   movieSearchOption: MovieOption;
   categoryIndex: number;
@@ -26,7 +24,6 @@ export const useInterfaceStore = create<InterfaceState & InterfaceActions>(
   (set) => ({
     theme: "dark",
     setTheme: (theme) => set(() => ({ theme })),
-    bottomSheetModalRef,
     movieSearchModalRef,
     movieSearchOption: MovieOption.ComingSoon,
     setMovieSearchOption: (option) =>

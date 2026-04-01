@@ -1,5 +1,6 @@
 import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
 import { Image } from "expo-image";
+import { useRouter, useSegments } from "expo-router";
 import { usePostHog } from "posthog-react-native";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { CustomVariableValue, PAYWALL_RESULT } from "react-native-purchases-ui";
@@ -8,7 +9,6 @@ import { useLimitHitOffering, useProOfferings } from "@/api/getProOfferings";
 import { handleMovieToggle, removeSub } from "@/helpers/helpers";
 import { useAuthenticatedUser } from "@/hooks/useAuthenticatedUser";
 import { useAuthStore } from "@/stores/auth";
-import { useInterfaceStore } from "@/stores/interface";
 import { useSubscriptionStore } from "@/stores/subscription";
 import { colors } from "@/theme/colors";
 import type { Games, ReleaseDate } from "@/types/igdb";
@@ -23,12 +23,14 @@ interface Props {
 }
 
 function PosterButton({ movieId, movieName, game }: Props) {
+  const router = useRouter();
+  const segments = useSegments();
+  const stack = segments[1] as "(find)" | "(countdown)" | "(search)";
   const user = useAuthenticatedUser();
   const isPro = useAuthStore((s) => s.isPro);
   const movieSubs = useSubscriptionStore((s) => s.movieSubs);
   const gameSubs = useSubscriptionStore((s) => s.gameSubs);
   const hasReachedLimit = useSubscriptionStore((s) => s.hasReachedLimit);
-  const bottomSheetModalRef = useInterfaceStore((s) => s.bottomSheetModalRef);
   const { data: pro } = useProOfferings();
   const { data: limitHit } = useLimitHitOffering();
   const posthog = usePostHog();
@@ -87,7 +89,10 @@ function PosterButton({ movieId, movieName, game }: Props) {
 
     return isGameSub()
       ? removeSub("gameReleases", gameId, user.uid)
-      : bottomSheetModalRef.current?.present(game);
+      : router.push({
+          pathname: `/(tabs)/${stack}/game-platform-picker`,
+          params: { game: JSON.stringify(game) },
+        });
   }
 
   const isSubscribed = isMovieSub() || isGameSub();

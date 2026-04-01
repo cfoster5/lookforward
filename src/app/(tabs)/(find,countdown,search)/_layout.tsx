@@ -1,14 +1,14 @@
+import { isLiquidGlassAvailable } from "expo-glass-effect";
 import { Stack } from "expo-router";
-import { Pressable, Text, View } from "react-native";
+import { Platform, Pressable, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { iOSUIKit } from "react-native-typography";
 
 import { CategoryControl } from "@/components/CategoryControl";
 import { CountdownLimitBanner } from "@/components/CountdownLimitBanner";
+import { AppleStackPreset } from "@/constants/AppleStackPreset";
 import { useInterfaceStore } from "@/stores/interface";
 import { colors } from "@/theme/colors";
-
-import { AppleStackPreset } from "@/constants/AppleStackPreset";
 
 export const unstable_settings = {
   initialRouteName: "find",
@@ -72,11 +72,7 @@ const FindHeader = () => {
   );
 };
 
-function SharedLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function SharedLayout({ children }: { children: React.ReactNode }) {
   return (
     <Stack>
       {children}
@@ -118,6 +114,35 @@ function SharedLayout({
         }}
       />
       <Stack.Screen name="game-discover" options={AppleStackPreset} />
+      <Stack.Screen
+        name="game-platform-picker"
+        options={{
+          headerShown: true,
+          headerTransparent: Platform.OS === "ios",
+          headerLargeTitle: false,
+          title: "Select Platform",
+          presentation: "formSheet",
+          sheetGrabberVisible: true,
+          sheetAllowedDetents: "fitToContents",
+          sheetInitialDetentIndex: Platform.OS === "ios" ? 0 : undefined,
+          contentStyle: {
+            backgroundColor:
+              Platform.OS === "ios" && isLiquidGlassAvailable()
+                ? "transparent"
+                : (colors.secondarySystemGroupedBackground as string),
+          },
+          headerStyle: {
+            backgroundColor:
+              Platform.OS === "ios" && isLiquidGlassAvailable()
+                ? "transparent"
+                : (colors.secondarySystemGroupedBackground as string),
+          },
+          headerBlurEffect:
+            Platform.OS === "ios" && isLiquidGlassAvailable()
+              ? undefined
+              : "light",
+        }}
+      />
     </Stack>
   );
 }
@@ -155,7 +180,10 @@ export default function DynamicLayout({ segment }: { segment: string }) {
 
   return (
     <SharedLayout>
-      <Stack.Screen name="index" options={{ ...AppleStackPreset, title: "Countdown" }} />
+      <Stack.Screen
+        name="index"
+        options={{ ...AppleStackPreset, title: "Countdown" }}
+      />
       <Stack.Screen
         name="collection"
         options={{ headerBackButtonDisplayMode: "minimal" }}

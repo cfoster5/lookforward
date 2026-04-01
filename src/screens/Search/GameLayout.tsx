@@ -2,7 +2,6 @@ import { useRouter } from "expo-router";
 import { useRef } from "react";
 import { FlatList, Pressable, StyleSheet } from "react-native";
 
-import { GamePlatformPicker } from "@/components/GamePlatformPicker";
 import { LoadingScreen } from "@/components/LoadingScreen";
 import { GamePoster } from "@/components/Posters/GamePoster";
 import { Games, ReleaseDate } from "@/types/igdb";
@@ -49,7 +48,6 @@ export function GameLayout() {
         showsVerticalScrollIndicator={false}
         contentInsetAdjustmentBehavior="automatic"
       />
-      <GamePlatformPicker />
     </>
   );
 }

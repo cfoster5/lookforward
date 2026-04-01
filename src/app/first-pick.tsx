@@ -35,6 +35,7 @@ type NormalizedPick = {
 };
 
 function navigateToPick(pick: NormalizedPick | null) {
+  Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
   if (pick) {
     router.push({
       pathname: "/onboarding",

@@ -1,5 +1,17 @@
 # Changelog
 
+## [7.32.0](https://github.com/cfoster5/lookforward/compare/v7.31.0...v7.32.0) (2026-04-01)
+
+
+### Features
+
+* add haptic feedback on pick selection in FirstPickScreen ([193eb43](https://github.com/cfoster5/lookforward/commit/193eb4308ea73b5db080c7f2f13d6fd003f071ca))
+
+
+### Bug Fixes
+
+* correct JSON structure in app.config.js ([a00d569](https://github.com/cfoster5/lookforward/commit/a00d569f8a9c9d909fe8b03cebb04ce881628404))
+
 ## [7.31.0](https://github.com/cfoster5/lookforward/compare/v7.30.0...v7.31.0) (2026-03-30)
 
 
